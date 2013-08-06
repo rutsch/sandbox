@@ -32,6 +32,10 @@
  * or implied, of Andrea Leofreddi.
  */
 
+ /*
+Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
+ */
+
 (function() {
 	var initialized = false;
 
@@ -47,20 +51,39 @@
 
 		var state = 'none', stateTarget, stateOrigin, stateTf;
 
-		setupHandlers(root);
+
+		//setup event handlers
+		if(objPageVars.mobile){
+			//alert('mobile')
+			//initiate the hammer object on the holder div of the worldmap svg
+			objPageVars.hammersvg = Hammer(root, {
+				prevent_default: true,
+				no_mouseevents: true
+			})
+
+			//alert('setup handlers3');
+			setupHandlersMobile();
+
+		}else{
+			//alert('desktop')
+			setupHandlersDesktop(root);
+		}
+		
+
 
 		initialized = true;
+
+		var elViewport=document.getElementById("viewport");
+
+
 
 		/**
 		 * Handler registration
 		 */
-		function setupHandlers(root){
+		function setupHandlersDesktop(root){
 			root.onmousedown = handleMouseDown;
 			root.onmousemove = handleMouseMove;
 			root.onmouseup = handleMouseUp;
-			root.ontouchstart = handleMouseDown;
-			root.ontouchmove = handleMouseMove;
-			root.ontouchend = handleMouseUp;			
 			//root.onmouseout = handleMouseUp; // Decomment this to stop the pan functionality when dragging out of the SVG element
 
 			if(navigator.userAgent.toLowerCase().indexOf('webkit') >= 0)
@@ -69,17 +92,43 @@
 				window.addEventListener('DOMMouseScroll', handleMouseWheel, false); // Others
 		}
 
+		function setupHandlersMobile(){
+		    objPageVars.hammersvg.on("dragstart", function(ev) {
+		        if(window.console) { console.log(ev); }
+		        handleMouseDown(ev);
+		    });
+		    objPageVars.hammersvg.on("drag", function(ev) {
+		        if(window.console) { console.log(ev); }
+		        handleMouseMove(ev);
+		    });		    
+		    objPageVars.hammersvg.on("dragend", function(ev) {
+		        if(window.console) { console.log(ev); }
+		        handleMouseUp(ev);
+		    });	
+		    objPageVars.hammersvg.on("pinchin", function(ev) {
+		        if(window.console) { console.log(ev); }
+		        handlePinchIn(ev);
+		    });	
+		    objPageVars.hammersvg.on("pinchout", function(ev) {
+		        if(window.console) { console.log(ev); }
+		        handlePinchOut(ev);
+		    });			    
+		}
+
 		/**
 		 * Instance an SVGPoint object with given event coordinates.
 		 */
 		function getEventPoint(evt) {
 			var p = root.createSVGPoint();
 
-			p.x = evt.clientX;
-			p.y = evt.clientY;
 
-			p.x = evt.touches[0].pageX;
-			p.y = evt.touches[0].pageY;
+			if(objPageVars.mobile){
+				p.x = evt.gesture.center.pageX;
+				p.y = evt.gesture.center.pageY;
+			}else{
+				p.x = evt.clientX;
+				p.y = evt.clientY;			
+			}
 
 			return p;
 		}
@@ -121,7 +170,7 @@
 
 			evt.returnValue = false;
 
-			var svgDoc = evt.target.ownerDocument;
+			
 
 			var delta;
 
@@ -132,7 +181,67 @@
 
 			var z = 1 + delta; // Zoom factor: 0.9/1.1
 
-			var g = svgDoc.getElementById("viewport");
+			console.log('zoom factor z:'+z+' delta:'+delta);
+
+			zoomSvg(evt, z);
+		}
+
+		var zRemembered=0;
+		function handlePinch(evt){
+			console.log(evt.gesture.scale);
+			var z=evt.gesture.scale;
+			if(z>1.05)z=1.05;
+			if(z<0.95)z=0.95;
+
+			event.log(z);
+			zoomSvg(evt, z);
+		}
+
+		function handlePinchIn(evt){
+			console.log('pinchin');
+			var z=evt.gesture.scale;
+			console.log(z);
+			var zCorrected=z;
+			console.log(zCorrected);
+			if(z>1.05){
+				zCorrected=1.05;
+			}else{
+				if(z<0.95){
+					zCorrected=0.95;
+				}
+			}
+				
+
+			event.log(zCorrected);
+			zoomSvg(evt, zCorrected);
+		}
+
+		function handlePinchOut(evt){
+			console.log('pinchout');
+			var z=evt.gesture.scale;
+			console.log(z);
+			var zCorrected=z;
+			if(z>1.05){
+				zCorrected=1.05;
+			}else{
+				if(z<0.95){
+					zCorrected=0.95;
+				}
+			}
+				
+
+			event.log(zCorrected);
+			zoomSvg(evt, zCorrected);
+		}
+
+		function zoomSvg(evt, z){
+			var g, svgDoc;
+			if(objPageVars.mobile){
+				var g = elViewport;
+			}else{
+				var svgDoc = evt.target.ownerDocument;
+				var g = svgDoc.getElementById("viewport");
+			}
 			
 			var p = getEventPoint(evt);
 
@@ -141,45 +250,42 @@
 			// Compute new scale matrix in current mouse position
 			var k = root.createSVGMatrix().translate(p.x, p.y).scale(z).translate(-p.x, -p.y);
 
-				setCTM(g, g.getCTM().multiply(k));
+			setCTM(g, g.getCTM().multiply(k));
 
 			if(typeof(stateTf) == "undefined")
 				stateTf = g.getCTM().inverse();
 
 			stateTf = stateTf.multiply(k.inverse());
+
 		}
 
 		/**
 		 * Handle mouse move event.
 		 */
 		function handleMouseMove(evt) {
-			if(evt.preventDefault)
-				evt.preventDefault();
-
-			console.log("handleMouseMove");
-
+			//preventDefault is handled by hammer
+			if(!objPageVars.mobile){
+				if(evt.preventDefault)evt.preventDefault();
+			}
+			
 			evt.returnValue = false;
 
-			var svgDoc = evt.target.ownerDocument;
-			//console.log(svgDoc);
-
-			var g = svgDoc.getElementById("viewport");
-			//console.log(g);
+			var g, svgDoc;
+			if(objPageVars.mobile){
+				var g = elViewport;
+			}else{
+				var svgDoc = evt.target.ownerDocument;
+				var g = svgDoc.getElementById("viewport");
+			}
 
 			//console.log(state);
 			//console.log(opts)
 			if(state == 'pan') {
-				console.log('In pan logic (new 4)');
 				// Pan mode
 				if (!opts.pan) return;
-				//console.log('** stateTf');
-				console.log(stateTf);
-				console.log(getEventPoint(evt));
-				console.log('*!*');
-				console.log(evt.touches[0].pageX)
-				var p = getEventPoint(evt).matrixTransform(stateTf);
-				console.log(p);
 
+
+				var p = getEventPoint(evt).matrixTransform(stateTf);
 				setCTM(g, stateTf.inverse().translate(p.x - stateOrigin.x, p.y - stateOrigin.y));
 
 			} else if(state == 'move') {
@@ -187,7 +293,6 @@
 				if (!opts.drag) return;
 
 				var p = getEventPoint(evt).matrixTransform(g.getCTM().inverse());
-				console.log(p)
 
 				setCTM(stateTarget, root.createSVGMatrix().translate(p.x - stateOrigin.x, p.y - stateOrigin.y).multiply(g.getCTM().inverse()).multiply(stateTarget.getCTM()));
 
@@ -199,14 +304,20 @@
 		 * Handle click event.
 		 */
 		function handleMouseDown(evt) {
-			if(evt.preventDefault)
-				evt.preventDefault();
+			//preventDefault is handled by hammer
+			if(!objPageVars.mobile){
+				if(evt.preventDefault)evt.preventDefault();
+			}
 
 			evt.returnValue = false;
 
-			var svgDoc = evt.target.ownerDocument;
-
-			var g = svgDoc.getElementById("viewport");
+			var g, svgDoc;
+			if(objPageVars.mobile){
+				var g = elViewport;
+			}else{
+				var svgDoc = evt.target.ownerDocument;
+				var g = svgDoc.getElementById("viewport");
+			}
 
 			if(evt.target.tagName == "svg" || !opts.drag) {
 				// Pan mode
@@ -235,12 +346,12 @@
 		 * Handle mouse button release event.
 		 */
 		function handleMouseUp(evt) {
-			if(evt.preventDefault)
-				evt.preventDefault();
+			//preventDefault is handled by hammer
+			if(!objPageVars.mobile){
+				if(evt.preventDefault)evt.preventDefault();
+			}
 
 			evt.returnValue = false;
-
-			var svgDoc = evt.target.ownerDocument;
 
 			if((state == 'pan' && opts.pan) || (state == 'move' && opts.drag)) {
 				// Quit pan mode

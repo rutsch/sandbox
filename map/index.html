@@ -26,20 +26,77 @@
 		<!-- <![endif]-->
 
 		<script type="text/javascript">        
-            window.onload = function () {
-				
 
 
-				var hammertime = Hammer(getEl('holder_1000'), {
-					prevent_default: true,
-					no_mouseevents: true
-				})
+			/*
+			Utilities
+			*/
+			var isMobile = {
+			    Android: function() {
+			        return navigator.userAgent.match(/Android/i);
+			    },
+			    BlackBerry: function() {
+			        return navigator.userAgent.match(/BlackBerry/i);
+			    },
+			    iOS: function() {
+			        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+			    },
+			    Opera: function() {
+			        return navigator.userAgent.match(/Opera Mini/i);
+			    },
+			    Windows: function() {
+			        return navigator.userAgent.match(/IEMobile/i);
+			    },
+			    any: function() {
+			        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+			    }
+			};
+
+
+			function getEl(id) {
+			    return document.getElementById(id);
+			}
+
+			function logAction(event, elThis, strType){
+				console.log(strType);
+				console.log(event);
+
+			}
+
+			function lon2x(lon) {
+				var xfactor = 2.752;
+				var xoffset = 473.75;
+				var x = (lon * xfactor) + xoffset;
+				return x;
+			}
+			function lat2y(lat) {
+				var yfactor = -2.753;
+				var yoffset = 231;
+				var y = (lat * yfactor) + yoffset;
+				return y;
+			}
+
+
+			function plot(lat,lon,size) {
+				size = size * .5 + 4;
+				return R.circle(lon2x(lon), lat2y(lat), size).attr(city_attr);
+			}
+
+
+			/*
+			Executes page logic
+			*/
+			function initPage(){
+				alert('in3');
+
+				//set the global page variable to detect if we are running on a mobile device or not
+				objPageVars.mobile=isMobile.any();
 
 
 
 				var current = null;
-				var map = {};
-				var m = {};				
+
+				//attributes for the worldmap				
 				var attr = {
 					fill: "#333",
 					stroke: "#888",
@@ -48,19 +105,22 @@
 				};	
 
 					
-				var map = {};
 				
-				var width = document.getElementById('holder_1000').style.width;
-				var height = document.getElementById('holder_1000').style.height * 0.99;
+				
+				//var width = document.getElementById('holder_1000').style.width;
+				//var height = document.getElementById('holder_1000').style.height * 0.99;
 				//alert(document.documentElement["clientHeight"]);
-				var svgHeight = 400;
-			    var svgWidth = 1000;
 
+			    //initiate the raphael object
 				var R = Raphael("holder_1000", document.body.clientWidth, document.documentElement["clientHeight"]);
 				R.ZPD({ zoom: true, pan: true, drag: false });
 				//R.setViewBox(0, 0, document.body.clientWidth, document.documentElement["clientHeight"], false);
 
-				render_map(R,map,attr);		
+				//render the map
+				var map = {};
+				render_map(R, map, attr);
+
+				//set the effects in the map
 				for (var state in map) {							        
     	            map[state].color = Raphael.getColor();
 	                (function (st, state) {
@@ -84,127 +144,25 @@
 				
 				//document.getElementsByTagName('svg')[0].id = 'viewport';
 
-				function lon2x(lon) {
-					var xfactor = 2.752;
-					var xoffset = 473.75;
-					var x = (lon * xfactor) + xoffset;
-					return x;
-				}
-				function lat2y(lat) {
-					var yfactor = -2.753;
-					var yoffset = 231;
-					var y = (lat * yfactor) + yoffset;
-					return y;
-				}
 
-				var city_attr = {
-					fill: "#0f0",
-					stroke: "none",
-					opacity: .3
-				};
-				function plot(lat,lon,size) {
-					size = size * .5 + 4;
-					return R.circle(lon2x(lon), lat2y(lat), size).attr(city_attr);
-				}
-				//var zpd = new RaphaelZPD(R, { zoom: true, pan: true, drag: true });
-				//var panZoom = R.panzoom({ initialZoom: 10, initialPosition: { x: 0, y: 0} });		
-				//panZoom.enable();
+
 				R.safari();	
-				/*var cities = {};
-
-				cities.Afghanistan = plot(33.93911,67.709953,20);
-				cities.Azerbaijan = plot(40.143105,47.576927,2);
-				cities.Bolivia = plot(-16.290154,-63.588653,1);
-				cities.Brazil = plot(-14.235004,-51.92528,3);
-				cities.Cameroon = plot(7.369722,12.354722,1);
-				cities.Colombia = plot(4.570868,-74.297333,1);
-				cities.DRC = plot(-4.038333,21.758664,2);
-				cities.DR = plot(18.735693,-70.162651,1);
-				cities.Ecuador = plot(-1.831239,-78.183406,1);
-				cities.Georgia = plot(42.315407,43.356892,1);
-				cities.Guatemala = plot(15.783471,-90.230759,1);
-				cities.Indonesia = plot(-0.789275,113.921327,3);
-				cities.Iraq = plot(33.223191,43.679291,25);
-				cities.Ivory_Coast = plot(7.539989,-5.54708,1);
-				cities.Kazakhstan = plot(48.019573,66.923684,1);
-				cities.Kenya = plot(-0.023559,37.906193,1);
-				cities.Kyrgyzstan = plot(41.20438,74.766098,1);
-				cities.Libya = plot(26.3351,17.228331,7);
-				cities.Mexico = plot(23.634501,-102.552784,24);
-				cities.Nepal = plot(28.394857,84.124008,4);
-				cities.Nigeria = plot(9.081999,8.675277,3);
-				cities.Pakistan = plot(30.375321,69.345116,17);
-				cities.Philippines = plot(12.879721,121.774017,35);
-				cities.Russia = plot(61.52401,105.318756,5);
-				cities.Somalia = plot(5.152149,46.199616,11);
-				cities.Sri_Lanka = plot(7.873054,80.771797,6);
-				cities.Syria = plot(34.802075,38.996815,1);
-				cities.Tunisia = plot(33.886917,9.537499,1);
-				cities.Turkmenistan = plot(38.969719,59.556278,1);
-				cities.Uganda = plot(1.373333,32.290275,1);
-				cities.Venezuela = plot(6.42375,-66.58973,1);
-				cities.Yemen = plot(15.552727,48.516388,5);
-				cities.Zimbabwe = plot(-19.015438,29.154857,2);
-
-				var current_city = null;
-				var city_box = null;
-				for (var city in cities) {							        
-    	            map[state].color = Raphael.getColor();
-	                (function (st, city) {
-						st[0].style.cursor = "pointer";
-						st[0].onmouseover = function () {
-							current_city && cities[current_city].animate({fill: "#0f0", opacity: .3}, 300);
-							st.animate({fill: "#0f0", opacity: 1}, 300);
-							R.safari();
-							current_city = city;
-						};
-						st[0].onmouseout = function () {
-							st.animate({fill: "#0f0", opacity: .3}, 300);
-							R.safari();
-						};
-						
-						st[0].onclick = function () {
-							if (t = document.getElementById(city_box)) { t.style.display = "none"; }
-							if (t = document.getElementById(city)) { t.style.display = "block"; }
-							city_box = city;
-						};
-
-
-						if (t = document.getElementById(city)) {
-								t.style.left = cities[city].attr('cx') + 'px';
-								t.style.top = cities[city].attr('cy') -20 + 'px';
-						}
-
-					})(cities[city], city);
-				}; // end for 
-				*/
-				/*
-				document.getElementById("viewport").addEventListener("mousemove",
-					function(event) { 
-						logAction(event, this, "m");
-					}, false);
-
-				document.getElementById("viewport").addEventListener("touchmove",
-					function(event) {
-						if(event.preventDefault) event.preventDefault();
-						// perhaps event.targetTouches[0]?
-						logAction(event.changedTouches[0], this, "t");
-					}, false);
-				*/
-			};
+			}
 
 			/*
-			Utilities
+			Global variables
 			*/
-			function getEl(id) {
-			    return document.getElementById(id);
+			var objPageElements={};
+			var objPageVars={
+				mobile: false,
+				hammersvg: null
 			}
 
-			function logAction(event, elThis, strType){
-				console.log(strType);
-				console.log(event);
+            /*
+			Main events
+            */
+            window.onload = initPage;
 
-			}
         </script>	
         
 
