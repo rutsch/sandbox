@@ -78,6 +78,9 @@
 			p.x = evt.clientX;
 			p.y = evt.clientY;
 
+			p.x = evt.touches[0].pageX;
+			p.y = evt.touches[0].pageY;
+
 			return p;
 		}
 
@@ -153,24 +156,38 @@
 			if(evt.preventDefault)
 				evt.preventDefault();
 
+			console.log("handleMouseMove");
+
 			evt.returnValue = false;
 
 			var svgDoc = evt.target.ownerDocument;
+			//console.log(svgDoc);
 
 			var g = svgDoc.getElementById("viewport");
+			//console.log(g);
 
+			//console.log(state);
+			//console.log(opts)
 			if(state == 'pan') {
+				console.log('In pan logic (new 4)');
 				// Pan mode
 				if (!opts.pan) return;
-
+				//console.log('** stateTf');
+				console.log(stateTf);
+				console.log(getEventPoint(evt));
+				console.log('*!*');
+				console.log(evt.touches[0].pageX)
 				var p = getEventPoint(evt).matrixTransform(stateTf);
+				console.log(p);
 
 				setCTM(g, stateTf.inverse().translate(p.x - stateOrigin.x, p.y - stateOrigin.y));
+
 			} else if(state == 'move') {
 				// Move mode
 				if (!opts.drag) return;
 
 				var p = getEventPoint(evt).matrixTransform(g.getCTM().inverse());
+				console.log(p)
 
 				setCTM(stateTarget, root.createSVGMatrix().translate(p.x - stateOrigin.x, p.y - stateOrigin.y).multiply(g.getCTM().inverse()).multiply(stateTarget.getCTM()));
 
