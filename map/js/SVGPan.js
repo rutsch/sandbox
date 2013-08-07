@@ -84,6 +84,7 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 		var svgSizeXMax=null;
 		var svgSizeXMin=null;
 		var maxZoom=7, minZoom=0.3;
+		var timer1, timer2;
 
 
 
@@ -113,9 +114,12 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 		    objPageVars.hammersvg.on("dragstart", function(ev) {
 		        //if(window.console) { console.log(ev); }
 		        bolDragging=true;
-		        var t=setTimeout(function(){
-		        	bolDragging=false
+		        
+		        if(timer1)clearTimeout(timer1);
+		        timer1=setTimeout(function(){
+		        	bolDragging=false;
 		        },500);
+
 		        handleMouseDown(ev);
 		    });
 		    objPageVars.hammersvg.on("drag", function(ev) {
@@ -129,15 +133,19 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 		    objPageVars.hammersvg.on("pinch", function(ev) {
 		        //if(window.console) { console.log(ev); }
 		        bolDragging=true;
-		        var t=setTimeout(function(){
-		        	bolDragging=false
+
+				if(timer1)clearTimeout(timer1);
+		        timer1=setTimeout(function(){
+		        	bolDragging=false;
 		        },500);
+
 		        handlePinch(ev);
 		    });	
 		   	objPageVars.hammersvg.on("touch", function(ev) {
 		   		if(window.console) { console.log(ev); }
-		   		var t2=setTimeout(function(){
-		   			if(!bolDragging)handleClick(ev)
+		   		timer2=setTimeout(function(){
+		   			if(!bolDragging)handleClick(ev);
+
 		   		},100)
 				
 		    });	
