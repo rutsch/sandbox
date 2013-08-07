@@ -21,7 +21,7 @@
 
 		<!--[if !IE]> -->
 		<script>
-		    Hammer.plugins.showTouches(true);
+		    //Hammer.plugins.showTouches(true);
 		</script>
 		<!-- <![endif]-->
 
@@ -87,14 +87,11 @@
 			Executes page logic
 			*/
 			function initPage(){
-				alert('in3');
+				//alert('in3');
 
 				//set the global page variable to detect if we are running on a mobile device or not
 				objPageVars.mobile=isMobile.any();
 
-
-
-				var current = null;
 
 				//attributes for the worldmap				
 				var attr = {
@@ -105,8 +102,6 @@
 				};	
 
 					
-				
-				
 				//var width = document.getElementById('holder_1000').style.width;
 				//var height = document.getElementById('holder_1000').style.height * 0.99;
 				//alert(document.documentElement["clientHeight"]);
@@ -121,6 +116,7 @@
 				render_map(R, map, attr);
 
 				//set the effects in the map
+				var current = null;
 				for (var state in map) {							        
     	            map[state].color = Raphael.getColor();
 	                (function (st, state) {
@@ -143,8 +139,6 @@
 				}; // end for
 				
 				//document.getElementsByTagName('svg')[0].id = 'viewport';
-
-
 
 				R.safari();	
 			}

@@ -56,10 +56,14 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 		if(objPageVars.mobile){
 			//alert('mobile')
 			//initiate the hammer object on the holder div of the worldmap svg
+			//Hammer.gestures.Drag.defaults.drag_min_distance=2;
 			objPageVars.hammersvg = Hammer(root, {
 				prevent_default: true,
 				no_mouseevents: true
-			})
+			});
+
+			//finetune
+			//objPageVars.hammersvg.gestures.Drag.defaults.correct_for_drag_min_distance=false;
 
 			//alert('setup handlers3');
 			setupHandlersMobile();
@@ -74,7 +78,10 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 		initialized = true;
 
 		var elViewport=document.getElementById("viewport");
-
+		//for scale/pinch on mobile
+		var totalScale=1;
+		var pinchRemembered=1;
+		var mode="zoomin";
 
 
 		/**
@@ -94,17 +101,22 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 
 		function setupHandlersMobile(){
 		    objPageVars.hammersvg.on("dragstart", function(ev) {
-		        if(window.console) { console.log(ev); }
+		        //if(window.console) { console.log(ev); }
 		        handleMouseDown(ev);
 		    });
 		    objPageVars.hammersvg.on("drag", function(ev) {
-		        if(window.console) { console.log(ev); }
+		        //if(window.console) { console.log(ev); }
 		        handleMouseMove(ev);
 		    });		    
-		    objPageVars.hammersvg.on("dragend", function(ev) {
-		        if(window.console) { console.log(ev); }
+		    objPageVars.hammersvg.on("dragend release", function(ev) {
+		        //if(window.console) { console.log(ev); }
 		        handleMouseUp(ev);
 		    });	
+		    objPageVars.hammersvg.on("pinch", function(ev) {
+		        //if(window.console) { console.log(ev); }
+		        handlePinch(ev);
+		    });	
+		    /*		    
 		    objPageVars.hammersvg.on("pinchin", function(ev) {
 		        if(window.console) { console.log(ev); }
 		        handlePinchIn(ev);
@@ -112,7 +124,8 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 		    objPageVars.hammersvg.on("pinchout", function(ev) {
 		        if(window.console) { console.log(ev); }
 		        handlePinchOut(ev);
-		    });			    
+		    });
+		    */			    
 		}
 
 		/**
@@ -186,55 +199,82 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 			zoomSvg(evt, z);
 		}
 
-		var zRemembered=0;
+
 		function handlePinch(evt){
-			console.log(evt.gesture.scale);
+			//console.log(evt.gesture.scale);
 			var z=evt.gesture.scale;
+			var zOriginal=z;
+			
+			if(z < pinchRemembered)mode="zoomout";
+			if(z > pinchRemembered)mode="zoomin";
+
+			if(mode=="zoomout" && z>1)z=1-z;
+			if(mode=="zoomin" && z<1)z=1+(1-z);
+
+			pinchRemembered=zOriginal;
+
+			//console.log(mode);
+
 			if(z>1.05)z=1.05;
 			if(z<0.95)z=0.95;
 
-			event.log(z);
-			zoomSvg(evt, z);
+			//remember the zoom level
+			if(totalScale <= 9.5 && totalScale >= 0.5)totalScale=totalScale*z;
+
+			console.log('mode: '+mode+' z:'+z+' pinchRemembered:'+pinchRemembered+' totalScale:'+totalScale);
+
+			var bolExecuteZoom=true;
+			if(totalScale > 9.5 && mode=="zoomin")bolExecuteZoom=false;
+			if(totalScale < 0.5 && mode=="zoomout")bolExecuteZoom=false;
+
+
+			if(bolExecuteZoom)zoomSvg(evt, z);
 		}
 
 		function handlePinchIn(evt){
-			console.log('pinchin');
-			var z=evt.gesture.scale;
-			console.log(z);
-			var zCorrected=z;
-			console.log(zCorrected);
-			if(z>1.05){
-				zCorrected=1.05;
+			//console.log('pinchin');
+			var scale=evt.gesture.scale;
+			//console.log(scale);
+			var zCorrected=scale;
+			//zCorrected=2.05;
+			//console.log(zCorrected);
+
+			if(zCorrected > 1.05){
+				zCorrected = 1.05;
 			}else{
-				if(z<0.95){
-					zCorrected=0.95;
+				if(zCorrected < 0.95){
+					zCorrected = 0.95;
 				}
 			}
-				
+			
 
-			event.log(zCorrected);
+			//console.log(zCorrected);
 			zoomSvg(evt, zCorrected);
 		}
 
 		function handlePinchOut(evt){
-			console.log('pinchout');
-			var z=evt.gesture.scale;
-			console.log(z);
-			var zCorrected=z;
-			if(z>1.05){
-				zCorrected=1.05;
+			//console.log('pinchout');
+			var scale=evt.gesture.scale;
+			//console.log(scale);
+			var zCorrected=scale;
+
+			//console.log(zCorrected);
+
+			if(scale > 1.05){
+				zCorrected = 1.05;
 			}else{
-				if(z<0.95){
-					zCorrected=0.95;
+				if(scale < 0.95){
+					zCorrected = 0.95;
 				}
 			}
 				
 
-			event.log(zCorrected);
+			//console.log(zCorrected);
 			zoomSvg(evt, zCorrected);
 		}
 
 		function zoomSvg(evt, z){
+			//console.log('z: '+z);
 			var g, svgDoc;
 			if(objPageVars.mobile){
 				var g = elViewport;
