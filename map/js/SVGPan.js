@@ -54,17 +54,19 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 
 		//setup event handlers
 		if(objPageVars.mobile){
-			//alert('mobile')
+			//finetune hammer object
+			Hammer.gestures.Drag.defaults.drag_min_distance=1;
+			Hammer.gestures.Drag.defaults.correct_for_drag_min_distance=true;
 
+			//setup a hammer object for the svg worldmap
+			objPageVars.hammersvg = Hammer(document.getElementById("main_wrapper"), {
+				prevent_default: true,
+				no_mouseevents: true
+			});
 
-			//finetune
-			//objPageVars.hammer.gestures.Drag.defaults.correct_for_drag_min_distance=false;
-
-			//alert('setup handlers3');
+			//setup handlers
 			setupHandlersMobile();
-
 		}else{
-			//alert('desktop')
 			setupHandlersDesktop(root);
 		}
 		
@@ -73,6 +75,7 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 		initialized = true;
 
 		var elViewport=document.getElementById("viewport");
+		var bolDragging=false;
 		//for scale/pinch on mobile
 		var pinchRemembered=1;
 		var mode="zoomin";
@@ -93,35 +96,57 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 			root.onmouseup = handleMouseUp;
 			//root.onmouseout = handleMouseUp; // Decomment this to stop the pan functionality when dragging out of the SVG element
 
-			if(navigator.userAgent.toLowerCase().indexOf('webkit') >= 0)
+			if(navigator.userAgent.toLowerCase().indexOf('webkit') >= 0){
 				window.addEventListener('mousewheel', handleMouseWheel, false); // Chrome/Safari
-			else
+			}else{
 				window.addEventListener('DOMMouseScroll', handleMouseWheel, false); // Others
+			}
+			
+			//root.onclick = handleClick;
+
 		}
 
+
+
 		function setupHandlersMobile(){
-		    objPageVars.hammer.on("dragstart", function(ev) {
+			//a few "cheap" tricks to work around the tap-issue (sometimes you need to tap twice to trigger the event...)
+		    objPageVars.hammersvg.on("dragstart", function(ev) {
 		        //if(window.console) { console.log(ev); }
+		        bolDragging=true;
+		        var t=setTimeout(function(){
+		        	bolDragging=false
+		        },500);
 		        handleMouseDown(ev);
 		    });
-		    objPageVars.hammer.on("drag", function(ev) {
+		    objPageVars.hammersvg.on("drag", function(ev) {
 		        //if(window.console) { console.log(ev); }
 		        handleMouseMove(ev);
 		    });		    
-		    objPageVars.hammer.on("dragend release", function(ev) {
+		    objPageVars.hammersvg.on("dragend release", function(ev) {
 		        //if(window.console) { console.log(ev); }
 		        handleMouseUp(ev);
 		    });	
-		    objPageVars.hammer.on("pinch", function(ev) {
+		    objPageVars.hammersvg.on("pinch", function(ev) {
 		        //if(window.console) { console.log(ev); }
+		        bolDragging=true;
+		        var t=setTimeout(function(){
+		        	bolDragging=false
+		        },500);
 		        handlePinch(ev);
 		    });	
+		   	objPageVars.hammersvg.on("touch", function(ev) {
+		   		if(window.console) { console.log(ev); }
+		   		var t2=setTimeout(function(){
+		   			if(!bolDragging)handleClick(ev)
+		   		},100)
+				
+		    });	
 		    /*		    
-		    objPageVars.hammer.on("pinchin", function(ev) {
+		    objPageVars.hammersvg.on("pinchin", function(ev) {
 		        if(window.console) { console.log(ev); }
 		        handlePinchIn(ev);
 		    });	
-		    objPageVars.hammer.on("pinchout", function(ev) {
+		    objPageVars.hammersvg.on("pinchout", function(ev) {
 		        if(window.console) { console.log(ev); }
 		        handlePinchOut(ev);
 		    });
@@ -171,6 +196,26 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 			for (i in attributes)
 				element.setAttributeNS(null, i, attributes[i]);
 		}
+
+		/**
+		 * Handle mouse click event.
+		 */
+		 function handleClick(evt, el){
+	   		//get the id of the clicked element - that corresponds to the country that the user has clicked on
+	   		var idCountry="";
+
+	   		if(objPageVars.mobile){
+				var elSvg=evt.srcElement;
+				idCountry=elSvg.id;
+	   		}else{
+	   			//console.log(evt);
+	   			console.log(el);
+	   		}
+	   		
+
+	   		countryClicked(idCountry);
+
+		 }
 
 		/**
 		 * Handle mouse move event.

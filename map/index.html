@@ -11,7 +11,7 @@
     </head>
     <body style="position:absolute;overflow: hidden;left: 0px;right: 0px;">
     	
-    	<div onclick="alert(); location.reload()">reload</div>
+    	<div onclick="location.reload()">reload</div>
 
     	<!-- anything inside this div is multitouch enabled -->
     	<div id="main_wrapper">
@@ -33,12 +33,22 @@
 		<!-- <![endif]-->
 
 		<script type="text/javascript">        
+			/*
+			Map interactions
+			*/
+
+			//fired when a country is clicked in the interface
+			function countryClicked(idCountry){
+				alert(idCountry)
+
+			}
 
 
 			/*
 			Utilities
 			*/
 			var isMobile = {
+			    /*
 			    Android: function() {
 			        return navigator.userAgent.match(/Android/i);
 			    },
@@ -54,9 +64,12 @@
 			    Windows: function() {
 			        return navigator.userAgent.match(/IEMobile/i);
 			    },
+			    */
 			    any: function() {
-			        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+			        //return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+			        return 'ontouchstart' in document.documentElement;
 			    }
+
 			};
 
 
@@ -98,17 +111,11 @@
 
 				//set the global page variable to detect if we are running on a mobile device or not
 				objPageVars.mobile=isMobile.any();
+				alert(objPageVars.mobile);
 
 				//initiate the hammer object to capture multitouch events
 				if(objPageVars.mobile){
-					//initiate the hammer object on the holder div of the worldmap svg
-					Hammer.gestures.Drag.defaults.drag_min_distance=1;
-					Hammer.gestures.Drag.defaults.correct_for_drag_min_distance=true;
-
-					objPageVars.hammer = Hammer(document.getElementById("main_wrapper"), {
-						prevent_default: true,
-						no_mouseevents: true
-					});
+					//setup hammer objects here for the panel and the sliders
 
 				}
 
@@ -136,26 +143,36 @@
 
 				//set the effects in the map
 				var current = null;
-				for (var state in map) {							        
-    	            map[state].color = Raphael.getColor();
-	                (function (st, state) {
-						st[0].style.cursor = "pointer";
-						st[0].onmouseover = function () {
-							current && map[current].animate({fill: "#333", stroke: "#666"}, 300);
-							st.animate({fill: st.color, stroke: "#ccc"}, 300);
-							R.safari();
-							current = state;
-						};
-						st[0].onmouseout = function () {
-							st.animate({fill: "#333", stroke: "#666"}, 300);
-							R.safari();
-						};
-						
-						st[0].onclick = function () {
-							//alert(state);
-						};
-					})(map[state], state);
-				}; // end for
+				if(objPageVars.mobile){
+					//on mobile - set the id of the country in the generated SVG map so that we can pick it up
+					for (var state in map) {
+						//console.log(state);
+						map[state].node.id=state;
+					}
+				}else{
+					for (var state in map) {
+						map[state].node.id=state;							        
+	    	            map[state].color = Raphael.getColor();
+		                (function (st, state) {
+							st[0].style.cursor = "pointer";
+							st[0].onmouseover = function () {
+								current && map[current].animate({fill: "#333", stroke: "#666"}, 300);
+								st.animate({fill: st.color, stroke: "#ccc"}, 300);
+								R.safari();
+								current = state;
+							};
+							st[0].onmouseout = function () {
+								st.animate({fill: "#333", stroke: "#666"}, 300);
+								R.safari();
+							};
+							
+							st[0].onclick = function () {
+								countryClicked(state);
+							};
+						})(map[state], state);
+					}; // end for					
+				}
+
 				
 				//document.getElementsByTagName('svg')[0].id = 'viewport';
 
@@ -168,7 +185,8 @@
 			var objPageElements={};
 			var objPageVars={
 				mobile: false,
-				hammer: null
+				hammer: null,
+				hammersvg: null
 			}
 
             /*
