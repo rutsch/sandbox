@@ -145,7 +145,7 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 		   		if(window.console) { console.log(ev); }
 		   		timer2=setTimeout(function(){
 		   			if(!bolDragging)handleClick(ev);
-
+		   			bolDragging=false;
 		   		},100)
 				
 		    });	
