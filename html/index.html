@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]>    <html class="no-js iem7"> <![endif]-->
+<!--[if (gt IEMobile 7)|!(IEMobile)]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+    </head>
+    <body>
+		<div id="app_panel" class="panel full">
+			<div id="title_bar">
+				<div id="btn_back" onclick="btn_back_to_map_click();"></div>
+				<div id="info">
+					<div id="region_name"></div>
+					<div id="filter_breadcrumb"></div>
+				</div>
+				<div id="toggle_favourite"></div>
+			</div>
+			<div id="app_wrapper">
+				<div id="map" onclick="region_click();"></div>
+				<div id="region_info" onclick="btn_back_to_map_click();"></div>
+				<div id="lives_improved"></div>
+			</div>
+			<div id="menu_bar">
+				<div id="btn_bookmarks" class="btn" onclick="btn_bookmarks_click();"></div>
+				<div id="btn_filter" class="btn" onclick="btn_filter_click();"></div>
+				<div id="btn_explain" class="btn" onclick="btn_explain_click();"></div>			
+				<div id="btn_logout" class="btn" onclick="btn_logout_click();"></div>
+			</div>
+		</div>
+		<div id="login_panel" class="panel full">
+			<form id="login">
+				<input type="text" placeholder="Account"/>
+				<input type="password" placeholder="Password"/>
+				<input type="submit" id="btn_submit" class="btn btn_login" onclick="btn_submit_click();return false;"/>
+			</form>
+			
+		</div>
+		<div id="filter_panel" class="panel modal">
+			<div id="btn_close_filter" class="btn btn_close" onclick="btn_close_filter_click();">Close</div>
+		</div>
+		<div id="explain_panel" class="panel modal">
+			<div id="btn_close_explain" class="btn btn_close" onclick="btn_close_explain_click();">Close</div>
+		</div>
+		<div id="bookmarks_panel" class="panel modal">
+			<div id="btn_close_bookmarks" class="btn btn_close" onclick="btn_close_bookmarks_click();">Close</div>
+		</div>
+		<div id="overlay"></div>
+		
+		<script src="js/tweenmax.js"></script>
+		<script type="text/javascript" src="js/app.js">//</script>
+    </body>
+</html>    

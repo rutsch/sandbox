@@ -1,0 +1,199 @@
+body{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	left: 0px;
+	bottom: 0px;
+	overflow: hidden;
+	margin: 0px;
+	font: -webkit-small-control;
+}
+
+.panel{
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	overflow: hidden;
+
+}
+.panel.modal{
+	top: 10px;
+	bottom: 10px;
+	left: 10px;
+	right: 10px;	
+	z-index: 4;
+	opacity: 0;
+	display: none;
+	/*transition: all 0.4s ease-out, height 0.4s ease-out 0.4s;
+	-webkit-transition: all 0.4s ease-out, height 0.4s ease-out 0.4s;		*/
+}
+.btn{
+	float: left;
+	padding-top: 36px;
+	border: 1px solid #1f1f1f;
+	background: #1f1f1f;
+	width: 25%;
+	height: 60px;
+	color: #fff;
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+}
+.btn_close{
+	width: 50px;
+	height: 50px;
+	float: right;
+	padding: 15px 0 0 0;
+	text-align: center;
+}
+#title_bar{
+	position: absolute;
+	top: 0px;
+	background: #efefef;
+	height: 60px;
+	width: 100%;	
+	border-bottom: 1px solid #e7e7e7;
+}
+#btn_back{
+	width: 60px;
+	height: 60px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background:url('../img/back_btn.png') no-repeat 20px 12px;
+	background-size: auto 55%;
+}
+#toggle_favourite{
+	width: 60px;
+	height: 60px;
+	position: absolute;
+	top: 0px;
+	right: 0px;	
+	background:url('../img/add_favourite.png') no-repeat 5px 15px;	
+	background-size: auto 45%;
+}
+#info{
+
+}
+#region_name{
+
+}
+#filter_breadcrumb{
+
+}
+#menu_bar{
+	position: absolute;
+	bottom: 0px;
+	height: 60px;
+	width: 100%;
+	text-align: center;
+}
+#menu_bar .btn{
+	background-size: auto 80%;
+}
+#btn_bookmarks{
+	background: #272c2d url('../img/bookmarks.png') no-repeat 50% 10px;	
+}
+#btn_filter{
+	background: #272c2d url('../img/filters.png') no-repeat 50% 10px;	
+}
+#btn_explain{
+	background: #272c2d url('../img/faq.png') no-repeat 50% 8px;	
+}
+#btn_logout{
+	background: #272c2d url('../img/logout.png') no-repeat 50% 10px;	
+}
+
+#app_panel{
+	display: block;
+	z-index: 1;
+}
+#app_wrapper{
+	position: absolute;
+	top: 60px;
+	bottom: 60px;
+	left: 0px;
+	right: 0px;
+}
+#map{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	height: 100%;	
+	background: #fff url('../img/map.png') no-repeat center;
+	background-size: auto 100%;
+	background-position: fixed;
+}
+#region_info{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	height: 0px;
+	width: 100%;
+	background: #fff url('../img/germany.png') no-repeat center;
+	background-size: auto 100% ;
+	background-position: fixed;
+}
+#lives_improved{
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	height: 0px;
+	width: 100%;
+	border-top: 1px solid #e7e7e7;
+	background: #fff url('../img/lives_improved.png') no-repeat center;
+	background-size: auto 100%;
+	background-position: fixed;
+}
+#login_panel{
+	background-color: #f4f4f4;
+	background-image:url('../img/login_bg.png');
+	background-repeat: no-repeat;
+	background-position: fixed;
+	background-size: auto 100% ;
+	z-index: 2;
+}
+#login{
+	position: absolute;
+	bottom: 100px;
+	left: 50px;
+	right: 50px;
+	bottom: 150px;
+}
+#login input{
+	width: 100%;
+	height: 40px;
+	margin: 0 0 10px 0;
+} 
+#btn_submit{
+	position: relative;
+	right: 0px;
+	left: 0px;
+	bottom: 0px;
+	padding: 0px;
+	width:100%;
+}
+#overlay{
+	position: absolute;
+	z-index: 3;
+	background: #000;
+	display: none;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	/*transition: opacity 0.4s ease-out, height 0.4s ease-out 0.4s;
+	-webkit-transition: opacity 0.4s ease-out, height 0.4s ease-out 0.4s;		*/
+}
+#filter_panel{
+	background: #fff;
+}
+#bookmarks_panel{
+	background: #fff;
+}
+#explain_panel{
+	background: #fff;
+}
