@@ -10,7 +10,13 @@
 
     </head>
     <body style="position:absolute;overflow: hidden;left: 0px;right: 0px;">
-		<div id="holder_1000" style="position:relative;"></div>
+    	<!-- anything inside this div is multitouch enabled -->
+    	<div onclick="location.reload()">reload</div>
+    	<div id="main_wrapper">
+			
+			<div id="holder_1000" style="position:relative;"></div>
+		</div>
+
         <!-- Add your site or application content here -->
 		
 		<script src="js/hammer.js" type="text/javascript">//</script>
@@ -92,6 +98,18 @@
 				//set the global page variable to detect if we are running on a mobile device or not
 				objPageVars.mobile=isMobile.any();
 
+				//initiate the hammer object to capture multitouch events
+				if(objPageVars.mobile){
+					//initiate the hammer object on the holder div of the worldmap svg
+					Hammer.gestures.Drag.defaults.drag_min_distance=1;
+					Hammer.gestures.Drag.defaults.correct_for_drag_min_distance=true;
+
+					objPageVars.hammer = Hammer(document.getElementById("main_wrapper"), {
+						prevent_default: true,
+						no_mouseevents: true
+					});
+
+				}
 
 				//attributes for the worldmap				
 				var attr = {
@@ -149,7 +167,7 @@
 			var objPageElements={};
 			var objPageVars={
 				mobile: false,
-				hammersvg: null
+				hammer: null
 			}
 
             /*
