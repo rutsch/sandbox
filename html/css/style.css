@@ -1,3 +1,6 @@
+*{
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);	
+}
 body{
 	position: absolute;
 	top: 0px;
@@ -133,9 +136,7 @@ body{
 	right: 0px;
 	height: 0px;
 	width: 100%;
-	background: #fff url('../img/germany.png') no-repeat center;
-	background-size: auto 100% ;
-	background-position: fixed;
+	background-color: #f4f4f4;
 }
 #lives_improved{
 	position: absolute;
@@ -145,9 +146,7 @@ body{
 	height: 0px;
 	width: 100%;
 	border-top: 1px solid #e7e7e7;
-	background: #fff url('../img/lives_improved.png') no-repeat center;
-	background-size: auto 100%;
-	background-position: fixed;
+	background-color: #f4f4f4;
 }
 #login_panel{
 	background-color: #f4f4f4;
@@ -196,4 +195,39 @@ body{
 }
 #explain_panel{
 	background: #fff;
+}
+input[type='range'] {
+    -webkit-appearance: none;
+    width: 280px;
+    height: 1px;
+    padding: 0px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    border: 1px solid #525252;
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #000000),
+        color-stop(1, #222222)
+    );
+}
+input[type='range']::-webkit-slider-thumb {  
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-image: 
+    -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #000),
+        color-stop(0.49, #dddddd),
+        color-stop(0.51, #d1d1d1),
+        color-stop(1, #a1a1a1)
+    );
+    background-repeat: no-repeat;
+    background-position: 50%;
 }

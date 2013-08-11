@@ -7,11 +7,59 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<script>
+			var sec={},
+				back={};
+
+			function updateVal(value, total, R, hand, id) {
+			    hand.animate({arc: [value, total, R]}, 1500, "bounce");
+			}
+            function initCircle() {
+                var r = Raphael("holder", 200, 200),
+                    R = 50,
+                    init = true,
+                    param = {stroke: "#fff", "stroke-width": 15},
+                    hash = document.location.hash,
+                    marksAttr = {fill: hash || "#444", stroke: "none"};
+                
+                // Custom Attribute
+                r.customAttributes.arc = function (value, total, R, c) {
+                	var color;
+                	//console.log(c);
+                	if (c == 0){
+                		color = '#000000';
+                	}else{
+                		color = '#9400D3';
+                	}
+                	//console.log(color);
+                    var alpha = 360 / total * value,
+                        a = (90 - alpha) * Math.PI / 180,
+                        x = 100 + R * Math.cos(a),
+                        y = 100 - R * Math.sin(a),
+                        path;
+
+                    if (total == value) {
+                        path = [["M", 100, 100 - R], ["A", R, R, 0, 1, 1, 99.99, 100 - R]];
+                    } else {
+                        path = [["M", 100, 100 - R], ["A", R, R, 0, +(alpha > 180), 1, x, y]];
+                    }
+                    return {path: path, stroke: color};
+                };
+                sec = r.path().attr(param).attr({arc: [0, 100, R, 1]});
+                back = r.path().attr(param).attr({arc: [0, 100, R, 0]});
+
+                
+
+                updateVal(0, 100, 50, sec, 2);
+                updateVal(0, 100, 50, back, 2);
+
+            };
+        </script>		
     </head>
     <body>
 		<div id="app_panel" class="panel full">
 			<div id="title_bar">
-				<div id="btn_back" onclick="btn_back_to_map_click();"></div>
+				<div id="btn_back" onclick="btnBackToMapClick();"></div>
 				<div id="info">
 					<div id="region_name"></div>
 					<div id="filter_breadcrumb"></div>
@@ -19,37 +67,42 @@
 				<div id="toggle_favourite"></div>
 			</div>
 			<div id="app_wrapper">
-				<div id="map" onclick="region_click();">
+				<div id="map">
 			    	<div id="main_wrapper">
 						<div id="holder_1000"></div>
 					</div>				
 				</div>
-				<div id="region_info" onclick="btn_back_to_map_click();"></div>
-				<div id="lives_improved"></div>
+				<div id="region_info" onclick="btnBackToMapClick();">
+
+				</div>
+				<div id="lives_improved">
+					<input type="range">
+					<div id="holder"></div>
+				</div>
 			</div>
 			<div id="menu_bar">
-				<div id="btn_bookmarks" class="btn" onclick="btn_bookmarks_click();"></div>
-				<div id="btn_filter" class="btn" onclick="btn_filter_click();"></div>
-				<div id="btn_explain" class="btn" onclick="btn_explain_click();"></div>			
-				<div id="btn_logout" class="btn" onclick="btn_logout_click();"></div>
+				<div id="btn_bookmarks" class="btn" onclick="btnBookmarksClick();"></div>
+				<div id="btn_filter" class="btn" onclick="btnFilterClick();"></div>
+				<div id="btn_explain" class="btn" onclick="btnExplainClick();"></div>			
+				<div id="btn_logout" class="btn" onclick="btnLogoutClick();"></div>
 			</div>
 		</div>
 		<div id="login_panel" class="panel full">
 			<form id="login">
 				<input type="text" placeholder="Account"/>
 				<input type="password" placeholder="Password"/>
-				<input type="submit" id="btn_submit" class="btn btn_login" onclick="btn_submit_click();return false;"/>
+				<input type="submit" id="btn_submit" class="btn btn_login" onclick="btnSubmitClick();return false;"/>
 			</form>
 			
 		</div>
 		<div id="filter_panel" class="panel modal">
-			<div id="btn_close_filter" class="btn btn_close" onclick="btn_close_filter_click();">Close</div>
+			<div id="btn_close_filter" class="btn btn_close" onclick="btnCloseFilterClick();">Close</div>
 		</div>
 		<div id="explain_panel" class="panel modal">
-			<div id="btn_close_explain" class="btn btn_close" onclick="btn_close_explain_click();">Close</div>
+			<div id="btn_close_explain" class="btn btn_close" onclick="btnCloseExplainClick();">Close</div>
 		</div>
 		<div id="bookmarks_panel" class="panel modal">
-			<div id="btn_close_bookmarks" class="btn btn_close" onclick="btn_close_bookmarks_click();">Close</div>
+			<div id="btn_close_bookmarks" class="btn btn_close" onclick="btnCloseBookmarksClick();">Close</div>
 		</div>
 		<div id="overlay"></div>
 		
