@@ -196,6 +196,9 @@ body{
 #explain_panel{
 	background: #fff;
 }
+#producttree_temp{
+	display: none;
+}
 input[type='range'] {
     -webkit-appearance: none;
     width: 280px;
