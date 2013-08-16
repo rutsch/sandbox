@@ -24,8 +24,19 @@ function plot(lat, lon, size) {
 	size = size * .5 + 4;
 	return R.circle(lon2x(lon), lat2y(lat), size).attr(city_attr);
 }
-function ajax(url, cb) {
-	var xmlhttp;
+function getParamStringFromObject(objParams){
+	var params = []; 
+
+	for (var param in objParams) {
+		params.push(param + '=' + objParams[param]);
+	}        
+	return params.join('&');
+
+}
+function psv(type, url, objParams, cb) {
+	var xmlhttp,
+	strParams = '';
+	
 	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
 		xmlhttp = new XMLHttpRequest();
 	} else {// code for IE6, IE5
@@ -35,31 +46,21 @@ function ajax(url, cb) {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			cb(xmlhttp.responseText);
 		}
+	};
+	
+	strParams = getParamStringFromObject(objParams);
+	
+	xmlhttp.open(type, url + (type==="GET" ? '?'+strParams : ''), true);
+	
+	xmlhttp.crossDomain=true;
+	xmlhttp.withCredentials = true;	
+	if(type =="POST"){
+		xmlhttp.timeout = 40000;
+		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xmlhttp.send(strParams);		
+	}else{
+		xmlhttp.send();
 	}
-	xmlhttp.open("GET", url, true);
-	xmlhttp.send();
-}
- 
-function getJSON(url, data, cb) {
-	var src = url + (url.indexOf("?")+1 ? "&" : "?");
-	var head = document.getElementsByTagName("head")[0];
-	var newScript = document.createElement("script");
-	var params = [];
-	var param_name = ""
-	
-	this.success = cb;
-	
-	data["callback"] = "success";
-	for(param_name in data){  
-	    params.push(param_name + "=" + encodeURIComponent(data[param_name]));  
-	}
-	src += params.join("&")
-	
-	newScript.type = "text/javascript";  
-	newScript.src = src;
-	
-	if(this.currentScript) head.removeChild(currentScript);
-	head.appendChild(newScript); 
 }
 
 
@@ -67,11 +68,69 @@ function getJSON(url, data, cb) {
  * Click functions
  */
 function btnSubmitClick() {
-	TweenLite.to(panels.login, 0.3, {
-		width : 0
-	});
+	showLoadingPanel();
+	// Start authentication
+	getEl('btn_submit').style.border = '1px solid red';
+	var un = getEl("username").value, 
+		pw = getEl("password").value,
+		handleLoginError = function(msg){
+			hideLoadingPanel();
+			getEl("username").value = '';
+			getEl("password").value = '';
+			getEl('btn_submit').style.border = 'none';
+			showErrorDiv(msg, true);			
+		};
+	if(un == "" || pw == "") {
+		alert('Please enter a code1 account and a password');
+	}else{
+		if(un.toLowerCase().indexOf('code1\\') == -1) un = 'code1\\' + un;
+		var objData = {
+			type: 'json',
+			fulldomain: location.protocol+"//"+location.hostname
+		};
+		psv('GET', authUrl1, objData, function(response){
+        	if(response.error) {
+        		handleLoginError(response.error.message);
+        	}else{			
+				objData.stay = true;
+				psv('GET', authUrl1, objData, function(response){
+	            	if(response.error) {
+	            		handleLoginError(response.error.message);
+	            	}else{				
+						objData.method='generatejsvarsjson';
+						psv('GET', authUrl2, objData, function(response){
+							if(response.error) {
+								handleLoginError(response.error.message);
+							}else{
+			                    var objDataAuthenticate = {
+			                            username: un,
+			                            password: pw,
+			                            url: '/index.aspx',
+			                            token: JSON.parse(response).token,
+			                            type: 'json',
+			                            fulldomain: location.protocol+"//"+location.hostname
+			                    };
+			                    
+			                    psv('POST', authUrl3, objDataAuthenticate, function(response){
+			                    	response = JSON.parse(response);
+			                    	if(response.error) {
+			                    		handleLoginError(response.error.message);
+			                    	}else{
+			                    		hideLoadingPanel();
+			                    		startApp();                   		
+			                    	}
+			                    });						
+							}
+						});
+	            	}
+				});
+        	}
+		});
+	}
 }
+
 function btnBackToMapClick() {
+	objPageElements.regionRaphael.remove();
 	TweenLite.to(appPanels.region_info, 0.4, {
 		height : 0
 	});
@@ -87,9 +146,9 @@ function regionClick(idCountry) {
 	TweenLite.to(appPanels.lives_improved, 0.4, {
 		height : '60%',
 		onComplete : function() {
-			var R = Raphael("region_info", 200, 200);
-			R.setViewBox(0, 0, 200, 200, true);
-			var path = R.path(
+			objPageElements.regionRaphael = Raphael("region_info", 200, 200);
+			objPageElements.regionRaphael.setViewBox(0, 0, 200, 200, true);
+			var path = objPageElements.regionRaphael.path(
 					objPageElements.map[idCountry].node.getAttribute("d"))
 					.attr({
 						fill : '#000000',
@@ -97,10 +156,6 @@ function regionClick(idCountry) {
 						'stroke-width' : 1
 					});
 			updateVal(90, 100, 50, sec, 2);
-			// debugger;
-			// objPageVars.selectedregionpath =
-			// document.getElementById(idCountry).cloneNode(true);
-			// document.getElementById("region_svg").appendChild(objPageVars.selectedregionpath);
 		}
 	});
 }
@@ -219,7 +274,14 @@ function renderMruFilterComponent(){
  * Data functions
  */
 function getMruHtml() {
-	getJSON(mruUrl, {}, function(data) {
+	var objData = {
+		fulldomain: location.protocol+"//"+location.hostname,
+		method:'getproductdata',
+		type:'json',
+		snapshotid:1		
+	}
+	psv('GET', mruUrl, objData, function(data) {
+		data = JSON.parse(data);
 		panels.mruhtml.innerHTML = data.html;
 		renderMruFilterComponent();
 	});
@@ -310,7 +372,69 @@ function renderWorldmap() {
 	R.safari();
 	objPageElements.raphaelmap = R;
 }
+/*
+ * functions
+ */
+function showLoadingPanel(){
+	panels.overlay.style.display = "block";
+	TweenLite.to(panels.overlay, 0.3, {
+		opacity : 0.7,
+		delay : 0,
+		onComplete : function() {
+			panels.loading.style.display = "block";
+			TweenLite.to(panels.loading, 0.4, {
+				display : 'block',
+				opacity : 1,
+				delay : 0
+			});
+		}
+	});
+}
+function hideLoadingPanel(){
+	TweenLite.to(panels.loading, 0.4, {
+		opacity : 0,
+		delay : 0,
+		onComplete : function() {
+			panels.loading.style.display = "none";
+			TweenLite.to(panels.overlay, 0.3, {
+				display : 'block',
+				opacity : 0,
+				delay : 0,
+				onComplete: function(){
+					panels.overlay.style.display = "none";
+				}
+			});
+		}
+	});
+}
+function showErrorDiv(strMessage, autoClose){
+	panels.error.innerHTML = strMessage;
+	TweenLite.to(panels.error, 0.3, {
+		opacity : 1
+	});	
+	if(autoClose) setTimeout(function(){hideErrorDiv();}, 5000);
+}
+function hideErrorDiv(){
+	TweenLite.to(panels.error, 0.3, {
+		opacity : 0,
+		delay : 0,
+		onComplete : function() {
+			panels.error.innerHTML = '';
+		}
+	});
+}
+function startApp(){
 
+	//when done animate loginpanel to background
+	TweenLite.to(panels.login, 0.3, {
+		width : 0,
+		onComplete: function(){
+			getMruHtml();
+			renderWorldmap();
+			initCircle();			
+		}
+	});   	
+}
 /*
  * Executes page logic
  */
@@ -323,7 +447,9 @@ function initPage() {
 		filter : getEl('filter_panel'),
 		explain : getEl('explain_panel'),
 		overlay : getEl('overlay'),
-		mruhtml: getEl('producttree_temp')
+		mruhtml: getEl('producttree_temp'),
+		error: getEl('error'),
+		loading: getEl('loading')
 	}
 	appPanels = {
 		map : getEl('map'),
@@ -351,9 +477,11 @@ function initPage() {
 
 	// get mru data to create filter
 
-	getMruHtml();
-	renderWorldmap();
-	initCircle();
+	
+	if(objPageVars.signedin && objPageVars.token !==""){
+		startApp();
+	}
+	
 }
 function onResize() {
 	objPageVars.width = document.body.clientWidth;
@@ -369,9 +497,12 @@ function onResize() {
 var panels = {};
 var appPanels = {};
 var objPageElements = {
-	map : {}
+	map : {},
+	regionRaphael: {}
 };
 var objPageVars = {
+	token: '',
+	signedin: false,
 	mobile : false,
 	hammer : null,
 	width : document.body.clientWidth,
@@ -383,7 +514,10 @@ var isMobile = {
 		return 'ontouchstart' in document.documentElement;
 	}
 };
-var mruUrl = "https://www.troperlaunna2010.philips.com/tools/dynamic_resources_cached.aspx?method=getproductdata&type=json&snapshotid=1";
+var mruUrl = "https://www.troperlaunna2010.philips.com/tools/dynamic_resources_cached.aspx";
+var authUrl1 = "https://www.troperlaunna2010.philips.com/pages/login/login.aspx";
+var authUrl2 = "https://www.troperlaunna2010.philips.com/tools/dynamic_resources.aspx";
+var authUrl3 = "https://www.troperlaunna2010.philips.com/pages/login/authenticate_user.aspx";
 var currentScript = null,
 	success = null;
 

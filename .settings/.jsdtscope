@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="hammer_plugins/" kind="src" path="html/js"/>
+	<classpathentry kind="src" path="html/js/hammer_plugins"/>
+	<classpathentry excluding="tools/mobile-bookmark-bubble/|js/vendor/|js/|tools/mobile-bookmark-bubble/example/|js/hammer_plugins/" kind="src" path="map"/>
+	<classpathentry excluding="vendor/|hammer_plugins/" kind="src" path="map/js"/>
+	<classpathentry kind="src" path="map/js/hammer_plugins"/>
+	<classpathentry kind="src" path="map/js/vendor"/>
+	<classpathentry excluding="example/" kind="src" path="map/tools/mobile-bookmark-bubble"/>
+	<classpathentry kind="src" path="map/tools/mobile-bookmark-bubble/example"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
+</classpath>

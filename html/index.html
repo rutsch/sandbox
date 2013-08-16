@@ -89,11 +89,10 @@
 		</div>
 		<div id="login_panel" class="panel full">
 			<form id="login">
-				<input type="text" placeholder="Account"/>
-				<input type="password" placeholder="Password"/>
+				<input type="text" id="username" placeholder="Account" value=""/>
+				<input type="password" id="password" placeholder="Password" value=""/>
 				<input type="submit" id="btn_submit" class="btn btn_login" onclick="btnSubmitClick();return false;"/>
 			</form>
-			
 		</div>
 		<div id="filter_panel" class="panel modal">
 			<div id="btn_close_filter" class="btn btn_close" onclick="btnCloseFilterClick();">Close</div>
@@ -105,7 +104,9 @@
 			<div id="btn_close_bookmarks" class="btn btn_close" onclick="btnCloseBookmarksClick();">Close</div>
 		</div>
 		<div id="overlay"></div>
+		<div id="loading"></div>
 		<div id="producttree_temp"></div>
+		<div id="error" onclick="hideErrorDiv();"></div>
 		
 		<script src="js/tweenmax.js"></script>
 		<script src="js/hammer.js" type="text/javascript">//</script>
