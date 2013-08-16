@@ -44,7 +44,7 @@ function psv(type, url, objParams, cb) {
 	}
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			cb(xmlhttp.responseText);
+			cb(JSON.parse(xmlhttp.responseText));
 		}
 	};
 	
@@ -106,13 +106,13 @@ function btnSubmitClick() {
 			                            username: un,
 			                            password: pw,
 			                            url: '/index.aspx',
-			                            token: JSON.parse(response).token,
+			                            token: response.token,
 			                            type: 'json',
 			                            fulldomain: location.protocol+"//"+location.hostname
 			                    };
 			                    
 			                    psv('POST', authUrl3, objDataAuthenticate, function(response){
-			                    	response = JSON.parse(response);
+			                    	//response = JSON.parse(response);
 			                    	if(response.error) {
 			                    		handleLoginError(response.error.message);
 			                    	}else{
@@ -273,7 +273,7 @@ function renderMruFilterComponent(){
 /*
  * Data functions
  */
-function getMruHtml() {
+function getMruHtml(cb) {
 	var objData = {
 		fulldomain: location.protocol+"//"+location.hostname,
 		method:'getproductdata',
@@ -281,9 +281,7 @@ function getMruHtml() {
 		snapshotid:1		
 	}
 	psv('GET', mruUrl, objData, function(data) {
-		data = JSON.parse(data);
-		panels.mruhtml.innerHTML = data.html;
-		renderMruFilterComponent();
+		cb(null, data);
 	});
 }
 
@@ -429,9 +427,37 @@ function startApp(){
 	TweenLite.to(panels.login, 0.3, {
 		width : 0,
 		onComplete: function(){
-			getMruHtml();
-			renderWorldmap();
-			initCircle();			
+	    	async.parallel({
+	    		// load everything needed to start rendering all html parts
+	    		// load bookmarks from storage
+	    	    bookmarksHtmlArray: function(callback){
+	    	    	callback(null, null);
+	    	    },
+	    	    // load mru HTML for latest snapshot id
+	    	    mruHtml: function(callback){
+	    	    	getMruHtml(function(err, data){
+	    				//if(err) callback(err);
+	    				callback(null, data.html);
+	    			});
+	    	    },
+	    	    // load mru HTML for latest snapshot id
+	    	    oruJson: function(callback){
+	    	    	callback(null, null);
+	    	    },
+	    	    snapshotConfig: function(callback){
+	    	    	callback(null, null);
+	    	    }
+	    	},
+	    	// all done
+	    	function(err, results) {
+	    		
+	    		panels.mruhtml.innerHTML = results.mruHtml;
+	    		renderMruFilterComponent();	    		
+				renderWorldmap();
+				initCircle();	
+	    	});			
+			
+		
 		}
 	});   	
 }
