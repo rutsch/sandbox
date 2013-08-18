@@ -146,15 +146,6 @@ function regionClick(idCountry) {
 	TweenLite.to(appPanels.lives_improved, 0.4, {
 		height : '60%',
 		onComplete : function() {
-			objPageElements.regionRaphael = Raphael("region_info", 200, 200);
-			objPageElements.regionRaphael.setViewBox(0, 0, 200, 200, true);
-			var path = objPageElements.regionRaphael.path(
-					objPageElements.map[idCountry].node.getAttribute("d"))
-					.attr({
-						fill : '#000000',
-						stroke : '#000000',
-						'stroke-width' : 1
-					});
 			updateVal(90, 100, 50, sec, 2);
 		}
 	});
@@ -275,7 +266,7 @@ function renderMruFilterComponent(){
  */
 function getMruHtml(cb) {
 	var objData = {
-		fulldomain: location.protocol+"//"+location.hostname,
+		fulldomain: 'http://97.95.163.236',//location.protocol+"//"+location.hostname,
 		method:'getproductdata',
 		type:'json',
 		snapshotid:1		
@@ -527,8 +518,8 @@ var objPageElements = {
 	regionRaphael: {}
 };
 var objPageVars = {
-	token: '',
-	signedin: false,
+	token: 'empty',
+	signedin: true,
 	mobile : false,
 	hammer : null,
 	width : document.body.clientWidth,
