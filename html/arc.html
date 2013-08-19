@@ -1,44 +1,44 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <style>
-      body {
-        margin: 0px;
-        padding: 0px;
-      }
+	<style>
+	  body {
+		margin: 0px;
+		padding: 0px;
+	  }
 
-      /* svg styling */
-      path#arc_path, circle#background{
+	  /* svg styling */
+	  path#arc_path, circle#background{
 		fill: none;
 		stroke-width: 20;       	
-      }
-      path#arc_path{
+	  }
+	  path#arc_path{
 		stroke: green      	
-      }
-      circle#background{
-      	stroke-opacity: .8;
+	  }
+	  circle#background{
+		stroke-opacity: .8;
 		stroke: blue
-      }
-    </style>
+	  }
+	</style>
   </head>
   <body>
 
-	<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="95%" height="95%" viewBox="-10 -10 220 220">
+	<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="80%" height="80%" viewBox="-10 -10 220 220">
 
 		
 	  <g fill="none" transform="translate(-100,-100)">
 			<circle id="background" cx="200" cy="200" r="100" />
-			<path id="arc_path" d=""/>		    
+			<path id="arc_path" />		    
 	  </g>
 	</svg>
 	<div id="debug">...</div>
-	<input type="button" value="animate" onclick=""/>
+	<input type="button" value="animate" onclick="animateArc({start: 0, end: 130}, 2)"/>
 
 	<script type="text/javascript" src="js/plugins/CSSPlugin.min.js">//</script>
 	<script type="text/javascript" src="js/plugins/RaphaelPlugin.js">//</script>
 	<script type="text/javascript" src="js/easing/EasePack.min.js">//</script>
 	<script type="text/javascript" src="js/TweenLite.js">//</script>
-    <script type="text/javascript">
+	<script type="text/javascript">
 
 
 		//generates an arc in svg
@@ -51,59 +51,89 @@
 			angle: 300
 		}
 		*/
-    	function generateArc(objArgs){
+		function generateArc(objArgs){
 
-    		var intAngle=objArgs.angle;
-    		intAngle=360-intAngle;
-    		if(intAngle<=0)intAngle=0.1;
-    		// M endx endy A 25 25 0 (0|1) 0 startx starty
-    		var arrStart=polarToCartesian(objArgs.centerx, objArgs.centery, objArgs.radius, 0);
-    		var arrEnd=polarToCartesian(objArgs.centerx, objArgs.centery, objArgs.radius, intAngle);
+			//correction for the angle and to make sure 360 works
+			var intAngle=360-objArgs.angle;
+			if(intAngle<=0)intAngle=0.1;
+			
+			//
+			//to create maximum performance on mobile i have not centralized the calculation in a function, but repeated the logic several times...
+			//also i avoided string contatination in favor of using arrays and join()
+			//
 
-    		var strAttrValue='M '+arrEnd[0]+' '+arrEnd[1]+' A '+objArgs.radius+' '+objArgs.radius+' 0 '+((intAngle<180)?'1':'0')+' 0 '+arrStart[0]+' '+arrStart[1];
+			// M endx endy A 25 25 0 (0|1) 0 startx starty
+			var arrAttrValue=[];
+			arrAttrValue.push('M ');
+			arrAttrValue.push(objArgs.centerx + (objArgs.radius *  Math.cos(((270-intAngle) * Math.PI) / 180.0))+' ');
+			arrAttrValue.push(objArgs.centery + (objArgs.radius *  Math.sin(((270-intAngle) * Math.PI) / 180.0))+' A ');
+			arrAttrValue.push(objArgs.radius+' '+objArgs.radius+' 0 '+((intAngle<180)?'1':'0')+' 0 ');
+			arrAttrValue.push(objArgs.centerx + (objArgs.radius *  Math.cos(((270-0) * Math.PI) / 180.0))+' ');
+			arrAttrValue.push(objArgs.centery + (objArgs.radius *  Math.sin(((270-0) * Math.PI) / 180.0)));
 
-    		//objPageElements.debuglayer.innerHTML=strAttrValue;
+			//objPageElements.debuglayer.innerHTML=strAttrValue;
 
-    		objArgs.targetnode.setAttributeNS(null, 'd', strAttrValue);
+			//set the value of the "d" attribute in the <path/> node
+			objArgs.targetnode.setAttributeNS(null, 'd', arrAttrValue.join(''));
+		}
 
-	 		function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
-				angleInDegrees=270-angleInDegrees;
-				//  angleInDegrees=90-angleInDegrees;
-				var angleInRadians = angleInDegrees * Math.PI / 180.0;
-				var x = centerX + radius * Math.cos(angleInRadians);
-				var y = centerY + radius * Math.sin(angleInRadians);
-				return [x,y];
+		function animateArc(objArgs, intAnimationDurationInSeconds){
+			var objToAnimate={
+				angle: objArgs.start
 			}
-    	}
 
-    	function animateArc(objArgs){
+			TweenLite.to(objToAnimate, intAnimationDurationInSeconds, {
+				angle: objArgs.end,
+				onUpdate: function(){
+					//hard coding the centerx, centery and radius boosts performance...
+					generateArc({
+						targetnode: objArcProps.targetnode,
+						centerx: objArcProps.centerx,
+						centery: objArcProps.centery,
+						radius: objArcProps.radius,
+						angle: objToAnimate.angle
+					});
 
+				}
+			});
 
-    	}
-
-
- 		function initPage(){
- 			objPageElements.svgpath=document.getElementById("arc_path");
- 			objPageElements.debuglayer=document.getElementById("debug");
-
- 			objArcProperties={
- 				targetnode: objPageElements.svgpath,
- 				centerx: 200,
- 				centery: 200,
- 				radius: 100,
- 				angle: 300
- 			}
-
- 			//calls the function that generates an arc from the path svg node
- 			generateArc(objArcProperties);
+		}
 
 
- 		}
+		function initPage(){
+			objPageElements.svgpath=document.getElementById("arc_path");
+			objPageElements.debuglayer=document.getElementById("debug");
 
- 		var objPageElements={};
+			//store the reference to the <path/> node in the global variable
+			objArcProps.targetnode=objPageElements.svgpath;
+
+			var objArcProperties={
+				targetnode: objArcProps.targetnode,
+				centerx: objArcProps.centerx,
+				centery: objArcProps.centery,
+				radius: objArcProps.radius,
+				angle: 300
+			}
+
+			//calls the function that generates an arc from the path svg node
+			generateArc(objArcProperties);
 
 
- 		window.onload = initPage;
-    </script>
+		}
+
+		var objPageElements={};
+
+		//global properties of the arc to build
+		var objArcProps={
+			targetnode: null,
+			centerx: 200,
+			centery: 200,
+			radius: 100,
+			angle: 0
+		}
+
+
+		window.onload = initPage;
+	</script>
   </body>
 </html>
