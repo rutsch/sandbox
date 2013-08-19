@@ -8,62 +8,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<link rel="stylesheet" type="text/css" href="css/style.css"/>
 		<script>
-			var sec={},
-				back={};
 
-			function updateVal(value, total, R, hand, id) {
-			    hand.animate({arc: [value, total, R]}, 1500, "bounce");
-			}
-            function initCircle() {
-                var r = Raphael("holder", 200, 200),
-                    R = 50,
-                    init = true,
-                    param = {stroke: "#fff", "stroke-width": 15},
-                    hash = document.location.hash,
-                    marksAttr = {fill: hash || "#444", stroke: "none"};
-                
-                // Custom Attribute
-                r.customAttributes.arc = function (value, total, R, c) {
-                	var color;
-                	//console.log(c);
-                	if (c == 0){
-                		color = '#006890';
-                	}else{
-                		color = '#00495d';
-                	}
-                	//console.log(color);
-                    var alpha = 360 / total * value,
-                        a = (90 - alpha) * Math.PI / 180,
-                        x = 100 + R * Math.cos(a),
-                        y = 100 - R * Math.sin(a),
-                        path;
-
-                    if (total == value) {
-                        path = [["M", 100, 100 - R], ["A", R, R, 0, 1, 1, 99.99, 100 - R]];
-                    } else {
-                        path = [["M", 100, 100 - R], ["A", R, R, 0, +(alpha > 180), 1, x, y]];
-                    }
-                    return {path: path, stroke: color};
-                };
-                back = r.path().attr(param).attr({arc: [0, 100, R, 0]});
-                sec = r.path().attr(param).attr({arc: [0, 100, R, 1]});
-                
-
-                updateVal(0, 100, 50, back, 2);
-
-                updateVal(0, 100, 50, sec, 2);
-                
-
-            };
         </script>		
     </head>
     <body>
 		<div id="app_panel" class="panel full">
 			<div id="title_bar">
-				<div id="btn_back" onclick="btnBackToMapClick();"></div>
+				<div id="btn_back" class="hide" onclick="btnBackToMapClick();"></div>
 				<div id="info">
-					<div id="region_name"></div>
-					<div id="filter_breadcrumb"></div>
+					<div id="region_name">Germany</div>
+					<div id="filter_breadcrumb">Lighting &bull; Lumileds</div>
 				</div>
 				<div id="toggle_favourite"></div>
 			</div>
@@ -74,10 +28,47 @@
 					</div>				
 				</div>
 				<div id="region_info" onclick="btnBackToMapClick();">
-					<div id="holder"></div>
+					<div class="svg_wrapper">
+						<div id="percentage">
+							<div id="lives_improved_percentage">61%</div>
+							<div id="lives_improved_percentage_sub">of total population</div>
+						</div>
+						<div id="holder"></div>					
+					</div>
+					<div class="data_wrapper">
+						<div id="region_data">
+							<div id="region_lives_improved">
+								<div id="nr_lives_improved">70.3</div>
+								<div class="lives_improved_sub">million lives improved</div>
+							</div>
+							<div id="region_gdp">
+								<div id="nr_gdp">$305 trillion</div>
+							</div>
+							<div id="region_population">
+								<div id="nr_population">70 million</div>
+							</div>
+						</div>					
+					</div>
 				</div>
-				<div id="lives_improved">
-					<input type="range">
+				<div id="simulation">
+					<div id="simulation_wrapper">
+						<h3>Simulation</h3>
+						<h4>Sales</h4>
+						<input type="range" min="-20" max="30" value="0">
+						<div class="range_indicator">
+							<div class="min">-20</div>
+							<div class="zero">0</div>
+							<div class="max">30</div>
+						</div>
+						<h4>Green sales</h4>
+						<input type="range" min="-20" max="30" value="0">			
+						<div class="range_indicator">
+							<div class="min">-20</div>
+							<div class="zero">0</div>
+							<div class="max">30</div>
+						</div>
+					</div>
+					
 					
 				</div>
 			</div>
@@ -97,6 +88,7 @@
 		</div>
 		<div id="filter_panel" class="panel modal">
 			<div id="btn_close_filter" class="btn btn_close" onclick="btnCloseFilterClick();">Close</div>
+			<div id="filter_container"></div>
 		</div>
 		<div id="explain_panel" class="panel modal">
 			<div id="btn_close_explain" class="btn btn_close" onclick="btnCloseExplainClick();">Close</div>
@@ -109,6 +101,7 @@
 		<div id="producttree_temp"></div>
 		<div id="error" onclick="hideErrorDiv();"></div>
 		
+		<!-- <script src="http://debug-software.intel.com/target/target-script-min.js#c3bf8f89-faf9-3626-9018-fa0fc21cdc81"></script>-->
 		<script src="js/async.js"></script>
 		<script src="js/tweenmax.js"></script>
 		<script src="js/hammer.js" type="text/javascript">//</script>
@@ -116,6 +109,7 @@
 		<script src="js/raphael_2.0.2.js" type="text/javascript">//</script>
 		<script src="js/world_1000.js" type="text/javascript">//</script>
 		<script src="js/SVGPan.js" type="text/javascript">//</script>			
+		<script src="js/sizzle.min.js" type="text/javascript">//</script>	
 		<script type="text/javascript" src="js/app.js">//</script>
     </body>
 </html>    

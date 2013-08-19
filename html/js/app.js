@@ -24,6 +24,50 @@ function plot(lat, lon, size) {
 	size = size * .5 + 4;
 	return R.circle(lon2x(lon), lat2y(lat), size).attr(city_attr);
 }
+function collectionHas(a, b) { //helper function (see below)
+    for(var i = 0, len = a.length; i < len; i ++) {
+        if(a[i] == b) return true;
+    }
+    return false;
+}
+function getFirstLevelChildElementsById(parentId, childNodeType){
+	//debugger;
+	var selector = parentId ==='producttree_temp'?'#producttree_temp':'#producttree_temp #' + parentId;
+	var parent = Sizzle(selector);
+	parent = parent[0].getElementsByTagName('ul')[0];
+	
+	var	childElements = parent.getElementsByTagName('li'),
+		result = [];
+
+	for (i=0;i<childElements.length;i++) { 
+	    if (childElements[i].parentNode === parent){
+	    	result.push(childElements[i]);
+	    }
+	};	
+	return result;
+}
+function getFirstLevelChildElements(parent, childNodeType){
+	//debugger;
+	
+	var	childElements = parent.getElementsByTagName(childNodeType),
+		result = [];
+
+	for (i=0;i<childElements.length;i++) { 
+	    if (childElements[i].parentNode === parent){
+	    	result.push(childElements[i]);
+	    }
+	};	
+	return result;
+}
+function findParentBySelector(parentId, selector) {
+	var elm = getEl(parentId);
+    var all = document.querySelectorAll(selector);
+    var cur = elm.parentNode;
+    while(cur && !collectionHas(all, cur)) { //keep going up until you find a match
+        cur = cur.parentNode; //go up
+    }
+    return cur; //will return null if not found
+}
 function getParamStringFromObject(objParams){
 	var params = []; 
 
@@ -32,6 +76,16 @@ function getParamStringFromObject(objParams){
 	}        
 	return params.join('&');
 
+}
+function toggleClass(el, cls){
+	var cur = el.getAttribute('class');
+
+	if(cur.indexOf(cls)>-1){
+		cur = cur.replace(cls, '');
+	}else{
+		cur = cur + ' ' +cls;
+	}
+	el.setAttribute('class', cur);
 }
 function psv(type, url, objParams, cb) {
 	var xmlhttp,
@@ -116,6 +170,7 @@ function btnSubmitClick() {
 			                    	if(response.error) {
 			                    		handleLoginError(response.error.message);
 			                    	}else{
+			                    		objPageVars.token = response.token;
 			                    		hideLoadingPanel();
 			                    		startApp();                   		
 			                    	}
@@ -130,25 +185,14 @@ function btnSubmitClick() {
 }
 
 function btnBackToMapClick() {
-	objPageElements.regionRaphael.remove();
 	TweenLite.to(appPanels.region_info, 0.4, {
 		height : 0
 	});
-	TweenLite.to(appPanels.lives_improved, 0.4, {
+	TweenLite.to(appPanels.simulation, 0.4, {
 		height : 0
 	});
-	updateVal(0, 100, 50, sec, 2);
-}
-function regionClick(idCountry) {
-	TweenLite.to(appPanels.region_info, 0.4, {
-		height : '40%'
-	});
-	TweenLite.to(appPanels.lives_improved, 0.4, {
-		height : '60%',
-		onComplete : function() {
-			updateVal(90, 100, 50, sec, 2);
-		}
-	});
+	toggleClass(getEl('btn_back'), 'hide');
+	//updateVal(0, 100, 50, sec, 2);
 }
 function btnLogoutClick() {
 	TweenLite.to(panels.login, 0.2, {
@@ -250,15 +294,112 @@ function countryClicked(idCountry) {
 		regionClick(idCountry);
 	}
 }
+function regionClick(idCountry) {
+	var sec={},
+	back={};
+
+	function updateVal(value, total, R, hand, id, time) {
+	    hand.animate({arc: [value, total, R]}, time, "ease-out");
+	}
+
+    var r = Raphael("holder", 200, 200),
+        R = 50,
+        init = true,
+        param = {stroke: "#fff", "stroke-width": 15},
+        hash = document.location.hash,
+        marksAttr = {fill: hash || "#444", stroke: "none"};
+    
+    // Custom Attribute
+    r.customAttributes.arc = function (value, total, R, c) {
+    	var color;
+    	//console.log(c);
+    	if (c == 0){
+    		color = '#006890';
+    	}else{
+    		color = '#00495d';
+    	}
+    	//console.log(color);
+        var alpha = 360 / total * value,
+            a = (90 - alpha) * Math.PI / 180,
+            x = 100 + R * Math.cos(a),
+            y = 100 - R * Math.sin(a),
+            path;
+
+        if (total == value) {
+            path = [["M", 100, 100 - R], ["A", R, R, 0, 1, 1, 99.99, 100 - R]];
+        } else {
+            path = [["M", 100, 100 - R], ["A", R, R, 0, +(alpha > 180), 1, x, y]];
+        }
+        return {path: path, stroke: color};
+    };
+    back = r.path().attr(param).attr({arc: [0, 100, R, 0]});
+    sec = r.path().attr(param).attr({arc: [0, 100, R, 1]});
+    
+    back.data('stroke', '#006890');
+    
+    updateVal(0, 100, 50, sec, 2, 0);
+    updateVal(0, 100, 50, back, 2, 0);
+
+
+	TweenLite.to(appPanels.region_info, 0.4, {
+		height : '40%'
+	});
+	TweenLite.to(appPanels.simulation, 0.4, {
+		height : '60%',
+		onComplete : function() {
+			updateVal(61, 100, 50, sec, 2, 1500);
+			toggleClass(getEl('btn_back'), 'hide');
+		}
+	});
+}
 
 
 /*
- Render functions
- */
-function renderMruFilterComponent(){
+MRU Filter functions
+*/
+function renderMruFilterComponent(arrLi, parentId){
+	appPanels.mru_filter.innerHTML = '';
+	var ul = document.createElement('ul'),
+		liHeader = document.createElement('li'),
+		backButton = document.createElement('div');
 	
+	liHeader.setAttribute('class', 'mru_filter_header');
+	backButton.setAttribute('id', 'btn_back');
+	backButton.onclick = function(){
+		levelUp(parentId);
+	}
+	liHeader.appendChild(backButton);
+	ul.appendChild(liHeader);
+	for ( var i = 0; i < arrLi.length; i++) {
+		var liItem = document.createElement('li'),
+			id = arrLi[i].id,
+			title = getFirstLevelChildElements(arrLi[i], 'div')[0].innerHTML;
+		//debugger;
+		
+		liItem.id = id;
+		liItem.setAttribute('class', 'mru_filter_element');
+		liItem.setAttribute('data-title', id);
+		liItem.onclick = function(){
+			showMruFilterLevel(this.id);
+		}
+		liItem.innerHTML = title;
+		ul.appendChild(liItem);
+	}
+	
+	
+	
+	appPanels.mru_filter.appendChild(ul);
 }
-
+function levelUp(parentId){
+	var selector = '#producttree_temp li';
+	var parent = findParentBySelector(parentId, selector);
+	var parentId = parent?parent.getAttribute('id'):'producttree_temp';
+	showMruFilterLevel(parentId);
+}
+function showMruFilterLevel(id){
+	var arrLi = getFirstLevelChildElementsById(id, 'li');
+	renderMruFilterComponent(arrLi, id);
+}
 
 
 /*
@@ -266,9 +407,10 @@ function renderMruFilterComponent(){
  */
 function getMruHtml(cb) {
 	var objData = {
-		fulldomain: 'http://97.95.163.236',//location.protocol+"//"+location.hostname,
+		fulldomain: location.protocol+"//"+location.hostname,
 		method:'getproductdata',
 		type:'json',
+		token: objPageVars.token,
 		snapshotid:1		
 	}
 	psv('GET', mruUrl, objData, function(data) {
@@ -443,9 +585,8 @@ function startApp(){
 	    	function(err, results) {
 	    		
 	    		panels.mruhtml.innerHTML = results.mruHtml;
-	    		renderMruFilterComponent();	    		
+	    		showMruFilterLevel('producttree_temp');
 				renderWorldmap();
-				initCircle();	
 	    	});			
 			
 		
@@ -471,7 +612,8 @@ function initPage() {
 	appPanels = {
 		map : getEl('map'),
 		region_info : getEl('region_info'),
-		lives_improved : getEl('lives_improved')
+		simulation : getEl('simulation'),
+		mru_filter: getEl('filter_container')
 	}
 	// set the global page variable to detect if we are running on a mobile
 	// device or not
@@ -488,12 +630,6 @@ function initPage() {
 		 * prevent_default: true, no_mouseevents: true });
 		 */
 	}
-	// get colors
-
-	// get bookmarks
-
-	// get mru data to create filter
-
 	
 	if(objPageVars.signedin && objPageVars.token !==""){
 		startApp();
@@ -518,7 +654,7 @@ var objPageElements = {
 	regionRaphael: {}
 };
 var objPageVars = {
-	token: 'empty',
+	token: 'a',
 	signedin: true,
 	mobile : false,
 	hammer : null,
@@ -531,10 +667,13 @@ var isMobile = {
 		return 'ontouchstart' in document.documentElement;
 	}
 };
+
 var mruUrl = "https://www.troperlaunna2010.philips.com/tools/dynamic_resources_cached.aspx";
 var authUrl1 = "https://www.troperlaunna2010.philips.com/pages/login/login.aspx";
 var authUrl2 = "https://www.troperlaunna2010.philips.com/tools/dynamic_resources.aspx";
 var authUrl3 = "https://www.troperlaunna2010.philips.com/pages/login/authenticate_user.aspx";
+var snapshot_url = 'https://www.troperlaunna2010.philips.com/tools/dynamic_resources_cached.aspx?method=getworldmapdata';
+
 var currentScript = null,
 	success = null;
 
