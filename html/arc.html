@@ -23,16 +23,21 @@
   </head>
   <body>
 
-	<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="400" height="400">
+	<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="95%" height="95%" viewBox="-10 -10 220 220">
 
 		
-	  <g fill="none">
+	  <g fill="none" transform="translate(-100,-100)">
 			<circle id="background" cx="200" cy="200" r="100" />
-			<path id="arc_path" d="M 180.84888892202554 216.0696902421635 A 25 25 0 1 0 200 175"/>		    
+			<path id="arc_path" d=""/>		    
 	  </g>
 	</svg>
 	<div id="debug">...</div>
+	<input type="button" value="animate" onclick=""/>
 
+	<script type="text/javascript" src="js/plugins/CSSPlugin.min.js">//</script>
+	<script type="text/javascript" src="js/plugins/RaphaelPlugin.js">//</script>
+	<script type="text/javascript" src="js/easing/EasePack.min.js">//</script>
+	<script type="text/javascript" src="js/TweenLite.js">//</script>
     <script type="text/javascript">
 
 
@@ -69,6 +74,11 @@
 				var y = centerY + radius * Math.sin(angleInRadians);
 				return [x,y];
 			}
+    	}
+
+    	function animateArc(objArgs){
+
+
     	}
 
 
