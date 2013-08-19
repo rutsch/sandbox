@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+
+      /* svg styling */
+      path#arc_path, circle#background{
+		fill: none;
+		stroke-width: 20;       	
+      }
+      path#arc_path{
+		stroke: green      	
+      }
+      circle#background{
+      	stroke-opacity: .8;
+		stroke: blue
+      }
+    </style>
+  </head>
+  <body>
+
+	<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="400" height="400">
+
+		
+	  <g fill="none">
+			<circle id="background" cx="200" cy="200" r="100" />
+			<path id="arc_path" d="M 180.84888892202554 216.0696902421635 A 25 25 0 1 0 200 175"/>		    
+	  </g>
+	</svg>
+	<div id="debug">...</div>
+
+    <script type="text/javascript">
+
+
+		//generates an arc in svg
+		/*
+		{
+			targetnode: objPageElements.svgpath,
+			centerx: 200,
+			centery: 200,
+			radius: 100,
+			angle: 300
+		}
+		*/
+    	function generateArc(objArgs){
+
+    		var intAngle=objArgs.angle;
+    		intAngle=360-intAngle;
+    		if(intAngle<=0)intAngle=0.1;
+    		// M endx endy A 25 25 0 (0|1) 0 startx starty
+    		var arrStart=polarToCartesian(objArgs.centerx, objArgs.centery, objArgs.radius, 0);
+    		var arrEnd=polarToCartesian(objArgs.centerx, objArgs.centery, objArgs.radius, intAngle);
+
+    		var strAttrValue='M '+arrEnd[0]+' '+arrEnd[1]+' A '+objArgs.radius+' '+objArgs.radius+' 0 '+((intAngle<180)?'1':'0')+' 0 '+arrStart[0]+' '+arrStart[1];
+
+    		//objPageElements.debuglayer.innerHTML=strAttrValue;
+
+    		objArgs.targetnode.setAttributeNS(null, 'd', strAttrValue);
+
+	 		function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+				angleInDegrees=270-angleInDegrees;
+				//  angleInDegrees=90-angleInDegrees;
+				var angleInRadians = angleInDegrees * Math.PI / 180.0;
+				var x = centerX + radius * Math.cos(angleInRadians);
+				var y = centerY + radius * Math.sin(angleInRadians);
+				return [x,y];
+			}
+    	}
+
+
+ 		function initPage(){
+ 			objPageElements.svgpath=document.getElementById("arc_path");
+ 			objPageElements.debuglayer=document.getElementById("debug");
+
+ 			objArcProperties={
+ 				targetnode: objPageElements.svgpath,
+ 				centerx: 200,
+ 				centery: 200,
+ 				radius: 100,
+ 				angle: 300
+ 			}
+
+ 			//calls the function that generates an arc from the path svg node
+ 			generateArc(objArcProperties);
+
+
+ 		}
+
+ 		var objPageElements={};
+
+
+ 		window.onload = initPage;
+    </script>
+  </body>
+</html>
