@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<link rel="stylesheet" type="text/css" href="css/style.css"/>
-<script>
+		<script>
 			var sec={},
 				back={};
 
@@ -27,9 +27,9 @@
                 	var color;
                 	//console.log(c);
                 	if (c == 0){
-                		color = '#000000';
+                		color = '#006890';
                 	}else{
-                		color = '#9400D3';
+                		color = '#00495d';
                 	}
                 	//console.log(color);
                     var alpha = 360 / total * value,
@@ -45,13 +45,14 @@
                     }
                     return {path: path, stroke: color};
                 };
-                sec = r.path().attr(param).attr({arc: [0, 100, R, 1]});
                 back = r.path().attr(param).attr({arc: [0, 100, R, 0]});
-
+                sec = r.path().attr(param).attr({arc: [0, 100, R, 1]});
                 
 
-                updateVal(0, 100, 50, sec, 2);
                 updateVal(0, 100, 50, back, 2);
+
+                updateVal(0, 100, 50, sec, 2);
+                
 
             };
         </script>		
@@ -73,11 +74,11 @@
 					</div>				
 				</div>
 				<div id="region_info" onclick="btnBackToMapClick();">
-
+					<div id="holder"></div>
 				</div>
 				<div id="lives_improved">
 					<input type="range">
-					<div id="holder"></div>
+					
 				</div>
 			</div>
 			<div id="menu_bar">
@@ -89,11 +90,10 @@
 		</div>
 		<div id="login_panel" class="panel full">
 			<form id="login">
-				<input type="text" placeholder="Account"/>
-				<input type="password" placeholder="Password"/>
+				<input type="text" id="username" placeholder="Account" value=""/>
+				<input type="password" id="password" placeholder="Password" value=""/>
 				<input type="submit" id="btn_submit" class="btn btn_login" onclick="btnSubmitClick();return false;"/>
 			</form>
-			
 		</div>
 		<div id="filter_panel" class="panel modal">
 			<div id="btn_close_filter" class="btn btn_close" onclick="btnCloseFilterClick();">Close</div>
@@ -105,7 +105,11 @@
 			<div id="btn_close_bookmarks" class="btn btn_close" onclick="btnCloseBookmarksClick();">Close</div>
 		</div>
 		<div id="overlay"></div>
+		<div id="loading"></div>
+		<div id="producttree_temp"></div>
+		<div id="error" onclick="hideErrorDiv();"></div>
 		
+		<script src="js/async.js"></script>
 		<script src="js/tweenmax.js"></script>
 		<script src="js/hammer.js" type="text/javascript">//</script>
 		<script src="js/hammer_plugins/hammer.showtouches.js"></script>
