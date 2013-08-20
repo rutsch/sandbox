@@ -87,6 +87,12 @@ function toggleClass(el, cls){
 	}
 	el.setAttribute('class', cur);
 }
+
+function getTransformedWidth(svg, el){
+	//debugger;
+    var matrix = el.getTransformToElement(svg);
+    return matrix.a*el.cx.animVal.value;
+}
 function psv(type, url, objParams, cb) {
 	var xmlhttp,
 	strParams = '';
@@ -122,21 +128,22 @@ function psv(type, url, objParams, cb) {
  * Click functions
  */
 function btnSubmitClick() {
-	showLoadingPanel();
-	// Start authentication
-	getEl('btn_submit').style.border = '1px solid red';
-	var un = getEl("username").value, 
-		pw = getEl("password").value,
-		handleLoginError = function(msg){
-			hideLoadingPanel();
-			getEl("username").value = '';
-			getEl("password").value = '';
-			getEl('btn_submit').style.border = 'none';
-			showErrorDiv(msg, true);			
-		};
+
 	if(un == "" || pw == "") {
 		alert('Please enter a code1 account and a password');
 	}else{
+		showLoadingPanel();
+		// Start authentication
+		getEl('btn_submit').style.border = '1px solid red';
+		var un = getEl("username").value, 
+			pw = getEl("password").value,
+			handleLoginError = function(msg){
+				hideLoadingPanel();
+				getEl("username").value = '';
+				getEl("password").value = '';
+				getEl('btn_submit').style.border = 'none';
+				showErrorDiv(msg, true);			
+			};		
 		if(un.toLowerCase().indexOf('code1\\') == -1) un = 'code1\\' + un;
 		var objData = {
 			type: 'json',
@@ -185,11 +192,26 @@ function btnSubmitClick() {
 }
 
 function btnBackToMapClick() {
-	TweenLite.to(appPanels.region_info, 0.4, {
-		height : 0
-	});
-	TweenLite.to(appPanels.simulation, 0.4, {
-		height : 0
+	animateArc({start: 0, end: 0}, 2);
+	TweenLite.to(objPageElements.region_info, 0.4, {
+		opacity : 0,
+		delay: 0,
+		onComplete: function(){
+			TweenLite.to(objPageElements.percentage, 0.4, {
+				opacity : 0,
+				onComplete : function() {
+					TweenLite.to(appPanels.simulation, 0.4, {
+						height : 0,
+						onComplete : function() {	
+							
+						}
+					});	
+					TweenLite.to(appPanels.region_info, 0.4, {
+						height : 0
+					});					
+				}
+			});
+		}
 	});
 	toggleClass(getEl('btn_back'), 'hide');
 	//updateVal(0, 100, 50, sec, 2);
@@ -298,61 +320,45 @@ function regionClick(idCountry) {
 	var sec={},
 	back={};
 
-	function updateVal(value, total, R, hand, id, time) {
-	    hand.animate({arc: [value, total, R]}, time, "ease-out");
-	}
-
-    var r = Raphael("holder", 200, 200),
-        R = 50,
-        init = true,
-        param = {stroke: "#fff", "stroke-width": 15},
-        hash = document.location.hash,
-        marksAttr = {fill: hash || "#444", stroke: "none"};
-    
-    // Custom Attribute
-    r.customAttributes.arc = function (value, total, R, c) {
-    	var color;
-    	//console.log(c);
-    	if (c == 0){
-    		color = '#006890';
-    	}else{
-    		color = '#00495d';
-    	}
-    	//console.log(color);
-        var alpha = 360 / total * value,
-            a = (90 - alpha) * Math.PI / 180,
-            x = 100 + R * Math.cos(a),
-            y = 100 - R * Math.sin(a),
-            path;
-
-        if (total == value) {
-            path = [["M", 100, 100 - R], ["A", R, R, 0, 1, 1, 99.99, 100 - R]];
-        } else {
-            path = [["M", 100, 100 - R], ["A", R, R, 0, +(alpha > 180), 1, x, y]];
-        }
-        return {path: path, stroke: color};
-    };
-    back = r.path().attr(param).attr({arc: [0, 100, R, 0]});
-    sec = r.path().attr(param).attr({arc: [0, 100, R, 1]});
-    
-    back.data('stroke', '#006890');
-    
-    updateVal(0, 100, 50, sec, 2, 0);
-    updateVal(0, 100, 50, back, 2, 0);
-
-
+	toggleClass(getEl('btn_back'), 'hide');
 	TweenLite.to(appPanels.region_info, 0.4, {
 		height : '40%'
 	});
 	TweenLite.to(appPanels.simulation, 0.4, {
 		height : '60%',
 		onComplete : function() {
-			updateVal(61, 100, 50, sec, 2, 1500);
-			toggleClass(getEl('btn_back'), 'hide');
+			//updateVal(61, 100, 50, sec, 2, 1500);
+			TweenLite.to(objPageElements.region_info, 0.4, {
+				opacity : 1,
+				onComplete : function() {
+					//updateVal(61, 100, 50, sec, 2, 1500);
+					// position the percentage div over the circle svg
+					var elCircle = getEl('background');
+					
+					//var width = elCircle.getBBox().width;
+					//var width2 = getTransformedWidth(objPageElements.circlesvg, elCircle);
+					var boundingRect = elCircle.getBoundingClientRect(); 
+					var width=boundingRect.width*100/90;
+					var left=boundingRect.left;
+					var centerx = left+(width/2);
+					
+					//debugger;					
+					var percentage = 61;
+					TweenLite.to(objPageElements.percentage, 0.4, {
+						opacity : 1,
+						onComplete : function() {	
+							animateArc({start: 0, end: (percentage*360) /100}, 2);
+						}
+					});
+				}
+			});			
 		}
 	});
 }
-
+function updateValue(val, id){
+	var target = getEl(id);
+	target.innerHTML = (val > 0 ? '+': '') + val + '%';
+}
 
 /*
 MRU Filter functions
@@ -385,8 +391,6 @@ function renderMruFilterComponent(arrLi, parentId){
 		liItem.innerHTML = title;
 		ul.appendChild(liItem);
 	}
-	
-	
 	
 	appPanels.mru_filter.appendChild(ul);
 }
@@ -498,8 +502,6 @@ function renderWorldmap() {
 		; // end for
 	}
 
-	// document.getElementsByTagName('svg')[0].id = 'viewport';
-
 	R.safari();
 	objPageElements.raphaelmap = R;
 }
@@ -553,6 +555,53 @@ function hideErrorDiv(){
 			panels.error.innerHTML = '';
 		}
 	});
+}
+function generateArc(objArgs){
+
+	//correction for the angle and to make sure 360 works
+	var intAngle=360-objArgs.angle;
+	if(intAngle<=0)intAngle=0.1;
+	
+	//
+	//to create maximum performance on mobile i have not centralized the calculation in a function, but repeated the logic several times...
+	//also i avoided string contatination in favor of using arrays and join()
+	//
+
+	// M endx endy A 25 25 0 (0|1) 0 startx starty
+	var arrAttrValue=[];
+	arrAttrValue.push('M ');
+	arrAttrValue.push(objArgs.centerx + (objArgs.radius *  Math.cos(((270-intAngle) * Math.PI) / 180.0))+' ');
+	arrAttrValue.push(objArgs.centery + (objArgs.radius *  Math.sin(((270-intAngle) * Math.PI) / 180.0))+' A ');
+	arrAttrValue.push(objArgs.radius+' '+objArgs.radius+' 0 '+((intAngle<180)?'1':'0')+' 0 ');
+	arrAttrValue.push(objArgs.centerx + (objArgs.radius *  Math.cos(((270-0) * Math.PI) / 180.0))+' ');
+	arrAttrValue.push(objArgs.centery + (objArgs.radius *  Math.sin(((270-0) * Math.PI) / 180.0)));
+
+	//objPageElements.debuglayer.innerHTML=strAttrValue;
+
+	//set the value of the "d" attribute in the <path/> node
+	objArgs.targetnode.setAttributeNS(null, 'd', arrAttrValue.join(''));
+}
+
+function animateArc(objArgs, intAnimationDurationInSeconds){
+	var objToAnimate={
+		angle: objArgs.start
+	}
+
+	TweenLite.to(objToAnimate, intAnimationDurationInSeconds, {
+		angle: objArgs.end,
+		onUpdate: function(){
+			//hard coding the centerx, centery and radius boosts performance...
+			generateArc({
+				targetnode: objArcProps.targetnode,
+				centerx: objArcProps.centerx,
+				centery: objArcProps.centery,
+				radius: objArcProps.radius,
+				angle: objToAnimate.angle
+			});
+
+		}
+	});
+
 }
 function startApp(){
 
@@ -630,6 +679,24 @@ function initPage() {
 		 * prevent_default: true, no_mouseevents: true });
 		 */
 	}
+	objPageElements.circlesvg = getEl('svg_circle');
+	objPageElements.svgpath=getEl('arc_path');
+	objPageElements.region_info = getEl('info');
+	objPageElements.percentage = getEl('percentage');
+	
+	objArcProps.targetnode=objPageElements.svgpath;
+	var objArcProperties={
+		targetnode: objArcProps.targetnode,
+		centerx: objArcProps.centerx,
+		centery: objArcProps.centery,
+		radius: objArcProps.radius,
+		angle: 0
+	}
+
+	//calls the function that generates an arc from the path svg node
+	generateArc(objArcProperties);
+	
+
 	
 	if(objPageVars.signedin && objPageVars.token !==""){
 		startApp();
@@ -661,6 +728,14 @@ var objPageVars = {
 	width : document.body.clientWidth,
 	height : document.documentElement["clientHeight"],
 	selectedregionpath : {}
+}
+//global properties of the arc to build
+var objArcProps={
+	targetnode: null,
+	centerx: 200,
+	centery: 200,
+	radius: 100,
+	angle: 0
 }
 var isMobile = {
 	any : function() {
