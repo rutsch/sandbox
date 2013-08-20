@@ -340,9 +340,11 @@ function regionClick(idCountry) {
 					var boundingRect = elCircle.getBoundingClientRect(); 
 					var width=boundingRect.width*100/90;
 					var left=boundingRect.left;
-					var centerx = left+(width/2);
-					
-					//debugger;					
+					var centerx = left+(width/2) -10;
+					debugger;
+					objPageElements.percentage.style.left = centerx - (objPageElements.percentage.clientWidth /2) + 'px';
+					objPageElements.percentage.style.bottom = (boundingRect.bottom /8) + (width/2) - (objPageElements.percentage.clientHeight / 2)  + 'px';
+										
 					var percentage = 61;
 					TweenLite.to(objPageElements.percentage, 0.4, {
 						opacity : 1,
