@@ -4,6 +4,17 @@ Utilities
 function getEl(id) {
 	return document.getElementById(id);
 }
+function findPos(obj) {
+	var curleft = curtop = 0;
+	if (obj.offsetParent) {
+		do {
+			curleft += obj.offsetLeft;
+			curtop += obj.offsetTop;
+		} while (obj = obj.offsetParent);
+	}
+	return [curleft,curtop];
+}
+
 function logAction(event, elThis, strType) {
 	console.log(strType);
 	console.log(event);
@@ -755,6 +766,13 @@ function loadWorldmap(objArgs){
 			
 			//resize the map to fit into the window
 			resizeWorldmap();
+
+			
+
+			//prepare an object containing vital information about the svg element to animate
+			objPageElements.rootanimateattributevalues=retrieveSvgElementObject(objPageElements.rootanimate);
+
+			centerWorldmap(objPageElements.rootanimate);
 			
 			//apply zoom and pan functionality to the svg drawing
 			var bolUseHomeGrown=false;
@@ -762,9 +780,8 @@ function loadWorldmap(objArgs){
 				//initiate the hammer object to capture multitouch events
 				setupHammer();
 
-				//prepare an object containing vital information about the svg element to animate
-				objPageElements.rootanimateattributevalues=retrieveSvgElementObject(objPageElements.rootanimate);
-				console.log(objPageElements.rootanimateattributevalues);
+
+				//console.log(objPageElements.rootanimateattributevalues);
 			}else{
 				initZoomPan(objPageElements.rootsvg);
 			}
@@ -784,6 +801,53 @@ function resizeWorldmap(){
 	objPageElements.rootsvg.setAttributeNS( null, 'width', objPageVars.width);
 	objPageElements.rootsvg.setAttributeNS( null, 'height', objPageVars.height);
 }
+
+function centerWorldmap(elSvg){
+
+	var offsetX=-(objPageElements.rootanimateattributevalues.size.width/2);
+	if(objPageVars.width>objPageElements.rootanimateattributevalues.size.width)offsetX=0-offsetX;
+	
+	var offsetY=-(objPageElements.rootanimateattributevalues.size.height/2);
+	//if(objPageVars.height>objPageElements.rootanimateattributevalues.size.height)offsetY=0-offsetY-(objPageElements.rootanimateattributevalues.size.height/2);
+
+	svgSetTransform(elSvg, {
+		scale: 1,
+		translatex: offsetX,
+		translatey: offsetY,
+		transformmatrix: {}
+	});
+}
+
+//sets the transform attribute on the passed svg node
+function svgSetTransform(elSvg, objSvgProperties){
+	var bolUseStringMethod=true;
+
+	if(bolUseStringMethod){
+		/* string method */
+		//var strTransformValue='translate('+objSvgProperties['translatex']+', '+objSvgProperties['translatey']+') scale('+objSvgProperties['scale']+')';
+		var strTransformValue='matrix('+objSvgProperties.scale+',0,0,'+objSvgProperties.scale+','+objSvgProperties.translatex+','+objSvgProperties.translatey+')';
+		elSvg.setAttributeNS( null, 'transform', strTransformValue);
+	}else{
+		/* native method */
+		//set the new values for the transform matrix
+		objSvgProperties.transformmatrix.a=objSvgProperties.scale;
+		objSvgProperties.transformmatrix.b=0;
+		objSvgProperties.transformmatrix.c=0;
+		objSvgProperties.transformmatrix.d=objSvgProperties.scale;
+		objSvgProperties.transformmatrix.e=objSvgProperties.translatex;
+		objSvgProperties.transformmatrix.f=objSvgProperties.translatey;
+
+		//console.log(objSvgProperties.transformmatrix);
+
+		//someitem.ownerSVGElement.createSVGTransformFromMatrix(m)
+		var svgTransform=elSvg.ownerSVGElement.createSVGTransformFromMatrix(objSvgProperties.transformmatrix);
+		//console.log(bla);
+
+		elSvg.transform.baseVal.initialize(svgTransform);
+	}
+
+}
+
 
 function startApp(){
 
@@ -887,9 +951,8 @@ function initPage() {
 function onResize() {
 	objPageVars.width = document.body.clientWidth;
 	objPageVars.height = document.documentElement["clientHeight"];
-	//console.log(objPageElements.raphaelmap.height);
-	objPageElements.raphaelmap.setSize(objPageVars.width, objPageVars.height);
-	//console.log(objPageElements.raphaelmap.height);
+	resizeWorldmap();
+	//centerWorldmap(objPageElements.rootanimate);
 }
 
 /*

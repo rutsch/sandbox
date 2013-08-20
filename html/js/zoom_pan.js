@@ -37,12 +37,9 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
  */
 
 
-var initialized = false;
-
 var opts = { zoom: true, pan: true, drag: true }
 
 function initZoomPan(root) {
-
 
 	var state = 'none', stateTarget, stateOrigin, stateTf;
 
@@ -74,8 +71,6 @@ function initZoomPan(root) {
 	}
 	
 
-
-	initialized = true;
 
 	var elViewport=document.getElementById("viewport");
 	var bolDragging=false;
@@ -115,6 +110,7 @@ function initZoomPan(root) {
 
 
 	function setupHandlersMobile(){
+		//console.log('setupHandlersMobile')
 		//a few "cheap" tricks to work around the tap-issue (sometimes you need to tap twice to trigger the event...)
 	    objPageVars.hammersvg.on("dragstart", function(ev) {
 	        //if(window.console) { console.log(ev); }
@@ -148,7 +144,7 @@ function initZoomPan(root) {
 	    });	
 	   	objPageVars.hammersvg.on("touch", function(ev) {
 	   		//if(window.console) { console.log(ev); }
-	   		storeOriginal(ev);
+	   		//storeOriginal(ev);
 	   		timer2=setTimeout(function(){
 	   			if(!bolDragging)handleClick(ev);
 	   			bolDragging=false;
@@ -420,7 +416,7 @@ function initZoomPan(root) {
 		if(!objPageVars.mobile){
 			if(evt.preventDefault)evt.preventDefault();
 		}
-		storeOriginal(evt);
+
 		evt.returnValue = false;
 
 		var g, svgDoc;
@@ -439,6 +435,7 @@ function initZoomPan(root) {
 		if(state == 'pan') {
 			// Pan mode
 			if (!opts.pan) return;
+			//console.log('xx');
 
 
 			var p = getEventPoint(evt).matrixTransform(stateTf);
@@ -475,18 +472,20 @@ function initZoomPan(root) {
 			var g = svgDoc.getElementById("viewport");
 		}
 
-		stateTf = g.getCTM().inverse();
-		stateOrigin = getEventPoint(evt).matrixTransform(stateTf);		
+		//stateTf = g.getCTM().inverse();
+		//stateOrigin = getEventPoint(evt).matrixTransform(stateTf);		
 
 		if(evt.target.tagName == "svg" || !opts.drag) {
 			// Pan mode
 			if (!opts.pan) return;
-
+			stateTf = g.getCTM().inverse();
+			stateOrigin = getEventPoint(evt).matrixTransform(stateTf);
 			state = 'pan';
 		} else {
 			// Move mode
 			if (!opts.drag || evt.target.draggable == false) return;
-
+			stateTf = g.getCTM().inverse();
+			stateOrigin = getEventPoint(evt).matrixTransform(stateTf);
 			state = 'move';
 		}
 	}
