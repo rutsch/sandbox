@@ -145,7 +145,7 @@ function initZoomPan(root) {
 	        handlePinch(ev);
 	    });	
 	   	objPageVars.hammersvg.on("touch", function(ev) {
-	   		if(window.console) { console.log(ev); }
+	   		//if(window.console) { console.log(ev); }
 	   		timer2=setTimeout(function(){
 	   			if(!bolDragging)handleClick(ev);
 	   			bolDragging=false;
@@ -249,7 +249,7 @@ function initZoomPan(root) {
 			idCountry=elSvg.id;
    		}else{
    			//console.log(evt);
-   			console.log(el);
+   			//console.log(el);
    		}
    		
 
@@ -279,7 +279,7 @@ function initZoomPan(root) {
 
 		var z = 1 + delta; // Zoom factor: 0.9/1.1
 
-		console.log('zoom factor z:'+z+' delta:'+delta);
+		//console.log('zoom factor z:'+z+' delta:'+delta);
 
 		zoomSvg(evt, z);
 	}
@@ -321,7 +321,7 @@ function initZoomPan(root) {
 			if(z>1.05)z=1.05;
 			if(z<0.95)z=0.95;
 
-			console.log('* mode: '+mode+' zOriginal:'+zOriginal+' z:'+z+' pinchRemembered:'+debugPinchRemembered);
+			//console.log('* mode: '+mode+' zOriginal:'+zOriginal+' z:'+z+' pinchRemembered:'+debugPinchRemembered);
 			
 			//logic to determine if we can zoom any further
 			var bolExecuteZoom=true;
@@ -378,7 +378,7 @@ function initZoomPan(root) {
 	}
 
 	function zoomSvg(evt, z){
-		console.log('z: '+z);
+		//console.log('z: '+z);
 		var g, svgDoc;
 		if(objPageVars.mobile){
 			var g = elViewport;
@@ -388,10 +388,10 @@ function initZoomPan(root) {
 		}
 		
 		var p = getEventPoint(evt);
-		console.log(p)
+		//console.log(p)
 
 		p = p.matrixTransform(g.getCTM().inverse());
-		console.log(p)
+		//console.log(p)
 
 		// Compute new scale matrix in current mouse position
 		var k = root.createSVGMatrix().translate(p.x, p.y).scale(z).translate(-p.x, -p.y);
@@ -424,7 +424,7 @@ function initZoomPan(root) {
 			var g = svgDoc.getElementById("viewport");
 		}
 
-		console.log(state);
+		//console.log(state);
 		state='pan';
 		//console.log(opts)
 		if(state == 'pan') {
