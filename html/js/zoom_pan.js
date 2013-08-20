@@ -91,6 +91,8 @@ function initZoomPan(root) {
 
 
 
+
+
 	/**
 	 * Handler registration
 	 */
@@ -146,6 +148,7 @@ function initZoomPan(root) {
 	    });	
 	   	objPageVars.hammersvg.on("touch", function(ev) {
 	   		//if(window.console) { console.log(ev); }
+	   		storeOriginal(ev);
 	   		timer2=setTimeout(function(){
 	   			if(!bolDragging)handleClick(ev);
 	   			bolDragging=false;
@@ -417,7 +420,7 @@ function initZoomPan(root) {
 		if(!objPageVars.mobile){
 			if(evt.preventDefault)evt.preventDefault();
 		}
-		
+		storeOriginal(evt);
 		evt.returnValue = false;
 
 		var g, svgDoc;
@@ -427,6 +430,8 @@ function initZoomPan(root) {
 			var svgDoc = evt.target.ownerDocument;
 			var g = svgDoc.getElementById("viewport");
 		}
+
+
 
 		//console.log(state);
 		state='pan';
@@ -470,26 +475,19 @@ function initZoomPan(root) {
 			var g = svgDoc.getElementById("viewport");
 		}
 
+		stateTf = g.getCTM().inverse();
+		stateOrigin = getEventPoint(evt).matrixTransform(stateTf);		
+
 		if(evt.target.tagName == "svg" || !opts.drag) {
 			// Pan mode
 			if (!opts.pan) return;
 
 			state = 'pan';
-
-			stateTf = g.getCTM().inverse();
-
-			stateOrigin = getEventPoint(evt).matrixTransform(stateTf);
 		} else {
 			// Move mode
 			if (!opts.drag || evt.target.draggable == false) return;
 
 			state = 'move';
-
-			stateTarget = evt.target;
-
-			stateTf = g.getCTM().inverse();
-
-			stateOrigin = getEventPoint(evt).matrixTransform(stateTf);
 		}
 	}
 
@@ -510,6 +508,19 @@ function initZoomPan(root) {
 		}
 
 		//pinchRemembered=1;
+	}
+
+	function storeOriginal(evt){
+		var g, svgDoc;
+		if(objPageVars.mobile){
+			var g = elViewport;
+		}else{
+			var svgDoc = evt.target.ownerDocument;
+			var g = svgDoc.getElementById("viewport");
+		}
+
+		stateTf = g.getCTM().inverse();
+		stateOrigin = getEventPoint(evt).matrixTransform(stateTf);	
 	}
 }
 
