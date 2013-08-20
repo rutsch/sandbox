@@ -68,6 +68,17 @@ function findParentBySelector(parentId, selector) {
     }
     return cur; //will return null if not found
 }
+function traverse_it(obj){
+    for(var prop in obj){
+        if(typeof obj[prop]=='object'){
+            // object
+            traverse_it(obj[prop[i]]);
+        }else{
+            // something else
+            alert('The value of '+prop+' is '+obj[prop]+'.');
+        }
+    }
+}
 function getParamStringFromObject(objParams){
 	var params = []; 
 
@@ -92,6 +103,44 @@ function getTransformedWidth(svg, el){
 	//debugger;
     var matrix = el.getTransformToElement(svg);
     return matrix.a*el.cx.animVal.value;
+}
+function getColorForPercentage(pct, low_color, middle_color, high_color) {
+	var self = this;
+    pct /= 100;
+
+    var percentColors = [
+            { pct: 0.01, color: rgbFromHex(low_color) },
+            { pct: 0.5, color: rgbFromHex(middle_color) },
+            { pct: 1.0, color: rgbFromHex(high_color) } 
+        ];
+
+    for (var i = 0; i < percentColors.length; i++) {
+        if (pct <= percentColors[i].pct) {
+            var lower = percentColors[i - 1] || { pct: 0.1, color: { r: 0x0, g: 0x00, b: 0 } };
+            var upper = percentColors[i];
+            var range = upper.pct - lower.pct;
+            var rangePct = (pct - lower.pct) / range;
+            var pctLower = 1 - rangePct;
+            var pctUpper = rangePct;
+            var color = {
+                r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+                g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+                b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+            };
+            return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+        }
+    }
+}
+function rgbFromHex(hex){
+	function hexToR(h) {return parseInt((cutHex(h)).substring(0,2),16)}
+	function hexToG(h) {return parseInt((cutHex(h)).substring(2,4),16)}
+	function hexToB(h) {return parseInt((cutHex(h)).substring(4,6),16)}
+	function cutHex(h) {return (h.charAt(0)=="#") ? h.substring(1,7):h}
+	return {
+		r: hexToR(hex),
+		g: hexToG(hex),
+		b: hexToB(hex)
+	}
 }
 function psv(type, url, objParams, cb) {
 	var xmlhttp,
@@ -155,6 +204,7 @@ function btnSubmitClick() {
         	}else{			
 				objData.stay = true;
 				psv('GET', authUrl1, objData, function(response){
+					
 	            	if(response.error) {
 	            		handleLoginError(response.error.message);
 	            	}else{				
@@ -163,6 +213,8 @@ function btnSubmitClick() {
 							if(response.error) {
 								handleLoginError(response.error.message);
 							}else{
+								//debugger;
+								console.log(response.token);
 			                    var objDataAuthenticate = {
 			                            username: un,
 			                            password: pw,
@@ -172,13 +224,15 @@ function btnSubmitClick() {
 			                            fulldomain: location.protocol+"//"+location.hostname
 			                    };
 			                    
-			                    psv('POST', authUrl3, objDataAuthenticate, function(response){
+			                    psv('POST', authUrl3, objDataAuthenticate, function(response2){
 			                    	//response = JSON.parse(response);
-			                    	if(response.error) {
-			                    		handleLoginError(response.error.message);
+			                    	if(response2.error) {
+			                    		handleLoginError(response2.error.message);
 			                    	}else{
-			                    		objPageVars.token = response.token;
-			                    		hideLoadingPanel();
+			                    		//debugger;
+			                    		console.log(response2.token);
+			                    		objPageVars.token = response2.token;
+
 			                    		startApp();                   		
 			                    	}
 			                    });						
@@ -315,7 +369,7 @@ function btnCloseBookmarksClick() {
 	});
 }
 function countryClicked(idCountry) {
-	if (idCountry !== "" &&) {
+	if (idCountry !== "") {
 		regionClick(idCountry);
 	}
 }
@@ -422,11 +476,48 @@ function getMruHtml(cb) {
 		token: objPageVars.token,
 		snapshotid:1		
 	}
-	psv('GET', mruUrl, objData, function(data) {
+	psv('GET', dynamicResourceUrl, objData, function(data) {
 		cb(null, data);
 	});
 }
-
+function getOruJson(cb){
+	var objData = {
+		fulldomain: location.protocol+"//"+location.hostname,
+		method:'getorudata',
+		type:'json',
+		token: objPageVars.token,
+		snapshotid:1		
+	}
+	psv('GET', dynamicResourceUrl, objData, function(data) {
+		cb(null, data);
+	});	
+}
+function getSnapShotConfig(cb){
+	/*var objData = {
+		fulldomain: location.protocol+"//"+location.hostname,
+		type:'json',
+		token: objPageVars.token,
+		snapshotid:1		
+	}
+	psv('GET', authUrl1, objData, function(data) {
+		cb(null, data);
+	});	*/
+	cb(null, {});	
+}
+function getWorldmapData(cb){
+	var objData = {
+		fulldomain: location.protocol+"//"+location.hostname,
+		method:'getworldmapdata',
+		type:'json',
+		token: objPageVars.token,
+		oru: objPageVars.current_oru,
+		mru: objPageVars.current_mru,
+		snapshotid:1		
+	}
+	psv('GET', dynamicResourceUrl, objData, function(data) {
+		cb(null, data);
+	});	
+}
 /*
  * Worldmap Logic
  */
@@ -629,19 +720,60 @@ function startApp(){
 	    	    },
 	    	    // load mru HTML for latest snapshot id
 	    	    oruJson: function(callback){
-	    	    	callback(null, null);
+	    	    	getOruJson(function(err, data){
+	    	    		callback(null, data);
+	    	    	});
+	    	    	
 	    	    },
 	    	    snapshotConfig: function(callback){
-	    	    	callback(null, null);
+	    	    	getSnapShotConfig(function(err, data){
+	    	    		callback(null, data);	
+	    	    	});
 	    	    }
 	    	},
 	    	// all done
 	    	function(err, results) {
-	    		
+	    		//debugger;
 	    		panels.mruhtml.innerHTML = results.mruHtml;
 	    		showMruFilterLevel('producttree_temp');
-				
-				//renderWorldmap();
+	    		objPageVars.orujson = results.oruJson;
+				//get worldmapdata
+	    		getWorldmapData(function(err, data){
+	    			//debugger;
+	    			var arrRegions = getEl('viewport').getElementsByTagName('g');
+	    			for ( var i = 0; i < arrRegions.length; i++) {
+						var region = arrRegions[i],
+							regionId = region.id,
+							key=objPageVars.current_mru + '_' + regionId,
+							regionData = data.snapshotdata[key],
+							colors;
+						
+						if (regionData) {
+							//console.log(regionData);
+							//debugger;
+							var percentageLI = (regionData.l * 100) / regionData.p || 0;
+							if(percentageLI> 99)percentageLI=100;
+							if(percentageLI< 1)percentageLI=1;
+							regionData.percentageLI = percentageLI;
+							var colors = {
+		            			low: '#99EAF0',
+		            			middle: '#5BCCD4',
+		            			high: '#30B6BF'
+		            		}
+							region.style.fill=getColorForPercentage(percentageLI, colors.low, colors.middle, colors.high);
+								//self.increaseBrightness('#112233', percentageLI);
+						} else {
+							//debugger;
+							// No regionData for region found so set default color
+							colors[region] = '#000';
+						}							
+					}
+            		hideLoadingPanel();
+	    		});
+	    		//get correct svg
+	    		
+	    		
+				//color Worldmap regions
 	    	});			
 			
 		
@@ -761,13 +893,15 @@ var objPageElements = {
 	regionRaphael: {}
 };
 var objPageVars = {
-	token: 'a',
-	signedin: true,
+	token: '',
+	signedin: false,
 	mobile : false,
 	hammer : null,
 	width : document.body.clientWidth,
 	height : document.documentElement["clientHeight"],
-	selectedregionpath : {}
+	selectedregionpath : {},
+	current_oru: 4,
+	current_mru: 'philips'
 }
 //global properties of the arc to build
 var objArcProps={
@@ -783,7 +917,7 @@ var isMobile = {
 	}
 };
 
-var mruUrl = "https://www.troperlaunna2010.philips.com/tools/dynamic_resources_cached.aspx";
+var dynamicResourceUrl = "https://www.troperlaunna2010.philips.com/tools/dynamic_resources_cached.aspx";
 var authUrl1 = "https://www.troperlaunna2010.philips.com/pages/login/login.aspx";
 var authUrl2 = "https://www.troperlaunna2010.philips.com/tools/dynamic_resources.aspx";
 var authUrl3 = "https://www.troperlaunna2010.philips.com/pages/login/authenticate_user.aspx";

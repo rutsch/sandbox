@@ -7206,7 +7206,15 @@
 		</div>
 		<div id="filter_panel" class="panel modal">
 			<div id="btn_close_filter" class="btn btn_close" onclick="btnCloseFilterClick();">Close</div>
-			<div id="filter_container" class="modal_content"></div>
+			<div class="modal_content">
+				<div id="oru_filter_container">
+					<div id="btn_world" data-value="world">World</div>
+					<div id="btn_region" data-value="region">Region</div>
+					<div id="btn_bmc" class="selected" data-value="bmc">BMC</div>
+					<div id="btn_country" data-value="country">Country</div>
+				</div>
+				<div id="filter_container"></div> 
+			</div>
 		</div>
 		<div id="explain_panel" class="panel modal">
 			<div id="btn_close_explain" class="btn btn_close" onclick="btnCloseExplainClick();">Close</div>
