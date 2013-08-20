@@ -4,6 +4,17 @@ Utilities
 function getEl(id) {
 	return document.getElementById(id);
 }
+function findPos(obj) {
+	var curleft = curtop = 0;
+	if (obj.offsetParent) {
+		do {
+			curleft += obj.offsetLeft;
+			curtop += obj.offsetTop;
+		} while (obj = obj.offsetParent);
+	}
+	return [curleft,curtop];
+}
+
 function logAction(event, elThis, strType) {
 	console.log(strType);
 	console.log(event);
@@ -172,6 +183,135 @@ function psv(type, url, objParams, cb) {
 	}
 }
 
+
+function serverSideRequest(objArguments){
+	/*
+	This function performs a serverside request by using the passed xmlhttp object.
+	It returns the string that the server side script returned (sync) or passes the string on a user defined function 'callbackFunction' (async)
+	Use named argument syntax:
+	serverSideRequest({url: '/bla.html', callback: 'performTask()', method: 'get', formdata: arrFormData, debug: false})
+	*/
+	var bolAsync=true, bolSubmitFormData=false, bolDebug=false, bolSubmitXmlFile=false;
+	var strDebug, strKey, strValue, strFormData='', strResult;
+	var strUrl='', strMethod='post', arrFormData='';
+	var callbackFunction=null;
+
+	//translate the passed object into local variables
+	strUrl=typeof objArguments.url != 'undefined'? objArguments.url : '';
+
+	callbackFunction=typeof objArguments.callback != 'undefined'? objArguments.callback : null;
+
+	strMethod=typeof objArguments.method != 'undefined'? objArguments.method.toLowerCase() : 'get';
+	strDebug=typeof objArguments.debug != 'undefined'? objArguments.debug+'' : 'false';
+	if(strDebug.toLowerCase()=='true')bolDebug=true;
+	//form data
+	arrFormData=typeof objArguments.arrdata != 'undefined'? objArguments.arrdata : '';
+	if(typeof(arrFormData)=='string')arrFormData=typeof objArguments.formdata != 'undefined'? objArguments.formdata : '';
+	if(bolDebug)arrFormData['debug']='true';
+	if(typeof(arrFormData)!='string')bolSubmitFormData=true;
+
+	
+	//detrmine asynchronous request
+	if(callbackFunction==null)bolAsync=false;	
+
+	//bolDebug=true;
+	if(bolDebug)alert("Parameters recieved:\n"+"strUrl="+strUrl+"\n"+"callbackFunction="+callbackFunction+"\n"+"strMethod="+strMethod+"\n"+"arrFormData="+arrFormData+"\n bolSubmitFormData="+bolSubmitFormData+"\nbolAsync="+bolAsync);
+
+
+	//bypass caching by adding a querystring to the url
+	if(strMethod=='post'){
+		strUrl+=(strUrl.indexOf('?')>0)?'&rnd=' + generateUniqueId():'?rnd=' + generateUniqueId();
+	}else{
+		if(typeof(arrFormData)!='string'){
+			arrFormData['rnd']=generateUniqueId();
+		}else{
+			arrFormData=new Array();
+			arrFormData['rnd']=generateUniqueId();
+			bolSubmitFormData=true;
+		}
+	}
+
+	//form data to sent
+	if(bolSubmitFormData){
+		var arr=new Array();
+		for(strKey in arrFormData){
+			//alert(typeof(arrFormData[strKey]));
+			if(typeof(arrFormData[strKey])!='function' && typeof(arrFormData[strKey])!='object'){
+				strValue=encodeUrl(arrFormData[strKey]);
+				arr.push(strKey+"="+strValue)
+			}
+		}
+		strFormData=arr.join('&');
+		if(bolDebug)alert('Form data sent to server:\n'+strFormData);
+	}
+
+	//create remote xmlhttp object
+	objXmlHttpLocal = createRemote();
+
+	//determine onreadystatechange function (async only)
+	if(bolAsync){
+		objXmlHttpLocal.onreadystatechange= function() {
+			if (objXmlHttpLocal.readyState == 4) {
+				if (objXmlHttpLocal.status == 200) {
+				  //ok
+				  strResult=objXmlHttpLocal.responseText;
+				  if(bolDebug)alert("just before callback function\n\n"+strResult);
+				  callbackFunction(strResult);
+				}else{
+					strResult="ERROR: There was a problem retrieving the server side data:\n" + objXmlHttpLocal.statusText;
+					alert(strResult);
+				}
+			}
+		}
+	}else{
+		//make sure to clear any previously attached onreadystate functions
+		/*
+		Need to investigate memory leak problems in IE
+		*/
+		objXmlHttpLocal.onreadystatechange = function(){};
+	}
+
+
+
+	//perform request
+	if(strMethod.toLowerCase()=="get")strUrl+="?"+strFormData;
+	objXmlHttpLocal.open(strMethod.toUpperCase(), strUrl, bolAsync);
+	if(bolSubmitFormData && strMethod.toLowerCase()=="post"){
+		objXmlHttpLocal.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		objXmlHttpLocal.send(strFormData);
+	}else{
+		if(bolSubmitXmlFile){
+			objXmlHttpLocal.send(arrFormData);
+		}else{			
+			objXmlHttpLocal.send(null);
+		}
+	}
+
+	if(!bolAsync)return objXmlHttpLocal.responseText;
+	
+	function createRemote(){
+		try {
+			return(new XMLHttpRequest());
+		}
+		catch(e) {
+			return(new ActiveXObject('Microsoft.XMLHTTP'));
+		}
+	}
+	
+}
+function encodeUrl(sStr) {
+	return escape(sStr).replace(/\+/g, '%2C').replace(/\"/g,'%22').replace(/\'/g, '%27').replace(/\//g, '%2F');
+}
+function generateUniqueId(){
+	var t=Math.random();
+	t=Math.round(t*10000);
+	var t2=Math.random();
+	t2=Math.round(t*10000);
+	var objDate=new Date();
+	var intSec=objDate.getSeconds();
+	t=t+"x"+intSec+"x"+t2;
+	return t;
+}
 
 /*
  * Click functions
@@ -699,6 +839,107 @@ function animateArc(objArgs, intAnimationDurationInSeconds){
 	});
 
 }
+
+//performs an ajax call and inserts the retrieved svg data into the wrapper div
+function loadWorldmap(objArgs){
+	serverSideRequest({
+		url: objArgs.url, 
+		method: 'get', 
+		debug: true,
+		debug: false,
+		callback: function(strSvgData){
+			//insert the SVG data into the holder div
+			objPageElements.elsvgholder.innerHTML=strSvgData;
+
+			//retrieve the base svg elements
+			objPageElements.rootanimate=getEl('viewport');
+			objPageElements.rootsvg=document.getElementsByTagName('svg')[0];
+			
+			//resize the map to fit into the window
+			resizeWorldmap();
+
+			
+
+			//prepare an object containing vital information about the svg element to animate
+			objPageElements.rootanimateattributevalues=retrieveSvgElementObject(objPageElements.rootanimate);
+
+			centerWorldmap(objPageElements.rootanimate);
+			
+			//apply zoom and pan functionality to the svg drawing
+			var bolUseHomeGrown=false;
+			if(bolUseHomeGrown){
+				//initiate the hammer object to capture multitouch events
+				setupHammer();
+
+
+				//console.log(objPageElements.rootanimateattributevalues);
+			}else{
+				initZoomPan(objPageElements.rootsvg);
+			}
+
+
+		}
+	});
+
+}
+
+//scale the worldmap svg to fit
+function resizeWorldmap(){
+	objPageElements.rootsvg.setAttributeNS( null, 'viewBox', '0 0 '+objPageVars.width+' '+objPageVars.height);
+	objPageElements.rootsvg.setAttributeNS( null, 'enable-background', 'new 0 0 '+objPageVars.width+' '+objPageVars.height);
+	objPageElements.elsvgholder.style.width = objPageVars.width+'px';
+	objPageElements.elsvgholder.style.height = objPageVars.height+'px';
+	objPageElements.rootsvg.setAttributeNS( null, 'width', objPageVars.width);
+	objPageElements.rootsvg.setAttributeNS( null, 'height', objPageVars.height);
+}
+
+function centerWorldmap(elSvg){
+
+	var offsetX=-(objPageElements.rootanimateattributevalues.size.width/2);
+	if(objPageVars.width>objPageElements.rootanimateattributevalues.size.width)offsetX=0-offsetX;
+	
+	var offsetY=-(objPageElements.rootanimateattributevalues.size.height/2);
+	//if(objPageVars.height>objPageElements.rootanimateattributevalues.size.height)offsetY=0-offsetY-(objPageElements.rootanimateattributevalues.size.height/2);
+
+	svgSetTransform(elSvg, {
+		scale: 1,
+		translatex: offsetX,
+		translatey: offsetY,
+		transformmatrix: {}
+	});
+}
+
+//sets the transform attribute on the passed svg node
+function svgSetTransform(elSvg, objSvgProperties){
+	var bolUseStringMethod=true;
+
+	if(bolUseStringMethod){
+		/* string method */
+		//var strTransformValue='translate('+objSvgProperties['translatex']+', '+objSvgProperties['translatey']+') scale('+objSvgProperties['scale']+')';
+		var strTransformValue='matrix('+objSvgProperties.scale+',0,0,'+objSvgProperties.scale+','+objSvgProperties.translatex+','+objSvgProperties.translatey+')';
+		elSvg.setAttributeNS( null, 'transform', strTransformValue);
+	}else{
+		/* native method */
+		//set the new values for the transform matrix
+		objSvgProperties.transformmatrix.a=objSvgProperties.scale;
+		objSvgProperties.transformmatrix.b=0;
+		objSvgProperties.transformmatrix.c=0;
+		objSvgProperties.transformmatrix.d=objSvgProperties.scale;
+		objSvgProperties.transformmatrix.e=objSvgProperties.translatex;
+		objSvgProperties.transformmatrix.f=objSvgProperties.translatey;
+
+		//console.log(objSvgProperties.transformmatrix);
+
+		//someitem.ownerSVGElement.createSVGTransformFromMatrix(m)
+		var svgTransform=elSvg.ownerSVGElement.createSVGTransformFromMatrix(objSvgProperties.transformmatrix);
+		//console.log(bla);
+
+		elSvg.transform.baseVal.initialize(svgTransform);
+	}
+
+}
+
+
 function startApp(){
 
 	//when done animate loginpanel to background
@@ -803,54 +1044,18 @@ function initPage() {
 		simulation : getEl('simulation'),
 		mru_filter: getEl('filter_container')
 	}
+
 	
-	// set the global page variable to detect if we are running on a mobile
-	// device or not
+	// set the global page variable to detect if we are running on a mobile device or not
 	objPageVars.mobile = isMobile.any();
 
-	// initiate the hammer object to capture multitouch events
-	if (objPageVars.mobile) {
-		// initiate the hammer object on the holder div of the worldmap svg
-		/*
-		 * Hammer.gestures.Drag.defaults.drag_min_distance=1;
-		 * Hammer.gestures.Drag.defaults.correct_for_drag_min_distance=true;
-		 * 
-		 * objPageVars.hammer = Hammer(document.getElementById("main_wrapper"), {
-		 * prevent_default: true, no_mouseevents: true });
-		 */
-	}
+
+	//load the worldmap and continue processing
+	objPageElements.elsvgholder=getEl('holder_1000');
+	loadWorldmap(objPageVars.maps.world);
 
 
-	/*
-	Worldmap logic
-	*/
-	objPageElements.rootanimate=getEl('viewport');
-	objPageElements.rootsvg=document.getElementsByTagName('svg')[0];
-
-	objPageElements.rootsvg.setAttributeNS( null, 'viewBox', '0 0 '+objPageVars.width+' '+objPageVars.height);
-	//objPageElements.rootsvg.setAttributeNS( null, 'enable-background', '0 0 '+objPageVars.width+' '+objPageVars.height);
-	getEl('holder_1000').style.width = objPageVars.width+'px';
-	getEl('holder_1000').style.height = objPageVars.height+'px';
-	
-	objPageElements.rootsvg.setAttributeNS( null, 'width', objPageVars.width);
-	objPageElements.rootsvg.setAttributeNS( null, 'height', objPageVars.height);
-	
-	//scale the svg
-
-
-	var bolUseHomeGrown=false;
-	if(bolUseHomeGrown){
-		//initiate the hammer object to capture multitouch events
-		setupHammer();
-
-		//prepare an object containing vital information about the svg element to animate
-		objPageElements.rootanimateattributevalues=retrieveSvgElementObject(objPageElements.rootanimate);
-		console.log(objPageElements.rootanimateattributevalues);
-	}else{
-		initZoomPan(objPageElements.rootsvg);
-	}
-
-
+	//initiate the infographic
 	objPageElements.circlesvg = getEl('svg_circle');
 	objPageElements.svgpath=getEl('arc_path');
 	objPageElements.region_info = getEl('info');
@@ -867,20 +1072,19 @@ function initPage() {
 
 	//calls the function that generates an arc from the path svg node
 	generateArc(objArcProperties);
-	
 
 	
 	if(objPageVars.signedin && objPageVars.token !==""){
 		startApp();
-	}
+	}	
 	
 }
+
 function onResize() {
 	objPageVars.width = document.body.clientWidth;
 	objPageVars.height = document.documentElement["clientHeight"];
-	//console.log(objPageElements.raphaelmap.height);
-	objPageElements.raphaelmap.setSize(objPageVars.width, objPageVars.height);
-	//console.log(objPageElements.raphaelmap.height);
+	resizeWorldmap();
+	//centerWorldmap(objPageElements.rootanimate);
 }
 
 /*
@@ -895,11 +1099,17 @@ var objPageElements = {
 var objPageVars = {
 	token: '',
 	signedin: false,
-	mobile : false,
-	hammer : null,
-	width : document.body.clientWidth,
-	height : document.documentElement["clientHeight"],
-	selectedregionpath : {},
+	mobile: false,
+	hammer: null,
+	width: document.body.clientWidth,
+	height: document.documentElement["clientHeight"],
+	selectedregionpath: {},
+	//the available maps
+	maps: {
+		world: {url: 'svg/new1.svg'},
+		market: {url: 'svg/new2.svg'},
+		country: {url: 'svg/new3.svg'}
+	},
 	current_oru: 4,
 	current_mru: 'philips'
 }
@@ -917,11 +1127,13 @@ var isMobile = {
 	}
 };
 
+
 var dynamicResourceUrl = "https://www.troperlaunna2010.philips.com/tools/dynamic_resources_cached.aspx";
 var authUrl1 = "https://www.troperlaunna2010.philips.com/pages/login/login.aspx";
 var authUrl2 = "https://www.troperlaunna2010.philips.com/tools/dynamic_resources.aspx";
 var authUrl3 = "https://www.troperlaunna2010.philips.com/pages/login/authenticate_user.aspx";
 var snapshot_url = 'https://www.troperlaunna2010.philips.com/tools/dynamic_resources_cached.aspx?method=getworldmapdata';
+
 
 var currentScript = null,
 	success = null;

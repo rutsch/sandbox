@@ -37,12 +37,9 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
  */
 
 
-var initialized = false;
-
 var opts = { zoom: true, pan: true, drag: true }
 
 function initZoomPan(root) {
-
 
 	var state = 'none', stateTarget, stateOrigin, stateTf;
 
@@ -75,8 +72,6 @@ function initZoomPan(root) {
 	
 
 
-	initialized = true;
-
 	var elViewport=document.getElementById("viewport");
 	var bolDragging=false;
 	//for scale/pinch on mobile
@@ -88,6 +83,8 @@ function initZoomPan(root) {
 	var svgSizeXMin=null;
 	var maxZoom=7, minZoom=0.3;
 	var timer1, timer2;
+
+
 
 
 
@@ -113,6 +110,7 @@ function initZoomPan(root) {
 
 
 	function setupHandlersMobile(){
+		//console.log('setupHandlersMobile')
 		//a few "cheap" tricks to work around the tap-issue (sometimes you need to tap twice to trigger the event...)
 	    objPageVars.hammersvg.on("dragstart", function(ev) {
 	        //if(window.console) { console.log(ev); }
@@ -146,6 +144,7 @@ function initZoomPan(root) {
 	    });	
 	   	objPageVars.hammersvg.on("touch", function(ev) {
 	   		//if(window.console) { console.log(ev); }
+	   		//storeOriginal(ev);
 	   		timer2=setTimeout(function(){
 	   			if(!bolDragging)handleClick(ev);
 	   			bolDragging=false;
@@ -417,7 +416,7 @@ function initZoomPan(root) {
 		if(!objPageVars.mobile){
 			if(evt.preventDefault)evt.preventDefault();
 		}
-		
+
 		evt.returnValue = false;
 
 		var g, svgDoc;
@@ -428,12 +427,15 @@ function initZoomPan(root) {
 			var g = svgDoc.getElementById("viewport");
 		}
 
+
+
 		//console.log(state);
 		state='pan';
 		//console.log(opts)
 		if(state == 'pan') {
 			// Pan mode
 			if (!opts.pan) return;
+			//console.log('xx');
 
 
 			var p = getEventPoint(evt).matrixTransform(stateTf);
@@ -470,26 +472,21 @@ function initZoomPan(root) {
 			var g = svgDoc.getElementById("viewport");
 		}
 
+		//stateTf = g.getCTM().inverse();
+		//stateOrigin = getEventPoint(evt).matrixTransform(stateTf);		
+
 		if(evt.target.tagName == "svg" || !opts.drag) {
 			// Pan mode
 			if (!opts.pan) return;
-
-			state = 'pan';
-
 			stateTf = g.getCTM().inverse();
-
 			stateOrigin = getEventPoint(evt).matrixTransform(stateTf);
+			state = 'pan';
 		} else {
 			// Move mode
 			if (!opts.drag || evt.target.draggable == false) return;
-
-			state = 'move';
-
-			stateTarget = evt.target;
-
 			stateTf = g.getCTM().inverse();
-
 			stateOrigin = getEventPoint(evt).matrixTransform(stateTf);
+			state = 'move';
 		}
 	}
 
@@ -510,6 +507,19 @@ function initZoomPan(root) {
 		}
 
 		//pinchRemembered=1;
+	}
+
+	function storeOriginal(evt){
+		var g, svgDoc;
+		if(objPageVars.mobile){
+			var g = elViewport;
+		}else{
+			var svgDoc = evt.target.ownerDocument;
+			var g = svgDoc.getElementById("viewport");
+		}
+
+		stateTf = g.getCTM().inverse();
+		stateOrigin = getEventPoint(evt).matrixTransform(stateTf);	
 	}
 }
 
