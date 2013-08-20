@@ -54,7 +54,7 @@ function initZoomPan(root) {
 		Hammer.gestures.Drag.defaults.correct_for_drag_min_distance=true;
 
 		//setup a hammer object for the svg worldmap
-		objPageVars.hammersvg = Hammer(document.getElementById("svg_wrapper"), {
+		objPageVars.hammersvg = Hammer(document.getElementById("holder_1000"), {
 			prevent_default: true,
 			no_mouseevents: true,
 
@@ -246,14 +246,18 @@ function initZoomPan(root) {
 
    		if(objPageVars.mobile){
 			var elSvg=evt.srcElement;
-			idCountry=elSvg.id;
+			var elParent=elSvg.parentNode;
+			if(elParent.nodeName=='g'){
+				idCountry=elSvg.parentNode.id;
+				countryClicked(idCountry);
+			}
    		}else{
    			//console.log(evt);
    			//console.log(el);
    		}
+   		//debugger;
+   		//console.log(evt);
    		
-
-   		countryClicked(idCountry);
 
 	 }
 

@@ -119,27 +119,6 @@
 				var intRelativefingerX=objAnimationProperties.fingerx-objSvgProperties.x;
 				var intRelativefingerY=objAnimationProperties.fingery-objSvgProperties.y;		
 						
-				/*
-				//translate the position on the screen to a position on the svg node
-
-				console.log('intRelativefingerX: '+intRelativefingerX+' intRelativefingerY: '+intRelativefingerY);
-
-				//calculate the end position of the svg node after zoom is done
-				
-				//var intTranslateX=(0-objAnimationProperties.relativefingerx)*(zoomLevel-1)+objSvgProperties.transformmatrix.e;
-				//var intTranslateY=(0-objAnimationProperties.relativefingery)*(zoomLevel-1)+objSvgProperties.transformmatrix.f;
-
-				//+(0-objSvgProperties.transformmatrix.e)
-				//+(0-objSvgProperties.transformmatrix.f)
-
-				var intTranslateX=(0-intRelativefingerX)*(zoomLevel-1);
-				console.log('(0-intRelativefingerX)*(zoomLevel-1)='+'(0 - '+intRelativefingerX+')*('+zoomLevel+'-1)');
-				var intTranslateY=(0-intRelativefingerY)*(zoomLevel-1);
-
-				console.log('intTranslateX: '+intTranslateX+' intTranslateY: '+intTranslateY);
-				console.log('---');
-				*/
-
 				//remember the original values
 				var vBHo = viewBoxHeight;
 				var vBWo = viewBoxWidth;
@@ -153,8 +132,8 @@
 				viewBoxHeight*=(1/zoomLevel);
 
 				//correction here for the mouse/finger position
-				viewBox.X -= ((viewBoxWidth - vBWo) / 2)+((intRelativefingerX*zoomLevel)/2);
-				viewBox.Y -= ((viewBoxHeight - vBHo) / 2)+((intRelativefingerY*zoomLevel)/2); 
+				viewBox.X -= ((viewBoxWidth - vBWo) / 2);
+				viewBox.Y -= ((viewBoxHeight - vBHo) / 2); 
 
 				//start values
 				var objTweenProps={
@@ -187,13 +166,8 @@
 
 				}else{
 					/* set it without animating */
-					objSvgProperties.translatex=intTranslateX;
-					objSvgProperties.translatey=intTranslateY;
-					objSvgProperties.scale=zoomLevel;
-					svgSetTransform(elSvg, objSvgProperties);
+					elSvg.setAttributeNS( null, 'viewBox', objTweenProps.vbx+' '+objTweenProps.vby+' '+objTweenProps.vbw+' '+objTweenProps.vbh);
 				}
-
-
 			}
 
 			//sets the transform attribute on the passed svg node
