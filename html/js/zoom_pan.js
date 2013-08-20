@@ -416,7 +416,7 @@ function initZoomPan(root) {
 		if(!objPageVars.mobile){
 			if(evt.preventDefault)evt.preventDefault();
 		}
-
+		
 		evt.returnValue = false;
 
 		var g, svgDoc;
@@ -427,15 +427,12 @@ function initZoomPan(root) {
 			var g = svgDoc.getElementById("viewport");
 		}
 
-
-
 		//console.log(state);
-		state='pan';
 		//console.log(opts)
+		state='pan';
 		if(state == 'pan') {
 			// Pan mode
 			if (!opts.pan) return;
-			//console.log('xx');
 
 
 			var p = getEventPoint(evt).matrixTransform(stateTf);
