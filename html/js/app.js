@@ -282,6 +282,8 @@ function btnCloseExplainClick() {
 	});
 }
 function btnBookmarksClick() {
+	location.reload();
+	/*
 	panels.overlay.style.display = "block";
 	TweenLite.to(panels.overlay, 0.3, {
 		opacity : 0.7,
@@ -294,6 +296,7 @@ function btnBookmarksClick() {
 			});
 		}
 	});
+	*/
 }
 function btnCloseBookmarksClick() {
 	TweenLite.to(panels.bookmarks, 0.4, {
@@ -312,7 +315,7 @@ function btnCloseBookmarksClick() {
 	});
 }
 function countryClicked(idCountry) {
-	if (idCountry !== "") {
+	if (idCountry !== "" &&) {
 		regionClick(idCountry);
 	}
 }
@@ -637,7 +640,8 @@ function startApp(){
 	    		
 	    		panels.mruhtml.innerHTML = results.mruHtml;
 	    		showMruFilterLevel('producttree_temp');
-				renderWorldmap();
+				
+				//renderWorldmap();
 	    	});			
 			
 		
@@ -648,6 +652,7 @@ function startApp(){
  * Executes page logic
  */
 function initPage() {
+	//alert('in');
 	// init global objects
 	panels = {
 		login : getEl('login_panel'),
@@ -666,6 +671,7 @@ function initPage() {
 		simulation : getEl('simulation'),
 		mru_filter: getEl('filter_container')
 	}
+	
 	// set the global page variable to detect if we are running on a mobile
 	// device or not
 	objPageVars.mobile = isMobile.any();
@@ -681,6 +687,38 @@ function initPage() {
 		 * prevent_default: true, no_mouseevents: true });
 		 */
 	}
+
+
+	/*
+	Worldmap logic
+	*/
+	objPageElements.rootanimate=getEl('viewport');
+	objPageElements.rootsvg=document.getElementsByTagName('svg')[0];
+
+	objPageElements.rootsvg.setAttributeNS( null, 'viewBox', '0 0 '+objPageVars.width+' '+objPageVars.height);
+	//objPageElements.rootsvg.setAttributeNS( null, 'enable-background', '0 0 '+objPageVars.width+' '+objPageVars.height);
+	getEl('holder_1000').style.width = objPageVars.width+'px';
+	getEl('holder_1000').style.height = objPageVars.height+'px';
+	
+	objPageElements.rootsvg.setAttributeNS( null, 'width', objPageVars.width);
+	objPageElements.rootsvg.setAttributeNS( null, 'height', objPageVars.height);
+	
+	//scale the svg
+
+
+	var bolUseHomeGrown=false;
+	if(bolUseHomeGrown){
+		//initiate the hammer object to capture multitouch events
+		setupHammer();
+
+		//prepare an object containing vital information about the svg element to animate
+		objPageElements.rootanimateattributevalues=retrieveSvgElementObject(objPageElements.rootanimate);
+		console.log(objPageElements.rootanimateattributevalues);
+	}else{
+		initZoomPan(objPageElements.rootsvg);
+	}
+
+
 	objPageElements.circlesvg = getEl('svg_circle');
 	objPageElements.svgpath=getEl('arc_path');
 	objPageElements.region_info = getEl('info');

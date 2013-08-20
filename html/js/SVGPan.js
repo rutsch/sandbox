@@ -142,7 +142,7 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 		        handlePinch(ev);
 		    });	
 		   	objPageVars.hammersvg.on("touch", function(ev) {
-		   		if(window.console) { console.log(ev); }
+		   		//if(window.console) { console.log(ev); }
 		   		timer2=setTimeout(function(){
 		   			if(!bolDragging)handleClick(ev);
 		   			bolDragging=false;
@@ -217,7 +217,7 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 				idCountry=elSvg.id;
 	   		}else{
 	   			//console.log(evt);
-	   			console.log(el);
+	   			//console.log(el);
 	   		}
 	   		
 
@@ -247,7 +247,7 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 
 			var z = 1 + delta; // Zoom factor: 0.9/1.1
 
-			console.log('zoom factor z:'+z+' delta:'+delta);
+			//console.log('zoom factor z:'+z+' delta:'+delta);
 
 			zoomSvg(evt, z);
 		}
@@ -289,7 +289,7 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 				if(z>1.05)z=1.05;
 				if(z<0.95)z=0.95;
 
-				console.log('* mode: '+mode+' zOriginal:'+zOriginal+' z:'+z+' pinchRemembered:'+debugPinchRemembered);
+				//console.log('* mode: '+mode+' zOriginal:'+zOriginal+' z:'+z+' pinchRemembered:'+debugPinchRemembered);
 				
 				//logic to determine if we can zoom any further
 				var bolExecuteZoom=true;
@@ -355,9 +355,12 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 				var g = svgDoc.getElementById("viewport");
 			}
 			
+			//console.log('---');
 			var p = getEventPoint(evt);
-
+			//console.log(p);
 			p = p.matrixTransform(g.getCTM().inverse());
+			//console.log(p);
+			//console.log('---');
 
 			// Compute new scale matrix in current mouse position
 			var k = root.createSVGMatrix().translate(p.x, p.y).scale(z).translate(-p.x, -p.y);
