@@ -988,7 +988,7 @@ function startApp(){
 							key=objPageVars.current_mru + '_' + regionId,
 							regionData = data.snapshotdata[key],
 							colors;
-						
+						//debugger;
 						if (regionData) {
 							//console.log(regionData);
 							//debugger;
@@ -1001,7 +1001,8 @@ function startApp(){
 		            			middle: '#5BCCD4',
 		            			high: '#30B6BF'
 		            		}
-							region.style.fill=getColorForPercentage(percentageLI, colors.low, colors.middle, colors.high);
+							//debugger;
+							region.firstElementChild.style.fill=getColorForPercentage(percentageLI, colors.low, colors.middle, colors.high);
 								//self.increaseBrightness('#112233', percentageLI);
 						} else {
 							//debugger;
