@@ -68,11 +68,17 @@ body{
 	-webkit-box-sizing:border-box;
 }
 .btn_close{
-	width: 50px;
-	height: 50px;
+	width: 100%;
+	height: 40px;
 	float: right;
 	padding: 15px 0 0 0;
 	text-align: center;
+}
+.modal_content{
+	position: relative;
+	top: 40px;
+	bottom: 0px;
+	width: 100%;
 }
 #title_bar{
 	position: absolute;
@@ -110,6 +116,7 @@ body{
 	left: 60px;
 	text-align: center;
 	margin-top: 5px;
+	opacity: 0;
 }
 #region_name{
 	color: #fff;
@@ -184,6 +191,18 @@ body{
 	bottom: 0px;
 	height: 100%;
 }
+
+path#arc_path, circle#background{
+	fill: none;
+	stroke-width: 20;       	
+}
+path#arc_path{
+	stroke: #00495d;     	
+}
+circle#background{
+	stroke-opacity: .8;
+	stroke: #006890;
+}
 .data_wrapper{
 	position: absolute;
 	width: 50%;
@@ -196,19 +215,23 @@ body{
 	width: 50%;
 	overflow: hidden;
 	float: left;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	float: left;	
 }
-#holder svg{
-	position: absolute!important;
-	bottom: 0px;
-	left: 0px;
-}
+
 #region_data{
 	text-align: right;
 	width: 50%;
 	height: 100%;
 }
 #region_data div{
+	display: inline-block;
 	padding-right: 15px;
+	padding-left: 30px;
+	width: auto;
+	
 }
 span{
 	display: block;
@@ -227,7 +250,8 @@ span{
 	height: 25%;
 	bottom: 25%;
 	left: 0px;
-	right: 0px;	
+	right: 0px;
+		
 }
 #region_population{
 	position: absolute;
@@ -238,40 +262,54 @@ span{
 	right: 0px;		
 }
 #nr_lives_improved{
+	padding-top: 10px;
 	font-size: 50px;
+	height: 50px;
 	color: #fff;
 }
 .lives_improved_sub{
 	clear: both;
 	display: block;
-	font-size: 9px;
+	font-size: 10px;
+	width: 100%;
 	color: #004c63;
 	font-weight: bold;
+	padding-right: 5px!important;
+	padding-left: 5px!important;
 }
 #nr_gdp{
 	color: #fff;
+	padding-top: 2px;
+	background: url('../img/gdp_icon.png') no-repeat 0px -4px;	
+	height: 45px;
+	padding-right: 5px!important;
 }
 #nr_population{
 	color: #fff;
+	padding-top: 5px;
+	padding-right: 5px!important;
+	background: url('../img/population_icon.png') no-repeat 0px -2px;	
+	height: 45px;
 }
 #percentage{
 	position: absolute;
-	bottom: 75px;
-	left: 75px;
+	bottom: 65px;
+	left: 38px;
 	z-index: 0;
 	background: transparent;
-	width: 50px;
-	height: 50px;
+	width: 80px;
+	height: 80px;
+	opacity: 0;
 }
 #percentage div{
 	text-align: center;
 }
 #lives_improved_percentage{
-	font-size: 25px;
+	font-size: 35px;
 	color: #fff;
 }
 #lives_improved_percentage_sub{
-	font-size: 9px;
+	font-size: 8px;
 	color: #004c63;
 	font-weight: bold;
 }
@@ -343,7 +381,7 @@ span{
 }
 input[type='range'] {
     -webkit-appearance: none;
-    width: 85%;
+    width: 83%;
     height: 1px;
     padding: 0px;
     margin-top: -3px;
@@ -369,19 +407,22 @@ input[type='range']::-webkit-slider-thumb {
     background-color: #fff;
     background-repeat: no-repeat;
     background-position: 50%;
-	-moz-box-shadow:    0px 0px 1px 1px #ccc;
+	-moz-box-shadow: 0px 0px 1px 1px #ccc;
   	-webkit-box-shadow: 0px 0px 1px 1px #ccc;
   	box-shadow: 0px 0px 1px 1px #ccc;
   	z-index: 10000;
 }
 .slider_value{
-	width: 10%;
+	width: 12%;
 	display: inline-block;
-	font-size: 17px;
-	padding: 0px 4px;
+	font-size: 15px;
+	font-weight: bold;
+	padding: 0px 0px;
+	color: #007aa7;
+	float: right;
 }
 .range_indicator{
-	width: 85%;
+	width: 83%;
 	height: 20px;
 	position: relative;
 	padding-top: 5px;
@@ -404,7 +445,9 @@ h3{
 	color: #4a4a4a;
 	font-size: 20px;
 	font-weight: normal;
+	
 }
 h4{
 	color: #4a4a4a;
+
 }

@@ -33,7 +33,16 @@
 							<div id="lives_improved_percentage">61%</div>
 							<div id="lives_improved_percentage_sub">of total population</div>
 						</div>
-						<div id="holder"></div>					
+						<div id="holder">
+							<svg id="svg_circle" xmlns="http://www.w3.org/2000/svg" version="1.1" width="80%" height="80%" viewBox="-10 -10 240 240">
+						
+								
+							  <g id="g" fill="none" transform="translate(-80,-80)">
+									<circle id="background" width="100" cx="200" cy="200" r="100" />
+									<path id="arc_path" />		    
+							  </g>
+							</svg>
+						</div>					
 					</div>
 					<div class="data_wrapper">
 						<div id="region_data">
@@ -54,14 +63,14 @@
 					<div id="simulation_wrapper">
 						<h3>Simulation</h3>
 						<h4>Sales</h4>
-						<input type="range" min="-20" max="30" value="0" step="0.5"><div class="slider_value" id="value_sales">-2%</div>		
+						<input type="range" min="-20" max="30" value="-2" step="1" onchange="updateValue(this.value, 'value_sales')"><div class="slider_value" id="value_sales">-2%</div>		
 						<div class="range_indicator">
 							<div class="min">-20</div>
 							<div class="zero">0</div>
 							<div class="max">30</div>
 						</div>
 						<h4>Green sales</h4>
-						<input type="range" min="-20" max="30" value="0" step="0.5"><div class="slider_value" id="value_green_sales">+15%</div>		
+						<input type="range" min="-20" max="30" value="15" step="1" onchange="updateValue(this.value, 'value_green_sales')"><div class="slider_value" id="value_green_sales">+15%</div>		
 						<div class="range_indicator">
 							<div class="min">-20</div>
 							<div class="zero">0</div>
@@ -88,7 +97,7 @@
 		</div>
 		<div id="filter_panel" class="panel modal">
 			<div id="btn_close_filter" class="btn btn_close" onclick="btnCloseFilterClick();">Close</div>
-			<div id="filter_container"></div>
+			<div id="filter_container" class="modal_content"></div>
 		</div>
 		<div id="explain_panel" class="panel modal">
 			<div id="btn_close_explain" class="btn btn_close" onclick="btnCloseExplainClick();">Close</div>
