@@ -783,11 +783,11 @@ var isMobile = {
 	}
 };
 
-var mruUrl = "https://www.troperlaunna2010.philips.com/tools/dynamic_resources_cached.aspx";
-var authUrl1 = "https://www.troperlaunna2010.philips.com/pages/login/login.aspx";
-var authUrl2 = "https://www.troperlaunna2010.philips.com/tools/dynamic_resources.aspx";
-var authUrl3 = "https://www.troperlaunna2010.philips.com/pages/login/authenticate_user.aspx";
-var snapshot_url = 'https://www.troperlaunna2010.philips.com/tools/dynamic_resources_cached.aspx?method=getworldmapdata';
+var mruUrl = "https://www.livesimproved.philips.com/tools/dynamic_resources_cached.aspx";
+var authUrl1 = "https://www.livesimproved.philips.com/pages/login/login.aspx";
+var authUrl2 = "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx";
+var authUrl3 = "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx";
+var snapshot_url = 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached.aspx?method=getworldmapdata';
 
 var currentScript = null,
 	success = null;
