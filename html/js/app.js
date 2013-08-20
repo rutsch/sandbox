@@ -761,8 +761,8 @@ var objPageElements = {
 	regionRaphael: {}
 };
 var objPageVars = {
-	token: 'a',
-	signedin: true,
+	token: '',
+	signedin: false,
 	mobile : false,
 	hammer : null,
 	width : document.body.clientWidth,
