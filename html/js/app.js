@@ -315,7 +315,7 @@ function btnCloseBookmarksClick() {
 	});
 }
 function countryClicked(idCountry) {
-	if (idCountry !== "" &&) {
+	if (idCountry !== "") {
 		regionClick(idCountry);
 	}
 }
