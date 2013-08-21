@@ -491,9 +491,8 @@ function handleZoomDesktop(evt){
 	else
 		delta = evt.detail / -9; // Mozilla
 
-	var z = Math.pow(1 + objZoomPanSettings.zoomscale, delta);
 
-	handleZoom(evt, z);
+	handleZoom(evt, Math.pow(1 + objZoomPanSettings.zoomscale, delta));
 
 
 }
