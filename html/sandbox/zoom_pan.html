@@ -69,33 +69,6 @@
 
 
 
-			//settings for the touch system
-			var objTouchSettings={
-				debug: true,
-				debugtoconsole: true,
-				debugtointerface: true,
-				zoommax: 5,
-				zoommin: 0.2
-			}
-
-			//data that will be updated while touching the screen
-			/*
-			var objTouchVars={
-				dragging: false,
-				timer1: null,
-				timer2: null,
-				timer3: null,
-				zoom: 1,
-				zoomworking: 1,
-				fingerx: null,
-				fingery: null,
-				pinchsize: 0,
-				pinchscale: 1,
-				sampling: false,
-				action: ''
-			}
-			*/
-
 
 			/*
 			Executes page logic
@@ -114,6 +87,23 @@
 				objPageVars.mobile=isMobile.any();
 				
 				objZoomPanSettings.mobile=objPageVars.mobile;
+				objZoomPanSettings.clickcallback=function(event){
+					//console.log('in callback');
+					//console.log(event);
+
+					var elClicked=event.srcElement;
+					var strElementName=elClicked.nodeName;
+					var strElementId=(elClicked.id)?elClicked.id:'';
+
+					var elParent=elClicked.parentNode;
+					var strParentElementName=elParent.nodeName;
+					var strParentElementId=(elParent.id)?elParent.id:'';
+
+					console.log('strElementName: '+strElementName+' strElementId: '+strElementId+' strParentElementName:'+strParentElementName+' strParentElementId: '+strParentElementId);
+
+
+
+				}
 				initSgvZoomPan(objPageElements.rootsvg, objPageElements.rootanimate);
 
 				
