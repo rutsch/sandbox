@@ -966,6 +966,7 @@ function loadWorldmap(oru, cb){
 					//initiate the new version of the zoom pan library
 
 					objTouchSettings.debugtointerface=false;
+					objTouchSettings.debugtoconsole=false;
 					objZoomPanSettings.mobile=objPageVars.mobile;
 					
 					objZoomPanSettings.clickcallback=function(event){
