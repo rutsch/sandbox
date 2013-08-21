@@ -996,7 +996,7 @@ function loadWorldmap(oru, cb){
 
 						//console.log('strElementName: '+strElementName+' strElementId: '+strElementId+' strParentElementName:'+strParentElementName+' strParentElementId: '+strParentElementId);
 
-						countryClicked(strElementId);
+						if(strElementName=='path')countryClicked(strElementId);
 
 
 					}
