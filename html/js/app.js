@@ -535,6 +535,7 @@ function countryClicked(idCountry) {
 	}
 }
 function regionClick(idCountry) {
+	debugger;
 	objPageVars.current_region = idCountry;
 	var sec={},
 	back={},
@@ -974,7 +975,7 @@ function loadWorldmap(oru, cb){
 
 						//console.log('strElementName: '+strElementName+' strElementId: '+strElementId+' strParentElementName:'+strParentElementName+' strParentElementId: '+strParentElementId);
 
-						countryClicked(strParentElementId);
+						countryClicked(strElementId);
 
 
 					}
@@ -1146,7 +1147,7 @@ function updateWorldmap(){
 			loadWorldmap(oru, function(){
 				objPageVars.worldmapdata = data.snapshotdata;
 				var arrRegions = getFirstLevelChildElements(getEl('viewport'), 'path') ;// getEl('viewport').getElementsByTagName('g');
-				//debugger;
+				debugger;
 				for ( var i = 0; i < arrRegions.length; i++) {
 					var region = arrRegions[i],
 						regionId = region.id == 'UK' ? 'GB' : region.id,
