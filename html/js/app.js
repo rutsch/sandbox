@@ -995,9 +995,8 @@ function loadWorldmap(oru, cb){
 						var strParentElementId=(elParent.id)?elParent.id:'';
 
 						//console.log('strElementName: '+strElementName+' strElementId: '+strElementId+' strParentElementName:'+strParentElementName+' strParentElementId: '+strParentElementId);
-						countryClicked(strElementId);
 
-
+						if(strElementName=='path')countryClicked(strElementId);
 					}
 					initSgvZoomPan(objPageElements.rootsvg, objPageElements.rootanimate);
 
