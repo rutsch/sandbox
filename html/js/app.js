@@ -458,6 +458,7 @@ function btnFilterClick() {
 	});
 }
 function btnCloseFilterClick() {
+	updateWorldmap();
 	TweenLite.to(panels.filter, 0.4, {
 		opacity : 0,
 		display : 'none',
@@ -547,47 +548,58 @@ function regionClick(idCountry) {
 	key=objPageVars.current_mru + '_' + idCountry,
 	regionData = objPageVars.worldmapdata[key];
 	
-	getEl('nr_lives_improved').innerHTML =regionData.l;
-	getEl('nr_gdp').innerHTML ='$'+regionData.g+' trillion';
-	getEl('nr_population').innerHTML =regionData.p+ ' million';
-	getEl('lives_improved_percentage').innerHTML = regionData.percentageLI+'%';
-	
-	toggleClass(getEl('btn_back'), 'hide');
-	TweenLite.to(appPanels.region_info, 0.4, {
-		height : '40%'
-	});
-	TweenLite.to(appPanels.simulation, 0.4, {
-		height : '60%',
-		onComplete : function() {
-			//updateVal(61, 100, 50, sec, 2, 1500);
-			TweenLite.to(objPageElements.region_info, 0.4, {
-				opacity : 1,
+	TweenLite.to(getEl(idCountry), 0.5, {
+		opacity: 0.5, 
+		onComplete: function(){
+			getEl('nr_lives_improved').innerHTML =regionData.l;
+			getEl('nr_gdp').innerHTML ='$'+regionData.g+' trillion';
+			getEl('nr_population').innerHTML =regionData.p+ ' million';
+			getEl('lives_improved_percentage').innerHTML = regionData.percentageLI+'%';
+			getEl('region_name').innerHTML = getRegionNameById(idCountry);
+			getEl('filter_breadcrumb').innerHTML = getMruFilterBreadcrumb();
+			
+			toggleClass(getEl('btn_back'), 'hide');
+			TweenLite.to(appPanels.region_info, 0.4, {
+				height : '40%'
+			});
+			TweenLite.to(appPanels.simulation, 0.4, {
+				height : '60%',
 				onComplete : function() {
 					//updateVal(61, 100, 50, sec, 2, 1500);
-					// position the percentage div over the circle svg
-					var elCircle = getEl('background');
-					
-					//var width = elCircle.getBBox().width;
-					//var width2 = getTransformedWidth(objPageElements.circlesvg, elCircle);
-					var boundingRect = elCircle.getBoundingClientRect(); 
-					var width=boundingRect.width*100/90;
-					var left=boundingRect.left;
-					var centerx = left+(width/2) -10;
-					debugger;
-					objPageElements.percentage.style.left = centerx - (objPageElements.percentage.clientWidth /2) + 'px';
-					objPageElements.percentage.style.bottom = (boundingRect.bottom /8) + (width/2) - (objPageElements.percentage.clientHeight / 2)  + 'px';
-										
-					var percentage = 61;
-					TweenLite.to(objPageElements.percentage, 0.4, {
+					TweenLite.to(objPageElements.region_info, 0.4, {
 						opacity : 1,
-						onComplete : function() {	
-							animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 2);
+						onComplete : function() {
+							//updateVal(61, 100, 50, sec, 2, 1500);
+							// position the percentage div over the circle svg
+							var elCircle = getEl('background');
+							
+							//var width = elCircle.getBBox().width;
+							//var width2 = getTransformedWidth(objPageElements.circlesvg, elCircle);
+							var boundingRect = elCircle.getBoundingClientRect(); 
+							var width=boundingRect.width*100/90;
+							var left=boundingRect.left;
+							var centerx = left+(width/2) -10;
+							debugger;
+							objPageElements.percentage.style.left = centerx - (objPageElements.percentage.clientWidth /2) + 'px';
+							objPageElements.percentage.style.bottom = (boundingRect.bottom /8) + (width/2) - (objPageElements.percentage.clientHeight / 2)  + 'px';
+												
+							TweenLite.to(objPageElements.percentage, 0.4, {
+								opacity : 1,
+								onComplete : function() {	
+									animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 2);
+									TweenLite.to(getEl(idCountry), 0.5, {
+										opacity: 1
+									});
+								}
+							});
 						}
-					});
+					});			
 				}
 			});			
 		}
 	});
+	
+
 }
 function updateValue(val, id){
 	var target = getEl(id);
@@ -640,12 +652,16 @@ function showMruFilterLevel(id){
 		objPageVars.current_sector = id;
 	}
 	objPageVars.current_mru = id;
-	updateWorldmap();	
+		
 	var arrLi = getFirstLevelChildElementsById(id, 'li');
 	renderMruFilterComponent(arrLi, id);
 }
-
-
+function setCurrentOru(oru){
+	objPageVars.current_oru = oru;
+}
+function toggleFavourite(){
+	
+}
 /*
  * Data functions
  */
@@ -883,45 +899,69 @@ function animateArc(objArgs, intAnimationDurationInSeconds){
 }
 
 //performs an ajax call and inserts the retrieved svg data into the wrapper div
-function loadWorldmap(objArgs){
-	serverSideRequest({
-		url: objArgs.url, 
-		method: 'get', 
-		debug: true,
-		debug: false,
-		callback: function(strSvgData){
-			//insert the SVG data into the holder div
-			objPageElements.elsvgholder.innerHTML=strSvgData;
+function loadWorldmap(oru, cb){
+	
+	var strOru = 'world';
+	switch (oru) {
+	case 1:
+		strOru = 'world';
+		break;
+	case 2:
+		strOru = 'region';
+		break;
+	case 3:
+		strOru = 'market';
+		break;
+	case 4:
+		strOru = 'country';
+		break;
+	default:
+		break;
+	}	
+	if(objPageVars.currentsvgid == oru){
+		cb();
+	}else{
+		serverSideRequest({
+			url: objPageVars.maps[strOru].url, 
+			method: 'get', 
+			debug: true,
+			debug: false,
+			callback: function(strSvgData){
+				//insert the SVG data into the holder div
+				objPageElements.elsvgholder.innerHTML=strSvgData;
 
-			//retrieve the base svg elements
-			objPageElements.rootanimate=getEl('viewport');
-			objPageElements.rootsvg=document.getElementsByTagName('svg')[0];
-			
-			//resize the map to fit into the window
-			resizeWorldmap();
+				//retrieve the base svg elements
+				objPageElements.rootanimate=getEl('viewport');
+				objPageElements.rootsvg=document.getElementsByTagName('svg')[0];
+				
+				//resize the map to fit into the window
+				resizeWorldmap();
 
-			
+				
 
-			//prepare an object containing vital information about the svg element to animate
-			objPageElements.rootanimateattributevalues=retrieveSvgElementObject(objPageElements.rootanimate);
+				//prepare an object containing vital information about the svg element to animate
+				objPageElements.rootanimateattributevalues=retrieveSvgElementObject(objPageElements.rootanimate);
 
-			centerWorldmap(objPageElements.rootanimate);
-			
-			//apply zoom and pan functionality to the svg drawing
-			var bolUseHomeGrown=false;
-			if(bolUseHomeGrown){
-				//initiate the hammer object to capture multitouch events
-				setupHammer();
+				centerWorldmap(objPageElements.rootanimate);
+				
+				//apply zoom and pan functionality to the svg drawing
+				var bolUseHomeGrown=false;
+				if(bolUseHomeGrown){
+					//initiate the hammer object to capture multitouch events
+					setupHammer();
 
 
-				//console.log(objPageElements.rootanimateattributevalues);
-			}else{
-				initZoomPan(objPageElements.rootsvg);
+					//console.log(objPageElements.rootanimateattributevalues);
+				}else{
+					initZoomPan(objPageElements.rootsvg);
+				}
+				objPageVars.currentsvgid=oru;
+				cb();
 			}
+		});		
+		
+	}
 
-
-		}
-	});
 
 }
 
@@ -1039,41 +1079,91 @@ function updateWorldmap(){
 			setCookie('token', '', 365);
 			btnLogoutClick();			
 		}else{
-			objPageVars.worldmapdata = data.snapshotdata;
-			var arrRegions = getEl('viewport').getElementsByTagName('path');
-			for ( var i = 0; i < arrRegions.length; i++) {
-				var region = arrRegions[i],
-					regionId = region.id == 'UK' ? 'GB' : region.id,
-					key=objPageVars.current_mru + '_' + regionId,
-					regionData = objPageVars.worldmapdata[key];
-				if (regionData) {
-					var percentageLI = (regionData.l * 100) / regionData.p || 0;
-					if(percentageLI> 99)percentageLI=100;
-					if(percentageLI< 1)percentageLI=0;
-					objPageVars.worldmapdata[key].percentageLI = Math.round(percentageLI);
-					
-					var color=getColorForPercentage(percentageLI, colors[objPageVars.current_sector].low, colors[objPageVars.current_sector].middle, colors[objPageVars.current_sector].high);
-					objPageVars.worldmapdata[key].color = color;
-					region.style.fill=color;
-					
-					//var paths=region.getElementsByTagName('path');
-					//for ( var ii = 0; ii < paths.length; ii++) {
-					//	paths[ii].style.fill=color;
-					//}									
-				} else {
-					region.style.fill = '#000';
-				}							
-			}
-			hideLoadingPanel();
+			//load correct map
+			var oru = objPageVars.current_oru;
+
+			loadWorldmap(oru, function(){
+				objPageVars.worldmapdata = data.snapshotdata;
+				var arrRegions = getFirstLevelChildElements(getEl('viewport'), 'g') ;// getEl('viewport').getElementsByTagName('g');
+				//debugger;
+				for ( var i = 0; i < arrRegions.length; i++) {
+					var region = arrRegions[i],
+						regionId = region.id == 'UK' ? 'GB' : region.id,
+						key=objPageVars.current_mru + '_' + (oru == 3 ? regionId.toLowerCase() : regionId),
+						regionData = objPageVars.worldmapdata[key];
+					//console.log();
+					//debugger;
+					if (regionData) {
+						var percentageLI = (regionData.l * 100) / regionData.p || 0;
+						if(percentageLI> 99)percentageLI=100;
+						if(percentageLI< 1)percentageLI=0;
+						objPageVars.worldmapdata[key].percentageLI = Math.round(percentageLI);
+						
+						var color=colors[objPageVars.current_sector].middle;//getColorForPercentage(percentageLI, colors[objPageVars.current_sector].low, colors[objPageVars.current_sector].middle, colors[objPageVars.current_sector].high);
+						objPageVars.worldmapdata[key].color = color;
+						var opacity=((percentageLI/100) * 0.7) + 0.3;
+						if(opacity < 0.2)opacity = 0.2;
+						region.style.opacity=1;
+						
+						var paths=region.getElementsByTagName('*');//.concat(region.getElementsByTagName('path'),region.getElementsByTagName('rect'),region.getElementsByTagName('polygon'));
+						for ( var ii = 0; ii < paths.length; ii++) {
+							var path = paths[ii];
+							if(path.nodeName == 'path' || path.nodeName == 'polygon' || path.nodeName == 'rect' || path.nodeName == 'g'){
+								paths[ii].style.fill=color;	
+								paths[ii].style.opacity=opacity;
+							}
+						}									
+					} else {
+						region.style.fill = '#000';
+					}							
+				}
+				hideLoadingPanel();				
+			});
+			
+			
 		}
 	});	
 }
 function getMruFilterBreadcrumb(){
 	var mru = objPageVars.current_mru;
-	objPageVars;
+	var el = getEl(mru);
+	var name = el.firstElementChild.innerHTML,
+	    arrParents = [];
+	arrParents.push(name);
+
+	while(el.parentNode !=null && el.parentNode.className !== 'filter_list mru'){
+	    el = el.parentNode; 
+	    if(el.localName == 'li'){
+	        arrParents.push(el.firstElementChild.innerHTML);
+	    }
+	    
+	}
+
+	return(arrParents.reverse().join(' - '));	
+	
+}
+var matchFound= false,
+returnObj;
+function iterate(obj, type, value) {
+	for (var property in obj) {
+	    
+	    if (obj.hasOwnProperty(property)) {
+	        if (typeof obj[property] == "object")
+	            iterate(obj[property], type, value);
+	        else
+	            if(obj[property] === value){
+	                if(property === type){
+	                    returnObj = obj;
+	                    matchFound= true;
+	                    break;
+	                }
+	            }
+	    }
+	}
+	return returnObj;
 }
 function getRegionNameById(regionId){
-	
+	return iterate(objPageVars.orujson, 'guid', regionId).name;
 }
 /*
  * Executes page logic
@@ -1106,7 +1196,7 @@ function initPage() {
 
 	//load the worldmap and continue processing
 	objPageElements.elsvgholder=getEl('holder_1000');
-	loadWorldmap(objPageVars.maps.country);
+	
 
 
 	//initiate the infographic
@@ -1161,10 +1251,10 @@ var objPageVars = {
 	selectedregionpath: {},
 	//the available maps
 	maps: {
-		world: {url: 'svg/new1.svg'},
-		region: {url: 'svg/new1.svg'},
-		market: {url: 'svg/new2.svg'},
-		country: {url: 'svg/countries.svg'}
+		world: {url: 'svg/World.svg'},
+		region: {url: 'svg/Continents.svg'},
+		market: {url: 'svg/Markets.svg'},
+		country: {url: 'svg/Countries.svg'}
 	},
 	current_oru: 4,
 	current_mru: 'philips',

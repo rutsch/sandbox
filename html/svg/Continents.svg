@@ -3,7 +3,8 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <svg version="1.0" id="Continents" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="581.28px" height="342.25px" viewBox="0 0 581.28 342.25" enable-background="new 0 0 581.28 342.25" xml:space="preserve">
-<g id="Asia">
+	 <g id="viewport" preserveAspectRatio="xMinYMin" transform="">
+<g id="asia">
 	<g>
 		<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#96CA55" points="478.287,162.499 478.162,162.635 478.264,162.731 
 			478.377,162.543 		"/>
@@ -2285,7 +2286,7 @@
 			l0.012,0.588l0.182,0.306l-0.023,0.181L449.107,189.404z"/>
 	</g>
 </g>
-<g id="EMEA">
+<g id="emea">
 	<g>
 		<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#A7D2FF" points="288.726,219.406 288.772,219.696 288.896,219.719 
 			289.072,219.605 289.185,219.379 288.908,219.208 		"/>
@@ -3938,7 +3939,7 @@
 			330.061,162.059 329.938,161.776 330.287,161.369 		"/>
 	</g>
 </g>
-<g id="Latam">
+<g id="latam">
 	<g>
 		<polygon fill="#AD56AB" points="181.403,190.877 181.414,190.538 181.652,190.267 181.245,190.277 180.984,190.47 181.03,190.617 
 					"/>
@@ -4392,7 +4393,7 @@
 			l0.238,0.13l0.113,0.403l0.085,0.073l0.164-0.039l0.13-0.119l0.232-0.012l0.125-0.147L228.304,317.221z"/>
 	</g>
 </g>
-<g id="North_America_1_">
+<g id="north_america">
 	<g>
 		<polygon fill="#F58F08" points="140.476,75.867 140.272,75.471 140.193,75.607 140.307,75.765 		"/>
 		<polygon fill="#F58F08" points="152.195,71.328 152.292,71.374 152.348,71.198 152.309,71.064 152.204,71.175 		"/>
@@ -6347,5 +6348,6 @@
 		<polygon fill="#F58F08" points="506.033,197.548 505.887,197.808 505.83,198 505.953,198.113 506.18,198.045 506.451,197.548 
 			506.338,197.469 		"/>
 	</g>
+</g>
 </g>
 </svg>

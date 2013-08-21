@@ -3,6 +3,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Countries" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="581.28px" height="342.25px" viewBox="0 0 581.28 342.25" enable-background="new 0 0 581.28 342.25" xml:space="preserve">
+	 <g id="viewport" preserveAspectRatio="xMinYMin" transform="">
 <g id="KG" opacity="0.16">
 	<path d="M383.121,150.653c0.631,0.094,1.287-0.292,1.959-0.045c0.344,0.125,0.414,0.361,0.742,0.467
 		c0.303,0.098,0.578,0.099,0.875-0.007c0.318-0.114,0.582-0.26,0.916-0.326c0.143-0.028,0.328,0,0.459-0.07
@@ -7097,5 +7098,6 @@
 		l-0.107-0.698l0.17-0.255l0.137-0.018l0.008-0.115l-0.023-0.316l-0.305,0.113l-0.373,0.282l-0.576,0.173L458.777,212.531
 		L458.777,212.531z M460.172,212.354l0.066,0.283l0.029,0.391l0.209,0.12l0.137-0.267l-0.193-0.545l-0.029-0.125l-0.082,0.11
 		L460.172,212.354z"/>
+</g>
 </g>
 </svg>

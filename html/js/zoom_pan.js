@@ -110,6 +110,7 @@ function initZoomPan(root) {
 
 
 	function setupHandlersMobile(){
+		debugger;
 		//console.log('setupHandlersMobile')
 		//a few "cheap" tricks to work around the tap-issue (sometimes you need to tap twice to trigger the event...)
 	    objPageVars.hammersvg.on("dragstart", function(ev) {
@@ -144,6 +145,7 @@ function initZoomPan(root) {
 	    });	
 	   	objPageVars.hammersvg.on("touch", function(ev) {
 	   		//if(window.console) { console.log(ev); }
+	   		//alert('test');
 	   		//storeOriginal(ev);
 	   		timer2=setTimeout(function(){
 	   			if(!bolDragging)handleClick(ev);
@@ -242,12 +244,15 @@ function initZoomPan(root) {
 	 function handleClick(evt, el){
    		//get the id of the clicked element - that corresponds to the country that the user has clicked on
    		var idCountry="";
-
+   		debugger;
    		if(objPageVars.mobile){
 			var elSvg=evt.srcElement;
 			var elParent=elSvg.parentNode;
-			if(elParent.nodeName=='g'){
+			if(elParent.nodeName!='svg'){
 				idCountry=elSvg.parentNode.id;
+				if(idCountry == '' || idCountry == null){
+					idCountry=elSvg.id;
+				}
 				countryClicked(idCountry);
 			}
    		}else{
