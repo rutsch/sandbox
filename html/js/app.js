@@ -426,6 +426,7 @@ function btnBackToMapClick() {
 		}
 	});
 	toggleClass(getEl('btn_back'), 'hide');
+	toggleClass(getEl('toggle_favourite'), 'hide');
 	//updateVal(0, 100, 50, sec, 2);
 }
 function btnLogoutClick() {
@@ -536,6 +537,8 @@ function countryClicked(idCountry) {
 }
 function regionClick(idCountry) {
 	objPageVars.current_region = idCountry;
+	//var isFav = isFavourite();
+	//alert(isFav);
 	var sec={},
 	back={},
 	key=objPageVars.current_mru + '_' + idCountry,
@@ -553,6 +556,7 @@ function regionClick(idCountry) {
 			getEl('filter_breadcrumb').innerHTML = getMruFilterBreadcrumb();
 			
 			toggleClass(getEl('btn_back'), 'hide');
+			toggleClass(getEl('toggle_favourite'), 'hide');
 			TweenLite.to(appPanels.region_info, 0.4, {
 				height : '40%'
 			});
@@ -653,18 +657,25 @@ function setCurrentOru(oru){
 	objPageVars.current_oru = oru;
 }
 function addFavourite(){
-	var key = 'fav_' +objPageVars.current_oru+'_'+objPageVars.app.current_mru+'_'+objPageVars.current_region;
+	alert('adding item to favourites');
+	var key = 'fav_' +objPageVars.current_oru+'_'+objPageVars.current_mru+'_'+objPageVars.current_region;
+
 	var obj = {
 		oru: objPageVars.current_oru,
 		mru: objPageVars.app.current_mru,
-		region_name: getRegionNameById(objPageVars.current_region),
-		breadcrumb: getMruFilterBreadcrumb()
+		region_name: '',
+		breadcrumb: ''
 	}
-	setLocalStorageItem(key, obj);
+	obj.region_name = getRegionNameById(objPageVars.current_region);
+	obj.breadcrumb = getMruFilterBreadcrumb();
+	var str = JSON.stringify(obj);
+	alert(str);
+	setLocalStorageItem(key, str);
+	alert('added item to favourites');
 }
 function isFavourite(){
 	var key = 'fav_' +objPageVars.current_oru+'_'+objPageVars.app.current_mru+'_'+objPageVars.current_region;
-	return getLocalStorageItem(key);
+	return JSON.parse(getLocalStorageItem(key)).breadcrumb!='';
 }
 /*
  * Data functions

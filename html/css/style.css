@@ -112,7 +112,8 @@ body{
 	background:url('../img/back_btn.png') no-repeat 20px 12px;
 	background-size: auto 55%;
 }
-#btn_back.hide{
+
+.hide{
 	display: none;
 }
 #toggle_favourite{
