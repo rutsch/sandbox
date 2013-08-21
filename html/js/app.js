@@ -418,6 +418,10 @@ function btnBackToMapClick() {
 				height : 0,
 				onComplete : function() {	
 					appPanels.map.style.display = 'block';
+					TweenLite.to(appPanels.map, 0.2, {
+						opacity: 1
+					});					
+					
 				}
 			});	
 			TweenLite.to(appPanels.region_info, 0.4, {
@@ -545,56 +549,62 @@ function regionClick(idCountry) {
 	regionData = objPageVars.worldmapdata[key];
 	var elRegion = getEl(idCountry);
 	var opacity = elRegion.style.opacity;
-	appPanels.map.style.display = 'none';
 	TweenLite.to(elRegion, 0.5, {
 		opacity: opacity - 0.3, 
 		onComplete: function(){
-			getEl('nr_lives_improved').innerHTML =regionData.l;
-			getEl('nr_gdp').innerHTML ='$'+regionData.g+' trillion';
-			getEl('nr_population').innerHTML =regionData.p+ ' million';
-			getEl('lives_improved_percentage').innerHTML = regionData.percentageLI+'%';
-			getEl('region_name').innerHTML = getRegionNameById(idCountry);
-			getEl('filter_breadcrumb').innerHTML = getMruFilterBreadcrumb();
-			
-			toggleClass(getEl('btn_back'), 'hide');
-			toggleClass(getEl('toggle_favourite'), 'hide');
-			TweenLite.to(appPanels.region_info, 0.4, {
-				height : '40%'
-			});
-			TweenLite.to(appPanels.simulation, 0.4, {
-				height : '60%',
-				onComplete : function() {
-					//updateVal(61, 100, 50, sec, 2, 1500);
-					TweenLite.to(objPageElements.region_info, 0.4, {
-						opacity : 1,
+			TweenLite.to(appPanels.map, 0.2, {
+				opacity: 0, 
+				onComplete: function(){
+					appPanels.map.style.display = 'none';
+					getEl('nr_lives_improved').innerHTML =regionData.l;
+					getEl('nr_gdp').innerHTML ='$'+regionData.g+' trillion';
+					getEl('nr_population').innerHTML =regionData.p+ ' million';
+					getEl('lives_improved_percentage').innerHTML = regionData.percentageLI+'%';
+					getEl('region_name').innerHTML = getRegionNameById(idCountry);
+					getEl('filter_breadcrumb').innerHTML = getMruFilterBreadcrumb();
+					
+					toggleClass(getEl('btn_back'), 'hide');
+					toggleClass(getEl('toggle_favourite'), 'hide');
+					TweenLite.to(appPanels.region_info, 0.4, {
+						height : '40%'
+					});
+					TweenLite.to(appPanels.simulation, 0.4, {
+						height : '60%',
 						onComplete : function() {
 							//updateVal(61, 100, 50, sec, 2, 1500);
-							// position the percentage div over the circle svg
-							var elCircle = getEl('background');
-							
-							//var width = elCircle.getBBox().width;
-							//var width2 = getTransformedWidth(objPageElements.circlesvg, elCircle);
-							var boundingRect = elCircle.getBoundingClientRect(); 
-							var width=boundingRect.width*100/90;
-							var left=boundingRect.left;
-							var centerx = left+(width/2) -10;
-							objPageElements.percentage.style.left = centerx - (objPageElements.percentage.clientWidth /2) + 'px';
-							objPageElements.percentage.style.bottom = (boundingRect.bottom /8) + (width/2) - (objPageElements.percentage.clientHeight / 2)  + 'px';
-							animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);				
-							TweenLite.to(objPageElements.percentage, 0.8, {
+							TweenLite.to(objPageElements.region_info, 0.4, {
 								opacity : 1,
-								onComplete : function() {	
+								onComplete : function() {
+									//updateVal(61, 100, 50, sec, 2, 1500);
+									// position the percentage div over the circle svg
+									var elCircle = getEl('background');
 									
-									elRegion.style.opacity = opacity;
-									
+									//var width = elCircle.getBBox().width;
+									//var width2 = getTransformedWidth(objPageElements.circlesvg, elCircle);
+									var boundingRect = elCircle.getBoundingClientRect(); 
+									var width=boundingRect.width*100/90;
+									var left=boundingRect.left;
+									var centerx = left+(width/2) -10;
+									objPageElements.percentage.style.left = centerx - (objPageElements.percentage.clientWidth /2) + 'px';
+									objPageElements.percentage.style.bottom = (boundingRect.bottom /8) + (width/2) - (objPageElements.percentage.clientHeight / 2)  + 'px';
+									animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);				
+									TweenLite.to(objPageElements.percentage, 0.8, {
+										opacity : 1,
+										onComplete : function() {	
+											
+											elRegion.style.opacity = opacity;
+											
+										}
+									});
 								}
-							});
+							});			
 						}
 					});			
 				}
 			});			
 		}
 	});
+
 	
 
 }
