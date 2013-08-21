@@ -97,7 +97,9 @@
 			</form>
 		</div>
 		<div id="filter_panel" class="panel modal">
-			<div id="btn_close_filter" class="btn btn_close" onclick="btnCloseFilterClick();">Close</div>
+			<div class="panel_header">
+				<div id="btn_close_filter" class="btn btn_close" onclick="btnCloseFilterClick();">X</div>
+			</div>	
 			<div class="modal_content">
 				<div id="oru_filter_container">
 					<div id="btn_world" onclick="setCurrentOru(1);" onclick="setCurrentOru(1)">World</div>
@@ -112,7 +114,13 @@
 			<div id="btn_close_explain" class="btn btn_close" onclick="btnCloseExplainClick();">Close</div>
 		</div>
 		<div id="bookmarks_panel" class="panel modal">
-			<div id="btn_close_bookmarks" class="btn btn_close" onclick="btnCloseBookmarksClick();">Close</div>
+			<div class="panel_header">
+				<h2>Bookmarks</h2>
+				<div id="btn_close_bookmarks" class="btn btn_close" onclick="btnCloseBookmarksClick();">X</div>
+			</div>
+			<div class="modal_content">
+			
+			</div>
 		</div>
 		<div id="overlay"></div>
 		<div id="loading"></div>
