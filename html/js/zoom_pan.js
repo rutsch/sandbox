@@ -469,8 +469,8 @@ function initZoomPan(root) {
 			var g = svgDoc.getElementById("viewport");
 		}
 
-		//stateTf = g.getCTM().inverse();
-		//stateOrigin = getEventPoint(evt).matrixTransform(stateTf);		
+		stateTf = g.getCTM().inverse();
+		stateOrigin = getEventPoint(evt).matrixTransform(stateTf);		
 
 		if(evt.target.tagName == "svg" || !opts.drag) {
 			// Pan mode
