@@ -536,6 +536,7 @@ function countryClicked(idCountry) {
 	}
 }
 function regionClick(idCountry) {
+	debugger;
 	objPageVars.current_region = idCountry;
 	//var isFav = isFavourite();
 	//alert(isFav);
@@ -954,20 +955,46 @@ function loadWorldmap(oru, cb){
 
 				
 
+
 				//prepare an object containing vital information about the svg element to animate
 				objPageElements.rootanimateattributevalues=retrieveSvgElementObject(objPageElements.rootanimate);
-
 				centerWorldmap(objPageElements.rootanimate);
 				
 				//apply zoom and pan functionality to the svg drawing
-				var bolUseHomeGrown=false;
+				var bolUseHomeGrown=true;
 				if(bolUseHomeGrown){
-					//initiate the hammer object to capture multitouch events
-					setupHammer();
 
+					//initiate the new version of the zoom pan library
+
+					objTouchSettings.debugtointerface=false;
+					objZoomPanSettings.mobile=objPageVars.mobile;
+					
+					objZoomPanSettings.clickcallback=function(event){
+						//console.log('in callback');
+						//console.log(event);
+
+						var elClicked=event.srcElement;
+						if(typeof(elClicked) == "undefined"){
+							elClicked=event.originalTarget;
+						}
+						var strElementName=elClicked.nodeName;
+						var strElementId=(elClicked.id)?elClicked.id:'';
+
+						var elParent=elClicked.parentNode;
+						var strParentElementName=elParent.nodeName;
+						var strParentElementId=(elParent.id)?elParent.id:'';
+
+						//console.log('strElementName: '+strElementName+' strElementId: '+strElementId+' strParentElementName:'+strParentElementName+' strParentElementId: '+strParentElementId);
+
+						countryClicked(strElementId);
+
+
+					}
+					initSgvZoomPan(objPageElements.rootsvg, objPageElements.rootanimate);
 
 					//console.log(objPageElements.rootanimateattributevalues);
 				}else{
+					
 					initZoomPan(objPageElements.rootsvg);
 				}
 				objPageVars.currentsvgid=oru;
@@ -1035,6 +1062,39 @@ function svgSetTransform(elSvg, objSvgProperties){
 	}
 
 }
+//retrieves the svg element properties (typically <g/> element)
+function retrieveSvgElementObject(elSvg){
+	objSvgElementProperties={};
+
+	//1- set the current values into the object
+	objSvgElementProperties.translatex=0;
+	objSvgElementProperties.translatey=0;
+	objSvgElementProperties.scale=1;				
+	
+	//2- position of the element in the browser
+	var arrPosition=findPos(elSvg.ownerSVGElement);
+	objSvgElementProperties.x=arrPosition[0];
+	objSvgElementProperties.y=arrPosition[1];
+	
+	//3- store the attributes of the svg node into the object too
+	for (var attr, i=0, attrs=objPageElements.rootanimate.attributes, l=attrs.length; i<l; i++){
+		attr = attrs.item(i);
+		//alert(attr.nodeName);
+		if(attr.nodeName=='transform'){
+			//perform srting manipulation to find all the values used in the transform
+		}
+		objSvgElementProperties[attr.nodeName]=attr.nodeValue;
+	}
+
+	//4- the svg transform object (this allows us to read the position, scale etc of the svg element)
+	objSvgElementProperties.transformmatrix=elSvg.getCTM();
+
+	//5- the svg size
+	objSvgElementProperties.size=elSvg.getBoundingClientRect();
+
+
+	return objSvgElementProperties;
+}
 
 
 function startApp(){
@@ -1098,7 +1158,7 @@ function updateWorldmap(){
 			loadWorldmap(oru, function(){
 				objPageVars.worldmapdata = data.snapshotdata;
 				var arrRegions = getFirstLevelChildElements(getEl('viewport'), 'path') ;// getEl('viewport').getElementsByTagName('g');
-				//debugger;
+				debugger;
 				for ( var i = 0; i < arrRegions.length; i++) {
 					var region = arrRegions[i],
 						regionId = region.id == 'UK' ? 'GB' : region.id,

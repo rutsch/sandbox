@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]>    <html class="no-js iem7"> <![endif]-->
+<!--[if (gt IEMobile 7)|!(IEMobile)]><!--> <html class="no-js"> <!--<![endif]-->
+	<head>
+		<meta charset="utf-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<title></title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<style type="text/css">
+			body{
+				font-family: arial;
+				font-size: 12px;
+			}
+
+		</style>
+
+	</head>
+	<body>
+		<div id="btn_reload" onclick="location.reload()">Reload</div>
+		<div style="position: absolute; z-index: 100; top: 200px; left: 200px; background-color: blue; width: 5px; height: 5px;">.</div>
+
+		<svg id="svgnode" style="overflow: hidden; position: relative;" height="320" width="320" version="1.1" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+			<g id="viewport" preserveAspectRatio="xMinYMin" transform="translate(0,0)">
+				<circle id="svg_circle" r="50" cx="160" cy="160" fill="slategrey" stroke="#000" stroke-width="7"></circle>
+				<rect x="50" y="30" width="100" height="100" fill="red" stroke="#000" stroke-width="2"></rect> 
+				<circle r="5" cx="30" cy="15" fill="#000"></circle>
+				<circle r="5" cx="100" cy="85" fill="#000"></circle>
+			</g>
+		</svg>
+		
+		<div id="debug_details" style="position: absolute; z-index: 110; top: 100px; left: 200px; background-color: #ccc; width: 300px; height: 300px; overflow: auto;">.</div>
+
+		<script type="text/javascript" src="../js/hammer.js">//</script>
+		<script type="text/javascript" src="SVGPan.js">//</script>
+		
+		
+		<script type="text/javascript">
+
+			/*
+			Utilities
+			*/
+			function getEl(id) {
+				return document.getElementById(id);
+			}
+			function logAction(event, elThis, strType){
+				console.log(strType);
+				console.log(event);
+			}
+
+			function findPos(obj) {
+				var curleft = curtop = 0;
+				if (obj.offsetParent) {
+					do {
+						curleft += obj.offsetLeft;
+						curtop += obj.offsetTop;
+					} while (obj = obj.offsetParent);
+				}
+				return [curleft,curtop];
+			}
+			var isMobile = {
+				any: function() {
+					return 'ontouchstart' in document.documentElement;
+				}
+			};
+
+
+
+
+
+
+			/*
+			Executes page logic
+			*/
+			function initPage() {
+
+				//get width and height of page
+				objPageVars.width = document.body.clientWidth;
+				objPageVars.height = document.documentElement["clientHeight"];
+
+				//init global objects
+				objPageElements.rootsvg=getEl('svgnode');
+				objPageElements.rootanimate=getEl('viewport');
+				objPageElements.debugdetails=getEl('debug_details');
+
+				objPageVars.mobile=isMobile.any();
+				
+				objZoomPanSettings.mobile=objPageVars.mobile;
+				objZoomPanSettings.clickcallback=function(event){
+					//console.log('in callback');
+					//console.log(event);
+
+					var elClicked=event.srcElement;
+					var strElementName=elClicked.nodeName;
+					var strElementId=(elClicked.id)?elClicked.id:'';
+
+					var elParent=elClicked.parentNode;
+					var strParentElementName=elParent.nodeName;
+					var strParentElementId=(elParent.id)?elParent.id:'';
+
+					console.log('strElementName: '+strElementName+' strElementId: '+strElementId+' strParentElementName:'+strParentElementName+' strParentElementId: '+strParentElementId);
+
+
+
+				}
+				initSgvZoomPan(objPageElements.rootsvg, objPageElements.rootanimate);
+
+				
+
+
+
+
+
+			}
+
+			function onResize(){
+				objPageVars.width = document.body.clientWidth;
+				objPageVars.height = document.documentElement["clientHeight"];
+			}
+
+
+			/*
+			Global variables
+			 */
+
+			var objPageElements={
+				rootanimate: null
+			};
+			var objPageVars={
+				mobile: false
+			}
+
+
+			window.onload = initPage;
+			window.onresize = onResize;
+
+
+		</script>
+	</body>
+</html>    
