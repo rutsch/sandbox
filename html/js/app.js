@@ -41,32 +41,11 @@ function collectionHas(a, b) { //helper function (see below)
     }
     return false;
 }
-function setCookie(c_name,value,exdays)
-{
-	var exdate=new Date();
-	exdate.setDate(exdate.getDate() + exdays);
-	var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
-	document.cookie=c_name + "=" + c_value;
+function setLocalStorageItem(key, value){
+	store.setItem(key, value);
 }
-function getCookie(c_name)
-{
-	var c_value = document.cookie;
-	var c_start = c_value.indexOf(" " + c_name + "=");
-	if (c_start == -1){
-		c_start = c_value.indexOf(c_name + "=");
-  	}
-	if (c_start == -1){
-		c_value = null;
-	}
-	else{
-		c_start = c_value.indexOf("=", c_start) + 1;
-		var c_end = c_value.indexOf(";", c_start);
-		if (c_end == -1){
-			c_end = c_value.length;
-	 	}
-		c_value = unescape(c_value.substring(c_start,c_end));
-	}
-	return c_value;
+function getLocalStorageItem(key){
+	return store.getItem(key);
 }
 function getFirstLevelChildElementsById(parentId, childNodeType){
 	//debugger;
@@ -83,6 +62,16 @@ function getFirstLevelChildElementsById(parentId, childNodeType){
 	    }
 	};	
 	return result;
+}
+function findFavourites(){
+	var arrResult = [];
+    for (var i = 0; i < store.length; i++){
+        var key = localStorage.key(i);
+        if(key.indexOf('fav_') > -1 ){
+        	arrResult.push(store.getItem(key));
+        }
+    }     	
+    return arrResult;
 }
 function getFirstLevelChildElements(parent, childNodeType){
 	//debugger;
@@ -399,7 +388,7 @@ function btnSubmitClick() {
 			                    		//debugger;
 			                    		console.log(response2.token);
 			                    		objPageVars.token = response2.token;
-			                    		setCookie('token', objPageVars.token, 1);
+			                    		setLocalStorageItem('token', objPageVars.token);
 
 			                    		startApp();                   		
 			                    	}
@@ -415,30 +404,32 @@ function btnSubmitClick() {
 
 function btnBackToMapClick() {
 	animateArc({start: 0, end: 0}, 2);
-	TweenLite.to(objPageElements.region_info, 0.4, {
+	TweenLite.to(objPageElements.region_info, 0.2, {
 		opacity : 0,
 		delay: 0,
 		onComplete: function(){
-			TweenLite.to(objPageElements.percentage, 0.4, {
-				opacity : 0,
-				onComplete : function() {
-					TweenLite.to(appPanels.simulation, 0.4, {
-						height : 0,
-						onComplete : function() {	
-							
-						}
-					});	
-					TweenLite.to(appPanels.region_info, 0.4, {
-						height : 0
-					});					
+
+		}
+	});
+	TweenLite.to(objPageElements.percentage, 0.2, {
+		opacity : 0,
+		onComplete : function() {
+			TweenLite.to(appPanels.simulation, 0.4, {
+				height : 0,
+				onComplete : function() {	
+					
 				}
-			});
+			});	
+			TweenLite.to(appPanels.region_info, 0.4, {
+				height : 0
+			});					
 		}
 	});
 	toggleClass(getEl('btn_back'), 'hide');
 	//updateVal(0, 100, 50, sec, 2);
 }
 function btnLogoutClick() {
+	setLocalStorageItem('token', '');
 	TweenLite.to(panels.login, 0.2, {
 		width : objPageVars.width
 	});
@@ -475,6 +466,8 @@ function btnCloseFilterClick() {
 	});
 }
 function btnExplainClick() {
+	location.reload();
+	/*	
 	panels.overlay.style.display = "block";
 	TweenLite.to(panels.overlay, 0.3, {
 		opacity : 0.7,
@@ -487,6 +480,7 @@ function btnExplainClick() {
 			});
 		}
 	});
+	*/
 }
 function btnCloseExplainClick() {
 	TweenLite.to(panels.explain, 0.4, {
@@ -505,8 +499,7 @@ function btnCloseExplainClick() {
 	});
 }
 function btnBookmarksClick() {
-	location.reload();
-	/*
+
 	panels.overlay.style.display = "block";
 	TweenLite.to(panels.overlay, 0.3, {
 		opacity : 0.7,
@@ -519,7 +512,6 @@ function btnBookmarksClick() {
 			});
 		}
 	});
-	*/
 }
 function btnCloseBookmarksClick() {
 	TweenLite.to(panels.bookmarks, 0.4, {
@@ -543,13 +535,15 @@ function countryClicked(idCountry) {
 	}
 }
 function regionClick(idCountry) {
+	objPageVars.current_region = idCountry;
 	var sec={},
 	back={},
 	key=objPageVars.current_mru + '_' + idCountry,
 	regionData = objPageVars.worldmapdata[key];
-	
-	TweenLite.to(getEl(idCountry), 0.5, {
-		opacity: 0.5, 
+	var elRegion = getEl(idCountry);
+	var opacity = elRegion.style.opacity;
+	TweenLite.to(elRegion, 0.5, {
+		opacity: opacity - 0.3, 
 		onComplete: function(){
 			getEl('nr_lives_improved').innerHTML =regionData.l;
 			getEl('nr_gdp').innerHTML ='$'+regionData.g+' trillion';
@@ -582,14 +576,13 @@ function regionClick(idCountry) {
 							debugger;
 							objPageElements.percentage.style.left = centerx - (objPageElements.percentage.clientWidth /2) + 'px';
 							objPageElements.percentage.style.bottom = (boundingRect.bottom /8) + (width/2) - (objPageElements.percentage.clientHeight / 2)  + 'px';
-												
-							TweenLite.to(objPageElements.percentage, 0.4, {
+							animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);				
+							TweenLite.to(objPageElements.percentage, 0.8, {
 								opacity : 1,
 								onComplete : function() {	
-									animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 2);
-									TweenLite.to(getEl(idCountry), 0.5, {
-										opacity: 1
-									});
+									
+									elRegion.style.opacity = opacity;
+									
 								}
 							});
 						}
@@ -659,8 +652,19 @@ function showMruFilterLevel(id){
 function setCurrentOru(oru){
 	objPageVars.current_oru = oru;
 }
-function toggleFavourite(){
-	
+function addFavourite(){
+	var key = 'fav_' +objPageVars.current_oru+'_'+objPageVars.app.current_mru+'_'+objPageVars.current_region;
+	var obj = {
+		oru: objPageVars.current_oru,
+		mru: objPageVars.app.current_mru,
+		region_name: getRegionNameById(objPageVars.current_region),
+		breadcrumb: getMruFilterBreadcrumb()
+	}
+	setLocalStorageItem(key, obj);
+}
+function isFavourite(){
+	var key = 'fav_' +objPageVars.current_oru+'_'+objPageVars.app.current_mru+'_'+objPageVars.current_region;
+	return getLocalStorageItem(key);
 }
 /*
  * Data functions
@@ -1057,7 +1061,6 @@ function startApp(){
 	    	// all done
 	    	function(err, results) {
 	    		if(err){
-	    			setCookie('token', '', 365);
 	    			btnLogoutClick();
 	    		}else{
 		    		//debugger;
@@ -1076,7 +1079,6 @@ function updateWorldmap(){
 		//debugger;
 		
 		if(err){
-			setCookie('token', '', 365);
 			btnLogoutClick();			
 		}else{
 			//load correct map
@@ -1084,7 +1086,7 @@ function updateWorldmap(){
 
 			loadWorldmap(oru, function(){
 				objPageVars.worldmapdata = data.snapshotdata;
-				var arrRegions = getFirstLevelChildElements(getEl('viewport'), 'g') ;// getEl('viewport').getElementsByTagName('g');
+				var arrRegions = getFirstLevelChildElements(getEl('viewport'), 'path') ;// getEl('viewport').getElementsByTagName('g');
 				//debugger;
 				for ( var i = 0; i < arrRegions.length; i++) {
 					var region = arrRegions[i],
@@ -1103,16 +1105,17 @@ function updateWorldmap(){
 						objPageVars.worldmapdata[key].color = color;
 						var opacity=((percentageLI/100) * 0.7) + 0.3;
 						if(opacity < 0.2)opacity = 0.2;
-						region.style.opacity=1;
+						region.style.fill=color;	
+						region.style.opacity=opacity;
 						
-						var paths=region.getElementsByTagName('*');//.concat(region.getElementsByTagName('path'),region.getElementsByTagName('rect'),region.getElementsByTagName('polygon'));
+						/*var paths=region.getElementsByTagName('*');//.concat(region.getElementsByTagName('path'),region.getElementsByTagName('rect'),region.getElementsByTagName('polygon'));
 						for ( var ii = 0; ii < paths.length; ii++) {
 							var path = paths[ii];
 							if(path.nodeName == 'path' || path.nodeName == 'polygon' || path.nodeName == 'rect' || path.nodeName == 'g'){
 								paths[ii].style.fill=color;	
 								paths[ii].style.opacity=opacity;
 							}
-						}									
+						}		*/						
 					} else {
 						region.style.fill = '#000';
 					}							
@@ -1197,7 +1200,7 @@ function initPage() {
 	//load the worldmap and continue processing
 	objPageElements.elsvgholder=getEl('holder_1000');
 	
-
+	objPageVars.arrFavourites = findFavourites();
 
 	//initiate the infographic
 	objPageElements.circlesvg = getEl('svg_circle');
@@ -1217,7 +1220,7 @@ function initPage() {
 	//calls the function that generates an arc from the path svg node
 	generateArc(objArcProperties);
 	
-	objPageVars.token = getCookie('token');
+	objPageVars.token = getLocalStorageItem('token');
 	
 	if(objPageVars.token !=="" && objPageVars.token !==null){
 		startApp();
@@ -1254,31 +1257,32 @@ var objPageVars = {
 		world: {url: 'svg/World.svg'},
 		region: {url: 'svg/Continents.svg'},
 		market: {url: 'svg/Markets.svg'},
-		country: {url: 'svg/Countries.svg'}
+		country: {url: 'svg/countries.svg'}
 	},
 	current_oru: 4,
 	current_mru: 'philips',
-	current_sector: 'cl'
+	current_sector: 'cl',
+	current_region: ''
 }
 var colors = {
 	philips: {
 		low: '#7DABF1',
-		middle: '#5C95EA',
+		middle: '#0b5ed7',
 		high: '#3D7FDF' 
 	},
 	PD0900: {
 		low: '#99EAF0',
-		middle: '#5BCCD4',
+		middle: '#2badb5',
 		high: '#30B6BF'		
 	},
 	PD0100: {
 		low: '#CBF277',
-		middle: '#A6D542',
+		middle: '#7dba00',
 		high: '#98C833'   		
 	},
 	PD0200:{
 		low: '#BE67E9',
-		middle: '#A359C8',
+		middle: '#68049c',
 		high: '#8737B0'  		
 	}
 };
@@ -1303,6 +1307,7 @@ var authUrl2 = "https://www.livesimproved.philips.com/tools/dynamic_resources.as
 var authUrl3 = "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx";
 var snapshot_url = 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached.aspx?method=getworldmapdata';
 
+var store = window.localStorage;
 
 var currentScript = null,
 	success = null;

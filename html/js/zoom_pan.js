@@ -248,11 +248,8 @@ function initZoomPan(root) {
    		if(objPageVars.mobile){
 			var elSvg=evt.srcElement;
 			var elParent=elSvg.parentNode;
-			if(elParent.nodeName!='svg'){
-				idCountry=elSvg.parentNode.id;
-				if(idCountry == '' || idCountry == null){
-					idCountry=elSvg.id;
-				}
+			if(elParent.nodeName=='g'){
+				idCountry=elSvg.id;
 				countryClicked(idCountry);
 			}
    		}else{
