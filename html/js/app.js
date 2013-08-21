@@ -41,6 +41,33 @@ function collectionHas(a, b) { //helper function (see below)
     }
     return false;
 }
+function setCookie(c_name,value,exdays)
+{
+	var exdate=new Date();
+	exdate.setDate(exdate.getDate() + exdays);
+	var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+	document.cookie=c_name + "=" + c_value;
+}
+function getCookie(c_name)
+{
+	var c_value = document.cookie;
+	var c_start = c_value.indexOf(" " + c_name + "=");
+	if (c_start == -1){
+		c_start = c_value.indexOf(c_name + "=");
+  	}
+	if (c_start == -1){
+		c_value = null;
+	}
+	else{
+		c_start = c_value.indexOf("=", c_start) + 1;
+		var c_end = c_value.indexOf(";", c_start);
+		if (c_end == -1){
+			c_end = c_value.length;
+	 	}
+		c_value = unescape(c_value.substring(c_start,c_end));
+	}
+	return c_value;
+}
 function getFirstLevelChildElementsById(parentId, childNodeType){
 	//debugger;
 	var selector = parentId ==='producttree_temp'?'#producttree_temp':'#producttree_temp #' + parentId;
@@ -372,6 +399,7 @@ function btnSubmitClick() {
 			                    		//debugger;
 			                    		console.log(response2.token);
 			                    		objPageVars.token = response2.token;
+			                    		setCookie('token', objPageVars.token, 1);
 
 			                    		startApp();                   		
 			                    	}
@@ -515,8 +543,15 @@ function countryClicked(idCountry) {
 }
 function regionClick(idCountry) {
 	var sec={},
-	back={};
-
+	back={},
+	key=objPageVars.current_mru + '_' + idCountry,
+	regionData = objPageVars.worldmapdata[key];
+	
+	getEl('nr_lives_improved').innerHTML =regionData.l;
+	getEl('nr_gdp').innerHTML ='$'+regionData.g+' trillion';
+	getEl('nr_population').innerHTML =regionData.p+ ' million';
+	getEl('lives_improved_percentage').innerHTML = regionData.percentageLI+'%';
+	
 	toggleClass(getEl('btn_back'), 'hide');
 	TweenLite.to(appPanels.region_info, 0.4, {
 		height : '40%'
@@ -546,7 +581,7 @@ function regionClick(idCountry) {
 					TweenLite.to(objPageElements.percentage, 0.4, {
 						opacity : 1,
 						onComplete : function() {	
-							animateArc({start: 0, end: (percentage*360) /100}, 2);
+							animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 2);
 						}
 					});
 				}
@@ -594,12 +629,18 @@ function renderMruFilterComponent(arrLi, parentId){
 	appPanels.mru_filter.appendChild(ul);
 }
 function levelUp(parentId){
-	var selector = '#producttree_temp li';
+	var selector = '#philips li';
 	var parent = findParentBySelector(parentId, selector);
-	var parentId = parent?parent.getAttribute('id'):'producttree_temp';
+	var parentId = parent?parent.getAttribute('id'):'philips';
 	showMruFilterLevel(parentId);
 }
 function showMruFilterLevel(id){
+	//debugger;
+	if(id == 'philips' || id == 'PD0100' || id == 'PD0200' || id == 'PD0900'){
+		objPageVars.current_sector = id;
+	}
+	objPageVars.current_mru = id;
+	updateWorldmap();	
 	var arrLi = getFirstLevelChildElementsById(id, 'li');
 	renderMruFilterComponent(arrLi, id);
 }
@@ -655,6 +696,7 @@ function getWorldmapData(cb){
 		snapshotid:1		
 	}
 	psv('GET', dynamicResourceUrl, objData, function(data) {
+		if(data.error)cb(data.error.message);
 		cb(null, data);
 	});	
 }
@@ -955,7 +997,7 @@ function startApp(){
 	    	    // load mru HTML for latest snapshot id
 	    	    mruHtml: function(callback){
 	    	    	getMruHtml(function(err, data){
-	    				//if(err) callback(err);
+	    				if(data.error) callback(data.error.message);
 	    				callback(null, data.html);
 	    			});
 	    	    },
@@ -974,53 +1016,64 @@ function startApp(){
 	    	},
 	    	// all done
 	    	function(err, results) {
-	    		//debugger;
-	    		panels.mruhtml.innerHTML = results.mruHtml;
-	    		showMruFilterLevel('producttree_temp');
-	    		objPageVars.orujson = results.oruJson;
-				//get worldmapdata
-	    		getWorldmapData(function(err, data){
-	    			//debugger;
-	    			var arrRegions = getEl('viewport').getElementsByTagName('g');
-	    			for ( var i = 0; i < arrRegions.length; i++) {
-						var region = arrRegions[i],
-							regionId = region.id,
-							key=objPageVars.current_mru + '_' + regionId,
-							regionData = data.snapshotdata[key],
-							colors;
-						//debugger;
-						if (regionData) {
-							//console.log(regionData);
-							//debugger;
-							var percentageLI = (regionData.l * 100) / regionData.p || 0;
-							if(percentageLI> 99)percentageLI=100;
-							if(percentageLI< 1)percentageLI=1;
-							regionData.percentageLI = percentageLI;
-							var colors = {
-		            			low: '#99EAF0',
-		            			middle: '#5BCCD4',
-		            			high: '#30B6BF'
-		            		}
-							//debugger;
-							region.firstElementChild.style.fill=getColorForPercentage(percentageLI, colors.low, colors.middle, colors.high);
-								//self.increaseBrightness('#112233', percentageLI);
-						} else {
-							//debugger;
-							// No regionData for region found so set default color
-							colors[region] = '#000';
-						}							
-					}
-            		hideLoadingPanel();
-	    		});
-	    		//get correct svg
-	    		
-	    		
-				//color Worldmap regions
+	    		if(err){
+	    			setCookie('token', '', 365);
+	    			btnLogoutClick();
+	    		}else{
+		    		//debugger;
+		    		panels.mruhtml.innerHTML = results.mruHtml;
+		    		showMruFilterLevel('philips');
+		    		objPageVars.orujson = results.oruJson;
+					//get worldmapdata
+		    		updateWorldmap();
+	    		}
 	    	});			
-			
-		
 		}
 	});   	
+}
+function updateWorldmap(){
+	getWorldmapData(function(err, data){
+		//debugger;
+		
+		if(err){
+			setCookie('token', '', 365);
+			btnLogoutClick();			
+		}else{
+			objPageVars.worldmapdata = data.snapshotdata;
+			var arrRegions = getEl('viewport').getElementsByTagName('path');
+			for ( var i = 0; i < arrRegions.length; i++) {
+				var region = arrRegions[i],
+					regionId = region.id == 'UK' ? 'GB' : region.id,
+					key=objPageVars.current_mru + '_' + regionId,
+					regionData = objPageVars.worldmapdata[key];
+				if (regionData) {
+					var percentageLI = (regionData.l * 100) / regionData.p || 0;
+					if(percentageLI> 99)percentageLI=100;
+					if(percentageLI< 1)percentageLI=0;
+					objPageVars.worldmapdata[key].percentageLI = Math.round(percentageLI);
+					
+					var color=getColorForPercentage(percentageLI, colors[objPageVars.current_sector].low, colors[objPageVars.current_sector].middle, colors[objPageVars.current_sector].high);
+					objPageVars.worldmapdata[key].color = color;
+					region.style.fill=color;
+					
+					//var paths=region.getElementsByTagName('path');
+					//for ( var ii = 0; ii < paths.length; ii++) {
+					//	paths[ii].style.fill=color;
+					//}									
+				} else {
+					region.style.fill = '#000';
+				}							
+			}
+			hideLoadingPanel();
+		}
+	});	
+}
+function getMruFilterBreadcrumb(){
+	var mru = objPageVars.current_mru;
+	objPageVars;
+}
+function getRegionNameById(regionId){
+	
 }
 /*
  * Executes page logic
@@ -1053,7 +1106,7 @@ function initPage() {
 
 	//load the worldmap and continue processing
 	objPageElements.elsvgholder=getEl('holder_1000');
-	loadWorldmap(objPageVars.maps.world);
+	loadWorldmap(objPageVars.maps.country);
 
 
 	//initiate the infographic
@@ -1073,9 +1126,10 @@ function initPage() {
 
 	//calls the function that generates an arc from the path svg node
 	generateArc(objArcProperties);
-
 	
-	if(objPageVars.signedin && objPageVars.token !==""){
+	objPageVars.token = getCookie('token');
+	
+	if(objPageVars.token !=="" && objPageVars.token !==null){
 		startApp();
 	}	
 	
@@ -1108,12 +1162,36 @@ var objPageVars = {
 	//the available maps
 	maps: {
 		world: {url: 'svg/new1.svg'},
+		region: {url: 'svg/new1.svg'},
 		market: {url: 'svg/new2.svg'},
-		country: {url: 'svg/new3.svg'}
+		country: {url: 'svg/countries.svg'}
 	},
 	current_oru: 4,
-	current_mru: 'philips'
+	current_mru: 'philips',
+	current_sector: 'cl'
 }
+var colors = {
+	philips: {
+		low: '#7DABF1',
+		middle: '#5C95EA',
+		high: '#3D7FDF' 
+	},
+	PD0900: {
+		low: '#99EAF0',
+		middle: '#5BCCD4',
+		high: '#30B6BF'		
+	},
+	PD0100: {
+		low: '#CBF277',
+		middle: '#A6D542',
+		high: '#98C833'   		
+	},
+	PD0200:{
+		low: '#BE67E9',
+		middle: '#A359C8',
+		high: '#8737B0'  		
+	}
+};
 //global properties of the arc to build
 var objArcProps={
 	targetnode: null,
