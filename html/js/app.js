@@ -417,7 +417,7 @@ function btnBackToMapClick() {
 			TweenLite.to(appPanels.simulation, 0.4, {
 				height : 0,
 				onComplete : function() {	
-					
+					appPanels.map.style.display = 'block';
 				}
 			});	
 			TweenLite.to(appPanels.region_info, 0.4, {
@@ -536,7 +536,6 @@ function countryClicked(idCountry) {
 	}
 }
 function regionClick(idCountry) {
-	debugger;
 	objPageVars.current_region = idCountry;
 	//var isFav = isFavourite();
 	//alert(isFav);
@@ -546,6 +545,7 @@ function regionClick(idCountry) {
 	regionData = objPageVars.worldmapdata[key];
 	var elRegion = getEl(idCountry);
 	var opacity = elRegion.style.opacity;
+	appPanels.map.style.display = 'none';
 	TweenLite.to(elRegion, 0.5, {
 		opacity: opacity - 0.3, 
 		onComplete: function(){
@@ -578,7 +578,6 @@ function regionClick(idCountry) {
 							var width=boundingRect.width*100/90;
 							var left=boundingRect.left;
 							var centerx = left+(width/2) -10;
-							debugger;
 							objPageElements.percentage.style.left = centerx - (objPageElements.percentage.clientWidth /2) + 'px';
 							objPageElements.percentage.style.bottom = (boundingRect.bottom /8) + (width/2) - (objPageElements.percentage.clientHeight / 2)  + 'px';
 							animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);				
