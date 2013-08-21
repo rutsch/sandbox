@@ -211,7 +211,7 @@ Edited bij Johan Thijs to make it compatible with hammer.js and mobile devices
 		 function handleClick(evt, el){
 	   		//get the id of the clicked element - that corresponds to the country that the user has clicked on
 	   		var idCountry="";
-
+	   		
 	   		if(objPageVars.mobile){
 				var elSvg=evt.srcElement;
 				idCountry=elSvg.id;

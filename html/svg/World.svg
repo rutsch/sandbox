@@ -3,7 +3,8 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <svg version="1.0" id="World" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="581.28px" height="342.25px" viewBox="0 0 581.28 342.25" enable-background="new 0 0 581.28 342.25" xml:space="preserve">
-<g opacity="0.6">
+	 <g id="viewport" preserveAspectRatio="xMinYMin" transform="">
+<g id="world" opacity="0.6">
 	<g>
 		<polygon fill="#0B5ED7" points="478.287,162.499 478.162,162.635 478.264,162.731 478.377,162.543 		"/>
 		<polygon fill="#0B5ED7" points="478.055,171.629 478.072,171.822 478.299,172.01 478.389,171.941 478.338,171.686 
@@ -5725,6 +5726,7 @@
 		<polygon fill="#0B5ED7" points="507.615,194.358 507.322,194.596 507.561,195.06 507.549,194.731 507.707,194.527 		"/>
 		<polygon fill="#0B5ED7" points="506.451,197.548 506.338,197.469 506.033,197.548 505.887,197.808 505.83,198 505.953,198.113 
 			506.18,198.045 		"/>
+	</g>
 	</g>
 </g>
 </svg>
