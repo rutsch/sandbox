@@ -7175,7 +7175,7 @@
 		</div>
 
 		<script type="text/javascript" src="js/zoom_pan.js">//</script>
-		<script type="text/javascript" src="js/sgv_zoom_homegrown.js">//</script>
+		<script type="text/javascript" src="js/svg_zoom_homegrown_v2.js">//</script>
 
 		<script type="text/javascript" src="js/plugins/CSSPlugin.min.js">//</script>
 		<script type="text/javascript" src="js/plugins/RaphaelPlugin.js">//</script>
@@ -7356,14 +7356,28 @@
 				objPageElements.rootanimate=getEl('viewport');
 				objPageElements.rootsvg=document.getElementsByTagName('svg')[0];
 				
-				var bolUseHomeGrown=false;
+				var bolUseHomeGrown=true;
 				if(bolUseHomeGrown){
-					//initiate the hammer object to capture multitouch events
-					setupHammer();
+					//initiate the new version of the zoom pan library
+					objZoomPanSettings.mobile=objPageVars.mobile;
+					objZoomPanSettings.clickcallback=function(event){
+						//console.log('in callback');
+						//console.log(event);
 
-					//prepare an object containing vital information about the svg element to animate
-					objPageElements.rootanimateattributevalues=retrieveSvgElementObject(objPageElements.rootanimate);
-					console.log(objPageElements.rootanimateattributevalues);
+						var elClicked=event.srcElement;
+						var strElementName=elClicked.nodeName;
+						var strElementId=(elClicked.id)?elClicked.id:'';
+
+						var elParent=elClicked.parentNode;
+						var strParentElementName=elParent.nodeName;
+						var strParentElementId=(elParent.id)?elParent.id:'';
+
+						console.log('strElementName: '+strElementName+' strElementId: '+strElementId+' strParentElementName:'+strParentElementName+' strParentElementId: '+strParentElementId);
+
+
+
+					}
+					initSgvZoomPan(objPageElements.rootsvg, objPageElements.rootanimate);
 				}else{
 					initZoomPan(objPageElements.rootsvg);
 				}

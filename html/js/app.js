@@ -41,6 +41,12 @@ function collectionHas(a, b) { //helper function (see below)
     }
     return false;
 }
+function setLocalStorageItem(key, value){
+	store.setItem(key, value);
+}
+function getLocalStorageItem(key){
+	return store.getItem(key);
+}
 function getFirstLevelChildElementsById(parentId, childNodeType){
 	//debugger;
 	var selector = parentId ==='producttree_temp'?'#producttree_temp':'#producttree_temp #' + parentId;
@@ -56,6 +62,16 @@ function getFirstLevelChildElementsById(parentId, childNodeType){
 	    }
 	};	
 	return result;
+}
+function findFavourites(){
+	var arrResult = [];
+    for (var i = 0; i < store.length; i++){
+        var key = localStorage.key(i);
+        if(key.indexOf('fav_') > -1 ){
+        	arrResult.push(store.getItem(key));
+        }
+    }     	
+    return arrResult;
 }
 function getFirstLevelChildElements(parent, childNodeType){
 	//debugger;
@@ -372,6 +388,7 @@ function btnSubmitClick() {
 			                    		//debugger;
 			                    		console.log(response2.token);
 			                    		objPageVars.token = response2.token;
+			                    		setLocalStorageItem('token', objPageVars.token);
 
 			                    		startApp();                   		
 			                    	}
@@ -387,30 +404,37 @@ function btnSubmitClick() {
 
 function btnBackToMapClick() {
 	animateArc({start: 0, end: 0}, 2);
-	TweenLite.to(objPageElements.region_info, 0.4, {
+	TweenLite.to(objPageElements.region_info, 0.2, {
 		opacity : 0,
 		delay: 0,
 		onComplete: function(){
-			TweenLite.to(objPageElements.percentage, 0.4, {
-				opacity : 0,
-				onComplete : function() {
-					TweenLite.to(appPanels.simulation, 0.4, {
-						height : 0,
-						onComplete : function() {	
-							
-						}
-					});	
-					TweenLite.to(appPanels.region_info, 0.4, {
-						height : 0
+
+		}
+	});
+	TweenLite.to(objPageElements.percentage, 0.2, {
+		opacity : 0,
+		onComplete : function() {
+			TweenLite.to(appPanels.simulation, 0.4, {
+				height : 0,
+				onComplete : function() {	
+					appPanels.map.style.display = 'block';
+					TweenLite.to(appPanels.map, 0.2, {
+						opacity: 1
 					});					
+					
 				}
-			});
+			});	
+			TweenLite.to(appPanels.region_info, 0.4, {
+				height : 0
+			});					
 		}
 	});
 	toggleClass(getEl('btn_back'), 'hide');
+	toggleClass(getEl('toggle_favourite'), 'hide');
 	//updateVal(0, 100, 50, sec, 2);
 }
 function btnLogoutClick() {
+	setLocalStorageItem('token', '');
 	TweenLite.to(panels.login, 0.2, {
 		width : objPageVars.width
 	});
@@ -430,6 +454,7 @@ function btnFilterClick() {
 	});
 }
 function btnCloseFilterClick() {
+	updateWorldmap();
 	TweenLite.to(panels.filter, 0.4, {
 		opacity : 0,
 		display : 'none',
@@ -446,6 +471,8 @@ function btnCloseFilterClick() {
 	});
 }
 function btnExplainClick() {
+	location.reload();
+	/*	
 	panels.overlay.style.display = "block";
 	TweenLite.to(panels.overlay, 0.3, {
 		opacity : 0.7,
@@ -458,6 +485,7 @@ function btnExplainClick() {
 			});
 		}
 	});
+	*/
 }
 function btnCloseExplainClick() {
 	TweenLite.to(panels.explain, 0.4, {
@@ -476,8 +504,7 @@ function btnCloseExplainClick() {
 	});
 }
 function btnBookmarksClick() {
-	location.reload();
-	/*
+
 	panels.overlay.style.display = "block";
 	TweenLite.to(panels.overlay, 0.3, {
 		opacity : 0.7,
@@ -490,7 +517,6 @@ function btnBookmarksClick() {
 			});
 		}
 	});
-	*/
 }
 function btnCloseBookmarksClick() {
 	TweenLite.to(panels.bookmarks, 0.4, {
@@ -514,45 +540,73 @@ function countryClicked(idCountry) {
 	}
 }
 function regionClick(idCountry) {
+	objPageVars.current_region = idCountry;
+	//var isFav = isFavourite();
+	//alert(isFav);
 	var sec={},
-	back={};
-
-	toggleClass(getEl('btn_back'), 'hide');
-	TweenLite.to(appPanels.region_info, 0.4, {
-		height : '40%'
-	});
-	TweenLite.to(appPanels.simulation, 0.4, {
-		height : '60%',
-		onComplete : function() {
-			//updateVal(61, 100, 50, sec, 2, 1500);
-			TweenLite.to(objPageElements.region_info, 0.4, {
-				opacity : 1,
-				onComplete : function() {
-					//updateVal(61, 100, 50, sec, 2, 1500);
-					// position the percentage div over the circle svg
-					var elCircle = getEl('background');
+	back={},
+	key=objPageVars.current_mru + '_' + idCountry,
+	regionData = objPageVars.worldmapdata[key];
+	var elRegion = getEl(idCountry);
+	var opacity = elRegion.style.opacity;
+	TweenLite.to(elRegion, 0.5, {
+		opacity: opacity - 0.3, 
+		onComplete: function(){
+			TweenLite.to(appPanels.map, 0.2, {
+				opacity: 0, 
+				onComplete: function(){
+					appPanels.map.style.display = 'none';
+					getEl('nr_lives_improved').innerHTML =regionData.l;
+					getEl('nr_gdp').innerHTML ='$'+regionData.g+' trillion';
+					getEl('nr_population').innerHTML =regionData.p+ ' million';
+					getEl('lives_improved_percentage').innerHTML = regionData.percentageLI+'%';
+					getEl('region_name').innerHTML = getRegionNameById(idCountry);
+					getEl('filter_breadcrumb').innerHTML = getMruFilterBreadcrumb();
 					
-					//var width = elCircle.getBBox().width;
-					//var width2 = getTransformedWidth(objPageElements.circlesvg, elCircle);
-					var boundingRect = elCircle.getBoundingClientRect(); 
-					var width=boundingRect.width*100/90;
-					var left=boundingRect.left;
-					var centerx = left+(width/2) -10;
-					debugger;
-					objPageElements.percentage.style.left = centerx - (objPageElements.percentage.clientWidth /2) + 'px';
-					objPageElements.percentage.style.bottom = (boundingRect.bottom /8) + (width/2) - (objPageElements.percentage.clientHeight / 2)  + 'px';
-										
-					var percentage = 61;
-					TweenLite.to(objPageElements.percentage, 0.4, {
-						opacity : 1,
-						onComplete : function() {	
-							animateArc({start: 0, end: (percentage*360) /100}, 2);
-						}
+					toggleClass(getEl('btn_back'), 'hide');
+					toggleClass(getEl('toggle_favourite'), 'hide');
+					TweenLite.to(appPanels.region_info, 0.4, {
+						height : '40%'
 					});
+					TweenLite.to(appPanels.simulation, 0.4, {
+						height : '60%',
+						onComplete : function() {
+							//updateVal(61, 100, 50, sec, 2, 1500);
+							TweenLite.to(objPageElements.region_info, 0.4, {
+								opacity : 1,
+								onComplete : function() {
+									//updateVal(61, 100, 50, sec, 2, 1500);
+									// position the percentage div over the circle svg
+									var elCircle = getEl('background');
+									
+									//var width = elCircle.getBBox().width;
+									//var width2 = getTransformedWidth(objPageElements.circlesvg, elCircle);
+									var boundingRect = elCircle.getBoundingClientRect(); 
+									var width=boundingRect.width*100/90;
+									var left=boundingRect.left;
+									var centerx = left+(width/2) -10;
+									objPageElements.percentage.style.left = centerx - (objPageElements.percentage.clientWidth /2) + 'px';
+									objPageElements.percentage.style.bottom = (boundingRect.bottom /8) + (width/2) - (objPageElements.percentage.clientHeight / 2)  + 'px';
+									animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);				
+									TweenLite.to(objPageElements.percentage, 0.8, {
+										opacity : 1,
+										onComplete : function() {	
+											
+											elRegion.style.opacity = opacity;
+											
+										}
+									});
+								}
+							});			
+						}
+					});			
 				}
 			});			
 		}
 	});
+
+	
+
 }
 function updateValue(val, id){
 	var target = getEl(id);
@@ -594,17 +648,45 @@ function renderMruFilterComponent(arrLi, parentId){
 	appPanels.mru_filter.appendChild(ul);
 }
 function levelUp(parentId){
-	var selector = '#producttree_temp li';
+	var selector = '#philips li';
 	var parent = findParentBySelector(parentId, selector);
-	var parentId = parent?parent.getAttribute('id'):'producttree_temp';
+	var parentId = parent?parent.getAttribute('id'):'philips';
 	showMruFilterLevel(parentId);
 }
 function showMruFilterLevel(id){
+	//debugger;
+	if(id == 'philips' || id == 'PD0100' || id == 'PD0200' || id == 'PD0900'){
+		objPageVars.current_sector = id;
+	}
+	objPageVars.current_mru = id;
+		
 	var arrLi = getFirstLevelChildElementsById(id, 'li');
 	renderMruFilterComponent(arrLi, id);
 }
+function setCurrentOru(oru){
+	objPageVars.current_oru = oru;
+}
+function addFavourite(){
+	alert('adding item to favourites');
+	var key = 'fav_' +objPageVars.current_oru+'_'+objPageVars.current_mru+'_'+objPageVars.current_region;
 
-
+	var obj = {
+		oru: objPageVars.current_oru,
+		mru: objPageVars.app.current_mru,
+		region_name: '',
+		breadcrumb: ''
+	}
+	obj.region_name = getRegionNameById(objPageVars.current_region);
+	obj.breadcrumb = getMruFilterBreadcrumb();
+	var str = JSON.stringify(obj);
+	alert(str);
+	setLocalStorageItem(key, str);
+	alert('added item to favourites');
+}
+function isFavourite(){
+	var key = 'fav_' +objPageVars.current_oru+'_'+objPageVars.app.current_mru+'_'+objPageVars.current_region;
+	return JSON.parse(getLocalStorageItem(key)).breadcrumb!='';
+}
 /*
  * Data functions
  */
@@ -655,6 +737,7 @@ function getWorldmapData(cb){
 		snapshotid:1		
 	}
 	psv('GET', dynamicResourceUrl, objData, function(data) {
+		if(data.error)cb(data.error.message);
 		cb(null, data);
 	});	
 }
@@ -841,45 +924,94 @@ function animateArc(objArgs, intAnimationDurationInSeconds){
 }
 
 //performs an ajax call and inserts the retrieved svg data into the wrapper div
-function loadWorldmap(objArgs){
-	serverSideRequest({
-		url: objArgs.url, 
-		method: 'get', 
-		debug: true,
-		debug: false,
-		callback: function(strSvgData){
-			//insert the SVG data into the holder div
-			objPageElements.elsvgholder.innerHTML=strSvgData;
+function loadWorldmap(oru, cb){
+	
+	var strOru = 'world';
+	switch (oru) {
+	case 1:
+		strOru = 'world';
+		break;
+	case 2:
+		strOru = 'region';
+		break;
+	case 3:
+		strOru = 'market';
+		break;
+	case 4:
+		strOru = 'country';
+		break;
+	default:
+		break;
+	}	
+	if(objPageVars.currentsvgid == oru){
+		cb();
+	}else{
+		serverSideRequest({
+			url: objPageVars.maps[strOru].url, 
+			method: 'get', 
+			debug: true,
+			debug: false,
+			callback: function(strSvgData){
+				//insert the SVG data into the holder div
+				objPageElements.elsvgholder.innerHTML=strSvgData;
 
-			//retrieve the base svg elements
-			objPageElements.rootanimate=getEl('viewport');
-			objPageElements.rootsvg=document.getElementsByTagName('svg')[0];
-			
-			//resize the map to fit into the window
-			resizeWorldmap();
+				//retrieve the base svg elements
+				objPageElements.rootanimate=getEl('viewport');
+				objPageElements.rootsvg=document.getElementsByTagName('svg')[0];
+				
+				//resize the map to fit into the window
+				resizeWorldmap();
 
-			
-
-			//prepare an object containing vital information about the svg element to animate
-			objPageElements.rootanimateattributevalues=retrieveSvgElementObject(objPageElements.rootanimate);
-
-			centerWorldmap(objPageElements.rootanimate);
-			
-			//apply zoom and pan functionality to the svg drawing
-			var bolUseHomeGrown=false;
-			if(bolUseHomeGrown){
-				//initiate the hammer object to capture multitouch events
-				setupHammer();
+				
 
 
-				//console.log(objPageElements.rootanimateattributevalues);
-			}else{
-				initZoomPan(objPageElements.rootsvg);
+				//prepare an object containing vital information about the svg element to animate
+				objPageElements.rootanimateattributevalues=retrieveSvgElementObject(objPageElements.rootanimate);
+				centerWorldmap(objPageElements.rootanimate);
+				
+				//apply zoom and pan functionality to the svg drawing
+				var bolUseHomeGrown=true;
+				if(bolUseHomeGrown){
+
+					//initiate the new version of the zoom pan library
+
+					objTouchSettings.debugtointerface=false;
+					objTouchSettings.debugtoconsole=false;
+					objZoomPanSettings.mobile=objPageVars.mobile;
+					
+					objZoomPanSettings.clickcallback=function(event){
+						//console.log('in callback');
+						//console.log(event);
+
+						var elClicked=event.srcElement;
+						if(typeof(elClicked) == "undefined"){
+							elClicked=event.originalTarget;
+						}
+						var strElementName=elClicked.nodeName;
+						var strElementId=(elClicked.id)?elClicked.id:'';
+
+						var elParent=elClicked.parentNode;
+						var strParentElementName=elParent.nodeName;
+						var strParentElementId=(elParent.id)?elParent.id:'';
+
+						//console.log('strElementName: '+strElementName+' strElementId: '+strElementId+' strParentElementName:'+strParentElementName+' strParentElementId: '+strParentElementId);
+
+						if(strElementName=='path')countryClicked(strElementId);
+					}
+					initSgvZoomPan(objPageElements.rootsvg, objPageElements.rootanimate);
+
+					//console.log(objPageElements.rootanimateattributevalues);
+				}else{
+					
+					initZoomPan(objPageElements.rootsvg);
+				}
+				objPageVars.currentsvgid=oru;
+				cb();
 			}
+		});		
+		
+	}
 
-
-		}
-	});
 
 }
 
@@ -938,6 +1070,39 @@ function svgSetTransform(elSvg, objSvgProperties){
 	}
 
 }
+//retrieves the svg element properties (typically <g/> element)
+function retrieveSvgElementObject(elSvg){
+	objSvgElementProperties={};
+
+	//1- set the current values into the object
+	objSvgElementProperties.translatex=0;
+	objSvgElementProperties.translatey=0;
+	objSvgElementProperties.scale=1;				
+	
+	//2- position of the element in the browser
+	var arrPosition=findPos(elSvg.ownerSVGElement);
+	objSvgElementProperties.x=arrPosition[0];
+	objSvgElementProperties.y=arrPosition[1];
+	
+	//3- store the attributes of the svg node into the object too
+	for (var attr, i=0, attrs=objPageElements.rootanimate.attributes, l=attrs.length; i<l; i++){
+		attr = attrs.item(i);
+		//alert(attr.nodeName);
+		if(attr.nodeName=='transform'){
+			//perform srting manipulation to find all the values used in the transform
+		}
+		objSvgElementProperties[attr.nodeName]=attr.nodeValue;
+	}
+
+	//4- the svg transform object (this allows us to read the position, scale etc of the svg element)
+	objSvgElementProperties.transformmatrix=elSvg.getCTM();
+
+	//5- the svg size
+	objSvgElementProperties.size=elSvg.getBoundingClientRect();
+
+
+	return objSvgElementProperties;
+}
 
 
 function startApp(){
@@ -955,7 +1120,7 @@ function startApp(){
 	    	    // load mru HTML for latest snapshot id
 	    	    mruHtml: function(callback){
 	    	    	getMruHtml(function(err, data){
-	    				//if(err) callback(err);
+	    				if(data.error) callback(data.error.message);
 	    				callback(null, data.html);
 	    			});
 	    	    },
@@ -974,53 +1139,113 @@ function startApp(){
 	    	},
 	    	// all done
 	    	function(err, results) {
-	    		//debugger;
-	    		panels.mruhtml.innerHTML = results.mruHtml;
-	    		showMruFilterLevel('producttree_temp');
-	    		objPageVars.orujson = results.oruJson;
-				//get worldmapdata
-	    		getWorldmapData(function(err, data){
-	    			//debugger;
-	    			var arrRegions = getEl('viewport').getElementsByTagName('g');
-	    			for ( var i = 0; i < arrRegions.length; i++) {
-						var region = arrRegions[i],
-							regionId = region.id,
-							key=objPageVars.current_mru + '_' + regionId,
-							regionData = data.snapshotdata[key],
-							colors;
-						//debugger;
-						if (regionData) {
-							//console.log(regionData);
-							//debugger;
-							var percentageLI = (regionData.l * 100) / regionData.p || 0;
-							if(percentageLI> 99)percentageLI=100;
-							if(percentageLI< 1)percentageLI=1;
-							regionData.percentageLI = percentageLI;
-							var colors = {
-		            			low: '#99EAF0',
-		            			middle: '#5BCCD4',
-		            			high: '#30B6BF'
-		            		}
-							//debugger;
-							region.firstElementChild.style.fill=getColorForPercentage(percentageLI, colors.low, colors.middle, colors.high);
-								//self.increaseBrightness('#112233', percentageLI);
-						} else {
-							//debugger;
-							// No regionData for region found so set default color
-							colors[region] = '#000';
-						}							
-					}
-            		hideLoadingPanel();
-	    		});
-	    		//get correct svg
-	    		
-	    		
-				//color Worldmap regions
+	    		if(err){
+	    			btnLogoutClick();
+	    		}else{
+		    		//debugger;
+		    		panels.mruhtml.innerHTML = results.mruHtml;
+		    		showMruFilterLevel('philips');
+		    		objPageVars.orujson = results.oruJson;
+					//get worldmapdata
+		    		updateWorldmap();
+	    		}
 	    	});			
-			
-		
 		}
 	});   	
+}
+function updateWorldmap(){
+	getWorldmapData(function(err, data){
+		//debugger;
+		
+		if(err){
+			btnLogoutClick();			
+		}else{
+			//load correct map
+			var oru = objPageVars.current_oru;
+
+			loadWorldmap(oru, function(){
+				objPageVars.worldmapdata = data.snapshotdata;
+				var arrRegions = getFirstLevelChildElements(getEl('viewport'), 'path') ;// getEl('viewport').getElementsByTagName('g');
+				debugger;
+				for ( var i = 0; i < arrRegions.length; i++) {
+					var region = arrRegions[i],
+						regionId = region.id == 'UK' ? 'GB' : region.id,
+						key=objPageVars.current_mru + '_' + (oru == 3 ? regionId.toLowerCase() : regionId),
+						regionData = objPageVars.worldmapdata[key];
+					//console.log();
+					//debugger;
+					if (regionData) {
+						var percentageLI = (regionData.l * 100) / regionData.p || 0;
+						if(percentageLI> 99)percentageLI=100;
+						if(percentageLI< 1)percentageLI=0;
+						objPageVars.worldmapdata[key].percentageLI = Math.round(percentageLI);
+						
+						var color=colors[objPageVars.current_sector].middle;//getColorForPercentage(percentageLI, colors[objPageVars.current_sector].low, colors[objPageVars.current_sector].middle, colors[objPageVars.current_sector].high);
+						objPageVars.worldmapdata[key].color = color;
+						var opacity=((percentageLI/100) * 0.7) + 0.3;
+						if(opacity < 0.2)opacity = 0.2;
+						region.style.fill=color;	
+						region.style.opacity=opacity;
+						
+						/*var paths=region.getElementsByTagName('*');//.concat(region.getElementsByTagName('path'),region.getElementsByTagName('rect'),region.getElementsByTagName('polygon'));
+						for ( var ii = 0; ii < paths.length; ii++) {
+							var path = paths[ii];
+							if(path.nodeName == 'path' || path.nodeName == 'polygon' || path.nodeName == 'rect' || path.nodeName == 'g'){
+								paths[ii].style.fill=color;	
+								paths[ii].style.opacity=opacity;
+							}
+						}		*/						
+					} else {
+						region.style.fill = '#000';
+					}							
+				}
+				hideLoadingPanel();				
+			});
+			
+			
+		}
+	});	
+}
+function getMruFilterBreadcrumb(){
+	var mru = objPageVars.current_mru;
+	var el = getEl(mru);
+	var name = el.firstElementChild.innerHTML,
+	    arrParents = [];
+	arrParents.push(name);
+
+	while(el.parentNode !=null && el.parentNode.className !== 'filter_list mru'){
+	    el = el.parentNode; 
+	    if(el.localName == 'li'){
+	        arrParents.push(el.firstElementChild.innerHTML);
+	    }
+	    
+	}
+
+	return(arrParents.reverse().join(' - '));	
+	
+}
+var matchFound= false,
+returnObj;
+function iterate(obj, type, value) {
+	for (var property in obj) {
+	    
+	    if (obj.hasOwnProperty(property)) {
+	        if (typeof obj[property] == "object")
+	            iterate(obj[property], type, value);
+	        else
+	            if(obj[property] === value){
+	                if(property === type){
+	                    returnObj = obj;
+	                    matchFound= true;
+	                    break;
+	                }
+	            }
+	    }
+	}
+	return returnObj;
+}
+function getRegionNameById(regionId){
+	return iterate(objPageVars.orujson, 'guid', regionId).name;
 }
 /*
  * Executes page logic
@@ -1053,8 +1278,8 @@ function initPage() {
 
 	//load the worldmap and continue processing
 	objPageElements.elsvgholder=getEl('holder_1000');
-	loadWorldmap(objPageVars.maps.world);
-
+	
+	objPageVars.arrFavourites = findFavourites();
 
 	//initiate the infographic
 	objPageElements.circlesvg = getEl('svg_circle');
@@ -1073,9 +1298,10 @@ function initPage() {
 
 	//calls the function that generates an arc from the path svg node
 	generateArc(objArcProperties);
-
 	
-	if(objPageVars.signedin && objPageVars.token !==""){
+	objPageVars.token = getLocalStorageItem('token');
+	
+	if(objPageVars.token !=="" && objPageVars.token !==null){
 		startApp();
 	}	
 	
@@ -1107,13 +1333,38 @@ var objPageVars = {
 	selectedregionpath: {},
 	//the available maps
 	maps: {
-		world: {url: 'svg/new1.svg'},
-		market: {url: 'svg/new2.svg'},
-		country: {url: 'svg/new3.svg'}
+		world: {url: 'svg/World.svg'},
+		region: {url: 'svg/Continents.svg'},
+		market: {url: 'svg/Markets.svg'},
+		country: {url: 'svg/countries.svg'}
 	},
 	current_oru: 4,
-	current_mru: 'philips'
+	current_mru: 'philips',
+	current_sector: 'cl',
+	current_region: ''
 }
+var colors = {
+	philips: {
+		low: '#7DABF1',
+		middle: '#0b5ed7',
+		high: '#3D7FDF' 
+	},
+	PD0900: {
+		low: '#99EAF0',
+		middle: '#2badb5',
+		high: '#30B6BF'		
+	},
+	PD0100: {
+		low: '#CBF277',
+		middle: '#7dba00',
+		high: '#98C833'   		
+	},
+	PD0200:{
+		low: '#BE67E9',
+		middle: '#68049c',
+		high: '#8737B0'  		
+	}
+};
 //global properties of the arc to build
 var objArcProps={
 	targetnode: null,
@@ -1135,6 +1386,7 @@ var authUrl2 = "https://www.livesimproved.philips.com/tools/dynamic_resources.as
 var authUrl3 = "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx";
 var snapshot_url = 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached.aspx?method=getworldmapdata';
 
+var store = window.localStorage;
 
 var currentScript = null,
 	success = null;

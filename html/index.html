@@ -19,7 +19,7 @@
 					<div id="region_name">Germany</div>
 					<div id="filter_breadcrumb">Lighting &bull; Lumileds</div>
 				</div>
-				<div id="toggle_favourite"></div>
+				<div class="hide" id="toggle_favourite" onclick="addFavourite();"></div>
 			</div>
 			<div id="app_wrapper">
 				<div id="map">
@@ -91,19 +91,21 @@
 		</div>
 		<div id="login_panel" class="panel full">
 			<form id="login">
-				<input type="text" id="username" placeholder="Account" value=""/>
+				<input type="text" id="username" placeholder="Account" value="nly37959"/>
 				<input type="password" id="password" placeholder="Password" value=""/>
 				<input type="submit" id="btn_submit" class="btn btn_login" onclick="btnSubmitClick();return false;"/>
 			</form>
 		</div>
 		<div id="filter_panel" class="panel modal">
-			<div id="btn_close_filter" class="btn btn_close" onclick="btnCloseFilterClick();">Close</div>
+			<div class="panel_header">
+				<div id="btn_close_filter" class="btn btn_close" onclick="btnCloseFilterClick();">X</div>
+			</div>	
 			<div class="modal_content">
 				<div id="oru_filter_container">
-					<div id="btn_world" data-value="world">World</div>
-					<div id="btn_region" data-value="region">Region</div>
-					<div id="btn_bmc" class="selected" data-value="bmc">BMC</div>
-					<div id="btn_country" data-value="country">Country</div>
+					<div id="btn_world" onclick="setCurrentOru(1);" onclick="setCurrentOru(1)">World</div>
+					<div id="btn_region" onclick="setCurrentOru(2);">Region</div>
+					<div id="btn_bmc" onclick="setCurrentOru(3);">BMC</div>
+					<div id="btn_country" onclick="setCurrentOru(4);" class="selected">Country</div>
 				</div>
 				<div id="filter_container"></div> 
 			</div>
@@ -112,18 +114,23 @@
 			<div id="btn_close_explain" class="btn btn_close" onclick="btnCloseExplainClick();">Close</div>
 		</div>
 		<div id="bookmarks_panel" class="panel modal">
-			<div id="btn_close_bookmarks" class="btn btn_close" onclick="btnCloseBookmarksClick();">Close</div>
+			<div class="panel_header">
+				<h2>Bookmarks</h2>
+				<div id="btn_close_bookmarks" class="btn btn_close" onclick="btnCloseBookmarksClick();">X</div>
+			</div>
+			<div class="modal_content">
+			
+			</div>
 		</div>
 		<div id="overlay"></div>
 		<div id="loading"></div>
 		<div id="producttree_temp"></div>
 		<div id="error" onclick="hideErrorDiv();"></div>
 		
-
 		<script type="text/javascript" src="js/async.js">//</script>
 
 		<script type="text/javascript" src="js/zoom_pan.js">//</script>
-		<script type="text/javascript" src="js/sgv_zoom_homegrown.js">//</script>
+		<script type="text/javascript" src="js/svg_zoom_homegrown_v2.js">//</script>
 
 		<script type="text/javascript" src="js/plugins/CSSPlugin.min.js">//</script>
 		<script type="text/javascript" src="js/easing/EasePack.min.js">//</script>

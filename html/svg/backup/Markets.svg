@@ -3,6 +3,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <svg version="1.0" id="Markets" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="581.28px" height="342.25px" viewBox="0 0 581.28 342.25" enable-background="new 0 0 581.28 342.25" xml:space="preserve">
+	 <g id="viewport" preserveAspectRatio="xMinYMin" transform="">
 <g id="Japan" opacity="0.6">
 	<g>
 		<path fill-rule="evenodd" clip-rule="evenodd" d="M481.191,154.09l0.139,0.15l-0.113,0.063l-0.078-0.04L481.191,154.09
@@ -247,7 +248,7 @@
 			420.92,182.561 		"/>
 	</g>
 </g>
-<g id="Russia_and_Central_Asia" opacity="0.6">
+<g id="Russia_Central-Asia" opacity="0.6">
 	<g>
 		<polygon fill-rule="evenodd" clip-rule="evenodd" points="367.146,29.754 367.428,29.923 367.467,30.229 367.359,31.092 
 			367.201,31.427 367.104,31.699 367.195,31.915 367.354,31.864 367.541,31.546 367.947,31.393 368.084,31.501 368.174,31.808 
@@ -1480,7 +1481,7 @@
 			329.957,39.414 329.891,39.877 329.789,39.979 329.912,40.171 		"/>
 	</g>
 </g>
-<g id="Asean_and_pacific" opacity="0.6">
+<g id="Asean" opacity="0.6">
 	<g>
 		<polygon points="476.354,158.284 476.514,157.963 476.457,157.745 476.398,157.62 476.25,157.714 476.168,157.907 476.16,158.174 
 			476.236,158.392 		"/>
@@ -3429,7 +3430,7 @@
 			379.342,308.181 379.336,308.086 378.928,308.133 378.791,307.908 378.916,307.719 		"/>
 	</g>
 </g>
-<g id="Central_and_East_Europe" opacity="0.6">
+<g id="Cantral-East_Europe" opacity="0.6">
 	<g>
 		<polygon fill-rule="evenodd" clip-rule="evenodd" points="308.369,113.857 308.635,113.834 308.828,114.152 308.924,113.971 
 			309.189,113.795 309.377,113.857 309.252,113.551 308.975,113.534 308.822,113.38 308.652,113.352 308.623,113.466 
@@ -3757,7 +3758,7 @@
 			288.168,127.893 288.174,127.586 288.298,127.313 288.321,127.137 288.412,127.023 288.419,126.957 		"/>
 	</g>
 </g>
-<g id="UK_and_Ireland" opacity="0.6">
+<g id="UK_Ireland" opacity="0.6">
 	<g>
 		<polygon points="270.187,118.649 270.039,118.65 270.05,118.795 		"/>
 	</g>
@@ -5913,7 +5914,7 @@
 			l0.085,0.073l0.164-0.039l0.13-0.119l0.232-0.012l0.125-0.147L228.304,317.221z"/>
 	</g>
 </g>
-<g id="Italy_x2C__Isreal_and_Greece" opacity="0.6">
+<g id="Italy_Israel_Greece" opacity="0.6">
 	<g>
 		<polygon fill-rule="evenodd" clip-rule="evenodd" points="293.523,147.34 293.451,147.442 293.105,147.578 292.969,147.72 
 			293.139,147.788 293.461,147.674 293.711,147.686 293.672,147.516 		"/>
@@ -6146,7 +6147,7 @@
 			332.914,166.462 333.016,166.303 333.207,166.134 333.225,166.135 333.307,165.883 		"/>
 	</g>
 </g>
-<g id="Middle_East_and_Turkey" opacity="0.6">
+<g id="Middle-East_Turkey" opacity="0.6">
 	<g>
 		<polygon fill-rule="evenodd" clip-rule="evenodd" points="393.994,165.208 393.596,165.111 393.217,165.259 392.74,165.156 
 			392.549,164.753 391.998,164.526 391.41,164.385 390.846,163.872 390.766,163.408 390.518,162.345 390.234,161.881 
@@ -6324,7 +6325,7 @@
 			330.729,160.927 		"/>
 	</g>
 </g>
-<g id="North_America" opacity="0.6">
+<g id="North_America_bmc" opacity="0.6">
 	<g>
 		<polygon points="140.476,75.867 140.272,75.471 140.193,75.607 140.307,75.765 		"/>
 	</g>
@@ -8837,5 +8838,6 @@
 		<polygon points="506.033,197.548 505.887,197.808 505.83,198 505.953,198.113 506.18,198.045 506.451,197.548 506.338,197.469 		
 			"/>
 	</g>
+</g>
 </g>
 </svg>
