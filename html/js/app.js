@@ -1,3 +1,4 @@
+
 /*
 Utilities
  */
@@ -47,6 +48,9 @@ function setLocalStorageItem(key, value){
 function getLocalStorageItem(key){
 	return store.getItem(key);
 }
+function removeLocalStorageItem(key){
+	store.removeItem(key);    
+}
 function getFirstLevelChildElementsById(parentId, childNodeType){
 	//debugger;
 	var selector = parentId ==='producttree_temp'?'#producttree_temp':'#producttree_temp #' + parentId;
@@ -72,6 +76,25 @@ function findFavourites(){
         }
     }     	
     return arrResult;
+}
+function ColorLuminance(hex, lum) {
+
+	// validate hex string
+	hex = String(hex).replace(/[^0-9a-f]/gi, '');
+	if (hex.length < 6) {
+		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+	}
+	lum = lum || 0;
+
+	// convert to decimal and change luminosity
+	var rgb = "#", c, i;
+	for (i = 0; i < 3; i++) {
+		c = parseInt(hex.substr(i*2,2), 16);
+		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+		rgb += ("00"+c).substr(c.length);
+	}
+
+	return rgb;
 }
 function getFirstLevelChildElements(parent, childNodeType){
 	//debugger;
@@ -415,7 +438,7 @@ function btnBackToMapClick() {
 		opacity : 0,
 		onComplete : function() {
 			TweenLite.to(appPanels.simulation, 0.4, {
-				height : 0,
+				bottom : '-60%',
 				onComplete : function() {	
 					appPanels.map.style.display = 'block';
 					TweenLite.to(appPanels.map, 0.2, {
@@ -425,7 +448,7 @@ function btnBackToMapClick() {
 				}
 			});	
 			TweenLite.to(appPanels.region_info, 0.4, {
-				height : 0
+				top : '-40%'
 			});					
 		}
 	});
@@ -435,6 +458,8 @@ function btnBackToMapClick() {
 }
 function btnLogoutClick() {
 	setLocalStorageItem('token', '');
+	panels.overlay.style.display = "none";
+	panels.overlay.style.opacity = 0;
 	TweenLite.to(panels.login, 0.2, {
 		width : objPageVars.width
 	});
@@ -460,13 +485,13 @@ function btnCloseFilterClick() {
 		display : 'none',
 		delay : 0,
 		onComplete : function() {
-			TweenLite.to(panels.overlay, 0.3, {
+			/*TweenLite.to(panels.overlay, 0.3, {
 				opacity : 0,
 				delay : 0,
 				onComplete : function() {
 					panels.overlay.style.display = "none";
 				}
-			});
+			});*/
 		}
 	});
 }
@@ -503,8 +528,16 @@ function btnCloseExplainClick() {
 		}
 	});
 }
-function btnBookmarksClick() {
-
+function btnBookmarksClick(el) {
+	var paddingtop=el.style['padding-top'];
+	TweenLite.to(el, 0.3, {
+		'padding-top' : '6px',
+		onComplete: function(){
+			TweenLite.to(el, 0.3, {
+				'padding-top' : paddingtop
+			});
+		}
+	});
 	panels.overlay.style.display = "block";
 	TweenLite.to(panels.overlay, 0.3, {
 		opacity : 0.7,
@@ -518,19 +551,21 @@ function btnBookmarksClick() {
 		}
 	});
 }
-function btnCloseBookmarksClick() {
+function btnCloseBookmarksClick(closeOverlay) {
 	TweenLite.to(panels.bookmarks, 0.4, {
 		opacity : 0,
 		display : 'none',
 		delay : 0,
 		onComplete : function() {
-			TweenLite.to(panels.overlay, 0.3, {
-				opacity : 0,
-				delay : 0,
-				onComplete : function() {
-					panels.overlay.style.display = "none";
-				}
-			});
+			if(closeOverlay){
+				TweenLite.to(panels.overlay, 0.3, {
+					opacity : 0,
+					delay : 0,
+					onComplete : function() {
+						panels.overlay.style.display = "none";
+					}
+				});
+			}
 		}
 	});
 }
@@ -541,11 +576,18 @@ function countryClicked(idCountry) {
 }
 function regionClick(idCountry) {
 	objPageVars.current_region = idCountry;
-	//var isFav = isFavourite();
+	if(isFavourite()){
+		getEl('toggle_favourite').className=getEl('toggle_favourite').className +' selected';
+	}else{
+		getEl('toggle_favourite').className=getEl('toggle_favourite').className.replace(' selected','');
+	}
 	//alert(isFav);
+	document.getElementsByTagName("body")[0].className = objPageVars.current_sector;
+	//var color=colors[objPageVars.current_sector].middle;
+	//appPanels.region_info.style.background = color;
 	var sec={},
 	back={},
-	key=objPageVars.current_mru + '_' + idCountry,
+	key=objPageVars.current_mru + '_' + (idCountry.length < 4 ? idCountry : idCountry.toLowerCase()),
 	regionData = objPageVars.worldmapdata[key];
 	var elRegion = getEl(idCountry);
 	var opacity = elRegion.style.opacity;
@@ -555,21 +597,27 @@ function regionClick(idCountry) {
 			TweenLite.to(appPanels.map, 0.2, {
 				opacity: 0, 
 				onComplete: function(){
+					//debugger;
 					appPanels.map.style.display = 'none';
 					getEl('nr_lives_improved').innerHTML =regionData.l;
-					getEl('nr_gdp').innerHTML ='$'+regionData.g+' trillion';
+					getEl('nr_gdp').innerHTML ='$'+regionData.g+' billion';
 					getEl('nr_population').innerHTML =regionData.p+ ' million';
 					getEl('lives_improved_percentage').innerHTML = regionData.percentageLI+'%';
-					getEl('region_name').innerHTML = getRegionNameById(idCountry);
+					getEl('region_name').innerHTML = getRegionNameById((idCountry.length < 4 ? idCountry : idCountry.toLowerCase()));
 					getEl('filter_breadcrumb').innerHTML = getMruFilterBreadcrumb();
+					//var color = ColorLuminance(colors[objPageVars.current_sector].middle, (100 - regionData.percentageLI) / 100);
+					//getEl('region_info').style['background-color'] = color;
 					
-					toggleClass(getEl('btn_back'), 'hide');
-					toggleClass(getEl('toggle_favourite'), 'hide');
+					
+					if(getEl('btn_back').className.indexOf('hide')> -1){
+						toggleClass(getEl('btn_back'), 'hide');
+						toggleClass(getEl('toggle_favourite'), 'hide');
+					}
 					TweenLite.to(appPanels.region_info, 0.4, {
-						height : '40%'
+						top : '0%'
 					});
 					TweenLite.to(appPanels.simulation, 0.4, {
-						height : '60%',
+						bottom : '0%',
 						onComplete : function() {
 							//updateVal(61, 100, 50, sec, 2, 1500);
 							TweenLite.to(objPageElements.region_info, 0.4, {
@@ -617,36 +665,80 @@ function updateValue(val, id){
 MRU Filter functions
 */
 function renderMruFilterComponent(arrLi, parentId){
-	appPanels.mru_filter.innerHTML = '';
-	var ul = document.createElement('ul'),
-		liHeader = document.createElement('li'),
-		backButton = document.createElement('div');
-	
-	liHeader.setAttribute('class', 'mru_filter_header');
-	backButton.setAttribute('id', 'btn_back');
-	backButton.onclick = function(){
-		levelUp(parentId);
-	}
-	liHeader.appendChild(backButton);
-	ul.appendChild(liHeader);
+	//create ul
+	var ul = document.createElement('ul');
+	ul.id='filter_list';
+	//create Philips li
+	var liPhilips = document.createElement('li');
+	liPhilips.innerHTML = 'Philips';
+	liPhilips.id = 'philips';
+	liPhilips.className = 'selected';
+	liPhilips.setAttribute('data-id', 'philips');
+	liPhilips.setAttribute('onclick', 'applyFilter(event, "mru", "philips")');
+	ul.appendChild(liPhilips);
+	//get all first children of philips from temp html
+	var arrLi = getFirstLevelChildElementsById('philips', 'li');
 	for ( var i = 0; i < arrLi.length; i++) {
-		var liItem = document.createElement('li'),
-			id = arrLi[i].id,
-			title = getFirstLevelChildElements(arrLi[i], 'div')[0].innerHTML;
-		//debugger;
-		
-		liItem.id = id;
-		liItem.setAttribute('class', 'mru_filter_element');
-		liItem.setAttribute('data-title', id);
-		liItem.onclick = function(){
-			showMruFilterLevel(this.id);
-		}
-		liItem.innerHTML = title;
-		ul.appendChild(liItem);
+		arrLi[i].innerHTML+= '<div class="mru_sector_color"></div>';
+		ul.appendChild(arrLi[i]);
 	}
-	
+	appPanels.mru_filter.innerHTML = '';
 	appPanels.mru_filter.appendChild(ul);
+	
+	//add event to function call for all calls to stop propagation 
+	var arrAllLi = getEl('filter_container').getElementsByTagName('li');
+	for ( var a = 0; a < arrAllLi.length; a++) {
+		if(arrAllLi[a].onclick){
+			var strClick = arrAllLi[a].getAttribute('onclick').replace('applyFilter(\'','applyFilter(event, \'');
+			arrAllLi[a].setAttribute('onclick', strClick); 
+		}
+	}	
 }
+function applyFilter(e, key, mru){
+	e.stopPropagation();
+	var elClicked=getEl(mru),
+	parentNode = elClicked.parentNode,
+	arrSiblingsOrSelf = getFirstLevelChildElements(parentNode, 'li');	
+
+	//set global current mru
+	objPageVars.current_mru = mru;
+	//remove all selected classes
+	var arrAllLi = getEl('filter_container').getElementsByTagName('li');
+	for ( var a = 0; a < arrAllLi.length; a++) {
+		arrAllLi[a].className = '';
+	}
+	//hide child ul for all siblings of clicked element
+	for ( var i = 0; i < arrSiblingsOrSelf.length; i++) {
+		var el = arrSiblingsOrSelf[i];
+		//skip self
+		if(el != elClicked){
+			var arrUl = el.getElementsByTagName('ul');
+			for ( var ii = 0; ii < arrUl.length; ii++) {
+				TweenLite.to(arrUl[ii], 0.2, {
+					height: 0
+				});
+			}
+		}
+	}
+	objPageVars.current_sector = getSectorFromBreadCrumb(getMruFilterBreadcrumb());
+	//debugger;
+	//set selected class on clicked element
+	elClicked.className='selected';
+	//test if element has children
+	var childUl = getFirstLevelChildElements(elClicked, 'ul');
+	if(childUl.length > 0){
+		//open the child ul
+		TweenLite.to(childUl[0], 0.4, {
+			height: 'auto'
+		});		
+	}
+}
+
+
+
+
+
+
 function levelUp(parentId){
 	var selector = '#philips li';
 	var parent = findParentBySelector(parentId, selector);
@@ -663,29 +755,104 @@ function showMruFilterLevel(id){
 	var arrLi = getFirstLevelChildElementsById(id, 'li');
 	renderMruFilterComponent(arrLi, id);
 }
-function setCurrentOru(oru){
+function setCurrentOru(el, oru){
+	var arrEl = el.parentNode.getElementsByTagName('div');
+	for ( var i = 0; i < arrEl.length; i++) {
+		var ele = arrEl[i];
+		ele.className='';
+	}
+	el.className='selected';
 	objPageVars.current_oru = oru;
 }
-function addFavourite(){
-	alert('adding item to favourites');
+function toggleFavourite(el){
+	//alert('adding item to favourites');
 	var key = 'fav_' +objPageVars.current_oru+'_'+objPageVars.current_mru+'_'+objPageVars.current_region;
+	
+	if(isFavourite()){
+		removeLocalStorageItem(key);
+		el.className=el.className.replace(' selected','');
 
-	var obj = {
-		oru: objPageVars.current_oru,
-		mru: objPageVars.app.current_mru,
-		region_name: '',
-		breadcrumb: ''
+	}else{
+		var obj = {
+			oru: objPageVars.current_oru,
+			mru: objPageVars.current_mru,
+			region_id: objPageVars.current_region,
+			region_name: getRegionNameById(objPageVars.current_region),
+			breadcrumb: getMruFilterBreadcrumb()
+		}
+		setLocalStorageItem(key, JSON.stringify(obj));	
+		el.className=el.className +' selected';		
 	}
-	obj.region_name = getRegionNameById(objPageVars.current_region);
-	obj.breadcrumb = getMruFilterBreadcrumb();
-	var str = JSON.stringify(obj);
-	alert(str);
-	setLocalStorageItem(key, str);
-	alert('added item to favourites');
+
+	//alert('added item to favourites');
+	renderFavouritePanel();
+}
+function removeFavourite(e, el){
+	e.stopPropagation();
+	var elParent=el.parentNode;
+	var key = elParent.getAttribute('data-key');
+	removeLocalStorageItem('fav_'+key);
+	TweenLite.to(elParent, 0.2, {
+		left: '100%',
+		delay : 0,
+		onComplete : function() {
+			TweenLite.to(elParent, 0.3, {
+				height : 0,
+				delay : 0,
+				onComplete: function(){
+					elParent.parentNode.removeChild(elParent);
+					return false;
+				}
+			});
+		}
+	});	
+	return false;
 }
 function isFavourite(){
-	var key = 'fav_' +objPageVars.current_oru+'_'+objPageVars.app.current_mru+'_'+objPageVars.current_region;
-	return JSON.parse(getLocalStorageItem(key)).breadcrumb!='';
+	var key = 'fav_' +objPageVars.current_oru+'_'+objPageVars.current_mru+'_'+objPageVars.current_region;
+	var fav = getLocalStorageItem(key);
+	return fav!=null;
+}
+function renderFavouritePanel(){
+	var arrFavs = findFavourites();
+	var ul = document.createElement('ul');
+	for ( var i = 0; i < arrFavs.length; i++) {
+		var obj = JSON.parse(arrFavs[i]),
+			sector = getSectorFromBreadCrumb(obj.breadcrumb);
+		var liItem = document.createElement('li');
+		liItem.setAttribute('data-oru', obj.oru);
+		liItem.setAttribute('data-mru', obj.mru);
+		liItem.setAttribute('data-region', obj.region_id);
+		liItem.setAttribute('data-sector', sector);
+		var key = obj.oru + '_' + obj.mru + '_' +(obj.oru != 4 ? obj.region_id.toLowerCase() : obj.region_id);
+		liItem.setAttribute('data-key', key);
+		
+		liItem.innerHTML = '<div class="bookmark_color" style="background:'+colors[sector].middle+'"></div><h2>'+obj.region_name+'</h2><span class="bookmark_sub">'+obj.breadcrumb+'</span><div class="remove_bookmark" onclick="removeFavourite(event, this);return false;"></div>';
+		liItem.onclick = function(){
+			openFavourite(this.getAttribute('data-oru'), this.getAttribute('data-mru'), this.getAttribute('data-region'), this.getAttribute('data-sector'));
+		}
+		ul.appendChild(liItem);
+	}
+	appPanels.bookmarkslist.innerHTML = '';
+	appPanels.bookmarkslist.appendChild(ul);
+}
+function getSectorFromBreadCrumb(str){
+	if(str.indexOf('ealthcare')> -1){
+		return 'PD0900';
+	}else if(str.indexOf('ighting')> -1){
+		return 'PD0100';
+	}else if(str.indexOf('ifestyle')> -1){
+		return 'PD0200';
+	}else{
+		return 'philips';
+	}
+}
+function openFavourite(oru, mru, region, sector){
+	objPageVars.current_oru = oru;
+	objPageVars.current_mru = mru;
+	objPageVars.current_sector = sector;
+	updateWorldmap(region);
+	btnCloseBookmarksClick(false);
 }
 /*
  * Data functions
@@ -849,7 +1016,7 @@ function hideLoadingPanel(){
 		onComplete : function() {
 			panels.loading.style.display = "none";
 			TweenLite.to(panels.overlay, 0.3, {
-				display : 'block',
+				display : 'none',
 				opacity : 0,
 				delay : 0,
 				onComplete: function(){
@@ -926,17 +1093,23 @@ function animateArc(objArgs, intAnimationDurationInSeconds){
 //performs an ajax call and inserts the retrieved svg data into the wrapper div
 function loadWorldmap(oru, cb){
 	
+
+	objTouchVars.elanimate=null;
 	var strOru = 'world';
 	switch (oru) {
+	case '1':
 	case 1:
 		strOru = 'world';
 		break;
+	case '2':
 	case 2:
 		strOru = 'region';
 		break;
+	case '3':
 	case 3:
 		strOru = 'market';
 		break;
+	case '4':
 	case 4:
 		strOru = 'country';
 		break;
@@ -949,7 +1122,6 @@ function loadWorldmap(oru, cb){
 		serverSideRequest({
 			url: objPageVars.maps[strOru].url, 
 			method: 'get', 
-			debug: true,
 			debug: false,
 			callback: function(strSvgData){
 				//insert the SVG data into the holder div
@@ -957,8 +1129,7 @@ function loadWorldmap(oru, cb){
 
 				//retrieve the base svg elements
 				objPageElements.rootanimate=getEl('viewport');
-				objPageElements.rootsvg=document.getElementsByTagName('svg')[0];
-				
+				objPageElements.rootsvg=getEl('holder_1000').getElementsByTagName('svg')[0];
 				//resize the map to fit into the window
 				resizeWorldmap();
 
@@ -972,11 +1143,10 @@ function loadWorldmap(oru, cb){
 				//apply zoom and pan functionality to the svg drawing
 				var bolUseHomeGrown=true;
 				if(bolUseHomeGrown){
-
 					//initiate the new version of the zoom pan library
 
 					objTouchSettings.debugtointerface=false;
-					objTouchSettings.debugtoconsole=false;
+					objTouchSettings.debugtoconsole=true;
 					objZoomPanSettings.mobile=objPageVars.mobile;
 					
 					objZoomPanSettings.clickcallback=function(event){
@@ -989,14 +1159,13 @@ function loadWorldmap(oru, cb){
 						}
 						var strElementName=elClicked.nodeName;
 						var strElementId=(elClicked.id)?elClicked.id:'';
-
 						var elParent=elClicked.parentNode;
 						var strParentElementName=elParent.nodeName;
 						var strParentElementId=(elParent.id)?elParent.id:'';
-
+						if(strElementId=='')strElementId = strParentElementId;
 						//console.log('strElementName: '+strElementName+' strElementId: '+strElementId+' strParentElementName:'+strParentElementName+' strParentElementId: '+strParentElementId);
 
-						if(strElementName=='path')countryClicked(strElementId);
+						if(strElementName=='path' || strElementName == 'g' || strElementName == 'polygon')countryClicked(strElementId);
 					}
 					initSgvZoomPan(objPageElements.rootsvg, objPageElements.rootanimate);
 
@@ -1153,24 +1322,23 @@ function startApp(){
 		}
 	});   	
 }
-function updateWorldmap(){
+function updateWorldmap(regionIdToSelect){
+	//showLoadingPanel();
 	getWorldmapData(function(err, data){
-		//debugger;
 		
 		if(err){
 			btnLogoutClick();			
 		}else{
 			//load correct map
 			var oru = objPageVars.current_oru;
-
 			loadWorldmap(oru, function(){
 				objPageVars.worldmapdata = data.snapshotdata;
 				var arrRegions = getFirstLevelChildElements(getEl('viewport'), 'path') ;// getEl('viewport').getElementsByTagName('g');
-				debugger;
+				if(arrRegions.length == 0) arrRegions = getFirstLevelChildElements(getEl('viewport'), 'g') ;
 				for ( var i = 0; i < arrRegions.length; i++) {
 					var region = arrRegions[i],
 						regionId = region.id == 'UK' ? 'GB' : region.id,
-						key=objPageVars.current_mru + '_' + (oru == 3 ? regionId.toLowerCase() : regionId),
+						key=objPageVars.current_mru + '_' + (oru != 4 ? regionId.toLowerCase() : regionId),
 						regionData = objPageVars.worldmapdata[key];
 					//console.log();
 					//debugger;
@@ -1179,7 +1347,6 @@ function updateWorldmap(){
 						if(percentageLI> 99)percentageLI=100;
 						if(percentageLI< 1)percentageLI=0;
 						objPageVars.worldmapdata[key].percentageLI = Math.round(percentageLI);
-						
 						var color=colors[objPageVars.current_sector].middle;//getColorForPercentage(percentageLI, colors[objPageVars.current_sector].low, colors[objPageVars.current_sector].middle, colors[objPageVars.current_sector].high);
 						objPageVars.worldmapdata[key].color = color;
 						var opacity=((percentageLI/100) * 0.7) + 0.3;
@@ -1187,19 +1354,22 @@ function updateWorldmap(){
 						region.style.fill=color;	
 						region.style.opacity=opacity;
 						
-						/*var paths=region.getElementsByTagName('*');//.concat(region.getElementsByTagName('path'),region.getElementsByTagName('rect'),region.getElementsByTagName('polygon'));
+						var paths=region.getElementsByTagName('*');
 						for ( var ii = 0; ii < paths.length; ii++) {
 							var path = paths[ii];
 							if(path.nodeName == 'path' || path.nodeName == 'polygon' || path.nodeName == 'rect' || path.nodeName == 'g'){
 								paths[ii].style.fill=color;	
-								paths[ii].style.opacity=opacity;
+								paths[ii].style.opacity=1;
 							}
-						}		*/						
+						}								
 					} else {
 						region.style.fill = '#000';
 					}							
 				}
-				hideLoadingPanel();				
+				hideLoadingPanel();	
+				if(regionIdToSelect){
+					regionClick(regionIdToSelect);
+				}
 			});
 			
 			
@@ -1208,19 +1378,26 @@ function updateWorldmap(){
 }
 function getMruFilterBreadcrumb(){
 	var mru = objPageVars.current_mru;
-	var el = getEl(mru);
-	var name = el.firstElementChild.innerHTML,
-	    arrParents = [];
+	var selector = '#filter_container #' + mru;
+	var el = Sizzle(selector)[0];
+	var name;
+	
+	if(el.firstElementChild){
+		name = el.firstElementChild.innerHTML
+	}else{
+		name = 'Philips';
+	}
+	var arrParents = [];
 	arrParents.push(name);
 
-	while(el.parentNode !=null && el.parentNode.className !== 'filter_list mru'){
+	while(el.parentNode !=null && el.parentNode.className !== 'filter_list'){
 	    el = el.parentNode; 
 	    if(el.localName == 'li'){
 	        arrParents.push(el.firstElementChild.innerHTML);
 	    }
 	    
 	}
-
+	arrParents.push('Philips');
 	return(arrParents.reverse().join(' - '));	
 	
 }
@@ -1268,7 +1445,8 @@ function initPage() {
 		map : getEl('map'),
 		region_info : getEl('region_info'),
 		simulation : getEl('simulation'),
-		mru_filter: getEl('filter_container')
+		mru_filter: getEl('filter_container'),
+		bookmarkslist: getEl('bookmarkslist')
 	}
 
 	
@@ -1295,6 +1473,8 @@ function initPage() {
 		radius: objArcProps.radius,
 		angle: 0
 	}
+	
+	renderFavouritePanel();
 
 	//calls the function that generates an arc from the path svg node
 	generateArc(objArcProperties);
@@ -1333,12 +1513,12 @@ var objPageVars = {
 	selectedregionpath: {},
 	//the available maps
 	maps: {
-		world: {url: 'svg/World.svg'},
-		region: {url: 'svg/Continents.svg'},
-		market: {url: 'svg/Markets.svg'},
-		country: {url: 'svg/countries.svg'}
+		world: {url: 'svg/jvector_world.svg'},
+		region: {url: 'svg/jvector_continents.svg'},
+		market: {url: 'svg/jvector_markets.svg'},
+		country: {url: 'svg/jvector_countries.svg'}
 	},
-	current_oru: 4,
+	current_oru: 3,
 	current_mru: 'philips',
 	current_sector: 'cl',
 	current_region: ''
