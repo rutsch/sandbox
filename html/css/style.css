@@ -182,7 +182,10 @@ body{
 	background: #272c2d url('../img/logout.svg') no-repeat 50% 10px;	
 	background-size: 30% auto!important;
 }
-
+.btn_close{
+	background: url('../img/close_icon.svg') no-repeat 50% 50%;
+	background-size: 50% auto;
+}
 #app_panel{
 	display: block;
 	z-index: 1;

@@ -1323,7 +1323,7 @@ function startApp(){
 	});   	
 }
 function updateWorldmap(regionIdToSelect){
-	//showLoadingPanel();
+	showLoadingPanel();
 	getWorldmapData(function(err, data){
 		
 		if(err){
