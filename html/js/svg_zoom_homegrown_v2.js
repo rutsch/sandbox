@@ -123,7 +123,6 @@ var objTouchVars={
 function initSgvZoomPan(elSvgRoot, elSvgNodeToAnimate){
 	//set the svg root
 	objTouchVars.elsvg=elSvgRoot;
-
 	//this function sets the svg node to animate and does some viewport magic
 	getRoot(elSvgNodeToAnimate);
 
@@ -151,7 +150,7 @@ function setupHandlers(){
 	//setup event handlers
 	if(objZoomPanSettings.mobile){
 		//finetune hammer object
-
+		
 		console.log('setting up for mobile');
 		//finetune hammer object
 		Hammer.gestures.Drag.defaults.drag_min_distance=1;
@@ -188,10 +187,10 @@ function setupHandlersDesktop(){
 	setAttributes(objTouchVars.elsvg, {
 		"onmouseup" : "handleClickTouchEnd(evt)",
 		"onmousedown" : "handleClickTouchStart(evt)",
-		"onmousemove" : "handleDrag(evt)",
+		"onmousemove" : "handleDrag(evt)"
 		//"onmouseout" : "handleClickTouchEnd(evt)", // Decomment this to stop the pan functionality when dragging out of the SVG element
 	});
-
+	//be aware that the events below are attached to the window - not to the svg or holder div
 	if(navigator.userAgent.toLowerCase().indexOf('webkit') >= 0){
 		window.addEventListener('mousewheel', handleZoomDesktop, false); // Chrome/Safari
 	}else{
@@ -270,29 +269,7 @@ function setupHandlersMobile(){
 
 	});	
 	objPageVars.hammersvg.on("pinchout", function(ev) {
-		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
-			//if(window.console) { console.log(ev); }
-		}
-
-	});
-
-	//check how we can switch off hammer events to save CPU calculation
-	objPageVars.hammersvg.on("hold", function(ev) {
-		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
-			//if(window.console) { console.log(ev); }
-			console.log('hold');
-		}
-	});		    
-	
-
-	objPageVars.hammersvg.on("swipe", function(ev) {
-		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
-			//if(window.console) { console.log(ev); }
-			console.log('swipe');
-		}
-	});	
-
-	objPageVars.hammersvg.on("tap", function(ev) {
+		if(objTouchSettings.debug &oion(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 			console.log('tap');
@@ -533,9 +510,12 @@ function handleDrag(evt) {
 	if(!objZoomPanSettings.mobile){
 		if(evt.preventDefault)evt.preventDefault();
 	}
-
+	
+	if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
+		//if(window.console)console.log(evt);
+	}
 	evt.returnValue = false;
-
+	
 	var g = getRoot(evt.target.ownerDocument);
 
 	if(objTouchVars.state == 'pan' && objZoomPanSettings.pan) {
@@ -654,6 +634,7 @@ function handleClickTouchEnd(evt) {
  */
 function getRoot(root) {
 	if(objTouchVars.elanimate == null) {
+		
 		var r = document.getElementById("viewport") ? document.getElementById("viewport") : document.documentElement, t = r;
 
 		while(t != root) {
