@@ -19,7 +19,7 @@
 					<div id="region_name">Germany</div>
 					<div id="filter_breadcrumb">Lighting &bull; Lumileds</div>
 				</div>
-				<div class="hide" id="toggle_favourite" onclick="addFavourite();"></div>
+				<div class="hide" id="toggle_favourite" onclick="toggleFavourite(this);"></div>
 			</div>
 			<div id="app_wrapper">
 				<div id="map">
@@ -64,29 +64,27 @@
 					<div id="simulation_wrapper">
 						<h3>Simulation</h3>
 						<h4>Sales</h4>
-						<input type="range" min="-20" max="30" value="-2" step="1" onchange="updateValue(this.value, 'value_sales')"><div class="slider_value" id="value_sales">-2%</div>		
+						<input type="range" min="-20" max="30" value="-2" step="1" onchange="updateValue(this.value, 'value_sales')" class="philips"><div class="slider_value" id="value_sales">-2%</div>		
 						<div class="range_indicator">
 							<div class="min">-20</div>
 							<div class="zero">0</div>
 							<div class="max">30</div>
 						</div>
 						<h4>Green sales</h4>
-						<input type="range" min="-20" max="30" value="15" step="1" onchange="updateValue(this.value, 'value_green_sales')"><div class="slider_value" id="value_green_sales">+15%</div>		
+						<input type="range" min="-20" max="30" value="15" step="1" onchange="updateValue(this.value, 'value_green_sales')" class="philips"><div class="slider_value" id="value_green_sales">+15%</div>		
 						<div class="range_indicator">
 							<div class="min">-20</div>
 							<div class="zero">0</div>
 							<div class="max">30</div>
 						</div>
 					</div>
-					
-					
 				</div>
 			</div>
 			<div id="menu_bar">
-				<div id="btn_bookmarks" class="btn" onclick="btnBookmarksClick();"></div>
-				<div id="btn_filter" class="btn" onclick="btnFilterClick();"></div>
-				<div id="btn_explain" class="btn" onclick="btnExplainClick();"></div>			
-				<div id="btn_logout" class="btn" onclick="btnLogoutClick();"></div>
+				<div id="btn_bookmarks" class="btn" onclick="btnBookmarksClick(this);">Bookmarks</div>
+				<div id="btn_filter" class="btn" onclick="btnFilterClick(this);">Filters</div>
+				<div id="btn_explain" class="btn" onclick="btnExplainClick(this);">FAQ</div>			
+				<div id="btn_logout" class="btn" onclick="btnLogoutClick(this);">Log out</div>
 			</div>
 		</div>
 		<div id="login_panel" class="panel full">
@@ -98,28 +96,34 @@
 		</div>
 		<div id="filter_panel" class="panel modal">
 			<div class="panel_header">
+				<h2>Filters</h2>
 				<div id="btn_close_filter" class="btn btn_close" onclick="btnCloseFilterClick();">X</div>
 			</div>	
 			<div class="modal_content">
+				<h4>Select geography filter:</h4>
 				<div id="oru_filter_container">
-					<div id="btn_world" onclick="setCurrentOru(1);" onclick="setCurrentOru(1)">World</div>
-					<div id="btn_region" onclick="setCurrentOru(2);">Region</div>
-					<div id="btn_bmc" onclick="setCurrentOru(3);">BMC</div>
-					<div id="btn_country" onclick="setCurrentOru(4);" class="selected">Country</div>
+					<div id="btn_world" onclick="setCurrentOru(this, 1);" onclick="setCurrentOru(1)">World</div>
+					<div id="btn_region" onclick="setCurrentOru(this, 2);">Region</div>
+					<div id="btn_bmc" onclick="setCurrentOru(this, 3);" class="selected">BMC</div>
+					<div id="btn_country" onclick="setCurrentOru(this, 4);">Country</div>
 				</div>
+				<h4>Select sector filter:</h4>
 				<div id="filter_container"></div> 
 			</div>
 		</div>
 		<div id="explain_panel" class="panel modal">
-			<div id="btn_close_explain" class="btn btn_close" onclick="btnCloseExplainClick();">Close</div>
+			<div class="panel_header">
+				<h2>FAQ</h2>
+				<div id="btn_close_explain" class="btn btn_close" onclick="btnCloseExplainClick();">Close</div>
+			</div>
 		</div>
 		<div id="bookmarks_panel" class="panel modal">
 			<div class="panel_header">
 				<h2>Bookmarks</h2>
-				<div id="btn_close_bookmarks" class="btn btn_close" onclick="btnCloseBookmarksClick();">X</div>
+				<div id="btn_close_bookmarks" class="btn btn_close" onclick="btnCloseBookmarksClick(true);">X</div>
 			</div>
-			<div class="modal_content">
-			
+			<div class="modal_content" id="bookmarkslist">
+				
 			</div>
 		</div>
 		<div id="overlay"></div>
