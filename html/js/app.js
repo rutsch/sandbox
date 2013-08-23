@@ -1138,7 +1138,6 @@ function loadWorldmap(oru, cb){
 
 				//prepare an object containing vital information about the svg element to animate
 				objPageElements.rootanimateattributevalues=retrieveSvgElementObject(objPageElements.rootanimate);
-				centerWorldmap(objPageElements.rootanimate);
 				
 				//apply zoom and pan functionality to the svg drawing
 				var bolUseHomeGrown=true;
@@ -1174,6 +1173,9 @@ function loadWorldmap(oru, cb){
 					
 					initZoomPan(objPageElements.rootsvg);
 				}
+
+				centerWorldmap(objPageElements.rootanimate);
+
 				objPageVars.currentsvgid=oru;
 				cb();
 			}
@@ -1194,20 +1196,64 @@ function resizeWorldmap(){
 	objPageElements.rootsvg.setAttributeNS( null, 'height', objPageVars.height);
 }
 
+//moves the worldmap by mimicking a drag in the browser window
+function moveWorldMap(intDeltaX, intDeltaY){
+	//create a custom object that mimics the mousemove event 
+	var objFakeEventObject={
+		gesture: {
+			center: {
+				pageX: 0,
+				pageY: 0
+			}
+		},
+		clientX: 0,
+		clientY: 0,
+		target: {
+			tagName: 'svg'
+		}
+	}
+
+	//fake start
+	handleClickTouchStart(objFakeEventObject);
+
+	//disable fireing of click event on desktop
+	objTouchVars.clickstart=false;
+
+	//fake drag by x amount of pixels
+	objFakeEventObject={
+		gesture: {
+			center: {
+				pageX: intDeltaX,
+				pageY: intDeltaY
+			}
+		},
+		clientX: intDeltaX,
+		clientY: intDeltaY
+	}
+	handleDrag(objFakeEventObject);
+
+	//fake end
+	handleClickTouchEnd(objFakeEventObject);
+
+}
+
+//centers the worldmap in the screen
 function centerWorldmap(elSvg){
-
-	var offsetX=-(objPageElements.rootanimateattributevalues.size.width/2);
-	if(objPageVars.width>objPageElements.rootanimateattributevalues.size.width)offsetX=0-offsetX;
-	
-	var offsetY=-(objPageElements.rootanimateattributevalues.size.height/2);
-	//if(objPageVars.height>objPageElements.rootanimateattributevalues.size.height)offsetY=0-offsetY-(objPageElements.rootanimateattributevalues.size.height/2);
-
+	//set the worldmap to position 0,0
 	svgSetTransform(elSvg, {
 		scale: 1,
-		translatex: offsetX,
-		translatey: offsetY,
+		translatex: 0,
+		translatey: 0,
 		transformmatrix: {}
 	});
+
+	
+	//var offsetX=(objPageVars.width/2)-(objPageElements.rootanimateattributevalues.size.width/2)-objPageElements.rootanimateattributevalues.x;
+	//var offsetY=(objPageVars.height/2)-(objPageElements.rootanimateattributevalues.size.height/2)-objPageElements.rootanimateattributevalues.y;
+	//console.log('offsetX: '+offsetX+' - offsetY: '+offsetY);
+
+	//move to new position
+	moveWorldMap((objPageVars.width/2)-(objPageElements.rootanimateattributevalues.size.width/2)-objPageElements.rootanimateattributevalues.x, (objPageVars.height/2)-(objPageElements.rootanimateattributevalues.size.height/2)-objPageElements.rootanimateattributevalues.y);
 }
 
 //sets the transform attribute on the passed svg node
@@ -1491,7 +1537,7 @@ function onResize() {
 	objPageVars.width = document.body.clientWidth;
 	objPageVars.height = document.documentElement["clientHeight"];
 	resizeWorldmap();
-	//centerWorldmap(objPageElements.rootanimate);
+	centerWorldmap(objPageElements.rootanimate);
 }
 
 /*

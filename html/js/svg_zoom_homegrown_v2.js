@@ -480,7 +480,8 @@ function handleZoom(evt, z) {
 		if(window.console)console.log(z);
 	}
 	
-	var g = getRoot(evt.target.ownerDocument);
+	//var g = getRoot(evt.target.ownerDocument);
+	var g=objTouchVars.elanimate;
 	
 	var p = getEventPoint(evt);
 
@@ -516,7 +517,8 @@ function handleDrag(evt) {
 	}
 	evt.returnValue = false;
 	
-	var g = getRoot(evt.target.ownerDocument);
+	//var g = getRoot(evt.target.ownerDocument);
+	var g = objTouchVars.elanimate;
 
 	if(objTouchVars.state == 'pan' && objZoomPanSettings.pan) {
 		// Pan mode
@@ -548,7 +550,8 @@ function handleClickTouchStart(evt) {
 
 	evt.returnValue = false;
 
-	var g = getRoot(evt.target.ownerDocument);
+	//var g = getRoot(evt.target.ownerDocument);
+	var g = objTouchVars.elanimate;
 	
 	// Pan anyway when drag is disabled and the user clicked on an element
 	if(evt.target.tagName == "svg" || !objZoomPanSettings.drag){
