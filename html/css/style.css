@@ -373,10 +373,11 @@ span{
 	border-top: 1px solid #e7e7e7;
 	background-color: #f4f4f4;
 	z-index: 30;
+	opacity: 0;
 }
 #simulation_wrapper{
 	margin: 0px 30px;
-	opacity: 0px;
+	
 }
 #simulation_wrapper h3{
 	height: 20%;

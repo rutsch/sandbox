@@ -629,6 +629,7 @@ function regionClick(idCountry) {
 		snapshotid: 1,
 		token: objPageVars.token
 	}
+	//JT: add simulator logic here
 	psv('GET', simulation_data_url, objData, function(response){
 		if(response.error) {
 			showErrorDiv('Error getting simulation data...', true);
