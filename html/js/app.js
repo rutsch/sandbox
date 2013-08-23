@@ -356,22 +356,26 @@ function generateUniqueId(){
  * Click functions
  */
 function btnSubmitClick() {
-
+	var un = getEl("username").value, 
+	pw = getEl("password").value,
+	handleLoginError = function(msg){
+		//hideLoadingPanel();
+		getEl("username").value = '';
+		getEl("password").value = '';
+		TweenLite.to(getEl('btn_submit'), 0.3, {
+			opacity : 1
+		});
+		showErrorDiv(msg, true);			
+	};	
 	if(un == "" || pw == "") {
 		alert('Please enter a code1 account and a password');
 	}else{
-		showLoadingPanel();
+		//showLoadingPanel();
 		// Start authentication
-		getEl('btn_submit').style.border = '1px solid red';
-		var un = getEl("username").value, 
-			pw = getEl("password").value,
-			handleLoginError = function(msg){
-				hideLoadingPanel();
-				getEl("username").value = '';
-				getEl("password").value = '';
-				getEl('btn_submit').style.border = 'none';
-				showErrorDiv(msg, true);			
-			};		
+		TweenLite.to(getEl('btn_submit'), 0.3, {
+			opacity : 0.5
+		});
+	
 		if(un.toLowerCase().indexOf('code1\\') == -1) un = 'code1\\' + un;
 		var objData = {
 			type: 'json',
@@ -412,7 +416,11 @@ function btnSubmitClick() {
 			                    		console.log(response2.token);
 			                    		objPageVars.token = response2.token;
 			                    		setLocalStorageItem('token', objPageVars.token);
-
+		                    			setLocalStorageItem('username', un);
+		                    			TweenLite.to(getEl('btn_submit'), 0.3, {
+		                    				opacity : 1
+		                    			});		        
+		                    			//hideLoadingPanel();
 			                    		startApp();                   		
 			                    	}
 			                    });						
@@ -427,31 +435,58 @@ function btnSubmitClick() {
 
 function btnBackToMapClick() {
 	animateArc({start: 0, end: 0}, 2);
-	TweenLite.to(objPageElements.region_info, 0.2, {
-		opacity : 0,
-		delay: 0,
-		onComplete: function(){
+	var strMapMode = '';
 
-		}
-	});
-	TweenLite.to(objPageElements.percentage, 0.2, {
-		opacity : 0,
-		onComplete : function() {
-			TweenLite.to(appPanels.simulation, 0.4, {
-				bottom : '-60%',
-				onComplete : function() {	
-					appPanels.map.style.display = 'block';
-					TweenLite.to(appPanels.map, 0.2, {
-						opacity: 1
-					});					
-					
-				}
-			});	
-			TweenLite.to(appPanels.region_info, 0.4, {
-				top : '-40%'
-			});					
-		}
-	});
+	if(objPageVars.width>700){
+		getEl('region_name').innerHTML = objPageVars.currentsvgname;
+		TweenLite.to(objPageElements.region_info, 0.2, {
+			opacity : 1,
+			delay: 0,
+			onComplete: function(){
+
+			}
+		});
+
+		TweenLite.to(appPanels.simulation, 0.4, {
+			top : '-30%',
+			onComplete : function() {	
+				appPanels.map.style.display = 'block';
+				TweenLite.to(appPanels.map, 0.2, {
+					opacity: 1
+				});					
+				
+			}
+		});	
+		TweenLite.to(appPanels.region_info, 0.4, {
+			top : '-30%'
+		});									
+	}else{
+		getEl('region_name').innerHTML = objPageVars.currentsvgname;
+		TweenLite.to(objPageElements.region_info, 0.2, {
+			opacity : 1,
+			delay: 0,
+			onComplete: function(){
+
+			}
+		});
+
+		TweenLite.to(appPanels.simulation, 0.4, {
+			bottom : '-60%',
+			onComplete : function() {	
+				appPanels.map.style.display = 'block';
+				TweenLite.to(appPanels.map, 0.2, {
+					opacity: 1
+				});					
+				
+			}
+		});	
+		TweenLite.to(appPanels.region_info, 0.4, {
+			top : '-40%'
+		});				
+	
+	}
+			
+	//hideLoadingPanel();
 	toggleClass(getEl('btn_back'), 'hide');
 	toggleClass(getEl('toggle_favourite'), 'hide');
 	//updateVal(0, 100, 50, sec, 2);
@@ -460,6 +495,8 @@ function btnLogoutClick() {
 	setLocalStorageItem('token', '');
 	panels.overlay.style.display = "none";
 	panels.overlay.style.opacity = 0;
+	getEl('username').value = objPageVars.username;
+	getEl("password").value = '';	
 	TweenLite.to(panels.login, 0.2, {
 		width : objPageVars.width
 	});
@@ -479,19 +516,20 @@ function btnFilterClick() {
 	});
 }
 function btnCloseFilterClick() {
-	updateWorldmap();
+	
 	TweenLite.to(panels.filter, 0.4, {
 		opacity : 0,
 		display : 'none',
 		delay : 0,
 		onComplete : function() {
-			/*TweenLite.to(panels.overlay, 0.3, {
+			btnBackToMapClick();
+			TweenLite.to(panels.overlay, 0.3, {
 				opacity : 0,
 				delay : 0,
 				onComplete : function() {
 					panels.overlay.style.display = "none";
 				}
-			});*/
+			});
 		}
 	});
 }
@@ -581,7 +619,27 @@ function regionClick(idCountry) {
 	}else{
 		getEl('toggle_favourite').className=getEl('toggle_favourite').className.replace(' selected','');
 	}
-	//alert(isFav);
+
+	//start Ajax Call to get simulation data
+	var objData = {
+		method: 'getlivesimprovedcachedata',
+		type: 'json',
+		oru: objPageVars.current_region,
+		mru: objPageVars.current_mru,
+		snapshotid: 1,
+		token: objPageVars.token
+	}
+	psv('GET', simulation_data_url, objData, function(response){
+		if(response.error) {
+			showErrorDiv('Error getting simulation data...', true);
+		}else{
+			TweenLite.to(getEl('simulation_wrapper'), 0.2, {
+				opacity: 1
+			});
+		}
+	});
+	
+	
 	document.getElementsByTagName("body")[0].className = objPageVars.current_sector;
 	//var color=colors[objPageVars.current_sector].middle;
 	//appPanels.region_info.style.background = color;
@@ -602,52 +660,56 @@ function regionClick(idCountry) {
 					getEl('nr_lives_improved').innerHTML =regionData.l;
 					getEl('nr_gdp').innerHTML ='$'+regionData.g+' billion';
 					getEl('nr_population').innerHTML =regionData.p+ ' million';
-					getEl('lives_improved_percentage').innerHTML = regionData.percentageLI+'%';
+					getEl('lives_improved_percentage').textContent = regionData.percentageLI+'%';
 					getEl('region_name').innerHTML = getRegionNameById((idCountry.length < 4 ? idCountry : idCountry.toLowerCase()));
 					getEl('filter_breadcrumb').innerHTML = getMruFilterBreadcrumb();
 					//var color = ColorLuminance(colors[objPageVars.current_sector].middle, (100 - regionData.percentageLI) / 100);
 					//getEl('region_info').style['background-color'] = color;
 					
-					
+					//hideLoadingPanel();	
 					if(getEl('btn_back').className.indexOf('hide')> -1){
 						toggleClass(getEl('btn_back'), 'hide');
 						toggleClass(getEl('toggle_favourite'), 'hide');
 					}
-					TweenLite.to(appPanels.region_info, 0.4, {
-						top : '0%'
-					});
-					TweenLite.to(appPanels.simulation, 0.4, {
-						bottom : '0%',
-						onComplete : function() {
-							//updateVal(61, 100, 50, sec, 2, 1500);
-							TweenLite.to(objPageElements.region_info, 0.4, {
-								opacity : 1,
-								onComplete : function() {
-									//updateVal(61, 100, 50, sec, 2, 1500);
-									// position the percentage div over the circle svg
-									var elCircle = getEl('background');
-									
-									//var width = elCircle.getBBox().width;
-									//var width2 = getTransformedWidth(objPageElements.circlesvg, elCircle);
-									var boundingRect = elCircle.getBoundingClientRect(); 
-									var width=boundingRect.width*100/90;
-									var left=boundingRect.left;
-									var centerx = left+(width/2) -10;
-									objPageElements.percentage.style.left = centerx - (objPageElements.percentage.clientWidth /2) + 'px';
-									objPageElements.percentage.style.bottom = (boundingRect.bottom /8) + (width/2) - (objPageElements.percentage.clientHeight / 2)  + 'px';
-									animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);				
-									TweenLite.to(objPageElements.percentage, 0.8, {
-										opacity : 1,
-										onComplete : function() {	
-											
-											elRegion.style.opacity = opacity;
-											
-										}
-									});
-								}
-							});			
-						}
-					});			
+					if(objPageVars.width>700){
+						TweenLite.to(appPanels.region_info, 0.4, {
+							top : '0%!important'
+						});
+						TweenLite.to(appPanels.simulation, 0.4, {
+							top : '0%',
+							onComplete : function() {
+								//updateVal(61, 100, 50, sec, 2, 1500);
+								TweenLite.to(objPageElements.region_info, 0.4, {
+									opacity : 1,
+									onComplete : function() {
+										elRegion.style.opacity = opacity;
+										animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);	
+										TweenLite.to(appPanels.map, 0.2, {
+											opacity: 1
+										});
+									}
+								});			
+							}
+						});							
+					}else{
+						TweenLite.to(appPanels.region_info, 0.4, {
+							top : '0%'
+						});
+						TweenLite.to(appPanels.simulation, 0.4, {
+							bottom : '0%',
+							onComplete : function() {
+								//updateVal(61, 100, 50, sec, 2, 1500);
+								TweenLite.to(objPageElements.region_info, 0.4, {
+									opacity : 1,
+									onComplete : function() {
+										elRegion.style.opacity = opacity;
+										animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);	
+									}
+								});			
+							}
+						});							
+					}
+		
 				}
 			});			
 		}
@@ -702,6 +764,7 @@ function applyFilter(e, key, mru){
 
 	//set global current mru
 	objPageVars.current_mru = mru;
+	updateWorldmap();	
 	//remove all selected classes
 	var arrAllLi = getEl('filter_container').getElementsByTagName('li');
 	for ( var a = 0; a < arrAllLi.length; a++) {
@@ -763,6 +826,7 @@ function setCurrentOru(el, oru){
 	}
 	el.className='selected';
 	objPageVars.current_oru = oru;
+	updateWorldmap();	
 }
 function toggleFavourite(el){
 	//alert('adding item to favourites');
@@ -852,7 +916,7 @@ function openFavourite(oru, mru, region, sector){
 	objPageVars.current_mru = mru;
 	objPageVars.current_sector = sector;
 	updateWorldmap(region);
-	btnCloseBookmarksClick(false);
+	btnCloseBookmarksClick(true);
 }
 /*
  * Data functions
@@ -903,7 +967,9 @@ function getWorldmapData(cb){
 		mru: objPageVars.current_mru,
 		snapshotid:1		
 	}
+	//showLoadingPanel();
 	psv('GET', dynamicResourceUrl, objData, function(data) {
+		//hideLoadingPanel();
 		if(data.error)cb(data.error.message);
 		cb(null, data);
 	});	
@@ -1002,7 +1068,6 @@ function showLoadingPanel(){
 		onComplete : function() {
 			panels.loading.style.display = "block";
 			TweenLite.to(panels.loading, 0.4, {
-				display : 'block',
 				opacity : 1,
 				delay : 0
 			});
@@ -1010,21 +1075,16 @@ function showLoadingPanel(){
 	});
 }
 function hideLoadingPanel(){
-	TweenLite.to(panels.loading, 0.4, {
+	panels.loading.style.display = "none";
+	TweenLite.to(panels.overlay, 0.3, {
+		display : 'none',
 		opacity : 0,
 		delay : 0,
-		onComplete : function() {
-			panels.loading.style.display = "none";
-			TweenLite.to(panels.overlay, 0.3, {
-				display : 'none',
-				opacity : 0,
-				delay : 0,
-				onComplete: function(){
-					panels.overlay.style.display = "none";
-				}
-			});
+		onComplete: function(){
+			panels.overlay.style.display = "none";
 		}
 	});
+
 }
 function showErrorDiv(strMessage, autoClose){
 	panels.error.innerHTML = strMessage;
@@ -1095,32 +1155,35 @@ function loadWorldmap(oru, cb){
 	
 
 	objTouchVars.elanimate=null;
-	var strOru = 'world';
+	var strOru = 'World';
 	switch (oru) {
 	case '1':
 	case 1:
-		strOru = 'world';
+		strOru = 'World';
 		break;
 	case '2':
 	case 2:
-		strOru = 'region';
+		strOru = 'Region';
 		break;
 	case '3':
 	case 3:
-		strOru = 'market';
+		strOru = 'Market';
 		break;
 	case '4':
 	case 4:
-		strOru = 'country';
+		strOru = 'Country';
 		break;
 	default:
 		break;
 	}	
+	objPageVars.currentsvgname = strOru;
+	getEl('region_name').innerHTML = objPageVars.currentsvgname;	
+	getEl('filter_breadcrumb').innerHTML = getMruFilterBreadcrumb();
 	if(objPageVars.currentsvgid == oru){
 		cb();
 	}else{
 		serverSideRequest({
-			url: objPageVars.maps[strOru].url, 
+			url: objPageVars.maps[strOru.toLowerCase()].url, 
 			method: 'get', 
 			debug: false,
 			callback: function(strSvgData){
@@ -1323,9 +1386,9 @@ function startApp(){
 	});   	
 }
 function updateWorldmap(regionIdToSelect){
-	showLoadingPanel();
+	//showLoadingPanel();
 	getWorldmapData(function(err, data){
-		
+		//hideLoadingPanel();	
 		if(err){
 			btnLogoutClick();			
 		}else{
@@ -1366,7 +1429,7 @@ function updateWorldmap(regionIdToSelect){
 						region.style.fill = '#000';
 					}							
 				}
-				hideLoadingPanel();	
+				//hideLoadingPanel();	
 				if(regionIdToSelect){
 					regionClick(regionIdToSelect);
 				}
@@ -1381,24 +1444,26 @@ function getMruFilterBreadcrumb(){
 	var selector = '#filter_container #' + mru;
 	var el = Sizzle(selector)[0];
 	var name;
+	var arrParents = [];
 	
 	if(el.firstElementChild){
 		name = el.firstElementChild.innerHTML
+		arrParents.push(name);
+
+		while(el.parentNode !=null && el.parentNode.className !== 'filter_list'){
+		    el = el.parentNode; 
+		    if(el.localName == 'li'){
+		        arrParents.push(el.firstElementChild.innerHTML);
+		    }
+		    
+		}
 	}else{
 		name = 'Philips';
+		arrParents.push(name);
 	}
-	var arrParents = [];
-	arrParents.push(name);
 
-	while(el.parentNode !=null && el.parentNode.className !== 'filter_list'){
-	    el = el.parentNode; 
-	    if(el.localName == 'li'){
-	        arrParents.push(el.firstElementChild.innerHTML);
-	    }
-	    
-	}
-	arrParents.push('Philips');
-	return(arrParents.reverse().join(' - '));	
+	//if(name!='Philips')arrParents.push('Philips');
+	return(arrParents.reverse().join(' &bull; '));	
 	
 }
 var matchFound= false,
@@ -1480,10 +1545,13 @@ function initPage() {
 	generateArc(objArcProperties);
 	
 	objPageVars.token = getLocalStorageItem('token');
+	objPageVars.username = getLocalStorageItem('username');
 	
 	if(objPageVars.token !=="" && objPageVars.token !==null){
 		startApp();
-	}	
+	}else{
+		getEl('username').value = objPageVars.username;
+	}
 	
 }
 
@@ -1565,6 +1633,7 @@ var authUrl1 = "https://www.livesimproved.philips.com/pages/login/login.aspx";
 var authUrl2 = "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx";
 var authUrl3 = "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx";
 var snapshot_url = 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached.aspx?method=getworldmapdata';
+var simulation_data_url = 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx'
 
 var store = window.localStorage;
 

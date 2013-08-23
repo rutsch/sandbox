@@ -16,8 +16,13 @@
 			<div id="title_bar">
 				<div id="btn_back" class="hide" onclick="btnBackToMapClick();"></div>
 				<div id="info">
-					<div id="region_name">Germany</div>
-					<div id="filter_breadcrumb">Lighting &bull; Lumileds</div>
+					<div class="info_wrapper">
+						<div id="region_name"></div>
+						<div id="filter_breadcrumb_wrapper">
+							<div id="filter_breadcrumb"></div>
+						</div>
+						
+					</div>
 				</div>
 				<div class="hide" id="toggle_favourite" onclick="toggleFavourite(this);"></div>
 			</div>
@@ -30,17 +35,15 @@
 				</div>
 				<div id="region_info" onclick="btnBackToMapClick();">
 					<div class="svg_wrapper">
-						<div id="percentage">
-							<div id="lives_improved_percentage">61%</div>
-							<div id="lives_improved_percentage_sub">of total population</div>
-						</div>
 						<div id="holder">
 							<svg id="svg_circle" xmlns="http://www.w3.org/2000/svg" version="1.1" width="80%" height="80%" viewBox="-10 -10 240 240">
 						
 								
 							  <g id="g" fill="none" transform="translate(-80,-80)">
 									<circle id="background" width="100" cx="200" cy="200" r="100" />
-									<path id="arc_path" />		    
+									<path id="arc_path" />
+									<text id="lives_improved_percentage" x="140" y="210" fill="#000">100%</text>
+									<text id="lives_improved_percentage_sub" x="0" y="220" fill="#000" width="200"><tspan x="7.3em" dy="1.1em">of population</tspan></text>
 							  </g>
 							</svg>
 						</div>					
@@ -63,19 +66,23 @@
 				<div id="simulation">
 					<div id="simulation_wrapper">
 						<h3>Simulation</h3>
-						<h4>Sales</h4>
-						<input type="range" min="-20" max="30" value="-2" step="1" onchange="updateValue(this.value, 'value_sales')" class="philips"><div class="slider_value" id="value_sales">-2%</div>		
-						<div class="range_indicator">
-							<div class="min">-20</div>
-							<div class="zero">0</div>
-							<div class="max">30</div>
+						<div id="section1">
+							<h4>Sales</h4>
+							<input type="range" min="-20" max="30" value="-2" step="1" onchange="updateValue(this.value, 'value_sales')" class="philips"><div class="slider_value" id="value_sales">-2%</div>		
+							<div class="range_indicator">
+								<div class="min">-20</div>
+								<div class="zero">0</div>
+								<div class="max">30</div>
+							</div>								
 						</div>
-						<h4>Green sales</h4>
-						<input type="range" min="-20" max="30" value="15" step="1" onchange="updateValue(this.value, 'value_green_sales')" class="philips"><div class="slider_value" id="value_green_sales">+15%</div>		
-						<div class="range_indicator">
-							<div class="min">-20</div>
-							<div class="zero">0</div>
-							<div class="max">30</div>
+						<div id="section2">
+							<h4>Green sales</h4>
+							<input type="range" min="-20" max="30" value="15" step="1" onchange="updateValue(this.value, 'value_green_sales')" class="philips"><div class="slider_value" id="value_green_sales">+15%</div>		
+							<div class="range_indicator">
+								<div class="min">-20</div>
+								<div class="zero">0</div>
+								<div class="max">30</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -89,9 +96,10 @@
 		</div>
 		<div id="login_panel" class="panel full">
 			<form id="login">
-				<input type="text" id="username" placeholder="Account" value="nly37959"/>
+			<span>Please log in using CODE1\*** and password.</span>
+				<input type="text" id="username" placeholder="Account" value=""/>
 				<input type="password" id="password" placeholder="Password" value=""/>
-				<input type="submit" id="btn_submit" class="btn btn_login" onclick="btnSubmitClick();return false;"/>
+				<input type="submit" id="btn_submit" class="btn btn_login" onclick="btnSubmitClick();return false;" value="Log in"/>
 			</form>
 		</div>
 		<div id="filter_panel" class="panel modal">
