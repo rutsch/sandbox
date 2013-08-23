@@ -373,11 +373,11 @@ span{
 	border-top: 1px solid #e7e7e7;
 	background-color: #f4f4f4;
 	z-index: 30;
-	opacity: 0;
+		
 }
 #simulation_wrapper{
 	margin: 0px 30px;
-	
+	opacity: 0;
 }
 #simulation_wrapper h3{
 	height: 20%;
@@ -760,15 +760,17 @@ and (orientation : portrait) {
 and (min-width : 768px) {
 /* Styles */
 	#region_info{
-		height: 30%;
+		height: 32%;
 		width: 50%;
-		top: -30%;
+		top: -32%;
 		border-bottom: 1px solid #ececec;
 	}
 	#simulation{
+	overflow: hidden;
 		left: 50%;
-		top: -30%;
-		height: 30%;
+		top: -32%;
+		width: 50%;
+		height: 32%;
 		border-bottom: 1px solid #ececec;
 	}
 }
