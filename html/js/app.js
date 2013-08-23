@@ -1143,7 +1143,7 @@ function loadWorldmap(oru, cb){
 				var bolUseHomeGrown=true;
 				if(bolUseHomeGrown){
 					//initiate the new version of the zoom pan library
-
+					objTouchSettings.debug=false;
 					objTouchSettings.debugtointerface=false;
 					objTouchSettings.debugtoconsole=true;
 					objZoomPanSettings.mobile=objPageVars.mobile;

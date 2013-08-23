@@ -149,9 +149,10 @@ function initSgvZoomPan(elSvgRoot, elSvgNodeToAnimate){
 function setupHandlers(){
 	//setup event handlers
 	if(objZoomPanSettings.mobile){
-		//finetune hammer object
+		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
+			if(window.console) { console.log('setting up for mobile'); }
+		}
 		
-		console.log('setting up for mobile');
 		//finetune hammer object
 		Hammer.gestures.Drag.defaults.drag_min_distance=1;
 		Hammer.gestures.Drag.defaults.correct_for_drag_min_distance=true;
@@ -173,7 +174,9 @@ function setupHandlers(){
 		//setup handlers
 		setupHandlersMobile();
 	}else{
-		console.log('setting up for desktop');
+		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
+			if(window.console) { console.log('setting up for desktop'); }
+		}
 		setupHandlersDesktop();
 	}	
 }
