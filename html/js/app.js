@@ -448,7 +448,7 @@ function btnBackToMapClick() {
 		});
 
 		TweenLite.to(appPanels.simulation, 0.4, {
-			top : '-30%',
+			top : '-32%',
 			onComplete : function() {	
 				appPanels.map.style.display = 'block';
 				TweenLite.to(appPanels.map, 0.2, {
@@ -458,7 +458,7 @@ function btnBackToMapClick() {
 			}
 		});	
 		TweenLite.to(appPanels.region_info, 0.4, {
-			top : '-30%'
+			top : '-32%'
 		});									
 	}else{
 		getEl('region_name').innerHTML = objPageVars.currentsvgname;
@@ -631,7 +631,7 @@ function regionClick(idCountry) {
 	}
 	psv('GET', simulation_data_url, objData, function(response){
 		if(response.error) {
-			showErrorDiv('Error getting simulation data...', true);
+			showErrorDiv(response.error.message, true);
 		}else{
 			TweenLite.to(getEl('simulation_wrapper'), 0.2, {
 				opacity: 1
@@ -652,11 +652,11 @@ function regionClick(idCountry) {
 	TweenLite.to(elRegion, 0.5, {
 		opacity: opacity - 0.3, 
 		onComplete: function(){
-			TweenLite.to(appPanels.map, 0.2, {
-				opacity: 0, 
-				onComplete: function(){
+			//TweenLite.to(appPanels.map, 0.2, {
+			//	opacity: 0, 
+			//	onComplete: function(){
 					//debugger;
-					appPanels.map.style.display = 'none';
+					//appPanels.map.style.display = 'none';
 					getEl('nr_lives_improved').innerHTML =regionData.l;
 					getEl('nr_gdp').innerHTML ='$'+regionData.g+' billion';
 					getEl('nr_population').innerHTML =regionData.p+ ' million';
@@ -710,8 +710,8 @@ function regionClick(idCountry) {
 						});							
 					}
 		
-				}
-			});			
+			//	}
+			//});			
 		}
 	});
 
