@@ -149,9 +149,10 @@ function initSgvZoomPan(elSvgRoot, elSvgNodeToAnimate){
 function setupHandlers(){
 	//setup event handlers
 	if(objZoomPanSettings.mobile){
-		//finetune hammer object
+		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
+			if(window.console) { console.log('setting up for mobile'); }
+		}
 		
-		console.log('setting up for mobile');
 		//finetune hammer object
 		Hammer.gestures.Drag.defaults.drag_min_distance=1;
 		Hammer.gestures.Drag.defaults.correct_for_drag_min_distance=true;
@@ -173,7 +174,9 @@ function setupHandlers(){
 		//setup handlers
 		setupHandlersMobile();
 	}else{
-		console.log('setting up for desktop');
+		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
+			if(window.console) { console.log('setting up for desktop'); }
+		}
 		setupHandlersDesktop();
 	}	
 }
@@ -480,7 +483,8 @@ function handleZoom(evt, z) {
 		if(window.console)console.log(z);
 	}
 	
-	var g = getRoot(evt.target.ownerDocument);
+	//var g = getRoot(evt.target.ownerDocument);
+	var g=objTouchVars.elanimate;
 	
 	var p = getEventPoint(evt);
 
@@ -516,7 +520,8 @@ function handleDrag(evt) {
 	}
 	evt.returnValue = false;
 	
-	var g = getRoot(evt.target.ownerDocument);
+	//var g = getRoot(evt.target.ownerDocument);
+	var g = objTouchVars.elanimate;
 
 	if(objTouchVars.state == 'pan' && objZoomPanSettings.pan) {
 		// Pan mode
@@ -548,7 +553,8 @@ function handleClickTouchStart(evt) {
 
 	evt.returnValue = false;
 
-	var g = getRoot(evt.target.ownerDocument);
+	//var g = getRoot(evt.target.ownerDocument);
+	var g = objTouchVars.elanimate;
 	
 	// Pan anyway when drag is disabled and the user clicked on an element
 	if(evt.target.tagName == "svg" || !objZoomPanSettings.drag){
