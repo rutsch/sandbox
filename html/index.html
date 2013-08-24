@@ -68,20 +68,20 @@
 						<h3>Simulation</h3>
 						<div id="section1">
 							<h4>Sales</h4>
-							<input type="range" min="-20" max="30" value="-2" step="1" onchange="updateValue(this.value, 'value_sales')" class="philips"><div class="slider_value" id="value_sales">-2%</div>		
+							<input id="slidersales" type="range" min="-20" max="30" value="0" step="0.1" class="philips"><div class="slider_value" id="value_sales">0%</div>		
 							<div class="range_indicator">
-								<div class="min">-20</div>
-								<div class="zero">0</div>
-								<div class="max">30</div>
+								<div class="min" id="salesmin">-20</div>
+								<div class="zero" id="saleszero">0</div>
+								<div class="max" id="salesmax">30</div>
 							</div>								
 						</div>
 						<div id="section2">
 							<h4>Green sales</h4>
-							<input type="range" min="-20" max="30" value="15" step="1" onchange="updateValue(this.value, 'value_green_sales')" class="philips"><div class="slider_value" id="value_green_sales">+15%</div>		
+							<input id="slidergreensales" type="range" min="-20" max="30" value="0" step="0.1" class="philips"><div class="slider_value" id="value_green_sales">0%</div>		
 							<div class="range_indicator">
-								<div class="min">-20</div>
-								<div class="zero">0</div>
-								<div class="max">30</div>
+								<div class="min" id="greensalesmin">-20</div>
+								<div class="zero" id="greensaleszero">0</div>
+								<div class="max" id="greensalesmax">30</div>
 							</div>
 						</div>
 					</div>
@@ -97,8 +97,8 @@
 		<div id="login_panel" class="panel full">
 			<form id="login">
 			<span>Please log in using CODE1\*** and password.</span>
-				<input type="text" id="username" placeholder="Account" value=""/>
-				<input type="password" id="password" placeholder="Password" value=""/>
+				<input type="text" id="username" placeholder="Account" value="nly37959"/>
+				<input type="password" id="password" placeholder="Password" value="Droplul1970"/>
 				<input type="submit" id="btn_submit" class="btn btn_login" onclick="btnSubmitClick();return false;" value="Log in"/>
 			</form>
 		</div>
@@ -151,7 +151,10 @@
 		<script type="text/javascript" src="js/hammer.js">//</script>
 
 	
-		<script type="text/javascript" src="js/sizzle.min.js">//</script>			
+		<script type="text/javascript" src="js/sizzle.min.js">//</script>	
+
+		<script type="text/javascript" src="js/utils.js">//</script>
+		<script type="text/javascript" src="js/simulator.js">//</script>
 		<script type="text/javascript" src="js/app.js">//</script>
     </body>
 </html>    
