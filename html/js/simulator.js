@@ -68,8 +68,8 @@ function simulatorCalculateValue(intCurrentSalesPercentage, intCurrentGreenSales
 	//console.log('in simulatorCalculateValue with sales: '+intCurrentSalesPercentage+' and green sales: '+intCurrentGreenSalesPercentage);
 
 	//update the lables of the sliders
-	objPageElements.elslidersaleslabel.innerHTML=(intCurrentSalesPercentage > 0 ? '+': '') + intCurrentSalesPercentage + '%';
-	objPageElements.elslidergreensaleslabel.innerHTML=(intCurrentGreenSalesPercentage > 0 ? '+': '') + intCurrentGreenSalesPercentage + '%';
+	objPageElements.elslidersaleslabel.innerHTML=(intCurrentSalesPercentage > 0 ? '+': '') + Math.round(intCurrentSalesPercentage*10)/10 + '%';
+	objPageElements.elslidergreensaleslabel.innerHTML=(intCurrentGreenSalesPercentage > 0 ? '+': '') + Math.round(intCurrentGreenSalesPercentage*10)/10 + '%';
 
 	//encode the retieved values so that we can find them in the simululator data
 	var intSalesMin, intGreenSalesMin, intSalesMax, intGreenSalesMax;
