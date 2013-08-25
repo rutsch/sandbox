@@ -1076,7 +1076,7 @@ function showAllCountries(el){
 	objPageVars.hideinactivecountries=false;
 	updateWorldmap();
 }
-function hideInactiveCountriesI(el){
+function hideInactiveCountries(el){
 	el.className = 'selected';
 	getEl('btn_show_all').className = '';
 	objPageVars.hideinactivecountries=true;
