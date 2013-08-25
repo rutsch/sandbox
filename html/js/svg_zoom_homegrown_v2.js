@@ -79,7 +79,8 @@ var objZoomPanSettings={
 	zoomscale: 0.2, // Zoom sensitivity
 	mobile: false,
 	clickcallback: null,
-	usesamplingformobile: false
+	usesamplingformobile: false,
+	samplingrate: 75
 }
 
 //settings for the touch system
@@ -281,12 +282,36 @@ function setupHandlersMobile(){
 
 		objTouchVars.dragging=true;
 
+
+		if(objZoomPanSettings.usesamplingformobile){
+
+			//store details about the event in the global variable
+			objTouchVars.fingerx=ev.gesture.startEvent.center.pageX;
+			objTouchVars.fingery=ev.gesture.startEvent.center.pageX;
+			objTouchVars.gesturescale=ev.gesture.scale;
+
+			//debugLog();
+
+			//start the sampling
+			if(!objTouchVars.sampling){
+				if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
+					console.log('!!! start the pinch sampling process !!!');
+				}
+				objTouchVars.sampling=true;
+				objTouchVars.timer4=setTimeout(function(){
+					startPinchSampling();
+				},50);
+			}
+		}else{
+			handleZoomMobile(ev);
+		}
+
 		if(objTouchVars.timer1)clearTimeout(objTouchVars.timer1);
 		objTouchVars.timer1=setTimeout(function(){
 			objTouchVars.dragging=false;
 		},500);
 
-		handleZoomMobile(ev);
+		
 	});	
 
 	/*	    
@@ -411,7 +436,6 @@ function handleRelease(ev){
  * Handle zoom.
  */
 function handleZoomMobile(ev){
-
 	//set the action parameter
 	if(objTouchVars.pinchscale!=ev.gesture.scale){
 		//console.log('in');
@@ -437,7 +461,9 @@ function handleZoomMobile(ev){
 	//var intZoomDelta=1-(intOldZoomLevel-intNewZoomLevel);
 	var intZoomDelta=1-(objTouchVars.pinchscale-ev.gesture.scale);
 	if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
-		if(window.console) { console.log(intZoomDelta); }
+		if(window.console) { 
+			console.log(intZoomDelta); 
+		}
 	}
 
 	/*
@@ -462,18 +488,6 @@ function handleZoomMobile(ev){
 	}
 
 	handleZoom(ev, intZoomDelta);
-	/*
-	//start the sampling
-	if(!objTouchVars.sampling){
-		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
-			console.log('!!! start the pinch sampling process !!!');
-		}
-		objTouchVars.sampling=true;
-		objTouchVars.timer4=setTimeout(function(){
-			startPinchSampling();
-		},50);
-	}
-	*/
 }
 
 
@@ -674,12 +688,54 @@ function startDragSampling(){
 	if(objTouchVars.sampling){
 		objTouchVars.timer3=setTimeout(function(){
 			startDragSampling();
-		},75);
+		},objZoomPanSettings.samplingrate);
 	}
 
 
 }
 
+function startPinchSampling(){
+	if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
+		if(window.console) { console.log('in startPinchSampling()'); }
+	}
+
+	handleZoomMobile({
+		gesture: {
+			center: {
+				pageX: objTouchVars.fingerx,
+				pageY: objTouchVars.fingery
+			},
+			startEvent: {
+				center: {
+					pageX: objTouchVars.fingerx,
+					pageY: objTouchVars.fingery
+				}
+			},
+			scale: objTouchVars.gesturescale
+		},
+		clientX: objTouchVars.fingerx,
+		clientY: objTouchVars.fingery,
+		target: {
+			tagName: 'svg'
+		}
+	});
+
+	//fix the values
+	/*
+	var objAnimationProperties={};
+	objAnimationProperties.zoom=objTouchVars.zoomworking;
+	objAnimationProperties.svgpoint=objTouchVars.svgpoint;
+	objAnimationProperties.ctmorig=objTouchVars.ctmorig
+	*/
+	
+	if(objTouchVars.sampling){
+		objTouchVars.timer3=setTimeout(function(){
+			startPinchSampling();
+		},objZoomPanSettings.samplingrate);
+	}
+
+
+}
 
 
 
