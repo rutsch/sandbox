@@ -49,9 +49,13 @@ function dynamicSort(property) {
         return result * sortOrder;
     }
 }
-function getLatestSnapshotId(){
-	var latestSnapshot = objPageVars.arrsnapshotdata.sort(dynamicSort('snapshotid'))[0];
-	return latestSnapshot.snapshotid;
+function getLatestSnapshot(){
+	if(objPageVars.arrsnapshotdata){
+		return objPageVars.arrsnapshotdata.sort(dynamicSort('snapshotid'))[0];
+	}else{
+		return {};
+	}
+	
 }
 
 
@@ -105,10 +109,10 @@ function btnSubmitClick() {
 	            		handleLoginError(response.error.message);
 	            	}else{		
 	            		//load snapshot config in global variable
-	            		objPageVars.arrsnapshotdata = response.snapshotconfig;
-	            		debugger;
-	            		objPageVars.latestsnapshotid = getLatestSnapshotId();
-						objData.method='generatejsvarsjson';
+	            		//setLocalStorageItem('snapshotconfig', JSON.stringify(response.snapshotconfig));
+	            		//objPageVars.latestsnapshotid = getLatestSnapshot().snapshotid;
+	            		
+	            		objData.method='generatejsvarsjson';
 						psv('GET', authUrl2, objData, function(response){
 							if(response.error) {
 								handleLoginError(response.error.message);
@@ -361,131 +365,113 @@ function countryClicked(idCountry) {
 	}
 }
 function regionClick(idCountry) {
-	if(!objPageVars.aninamtionrunning1){
-		
-		objPageVars.aninamtionrunning1=true;
-
-		objPageVars.current_region = idCountry;
-		if(isFavourite()){
-			getEl('toggle_favourite').className=getEl('toggle_favourite').className +' selected';
-		}else{
-			getEl('toggle_favourite').className=getEl('toggle_favourite').className.replace(' selected','');
-		}
-		//hide the green sales slider element for Healthcare
-		if(objPageVars.current_sector == 'PD0900'){
-			objPageElements.elslidergreensales.parentNode.style.display = 'none';
-		}else{
-			objPageElements.elslidergreensales.parentNode.style.display = 'block';
-		}
-
-		//start Ajax Call to get simulation data
-		var objData = {
-			fulldomain: location.protocol+"//"+location.hostname,
-			method: 'getlivesimprovedcachedata',
-			type: 'json',
-			oru: objPageVars.current_region,
-			mru: objPageVars.current_mru,
-			snapshotid: 1,
-			token: objPageVars.token
-		}
-		
-		//initiates the simulator
-		psv('GET', simulation_data_url, objData, function(response){
-			if(response.error) {
-				showErrorDiv(response.error.message, true);
-			}else{
-				initSimulator(response);
-			}
-		});
-		TweenLite.to(getEl('simulation_wrapper'), 0.2, {
-			opacity: 1
-		}); 
-		
-		document.getElementsByTagName("body")[0].className = objPageVars.current_sector;
-		//var color=colors[objPageVars.current_sector].middle;
-		//appPanels.region_info.style.background = color;
-		var sec={},
-		back={},
-		key=objPageVars.current_mru + '_' + (idCountry.length < 4 ? idCountry : idCountry.toLowerCase()),
-		regionData = objPageVars.worldmapdata[key];
-		var elRegion = getEl(idCountry);
-		var opacity = elRegion.style.opacity;
-		TweenLite.to(elRegion, 0.5, {
-			opacity: opacity - 0.3,
-			onStart: function(){
-				objPageVars.aninamtionrunning1=true;
-			},
-			onComplete: function(){
-				//TweenLite.to(appPanels.map, 0.2, {
-				//	opacity: 0, 
-				//	onComplete: function(){
-						//debugger;
-						//appPanels.map.style.display = 'none';
-						objPageElements.ellivesimprovednumber.innerHTML =regionData.l;
-						getEl('nr_gdp').innerHTML ='$'+regionData.g+' billion';
-						getEl('nr_population').innerHTML =regionData.p+ ' million';
-						objPageElements.ellivesimprovedpercentage.textContent = regionData.percentageLI+'%';
-						getEl('region_name').innerHTML = getRegionNameById((idCountry.length < 4 ? idCountry : idCountry.toLowerCase()));
-						getEl('filter_breadcrumb').innerHTML = getMruFilterBreadcrumb();
-						//var color = ColorLuminance(colors[objPageVars.current_sector].middle, (100 - regionData.percentageLI) / 100);
-						//getEl('region_info').style['background-color'] = color;
-						
-						//hideLoadingPanel();	
-						if(getEl('btn_back').className.indexOf('hide')> -1){
-							toggleClass(getEl('btn_back'), 'hide');
-							toggleClass(getEl('toggle_favourite'), 'hide');
-						}
-						if(objPageVars.width>700){
-							TweenLite.to(appPanels.region_info, 0.4, {
-								top : '0%!important'
-							});
-							TweenLite.to(appPanels.simulation, 0.4, {
-								top : '0%',
-								onComplete : function() {
-									//updateVal(61, 100, 50, sec, 2, 1500);
-									TweenLite.to(objPageElements.region_info, 0.4, {
-										opacity : 1,
-										onComplete : function() {
-											elRegion.style.opacity = opacity;
-											animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);	
-											TweenLite.to(appPanels.map, 0.2, {
-												opacity: 1
-											});
-										}
-									});			
-								}
-							});							
-						}else{
-							TweenLite.to(appPanels.region_info, 0.4, {
-								top : '0%'
-							});
-							TweenLite.to(appPanels.simulation, 0.4, {
-								bottom : '0%',
-								onComplete : function() {
-									//updateVal(61, 100, 50, sec, 2, 1500);
-									TweenLite.to(objPageElements.region_info, 0.4, {
-										opacity : 1,
-										onComplete : function() {
-											elRegion.style.opacity = opacity;
-											animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);	
-										}
-									});			
-								}
-							});							
-						}
-			
-				//	}
-				//});	
-
-				objPageVars.aninamtionrunning1=false;		
-			}
-		});
-
-
-
-
+	objPageVars.current_region = idCountry;
+	if(isFavourite()){
+		getEl('toggle_favourite').className=getEl('toggle_favourite').className +' selected';
+	}else{
+		getEl('toggle_favourite').className=getEl('toggle_favourite').className.replace(' selected','');
+	}
+	//hide the green sales slider element for Healthcare
+	if(objPageVars.current_sector == 'PD0900'){
+		objPageElements.elslidergreensales.parentNode.style.display = 'none';
+	}else{
+		objPageElements.elslidergreensales.parentNode.style.display = 'block';
 	}
 
+	//start Ajax Call to get simulation data
+	var objData = {
+		fulldomain: location.protocol+"//"+location.hostname,
+		method: 'getlivesimprovedcachedata',
+		type: 'json',
+		oru: objPageVars.current_region,
+		mru: objPageVars.current_mru,
+		snapshotid: 1,
+		token: objPageVars.token
+	}
+	
+	//initiates the simulator
+	psv('GET', simulation_data_url, objData, function(response){
+		if(response.error) {
+			showErrorDiv(response.error.message, true);
+		}else{
+			initSimulator(response);
+		}
+	});
+	
+	document.getElementsByTagName("body")[0].className = objPageVars.current_sector;
+	//var color=colors[objPageVars.current_sector].middle;
+	//appPanels.region_info.style.background = color;
+	var sec={},
+	back={},
+	key=objPageVars.current_mru + '_' + (idCountry.length < 4 ? idCountry : idCountry.toLowerCase()),
+	regionData = objPageVars.worldmapdata[key];
+	var elRegion = getEl(idCountry);
+	var opacity = elRegion.style.opacity;
+	TweenLite.to(elRegion, 0.5, {
+		opacity: opacity - 0.3, 
+		onComplete: function(){
+			//TweenLite.to(appPanels.map, 0.2, {
+			//	opacity: 0, 
+			//	onComplete: function(){
+					//debugger;
+					//appPanels.map.style.display = 'none';
+					objPageElements.ellivesimprovednumber.innerHTML =regionData.l;
+					getEl('nr_gdp').innerHTML ='$'+regionData.g+' billion';
+					getEl('nr_population').innerHTML =regionData.p+ ' million';
+					objPageElements.ellivesimprovedpercentage.textContent = regionData.percentageLI+'%';
+					getEl('region_name').innerHTML = getRegionNameById((idCountry.length < 4 ? idCountry : idCountry.toLowerCase()));
+					getEl('filter_breadcrumb').innerHTML = getMruFilterBreadcrumb();
+					//var color = ColorLuminance(colors[objPageVars.current_sector].middle, (100 - regionData.percentageLI) / 100);
+					//getEl('region_info').style['background-color'] = color;
+					
+					//hideLoadingPanel();	
+					if(getEl('btn_back').className.indexOf('hide')> -1){
+						toggleClass(getEl('btn_back'), 'hide');
+						toggleClass(getEl('toggle_favourite'), 'hide');
+					}
+					if(objPageVars.width>700){
+						TweenLite.to(appPanels.region_info, 0.4, {
+							top : '0%!important'
+						});
+						TweenLite.to(appPanels.simulation, 0.4, {
+							top : '0%',
+							onComplete : function() {
+								//updateVal(61, 100, 50, sec, 2, 1500);
+								TweenLite.to(objPageElements.region_info, 0.4, {
+									opacity : 1,
+									onComplete : function() {
+										elRegion.style.opacity = opacity;
+										animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);	
+										TweenLite.to(appPanels.map, 0.2, {
+											opacity: 1
+										});
+									}
+								});			
+							}
+						});							
+					}else{
+						TweenLite.to(appPanels.region_info, 0.4, {
+							top : '0%'
+						});
+						TweenLite.to(appPanels.simulation, 0.4, {
+							bottom : '0%',
+							onComplete : function() {
+								//updateVal(61, 100, 50, sec, 2, 1500);
+								TweenLite.to(objPageElements.region_info, 0.4, {
+									opacity : 1,
+									onComplete : function() {
+										elRegion.style.opacity = opacity;
+										animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);	
+									}
+								});			
+							}
+						});							
+					}
+		
+			//	}
+			//});			
+		}
+	});
 
 	
 
@@ -698,7 +684,7 @@ function getMruHtml(cb) {
 		method:'getproductdata',
 		type:'json',
 		token: objPageVars.token,
-		snapshotid:objPageVars.latestsnapshotid		
+		snapshotid:1	
 	}
 	psv('GET', dynamicResourceUrl, objData, function(data) {
 		cb(null, data);
@@ -710,7 +696,7 @@ function getOruJson(cb){
 		method:'getorudata',
 		type:'json',
 		token: objPageVars.token,
-		snapshotid:objPageVars.latestsnapshotid		
+		snapshotid:1	
 	}
 	psv('GET', dynamicResourceUrl, objData, function(data) {
 		cb(null, data);
@@ -736,7 +722,7 @@ function getWorldmapData(cb){
 		token: objPageVars.token,
 		oru: objPageVars.current_oru,
 		mru: objPageVars.current_mru,
-		snapshotid:objPageVars.latestsnapshotid		
+		snapshotid:1
 	}
 	//showLoadingPanel();
 	psv('GET', snapshot_url, objData, function(data) {
@@ -1008,6 +994,8 @@ function retrieveSvgElementObject(elSvg){
 
 function startApp(){
 
+	
+	
 	//when done animate loginpanel to background
 	TweenLite.to(panels.login, 0.3, {
 		width : 0,
@@ -1170,7 +1158,7 @@ function getRegionNameById(regionId){
  * Executes page logic
  */
 function initPage() {
-
+	
 	// init global objects
 	panels = {
 		login : getEl('login_panel'),
@@ -1227,10 +1215,11 @@ function initPage() {
 	renderFavouritePanel();
 
 
-	
+	//objPageVars.snapshotconfig= JSON.parse(getLocalStorageItem('snapshotconfig'));
+	//objPageVars.latestsnapshotid = getLatestSnapshot().snapshotid || 0;
 	objPageVars.token = getLocalStorageItem('token');
 	objPageVars.username = getLocalStorageItem('username');
-	
+	objPageVars.latestsnapshotid = 1;
 	if(objPageVars.token !=="" && objPageVars.token !==null){
 		startApp();
 	}else{
@@ -1276,8 +1265,7 @@ var objPageVars = {
 	current_sector: 'cl',
 	current_region: '',
 	faqloaded: false,
-	hideinactivecountries: true,
-	aninamtionrunning1: false
+	hideinactivecountries: true
 }
 var colors = {
 	philips: {

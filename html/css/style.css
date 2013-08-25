@@ -296,7 +296,6 @@ circle#background{
 #region_data div{
 	padding-right: 15px;
 	
-	width: auto;
 	
 }
 span{
@@ -327,15 +326,43 @@ span{
 	left: 0px;
 	right: 0px;		
 }
+#region_info.less #nr_lives_improved{
+	background:  url('../img/arrow_down.svg') no-repeat 0px 10px;	
+}
+#region_info.more #nr_lives_improved{
+	background:  url('../img/arrow_up.svg') no-repeat 0px 10px;	
+}
+#region_info.less #up{
+	display: none;
+}
+#region_info.less #down{
+	display: block;
+}
+#region_info.more #up{
+	display: block;
+}
+#region_info.more #down{
+	display: none;
+}
+#region_info #up, #region_info #down{
+	display: none;
+}
+
+
+
+
 #nr_lives_improved{
 	padding-right: 0px!important;
 	font-size: 4em;
 	height: 70px;
 	color: #fff;
+	display: inline-block;
+	
+	padding-left: 40px;
 }
 .lives_improved_sub{
 	clear: both;
-	display: block;
+	display: block!important;
 	font-size: 10px;
 	width: 100%;
 	color: #000000;
