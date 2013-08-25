@@ -78,7 +78,8 @@ var objZoomPanSettings={
 	drag: 0, // 1 or 0: enable or disable dragging (default disabled)
 	zoomscale: 0.2, // Zoom sensitivity
 	mobile: false,
-	clickcallback: null
+	clickcallback: null,
+	usesamplingformobile: true
 }
 
 //settings for the touch system
@@ -224,9 +225,33 @@ function setupHandlersMobile(){
 			//if(window.console) { console.log(ev); }
 		}
 
+
+
 		objTouchVars.dragging=true;
 		
-		handleDrag(ev);
+		if(objZoomPanSettings.usesamplingformobile){
+
+			//store details about the event in the global variable
+			objTouchVars.fingerx=ev.gesture.srcEvent.pageX;
+			objTouchVars.fingery=ev.gesture.srcEvent.pageY;
+
+			//debugLog();
+
+			//start the sampling
+			if(!objTouchVars.sampling){
+				if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
+					console.log('!!! start the drag sampling process !!!');
+				}
+				objTouchVars.sampling=true;
+				objTouchVars.timer4=setTimeout(function(){
+					startDragSampling();
+				},50);
+			}
+		}else{
+			handleDrag(ev);	
+		}
+
+		
 	});	
 	/*	    
 	objPageVars.hammersvg.on("dragend release", function(ev) {
@@ -613,6 +638,68 @@ function handleClickTouchEnd(evt) {
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+/*
+Sampling rountines
+*/
+function startDragSampling(){
+	if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
+		if(window.console) { console.log('in startDragSampling()'); }
+	}
+
+	//fire the drag function using the values that the objPageVars.hammersvg.on("drag") stores
+	handleDrag({
+		gesture: {
+			center: {
+				pageX: objTouchVars.fingerx,
+				pageY: objTouchVars.fingery
+			}
+		},
+		clientX: objTouchVars.fingerx,
+		clientY: objTouchVars.fingery,
+		target: {
+			tagName: 'svg'
+		}
+	});
+	
+	
+	if(objTouchVars.sampling){
+		objTouchVars.timer3=setTimeout(function(){
+			startDragSampling();
+		},75);
+	}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

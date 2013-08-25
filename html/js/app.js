@@ -238,9 +238,7 @@ function btnExplainClick() {
 				//insert the SVG data into the holder div
 				getEl('explain_content').innerHTML=strFaqContent;
 
-
 				objPageVars.faqloaded=true;
-
 
 				openExplain();
 			}
@@ -807,7 +805,7 @@ function loadWorldmap(oru, cb){
 				var bolUseHomeGrown=true;
 				if(bolUseHomeGrown){
 					//initiate the new version of the zoom pan library
-					objTouchSettings.debug=false;
+					objTouchSettings.debug=true;
 					objTouchSettings.debugtointerface=false;
 					objTouchSettings.debugtoconsole=true;
 					objZoomPanSettings.mobile=objPageVars.mobile;
@@ -852,12 +850,15 @@ function loadWorldmap(oru, cb){
 
 //scale the worldmap svg to fit
 function resizeWorldmap(){
-	objPageElements.rootsvg.setAttributeNS( null, 'viewBox', '0 0 '+objPageVars.width+' '+objPageVars.height);
-	objPageElements.rootsvg.setAttributeNS( null, 'enable-background', 'new 0 0 '+objPageVars.width+' '+objPageVars.height);
-	objPageElements.elsvgholder.style.width = objPageVars.width+'px';
-	objPageElements.elsvgholder.style.height = objPageVars.height+'px';
-	objPageElements.rootsvg.setAttributeNS( null, 'width', objPageVars.width);
-	objPageElements.rootsvg.setAttributeNS( null, 'height', objPageVars.height);
+	if(typeof(objPageElements.rootsvg)!="undefined"){
+		objPageElements.rootsvg.setAttributeNS( null, 'viewBox', '0 0 '+objPageVars.width+' '+objPageVars.height);
+		objPageElements.rootsvg.setAttributeNS( null, 'enable-background', 'new 0 0 '+objPageVars.width+' '+objPageVars.height);
+		objPageElements.elsvgholder.style.width = objPageVars.width+'px';
+		objPageElements.elsvgholder.style.height = objPageVars.height+'px';
+		objPageElements.rootsvg.setAttributeNS( null, 'width', objPageVars.width);
+		objPageElements.rootsvg.setAttributeNS( null, 'height', objPageVars.height);		
+	}
+
 }
 
 //moves the worldmap by mimicking a drag in the browser window
