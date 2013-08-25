@@ -38,6 +38,21 @@ function getColorForPercentage(pct, low_color, middle_color, high_color) {
         }
     }
 }
+function dynamicSort(property) {
+    var sortOrder = 1;
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+    return function (a,b) {
+        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        return result * sortOrder;
+    }
+}
+function getLatestSnapshotId(){
+	var latestSnapshot = objPageVars.arrsnapshotdata.sort(dynamicSort('snapshotid'));
+	return latestSnapshot.snapshotid;
+}
 
 
 /*
@@ -75,10 +90,13 @@ function btnSubmitClick() {
         	}else{			
 				objData.stay = true;
 				psv('GET', authUrl1, objData, function(response){
-					
+					//debugger;
 	            	if(response.error) {
 	            		handleLoginError(response.error.message);
-	            	}else{				
+	            	}else{		
+	            		//load snapshot config in global variable
+	            		objPageVars.arrsnapshotdata = response.snapshotconfig;
+	            		objPageVars.latestsnapshotid = getLatestSnapshotId();
 						objData.method='generatejsvarsjson';
 						psv('GET', authUrl2, objData, function(response){
 							if(response.error) {
@@ -649,7 +667,7 @@ function getMruHtml(cb) {
 		method:'getproductdata',
 		type:'json',
 		token: objPageVars.token,
-		snapshotid:1		
+		snapshotid:objPageVars.latestsnapshotid		
 	}
 	psv('GET', dynamicResourceUrl, objData, function(data) {
 		cb(null, data);
@@ -661,7 +679,7 @@ function getOruJson(cb){
 		method:'getorudata',
 		type:'json',
 		token: objPageVars.token,
-		snapshotid:1		
+		snapshotid:objPageVars.latestsnapshotid		
 	}
 	psv('GET', dynamicResourceUrl, objData, function(data) {
 		cb(null, data);
@@ -687,7 +705,7 @@ function getWorldmapData(cb){
 		token: objPageVars.token,
 		oru: objPageVars.current_oru,
 		mru: objPageVars.current_mru,
-		snapshotid:1		
+		snapshotid:objPageVars.latestsnapshotid		
 	}
 	//showLoadingPanel();
 	psv('GET', snapshot_url, objData, function(data) {
