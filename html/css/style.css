@@ -729,7 +729,10 @@ div#explain_panel div.faq_wrapper div.faq_content p{
 	margin-bottom: 7px;
 }
 
-
+/* attempt to hardware accelarate the worldmap */
+div#holder_1000 svg{
+	/* -webkit-transform: translateZ(0); */
+}
 
 
 
