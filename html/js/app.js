@@ -49,9 +49,13 @@ function dynamicSort(property) {
         return result * sortOrder;
     }
 }
-function getLatestSnapshotId(){
-	var latestSnapshot = objPageVars.arrsnapshotdata.sort(dynamicSort('snapshotid'))[0];
-	return latestSnapshot.snapshotid;
+function getLatestSnapshot(){
+	if(objPageVars.arrsnapshotdata){
+		return objPageVars.arrsnapshotdata.sort(dynamicSort('snapshotid'))[0];
+	}else{
+		return {};
+	}
+	
 }
 
 
@@ -105,10 +109,10 @@ function btnSubmitClick() {
 	            		handleLoginError(response.error.message);
 	            	}else{		
 	            		//load snapshot config in global variable
-	            		objPageVars.arrsnapshotdata = response.snapshotconfig;
-	            		debugger;
-	            		objPageVars.latestsnapshotid = getLatestSnapshotId();
-						objData.method='generatejsvarsjson';
+	            		//setLocalStorageItem('snapshotconfig', JSON.stringify(response.snapshotconfig));
+	            		//objPageVars.latestsnapshotid = getLatestSnapshot().snapshotid;
+	            		
+	            		objData.method='generatejsvarsjson';
 						psv('GET', authUrl2, objData, function(response){
 							if(response.error) {
 								handleLoginError(response.error.message);
@@ -393,9 +397,6 @@ function regionClick(idCountry) {
 			initSimulator(response);
 		}
 	});
-	TweenLite.to(getEl('simulation_wrapper'), 0.2, {
-		opacity: 1
-	}); 
 	
 	document.getElementsByTagName("body")[0].className = objPageVars.current_sector;
 	//var color=colors[objPageVars.current_sector].middle;
@@ -683,7 +684,7 @@ function getMruHtml(cb) {
 		method:'getproductdata',
 		type:'json',
 		token: objPageVars.token,
-		snapshotid:objPageVars.latestsnapshotid		
+		snapshotid:1	
 	}
 	psv('GET', dynamicResourceUrl, objData, function(data) {
 		cb(null, data);
@@ -695,7 +696,7 @@ function getOruJson(cb){
 		method:'getorudata',
 		type:'json',
 		token: objPageVars.token,
-		snapshotid:objPageVars.latestsnapshotid		
+		snapshotid:1	
 	}
 	psv('GET', dynamicResourceUrl, objData, function(data) {
 		cb(null, data);
@@ -721,7 +722,7 @@ function getWorldmapData(cb){
 		token: objPageVars.token,
 		oru: objPageVars.current_oru,
 		mru: objPageVars.current_mru,
-		snapshotid:objPageVars.latestsnapshotid		
+		snapshotid:1
 	}
 	//showLoadingPanel();
 	psv('GET', snapshot_url, objData, function(data) {
@@ -993,6 +994,8 @@ function retrieveSvgElementObject(elSvg){
 
 function startApp(){
 
+	
+	
 	//when done animate loginpanel to background
 	TweenLite.to(panels.login, 0.3, {
 		width : 0,
@@ -1155,7 +1158,7 @@ function getRegionNameById(regionId){
  * Executes page logic
  */
 function initPage() {
-
+	
 	// init global objects
 	panels = {
 		login : getEl('login_panel'),
@@ -1212,10 +1215,11 @@ function initPage() {
 	renderFavouritePanel();
 
 
-	
+	//objPageVars.snapshotconfig= JSON.parse(getLocalStorageItem('snapshotconfig'));
+	//objPageVars.latestsnapshotid = getLatestSnapshot().snapshotid || 0;
 	objPageVars.token = getLocalStorageItem('token');
 	objPageVars.username = getLocalStorageItem('username');
-	
+	objPageVars.latestsnapshotid = 1;
 	if(objPageVars.token !=="" && objPageVars.token !==null){
 		startApp();
 	}else{
