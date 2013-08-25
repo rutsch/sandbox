@@ -124,7 +124,7 @@ function initSgvZoomPan(elSvgRoot, elSvgNodeToAnimate){
 	//set the svg root
 	objTouchVars.elsvg=elSvgRoot;
 	//this function sets the svg node to animate and does some viewport magic
-	getRoot(elSvgNodeToAnimate);
+	objTouchVars.elanimate=getRoot(elSvgNodeToAnimate);
 
 	//retrieve the position of the svg element
 	var arrPos=retrievePosition(elSvgRoot);
@@ -484,7 +484,7 @@ function handleZoom(evt, z) {
 	}
 	
 	//var g = getRoot(evt.target.ownerDocument);
-	var g=objTouchVars.elanimate;
+	var g=(objTouchVars.elanimate==null)?getRoot(evt.target.ownerDocument):objTouchVars.elanimate;
 	
 	var p = getEventPoint(evt);
 
@@ -516,17 +516,26 @@ function handleDrag(evt) {
 	}
 	
 	if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
-		//if(window.console)console.log(evt);
+		if(window.console)console.log(evt);
 	}
 	evt.returnValue = false;
 	
+	//console.log('+++++++')
+	//console.log(evt);
 	//var g = getRoot(evt.target.ownerDocument);
-	var g = objTouchVars.elanimate;
+	var g=(objTouchVars.elanimate==null)?getRoot(evt.target.ownerDocument):objTouchVars.elanimate;
+	//console.log(g);
+	//console.log('+++++++')
+	//var g=(objTouchVars.elanimate==null && !objZoomPanSettings.mobile)?getRoot(evt.target.ownerDocument):objTouchVars.elanimate;
 
 	if(objTouchVars.state == 'pan' && objZoomPanSettings.pan) {
 		// Pan mode
 		var p = getEventPoint(evt).matrixTransform(objTouchVars.svgmatrix);
-
+		//console.log('.....')
+		//console.log(p);
+		//console.log(objTouchVars.svgmatrix.inverse());
+		//console.log(objTouchVars.svgpointorigin);
+		//console.log('.....')
 		setCTM(g, objTouchVars.svgmatrix.inverse().translate(p.x - objTouchVars.svgpointorigin.x, p.y - objTouchVars.svgpointorigin.y));
 	} else if(objTouchVars.state == 'drag' && objZoomPanSettings.drag) {
 		// Drag mode
@@ -554,7 +563,8 @@ function handleClickTouchStart(evt) {
 	evt.returnValue = false;
 
 	//var g = getRoot(evt.target.ownerDocument);
-	var g = objTouchVars.elanimate;
+	var g=(objTouchVars.elanimate==null)?getRoot(evt.target.ownerDocument):objTouchVars.elanimate;
+	//var g=(objTouchVars.elanimate==null && !objZoomPanSettings.mobile)?getRoot(evt.target.ownerDocument):objTouchVars.elanimate;
 	
 	// Pan anyway when drag is disabled and the user clicked on an element
 	if(evt.target.tagName == "svg" || !objZoomPanSettings.drag){
@@ -645,8 +655,11 @@ function getRoot(root) {
 
 		while(t != root) {
 			if(t.getAttribute("viewBox")) {
-				setCTM(r, t.getCTM());
 
+				var matrix=t.getCTM();
+				if(matrix!=null){
+					setCTM(r, matrix);
+				}
 				t.removeAttribute("viewBox");
 			}
 
@@ -664,6 +677,10 @@ function getRoot(root) {
  */
 function setCTM(elSvg, objSvgProperties){
 	var bolUseStringMethod=false;
+	//console.log(elSvg);
+	//console.log(objSvgProperties);
+
+	if(!objZoomPanSettings.mobile)bolUseStringMethod=true;
 
 	if(bolUseStringMethod){
 		/* string method */
