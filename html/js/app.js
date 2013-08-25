@@ -335,6 +335,11 @@ function regionClick(idCountry) {
 	}else{
 		getEl('toggle_favourite').className=getEl('toggle_favourite').className.replace(' selected','');
 	}
+	if(objPageVars.current_sector == 'PD0900'){
+		objPageElements.elslidergreensales.parentNode.style.display = 'none';
+	}else{
+		objPageElements.elslidergreensales.parentNode.style.display = 'block';
+	}
 
 	//start Ajax Call to get simulation data
 	var objData = {
@@ -355,7 +360,9 @@ function regionClick(idCountry) {
 			initSimulator(response);
 		}
 	});
-	
+	TweenLite.to(getEl('simulation_wrapper'), 0.2, {
+		opacity: 1
+	});
 	
 	document.getElementsByTagName("body")[0].className = objPageVars.current_sector;
 	//var color=colors[objPageVars.current_sector].middle;
