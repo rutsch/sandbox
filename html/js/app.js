@@ -50,7 +50,7 @@ function dynamicSort(property) {
     }
 }
 function getLatestSnapshotId(){
-	var latestSnapshot = objPageVars.arrsnapshotdata.sort(dynamicSort('snapshotid'));
+	var latestSnapshot = objPageVars.arrsnapshotdata.sort(dynamicSort('snapshotid'))[0];
 	return latestSnapshot.snapshotid;
 }
 
@@ -106,6 +106,7 @@ function btnSubmitClick() {
 	            	}else{		
 	            		//load snapshot config in global variable
 	            		objPageVars.arrsnapshotdata = response.snapshotconfig;
+	            		debugger;
 	            		objPageVars.latestsnapshotid = getLatestSnapshotId();
 						objData.method='generatejsvarsjson';
 						psv('GET', authUrl2, objData, function(response){
@@ -1005,8 +1006,11 @@ function startApp(){
 	    	    // load mru HTML for latest snapshot id
 	    	    mruHtml: function(callback){
 	    	    	getMruHtml(function(err, data){
-	    				if(data.error) callback(data.error.message);
-	    				callback(null, data.html);
+	    				if(data.error){
+	    					callback(data.error.message);
+	    				}else{
+	    					callback(null, data.html);	
+	    				}
 	    			});
 	    	    },
 	    	    // load mru HTML for latest snapshot id
