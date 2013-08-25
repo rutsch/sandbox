@@ -111,11 +111,16 @@
 				<div id="btn_close_filter" class="btn btn_close" onclick="btnCloseFilterClick();">X</div>
 			</div>	
 			<div class="modal_content">
+				<h4>Select activity filter:</h4>
+				<div id="activity_filter_container">
+					<div id="btn_show_all" onclick="showAllCountries(this);">Show all countries</div>
+					<div id="btn_hide" onclick="hideInactiveCountries(this);" class="selected">Hide countries</div>
+				</div>
 				<h4>Select geography filter:</h4>
 				<div id="oru_filter_container">
-					<div id="btn_world" onclick="setCurrentOru(this, 1);" onclick="setCurrentOru(1)">World</div>
+					<div id="btn_world" onclick="setCurrentOru(this, 1);">World</div>
 					<div id="btn_region" onclick="setCurrentOru(this, 2);">Region</div>
-					<div id="btn_bmc" onclick="setCurrentOru(this, 3);" class="selected">BMC</div>
+					<div id="btn_bmc" onclick="setCurrentOru(this, 3);" class="selected">Market</div>
 					<div id="btn_country" onclick="setCurrentOru(this, 4);">Country</div>
 				</div>
 				<h4>Select sector filter:</h4>

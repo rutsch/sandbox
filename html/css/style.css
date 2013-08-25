@@ -520,7 +520,21 @@ li#philips.selected{
 	font-family: gill_header;
 	font-weight: bold;
 }
-
+#activity_filter_container div{
+	width: 50%;
+	height: 40px;
+	float: left;
+	border-right: 1px solid #fff;
+	box-sizing:border-box;
+  	-moz-box-sizing:border-box;
+  	-webkit-box-sizing:border-box;
+	background: #999; 
+	color: #2d2d2d;
+	margin-top: 5px;
+	margin-bottom: 15px;	
+	text-align: center;
+	padding-top: 10px;		
+}
 #oru_filter_container div{
 	width: 25%;
 	height: 40px;
@@ -536,10 +550,10 @@ li#philips.selected{
 	text-align: center;
 	padding-top: 10px;
 }
-#oru_filter_container div:last-child{
+#oru_filter_container div:last-child. #activity_filter_container div:last-child{
 	border-right: none;
 }
-#oru_filter_container div.selected{
+#oru_filter_container div.selected, #activity_filter_container div.selected{
 	background: #2d2d2d;
 	color: #fff;
 }

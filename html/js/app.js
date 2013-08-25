@@ -1032,11 +1032,16 @@ function updateWorldmap(regionIdToSelect){
 					//console.log();
 					//debugger;
 					if (regionData) {
+
 						var percentageLI = (regionData.l * 100) / regionData.p || 0;
 						if(percentageLI> 99)percentageLI=100;
 						if(percentageLI< 1)percentageLI=0;
 						objPageVars.worldmapdata[key].percentageLI = Math.round(percentageLI);
+					
 						var color=colors[objPageVars.current_sector].middle;//getColorForPercentage(percentageLI, colors[objPageVars.current_sector].low, colors[objPageVars.current_sector].middle, colors[objPageVars.current_sector].high);
+						if(regionData.l == 0 && objPageVars.hideinactivecountries){
+							color = '#999';
+						}
 						objPageVars.worldmapdata[key].color = color;
 						var opacity=((percentageLI/100) * 0.7) + 0.3;
 						if(opacity < 0.2)opacity = 0.2;
@@ -1052,7 +1057,7 @@ function updateWorldmap(regionIdToSelect){
 							}
 						}								
 					} else {
-						region.style.fill = '#000';
+						region.style.fill = '#999';
 					}							
 				}
 				//hideLoadingPanel();	
@@ -1065,6 +1070,19 @@ function updateWorldmap(regionIdToSelect){
 		}
 	});	
 }
+function showAllCountries(el){
+	el.className = 'selected';
+	getEl('btn_hide').className = '';
+	objPageVars.hideinactivecountries=false;
+	updateWorldmap();
+}
+function hideInactiveCountriesI(el){
+	el.className = 'selected';
+	getEl('btn_show_all').className = '';
+	objPageVars.hideinactivecountries=true;
+	updateWorldmap();	
+}
+
 function getMruFilterBreadcrumb(){
 	var mru = objPageVars.current_mru;
 	var selector = '#filter_container #' + mru;
@@ -1200,7 +1218,8 @@ var objPageVars = {
 	current_mru: 'philips',
 	current_sector: 'cl',
 	current_region: '',
-	faqloaded: false
+	faqloaded: false,
+	hideinactivecountries: true
 }
 var colors = {
 	philips: {
