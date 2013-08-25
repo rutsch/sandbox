@@ -764,7 +764,7 @@ function applyFilter(e, key, mru){
 
 	//set global current mru
 	objPageVars.current_mru = mru;
-	updateWorldmap();	
+	
 	//remove all selected classes
 	var arrAllLi = getEl('filter_container').getElementsByTagName('li');
 	for ( var a = 0; a < arrAllLi.length; a++) {
@@ -784,6 +784,7 @@ function applyFilter(e, key, mru){
 		}
 	}
 	objPageVars.current_sector = getSectorFromBreadCrumb(getMruFilterBreadcrumb());
+	
 	//debugger;
 	//set selected class on clicked element
 	elClicked.className='selected';
@@ -795,6 +796,7 @@ function applyFilter(e, key, mru){
 			height: 'auto'
 		});		
 	}
+	updateWorldmap();	
 }
 
 
