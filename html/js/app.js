@@ -59,14 +59,19 @@ function getLatestSnapshotId(){
  * Click functions
  */
 function btnSubmitClick() {
-	var un = getEl("username").value, 
-	pw = getEl("password").value,
+	var un = objPageElements.loginusername.value, 
+	pw = objPageElements.loginpassword.value,
 	handleLoginError = function(msg){
 		//hideLoadingPanel();
-		getEl("username").value = '';
-		getEl("password").value = '';
-		TweenLite.to(getEl('btn_submit'), 0.3, {
-			opacity : 1
+		//objPageElements.loginusername.value = '';
+		objPageElements.loginpassword.value = '';
+		TweenLite.to(objPageElements.loginsubmit, 0.3, {
+			opacity : 1,
+			onComplete: function(){
+				objPageElements.loginsubmit.value="Log in";
+				objPageElements.loginusername.disabled = false;
+				objPageElements.loginpassword.disabled = false;
+			}
 		});
 		showErrorDiv(msg, true);			
 	};	
@@ -75,8 +80,13 @@ function btnSubmitClick() {
 	}else{
 		//showLoadingPanel();
 		// Start authentication
-		TweenLite.to(getEl('btn_submit'), 0.3, {
-			opacity : 0.5
+		TweenLite.to(objPageElements.loginsubmit, 0.3, {
+			opacity : 0.5,
+			onComplete: function(){
+				objPageElements.loginsubmit.value="Authenticating...";
+				objPageElements.loginusername.disabled = true;
+				objPageElements.loginpassword.disabled = true;
+			}
 		});
 	
 		if(un.toLowerCase().indexOf('code1\\') == -1) un = 'code1\\' + un;
@@ -123,8 +133,13 @@ function btnSubmitClick() {
 			                    		objPageVars.token = response2.token;
 			                    		setLocalStorageItem('token', objPageVars.token);
 		                    			setLocalStorageItem('username', un);
-		                    			TweenLite.to(getEl('btn_submit'), 0.3, {
-		                    				opacity : 1
+		                    			TweenLite.to(objPageElements.loginsubmit, 0.3, {
+		                    				opacity : 1,
+											onComplete: function(){
+												objPageElements.loginsubmit.value="Log in";
+												objPageElements.loginusername.disabled = false;
+												objPageElements.loginpassword.disabled = false;
+											}
 		                    			});		        
 		                    			//hideLoadingPanel();
 			                    		startApp();                   		
@@ -204,8 +219,8 @@ function btnLogoutClick() {
 	setLocalStorageItem('token', '');
 	panels.overlay.style.display = "none";
 	panels.overlay.style.opacity = 0;
-	getEl('username').value = objPageVars.username;
-	getEl("password").value = '';	
+	objPageElements.loginusername.value = objPageVars.username;
+	objPageElements.loginpassword.value = '';	
 	TweenLite.to(panels.login, 0.2, {
 		width : objPageVars.width
 	});
@@ -1157,6 +1172,11 @@ function initPage() {
 		bookmarkslist: getEl('bookmarkslist')
 	}
 
+	//login form elements
+	objPageElements.loginsubmit=getEl('btn_submit');
+	objPageElements.loginusername=getEl("username");
+	objPageElements.loginpassword=getEl("password");
+
 	//page elements needed for the simulator
 	objPageElements.elslidersales=getEl('slidersales');
 	objPageElements.elslidersaleslabel=getEl('value_sales');
@@ -1195,7 +1215,7 @@ function initPage() {
 	if(objPageVars.token !=="" && objPageVars.token !==null){
 		startApp();
 	}else{
-		getEl('username').value = objPageVars.username;
+		objPageElements.loginusername.value = objPageVars.username;
 	}
 	
 }
