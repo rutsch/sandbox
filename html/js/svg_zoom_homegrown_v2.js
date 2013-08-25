@@ -79,7 +79,7 @@ var objZoomPanSettings={
 	zoomscale: 0.2, // Zoom sensitivity
 	mobile: false,
 	clickcallback: null,
-	usesamplingformobile: true
+	usesamplingformobile: false
 }
 
 //settings for the touch system
