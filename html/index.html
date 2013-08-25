@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <!--[if IEMobile 7 ]>    <html class="no-js iem7"> <![endif]-->
 <!--[if (gt IEMobile 7)|!(IEMobile)]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<link rel="stylesheet" type="text/css" href="css/style.css"/>
 		<script>
 
-        </script>		
-    </head>
-    <body>
+		</script>		
+	</head>
+	<body>
 		<div id="app_panel" class="panel full">
 			<div id="title_bar">
 				<div id="btn_back" class="hide" onclick="btnBackToMapClick();"></div>
 				<div id="info">
 					<div class="info_wrapper">
-						<div id="region_name"></div>
+						<div id="region_name" onclick="location.reload();"></div>
 						<div id="filter_breadcrumb_wrapper">
 							<div id="filter_breadcrumb"></div>
 						</div>
@@ -28,7 +28,7 @@
 			</div>
 			<div id="app_wrapper">
 				<div id="map">
-			    	<div id="main_wrapper">
+					<div id="main_wrapper">
 						<div id="holder_1000">
 						</div>
 					</div>				
@@ -37,13 +37,16 @@
 					<div class="svg_wrapper">
 						<div id="holder">
 							<svg id="svg_circle" xmlns="http://www.w3.org/2000/svg" version="1.1" width="80%" height="80%" viewBox="-10 -10 240 240">
-						
-								
 							  <g id="g" fill="none" transform="translate(-80,-80)">
-									<circle id="background" width="100" cx="200" cy="200" r="100" />
-									<path id="arc_path" />
-									<text id="lives_improved_percentage" x="140" y="210" fill="#000">100%</text>
-									<text id="lives_improved_percentage_sub" x="0" y="220" fill="#000" width="200"><tspan x="7.3em" dy="1.1em">of population</tspan></text>
+								<circle id="background" width="100" cx="200" cy="200" r="100" />
+								<path id="arc_path" />
+								<g id="arc_path_left_wrapper" transform="rotate(0,200,200)">
+									<path id="arc_path_left" />
+								</g>
+								<text id="lives_improved_percentage" x="140" y="210" fill="#000">100%</text>
+								<text id="lives_improved_percentage_sub" x="0" y="220" fill="#000" width="200">
+									<tspan x="7.3em" dy="1.1em">of population</tspan>
+								</text>
 							  </g>
 							</svg>
 						</div>					
@@ -122,7 +125,10 @@
 		<div id="explain_panel" class="panel modal">
 			<div class="panel_header">
 				<h2>FAQ</h2>
-				<div id="btn_close_explain" class="btn btn_close" onclick="btnCloseExplainClick();">Close</div>
+				<div id="btn_close_explain" class="btn btn_close" onclick="btnCloseExplainClick();">X</div>
+				<div id="explain_content">
+				
+				</div>
 			</div>
 		</div>
 		<div id="bookmarks_panel" class="panel modal">
@@ -155,6 +161,7 @@
 
 		<script type="text/javascript" src="js/utils.js">//</script>
 		<script type="text/javascript" src="js/simulator.js">//</script>
+		<script type="text/javascript" src="js/infographic.js">//</script>
 		<script type="text/javascript" src="js/app.js">//</script>
-    </body>
+	</body>
 </html>    

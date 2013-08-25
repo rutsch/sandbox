@@ -245,14 +245,18 @@ body{
 	height: 100%;
 }
 
-path#arc_path, circle#background{
+path#arc_path, circle#background, path#arc_path_left{
 	fill: none;
 	stroke-width: 20;       	
 }
-path#arc_path{
-	/*stroke: #00495d;*/     	
-	stroke: #000000;
-	opacity: .4;
+
+path#arc_path {
+    opacity: 0.4;
+    stroke: #000000;
+}
+path#arc_path_left{
+    opacity: 0.6;
+    stroke: #000000;
 }
 circle#background{
 	stroke-opacity: .1;
@@ -703,9 +707,27 @@ margin-bottom: 2%;
 margin-top: 1%;
 }
 
+/* FAQ */
+div#explain_content {
+    overflow: auto;
+    position: absolute;
+    top: 40px;
+    width: 100%;
+    padding: 10px;
+}
+div#explain_panel div.faq_wrapper{
+	color: #252F47;
 
-
-
+}
+div#explain_panel div.faq_wrapper div.faq_header{
+	font-weight: bold;
+	padding-top: 5px;
+	padding-bottom: 1px;
+}
+div#explain_panel div.faq_wrapper div.faq_content p{
+	margin-top: 3px;
+	margin-bottom: 7px;
+}
 
 
 

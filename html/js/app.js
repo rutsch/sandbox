@@ -125,6 +125,9 @@ function btnBackToMapClick() {
 	animateArc({start: 0, end: 0}, 2);
 	var strMapMode = '';
 
+	//stop sampling the simulation handles
+	objPageVars.simulatorsampling=false;
+
 	if(objPageVars.width>700){
 		getEl('region_name').innerHTML = objPageVars.currentsvgname;
 		TweenLite.to(objPageElements.region_info, 0.2, {
@@ -190,6 +193,9 @@ function btnLogoutClick() {
 	});
 }
 function btnFilterClick() {
+	//stop sampling the simulator handles
+	objPageVars.simulatorsampling=false;
+
 	panels.overlay.style.display = "block";
 	TweenLite.to(panels.overlay, 0.3, {
 		opacity : 0.7,
@@ -222,9 +228,31 @@ function btnCloseFilterClick() {
 	});
 }
 function btnExplainClick() {
-	location.reload();
-	/*	
 	panels.overlay.style.display = "block";
+	if(!objPageVars.faqloaded){
+		serverSideRequest({
+			url: 'data/faq.html', 
+			method: 'get', 
+			debug: false,
+			callback: function(strFaqContent){
+				//insert the SVG data into the holder div
+				getEl('explain_content').innerHTML=strFaqContent;
+
+
+				objPageVars.faqloaded=true;
+
+
+				openExplain();
+			}
+		});		
+
+	}else{
+		openExplain();
+	}
+
+
+}
+function openExplain(){
 	TweenLite.to(panels.overlay, 0.3, {
 		opacity : 0.7,
 		delay : 0,
@@ -235,9 +263,9 @@ function btnExplainClick() {
 				delay : 0
 			});
 		}
-	});
-	*/
+	});	
 }
+
 function btnCloseExplainClick() {
 	TweenLite.to(panels.explain, 0.4, {
 		opacity : 0,
@@ -318,7 +346,8 @@ function regionClick(idCountry) {
 		snapshotid: 1,
 		token: objPageVars.token
 	}
-	//JT: add simulator logic here
+	
+	//initiates the simulator
 	psv('GET', simulation_data_url, objData, function(response){
 		if(response.error) {
 			showErrorDiv(response.error.message, true);
@@ -710,57 +739,7 @@ function hideErrorDiv(){
 		}
 	});
 }
-function generateArc(objArgs){
 
-	//correction for the angle and to make sure 360 works
-	var intAngle=360-objArgs.angle;
-	if(intAngle<=0)intAngle=0.1;
-	
-	//
-	//to create maximum performance on mobile i have not centralized the calculation in a function, but repeated the logic several times...
-	//also i avoided string contatination in favor of using arrays and join()
-	//
-
-	// M endx endy A 25 25 0 (0|1) 0 startx starty
-	var arrAttrValue=[];
-	arrAttrValue.push('M ');
-	arrAttrValue.push(objArgs.centerx + (objArgs.radius *  Math.cos(((270-intAngle) * Math.PI) / 180.0))+' ');
-	arrAttrValue.push(objArgs.centery + (objArgs.radius *  Math.sin(((270-intAngle) * Math.PI) / 180.0))+' A ');
-	arrAttrValue.push(objArgs.radius+' '+objArgs.radius+' 0 '+((intAngle<180)?'1':'0')+' 0 ');
-	arrAttrValue.push(objArgs.centerx + (objArgs.radius *  Math.cos(((270-0) * Math.PI) / 180.0))+' ');
-	arrAttrValue.push(objArgs.centery + (objArgs.radius *  Math.sin(((270-0) * Math.PI) / 180.0)));
-
-	//objPageElements.debuglayer.innerHTML=strAttrValue;
-
-	//set the value of the "d" attribute in the <path/> node
-	objArgs.targetnode.setAttributeNS(null, 'd', arrAttrValue.join(''));
-}
-
-function animateArc(objArgs, intAnimationDurationInSeconds){
-	var objToAnimate={
-		angle: objArgs.start
-	}
-
-	TweenLite.to(objToAnimate, intAnimationDurationInSeconds, {
-		angle: objArgs.end,
-		onUpdate: function(){
-			//hard coding the centerx, centery and radius boosts performance...
-			generateArc({
-				targetnode: objArcProps.targetnode,
-				centerx: objArcProps.centerx,
-				centery: objArcProps.centery,
-				radius: objArcProps.radius,
-				angle: objToAnimate.angle
-			});
-
-		},
-		onComplete: function(){
-			//store the final arc in a global variable
-			objPageVars.infographicangle=objArgs.end;
-		}
-	});
-
-}
 
 //performs an ajax call and inserts the retrieved svg data into the wrapper div
 function loadWorldmap(oru, cb){
@@ -1110,7 +1089,7 @@ function getRegionNameById(regionId){
  * Executes page logic
  */
 function initPage() {
-	//alert('in');
+
 	// init global objects
 	panels = {
 		login : getEl('login_panel'),
@@ -1131,11 +1110,11 @@ function initPage() {
 		bookmarkslist: getEl('bookmarkslist')
 	}
 
+	//page elements needed for the simulator
 	objPageElements.elslidersales=getEl('slidersales');
 	objPageElements.elslidersaleslabel=getEl('value_sales');
 	objPageElements.elslidergreensales=getEl('slidergreensales');
 	objPageElements.elslidergreensaleslabel=getEl('value_green_sales');
-	objPageElements.ellivesimprovednumberwrapper=getEl('region_lives_improved');
 	objPageElements.ellivesimprovednumber=getEl('nr_lives_improved');
 	objPageElements.ellivesimprovedpercentage=getEl('lives_improved_percentage');
 
@@ -1143,30 +1122,25 @@ function initPage() {
 	objPageVars.mobile = isMobile.any();
 
 
-	//load the worldmap and continue processing
+	//wrapper dive for the worldmap
 	objPageElements.elsvgholder=getEl('holder_1000');
 	
-	objPageVars.arrFavourites = findFavourites();
-
-	//initiate the infographic
-	objPageElements.circlesvg = getEl('svg_circle');
-	objPageElements.svgpath=getEl('arc_path');
+	
+	//elements required for the infographic
 	objPageElements.region_info = getEl('info');
-	objPageElements.percentage = getEl('percentage');
+	//objPageElements.percentage = getEl('percentage');
 	
-	objArcProps.targetnode=objPageElements.svgpath;
-	var objArcProperties={
-		targetnode: objArcProps.targetnode,
-		centerx: objArcProps.centerx,
-		centery: objArcProps.centery,
-		radius: objArcProps.radius,
-		angle: 0
-	}
+	//setup the infographic
+	objArcProps.targetnode=getEl('arc_path');
+	objArcProps.targetleftwrapper=getEl('arc_path_left_wrapper');
+	objArcProps.targetleftnode=getEl('arc_path_left');
+	renderInfographic({angle: 0});
 	
+	//render the favourites panel
+	objPageVars.arrFavourites = findFavourites();
 	renderFavouritePanel();
 
-	//calls the function that generates an arc from the path svg node
-	generateArc(objArcProperties);
+
 	
 	objPageVars.token = getLocalStorageItem('token');
 	objPageVars.username = getLocalStorageItem('username');
@@ -1214,7 +1188,8 @@ var objPageVars = {
 	current_oru: 3,
 	current_mru: 'philips',
 	current_sector: 'cl',
-	current_region: ''
+	current_region: '',
+	faqloaded: false
 }
 var colors = {
 	philips: {
@@ -1238,14 +1213,7 @@ var colors = {
 		high: '#8737B0'  		
 	}
 };
-//global properties of the arc to build
-var objArcProps={
-	targetnode: null,
-	centerx: 200,
-	centery: 200,
-	radius: 100,
-	angle: 0
-}
+
 var isMobile = {
 	any : function() {
 		return 'ontouchstart' in document.documentElement;

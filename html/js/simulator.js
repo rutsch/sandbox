@@ -10,7 +10,9 @@ function initSimulator(objSimulatorData){
 	objPageVars.simulatordata=objSimulatorData;
 
 	//store the current lives improved number
-	objPageVars.livesimprovedcurrent=parseInt(objPageElements.ellivesimprovednumber.innerHTML);
+	var strKey=objPageVars["current_mru"]+"_"+objPageVars["current_region"];
+	var intPopulation=objPageVars.worldmapdata[strKey].l*1000000;
+	objPageVars.livesimprovedcurrent=intPopulation;
 
 	//set the values min/max for the slider labels
 	getEl('salesmin').innerHTML=objPageVars.simulatordata.scenario.salesmin;
@@ -27,7 +29,7 @@ function initSimulator(objSimulatorData){
 	//position the "0" label
 	//objPageVars.simulatordata.scenario.salesmin=-30;
 	var intLeftSales=(-objPageVars.simulatordata.scenario.salesmin)/(-objPageVars.simulatordata.scenario.salesmin+objPageVars.simulatordata.scenario.salesmax)*100+1;
-	var intLeftGreensales=(-objPageVars.simulatordata.scenario.salesmin)/(-objPageVars.simulatordata.scenario.salesmin+objPageVars.simulatordata.scenario.salesmax)*100+1;
+	var intLeftGreensales=(-objPageVars.simulatordata.scenario.greensalesmin)/(-objPageVars.simulatordata.scenario.greensalesmin+objPageVars.simulatordata.scenario.greensalesmax)*100+1;
 	getEl('saleszero').style.left=intLeftSales+'%';
 	getEl('greensaleszero').style.left=intLeftGreensales+'%';
 	//objPageElements.elslidersaleslabel
@@ -76,7 +78,10 @@ function simulatorCalculateValue(intCurrentSalesPercentage, intCurrentGreenSales
 	intCurrentSalesPercentage=parseFloat(intCurrentSalesPercentage, 10);
 	intCurrentGreenSalesPercentage=parseFloat(intCurrentGreenSalesPercentage, 10);
 
-
+	//correct for maximum values
+	if(intCurrentSalesPercentage==objPageVars.simulatordata.scenario.salesmax)intCurrentSalesPercentage=objPageVars.simulatordata.scenario.salesmax-0.000001;
+	if(intCurrentGreenSalesPercentage==objPageVars.simulatordata.scenario.greensalesmax)intCurrentGreenSalesPercentage=objPageVars.simulatordata.scenario.greensalesmax-0.000001;
+	
 	intSalesMin=Math.floor((intCurrentSalesPercentage+0.00001)/objPageVars.simulatordata.scenario.salesstep)*objPageVars.simulatordata.scenario.salesstep
 	//console.log(intSalesTemp)
 	intGreenSalesMin=Math.floor((intCurrentGreenSalesPercentage+0.00001)/objPageVars.simulatordata.scenario.greensalesstep)*objPageVars.simulatordata.scenario.greensalesstep
@@ -100,7 +105,7 @@ function simulatorCalculateValue(intCurrentSalesPercentage, intCurrentGreenSales
 	    intLivesImprovedMax=objPageVars.simulatordata.livesimproved[strKeyMax];
 	}
 
-	console.log('intLivesImprovedMin: '+intLivesImprovedMin+' - intLivesImprovedMax: '+intLivesImprovedMax);
+	//console.log('- strKeyMin: '+strKeyMin+' - strKeyMax: '+strKeyMax+'intLivesImprovedMin: '+intLivesImprovedMin+' - intLivesImprovedMax: '+intLivesImprovedMax);
 
 	//assume both sliders have the same influence
 	var intDelta=intLivesImprovedMax-intLivesImprovedMin;
@@ -131,9 +136,8 @@ function simulatorCalculateValue(intCurrentSalesPercentage, intCurrentGreenSales
 
 	var intLivesImprovedSimulatedPercentage=Math.round((intLivesImprovedSimulated/(intPopulation*1000000))*100);
 
-	console.log(intLivesImprovedSimulatedPercentage);
-
-	console.log(intLivesImprovedSimulated);
+	//console.log(intLivesImprovedSimulatedPercentage);
+	//console.log(intLivesImprovedSimulated);
 
 	//overwrite the livesimproved number in the interface
 	objPageElements.ellivesimprovednumber.innerHTML=Math.round(intLivesImprovedSimulated/1000000);
@@ -142,6 +146,9 @@ function simulatorCalculateValue(intCurrentSalesPercentage, intCurrentGreenSales
 	objPageElements.ellivesimprovedpercentage.textContent=intLivesImprovedSimulatedPercentage+'%';
 	//animateArc({start: objPageVars.infographicangle, end: (intLivesImprovedSimulatedPercentage*360) /100}, 0.1);	
 
+
+	applyInfographicDelta((intLivesImprovedSimulatedPercentage*360) /100);
+	/*
 	generateArc({
 		targetnode: objArcProps.targetnode,
 		centerx: objArcProps.centerx,
@@ -149,15 +156,16 @@ function simulatorCalculateValue(intCurrentSalesPercentage, intCurrentGreenSales
 		radius: objArcProps.radius,
 		angle: (intLivesImprovedSimulatedPercentage*360) /100
 	});
+	*/
 
 	if(intLivesImprovedSimulated>objPageVars.livesimprovedcurrent){
-		objPageElements.ellivesimprovednumberwrapper.setAttribute('class', 'more');
+		appPanels.region_info.setAttribute('class', 'more');
 
 	}else{
 		if(intLivesImprovedSimulated<objPageVars.livesimprovedcurrent){
-			objPageElements.ellivesimprovednumberwrapper.setAttribute('class', 'less');
+			appPanels.region_info.setAttribute('class', 'less');
 		}else{
-			objPageElements.ellivesimprovednumberwrapper.setAttribute('class', 'equal');
+			appPanels.region_info.setAttribute('class', 'equal');
 		}
 	}
 
