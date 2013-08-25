@@ -335,6 +335,7 @@ function regionClick(idCountry) {
 	}else{
 		getEl('toggle_favourite').className=getEl('toggle_favourite').className.replace(' selected','');
 	}
+	//hide the green sales slider element for Healthcare
 	if(objPageVars.current_sector == 'PD0900'){
 		objPageElements.elslidergreensales.parentNode.style.display = 'none';
 	}else{
@@ -362,7 +363,7 @@ function regionClick(idCountry) {
 	});
 	TweenLite.to(getEl('simulation_wrapper'), 0.2, {
 		opacity: 1
-	});
+	}); 
 	
 	document.getElementsByTagName("body")[0].className = objPageVars.current_sector;
 	//var color=colors[objPageVars.current_sector].middle;
