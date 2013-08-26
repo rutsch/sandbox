@@ -1007,6 +1007,7 @@ function updateWorldmap(regionIdToSelect){
 				/*
 				1) stick the svg data into a div
 				*/
+				objPageElements.elsvgholder.innerHTML='';
 				objPageElements.elsvgholder.innerHTML=strSvgData;
 
 
@@ -1020,7 +1021,7 @@ function updateWorldmap(regionIdToSelect){
 				var elSvgWrapper=getEl('svgcontentwrapper');
 				var arrRegions = getFirstLevelChildElements(elSvgWrapper, 'path') ;// getEl('viewport').getElementsByTagName('g');
 				if(arrRegions.length == 0) arrRegions = getFirstLevelChildElements(elSvgWrapper, 'g')
-				//console.log(arrRegions);
+				console.log(arrRegions);
 				/**/
 				for ( var i = 0; i < arrRegions.length; i++) {
 					var region = arrRegions[i],
@@ -1038,13 +1039,22 @@ function updateWorldmap(regionIdToSelect){
 						objPageVars.worldmapdata[key].percentageLI = Math.round(percentageLI);
 						
 						//JT - add colors to the map
+
 						var color=colors[objPageVars.current_sector].middle;//getColorForPercentage(percentageLI, colors[objPageVars.current_sector].low, colors[objPageVars.current_sector].middle, colors[objPageVars.current_sector].high);
+						objPageVars.worldmapdata[key].color = colors[objPageVars.current_sector].middle;
+
+						//calculate the color to place on the map
+						var percentageForColor=percentageLI;
+						if(percentageForColor<10)percentageForColor=10;
+						console.log(percentageForColor);
+						var colorToSet=getColorForPercentage(percentageForColor, colors[objPageVars.current_sector].low, colors[objPageVars.current_sector].middle, colors[objPageVars.current_sector].high);
+
 						if(regionData.l == 0 && objPageVars.hideinactivecountries){
 							color = '#999';
 						}
-						objPageVars.worldmapdata[key].color = color;
-						var opacity=((percentageLI/100) * 0.7) + 0.3;
-						if(opacity < 0.2)opacity = 0.2;
+						
+						//var opacity=((percentageLI/100) * 0.7) + 0.3;
+						//if(opacity < 0.2)opacity = 0.2;
 						region.style.fill=color;	
 						//region.style.opacity=opacity;
 						
@@ -1052,7 +1062,7 @@ function updateWorldmap(regionIdToSelect){
 						for ( var ii = 0; ii < paths.length; ii++) {
 							var path = paths[ii];
 							if(path.nodeName == 'path' || path.nodeName == 'polygon' || path.nodeName == 'rect' || path.nodeName == 'g'){
-								paths[ii].style.fill=color;	
+								paths[ii].style.fill=colorToSet;	
 								//paths[ii].style.opacity=1;
 							}
 						}								
