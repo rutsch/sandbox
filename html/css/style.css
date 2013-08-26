@@ -784,7 +784,7 @@ div#explain_panel div.faq_wrapper div.faq_content p{
 }
 
 /* attempt to hardware accelarate the worldmap */
-g#svgcontentwrapper{
+div#holder_1000 g#svgcontentwrapper{
 	-webkit-transform: translateZ(0);
 }
 
