@@ -1064,14 +1064,14 @@ function updateWorldmap(regionIdToSelect){
 
 				var arrRegions = getFirstLevelChildElements(getEl('svgcontentwrapper'), 'path') ;// getEl('viewport').getElementsByTagName('g');
 				if(arrRegions.length == 0) arrRegions = getFirstLevelChildElements(getEl('svgcontentwrapper'), 'g')
-				console.log(arrRegions);
+				//console.log(arrRegions);
 				for ( var i = 0; i < arrRegions.length; i++) {
 					var region = arrRegions[i],
 						regionId = region.id == 'UK' ? 'GB' : region.id,
 						key=objPageVars.current_mru + '_' + (oru != 4 ? regionId.toLowerCase() : regionId),
 						//JT: need a test here to check if the key really exists
 						regionData = (objPageVars.worldmapdata[key])?objPageVars.worldmapdata[key]:false;
-					console.log(key+' - '+regionData);
+					//console.log(key+' - '+regionData);
 					//debugger;
 					if (regionData) {
 
