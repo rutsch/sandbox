@@ -1061,15 +1061,17 @@ function updateWorldmap(regionIdToSelect){
 				objPageVars.worldmapdata = data.snapshotdata;
 
 				//set the colors
-				var arrRegions = getFirstLevelChildElements(getEl('viewport'), 'path') ;// getEl('viewport').getElementsByTagName('g');
-				if(arrRegions.length == 0) arrRegions = getFirstLevelChildElements(getEl('viewport'), 'g') ;
+
+				var arrRegions = getFirstLevelChildElements(getEl('svgcontentwrapper'), 'path') ;// getEl('viewport').getElementsByTagName('g');
+				if(arrRegions.length == 0) arrRegions = getFirstLevelChildElements(getEl('svgcontentwrapper'), 'g')
+				console.log(arrRegions);
 				for ( var i = 0; i < arrRegions.length; i++) {
 					var region = arrRegions[i],
 						regionId = region.id == 'UK' ? 'GB' : region.id,
 						key=objPageVars.current_mru + '_' + (oru != 4 ? regionId.toLowerCase() : regionId),
 						//JT: need a test here to check if the key really exists
 						regionData = (objPageVars.worldmapdata[key])?objPageVars.worldmapdata[key]:false;
-					//console.log();
+					console.log(key+' - '+regionData);
 					//debugger;
 					if (regionData) {
 
@@ -1077,7 +1079,8 @@ function updateWorldmap(regionIdToSelect){
 						if(percentageLI> 99)percentageLI=100;
 						if(percentageLI< 1)percentageLI=0;
 						objPageVars.worldmapdata[key].percentageLI = Math.round(percentageLI);
-					
+						
+						//JT - add colors to the map
 						var color=colors[objPageVars.current_sector].middle;//getColorForPercentage(percentageLI, colors[objPageVars.current_sector].low, colors[objPageVars.current_sector].middle, colors[objPageVars.current_sector].high);
 						if(regionData.l == 0 && objPageVars.hideinactivecountries){
 							color = '#999';
