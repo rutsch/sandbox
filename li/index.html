@@ -112,10 +112,10 @@
 				</div>
 			</div>
 			<div id="menu_bar">
-				<div id="btn_bookmarks" class="btn" onclick="btnBookmarksClick(this);">Bookmarks</div>
-				<div id="btn_filter" class="btn" onclick="btnFilterClick(this);">Filters</div>
-				<div id="btn_explain" class="btn" onclick="btnExplainClick(this);">FAQ</div>			
-				<div id="btn_logout" class="btn" onclick="btnLogoutClick(this);">Log out</div>
+				<div id="btn_bookmarks" class="btn" onclick="app.btnbookmarksclick(this);">Bookmarks</div>
+				<div id="btn_filter" class="btn" onclick="app.btnfilterclick(this);">Filters</div>
+				<div id="btn_explain" class="btn" onclick="app.btnexplainclick(this);">FAQ</div>			
+				<div id="btn_logout" class="btn" onclick="app.btnlogoutclick(this);">Log out</div>
 			</div>
 		</div>
 		<div id="login_panel" class="panel full">
@@ -129,7 +129,7 @@
 		<div id="filter_panel" class="panel modal">
 			<div class="panel_header">
 				<h2>Filters</h2>
-				<div id="btn_close_filter" class="btn btn_close" onclick="btnCloseFilterClick();">X</div>
+				<div id="btn_close_filter" class="btn btn_close" onclick="objFilter.hide();">X</div>
 			</div>	
 			<div class="modal_content">
 				<h4>Select activity filter:</h4>
@@ -139,10 +139,10 @@
 				</div>
 				<h4>Select geography filter:</h4>
 				<div id="oru_filter_container">
-					<div id="btn_world" onclick="setCurrentOru(this, 1);">World</div>
-					<div id="btn_region" onclick="setCurrentOru(this, 2);">Region</div>
-					<div id="btn_bmc" onclick="setCurrentOru(this, 3);" class="selected">Market</div>
-					<div id="btn_country" onclick="setCurrentOru(this, 4);">Country</div>
+					<div id="btn_world" onclick="objOruFilter.selectoru(this, 1);">World</div>
+					<div id="btn_region" onclick="objOruFilter.selectoru(this, 2);">Region</div>
+					<div id="btn_bmc" onclick="objOruFilter.selectoru(this, 3);" class="selected">Market</div>
+					<div id="btn_country" onclick="objOruFilter.selectoru(this, 4);">Country</div>
 				</div>
 				<h4>Select sector filter:</h4>
 				<div id="filter_container"></div> 
@@ -151,7 +151,7 @@
 		<div id="explain_panel" class="panel modal">
 			<div class="panel_header">
 				<h2>FAQ</h2>
-				<div id="btn_close_explain" class="btn btn_close" onclick="btnCloseExplainClick();">X</div>
+				<div id="btn_close_explain" class="btn btn_close" onclick="objExplain.hide();">X</div>
 			</div>
 			<div class="modal_content">
 				<div id="explain_content">
@@ -162,7 +162,7 @@
 		<div id="bookmarks_panel" class="panel modal">
 			<div class="panel_header">
 				<h2>Bookmarks</h2>
-				<div id="btn_close_bookmarks" class="btn btn_close" onclick="btnCloseBookmarksClick(true);">X</div>
+				<div id="btn_close_bookmarks" class="btn btn_close" onclick="objBookmarks.hide(true);">X</div>
 			</div>
 			<div class="modal_content" id="bookmarkslist">
 				
@@ -202,6 +202,9 @@
 		<script type="text/javascript" src="js/panels/sliders.js">//</script>
 		<script type="text/javascript" src="js/panels/login.js">//</script>
 		<script type="text/javascript" src="js/panels/error.js">//</script>
+		<script type="text/javascript" src="js/panels/filter.js">//</script>
+		<script type="text/javascript" src="js/panels/bookmarks.js">//</script>
+		<script type="text/javascript" src="js/panels/explain.js">//</script>
 		
 		<!-- Elements -->
 		<script type="text/javascript" src="js/elements/mru_filter.js">//</script>

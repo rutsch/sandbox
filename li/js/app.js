@@ -1,18 +1,20 @@
 var app = {
 	state: {
-		signedin: false,
-		token: null,
-		current_mru: null,
-		current_oru: null,
-		current_sector: null,
-		current_region: null
+
+	},
+	btnfilterclick: function(el){
+		objFilter.show();
+	},
+	btnbookmarksclick: function(el){
+		objBookmarks.show();
+	},
+	btnexplainclick: function(el){
+		objExplain.show();
+	},
+	btnlogoutclick: function(el){
+		objLogin.logout();
 	},
 	start: function(){
-		//load base data for filters etc
-		
-		//set values for opening state of map (check localstorage ro get default from config)
-
-		//update map
 		objMap.updatemap();		
 	},
 	init: function(){
@@ -28,17 +30,33 @@ var app = {
 		objRegionInfo.init();
 		objSliders.init();
 		objError.init();
-		//init elements
-		objMruFilter.init();
+		objFilter.init();
+		objBookmarks.init();
+		objExplain.init();
 		
 		//check logged in?
-		if(objLogin.checkloggedin()){
+		if(objLogin.loggedin()){
 			//when signed in
-			self.start();
+			//init elements with async because elements require external data
+			async.parallel({
+				initOru: function(cb){
+					objOruFilter.init(function(){
+						cb();
+					});
+				},
+				initMru: function(cb){
+					objMruFilter.init(function(){
+						cb();
+					});
+				}				
+			},function(err, results){
+				objLogin.hide();
+				self.start();
+			});			
 		}else{
 			//show login panel
 			objLogin.show();
-		}
+		}	
 	}
 }
 

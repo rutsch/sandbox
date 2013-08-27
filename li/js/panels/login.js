@@ -17,7 +17,7 @@ var objLogin = {
 		var self = this;
 		objOverlay.hide();
 		self.el.tbxpassword.value = '';
-		self.state.tweening = true;
+		self.state.authenticating = false;		
 		TweenLite.to(self.el.submit, 0.3, {
 			opacity : 1,
 			onComplete: function(){
@@ -29,8 +29,10 @@ var objLogin = {
 		});
 		objError.show(msg, true);		
 	},
-	checkloggedin: function(){
-		return false;
+	loggedin: function(){
+		var self = this;
+		self.token  = objStore.getlocalstorageitem('token');
+		return self.token != null && self.token != '';
 	},
 	/*
 	 * Click functions
@@ -94,12 +96,12 @@ var objLogin = {
 		var self = this;
 		if(self.el.tbxusername.value.toLowerCase().indexOf('code1\\') == -1) self.el.tbxusername.value = 'code1\\' + self.el.tbxusername.value;
         var objDataAuthenticate = {
-                username: self.el.tbxusername.value,
-                password: self.el.tbxpassword.value,
-                url: '/index.aspx',
-                token: token,
-                type: 'json',
-                fulldomain: location.protocol+"//"+location.hostname
+            username: self.el.tbxusername.value,
+            password: self.el.tbxpassword.value,
+            url: '/index.aspx',
+            token: token,
+            type: 'json',
+            fulldomain: location.protocol+"//"+location.hostname
         };
         
         psv('POST', objConfig.urls.authurl3, objDataAuthenticate, function(response){

@@ -14,7 +14,7 @@ var objStore = {
 		objStore.store.setItem(key, value);
 	},
 	getlocalstorageitem: function(key){
-		objStore.store.getItem(key);
+		return objStore.store.getItem(key);
 	},
 	removelocalstorageitem: function(key){
 		objStore.store.removeItem(key);    
