@@ -14,6 +14,7 @@ function findFavourites(){
 function getColorForPercentage(pct, low_color, middle_color, high_color) {
 	var self = this;
     pct /= 100;
+    //console.log('pct '+pct);
 
     var percentColors = [
             { pct: 0.01, color: rgbFromHex(low_color) },
@@ -1014,8 +1015,6 @@ function updateWorldmap(regionIdToSelect){
 					objPageElements.elsvgholder.innerHTML=strSvgData;
 				}
 
-
-
 				/*
 				2) set the proper coloring
 				*/
@@ -1028,6 +1027,24 @@ function updateWorldmap(regionIdToSelect){
 				if(arrRegions.length == 0) arrRegions = getFirstLevelChildElements(elSvgWrapper, 'g')
 				console.log(arrRegions);
 				/**/
+
+				//analyze the data we have received
+				var intLivesImprovedTotal=0;
+				var intLivesImprovedPercentageMax=0;
+				var intLivesImprovedPercentageMin=100;
+				for (var key in objPageVars.worldmapdata) {
+					intLivesImprovedTotal+=objPageVars.worldmapdata[key].l;
+					var livesImprovedPercentage=(objPageVars.worldmapdata[key].l*100/objPageVars.worldmapdata[key].p);
+					if(livesImprovedPercentage>intLivesImprovedPercentageMax)intLivesImprovedPercentageMax=livesImprovedPercentage;
+					if(livesImprovedPercentage<intLivesImprovedPercentageMin)intLivesImprovedPercentageMin=livesImprovedPercentage;
+
+				}
+				//console.log('- intLivesImprovedTotal: '+intLivesImprovedTotal+' - intLivesImprovedPercentageMax: '+intLivesImprovedPercentageMax+' - intLivesImprovedPercentageMin: '+intLivesImprovedPercentageMin);
+
+				//settings for the coloring
+				var minimumPercentage=10; //anything below this percentage will get the 'low' color
+				var factor=(intLivesImprovedPercentageMax-intLivesImprovedPercentageMin)/(100-minimumPercentage);
+
 				for ( var i = 0; i < arrRegions.length; i++) {
 					var region = arrRegions[i],
 						regionId = region.id == 'UK' ? 'GB' : region.id,
@@ -1037,31 +1054,28 @@ function updateWorldmap(regionIdToSelect){
 					//console.log(key+' - '+regionData);
 					//debugger;
 					if (regionData) {
-
+						//calculate percentage lives improved and store that in the worldmapdata object
 						var percentageLI = (regionData.l * 100) / regionData.p || 0;
 						if(percentageLI> 99)percentageLI=100;
 						if(percentageLI< 1)percentageLI=0;
 						objPageVars.worldmapdata[key].percentageLI = Math.round(percentageLI);
 						
-						//JT - add colors to the map
-
-						var color=colors[objPageVars.current_sector].middle;//getColorForPercentage(percentageLI, colors[objPageVars.current_sector].low, colors[objPageVars.current_sector].middle, colors[objPageVars.current_sector].high);
+						//add colors to the map
+						var color=colors[objPageVars.current_sector].middle;
 						objPageVars.worldmapdata[key].color = colors[objPageVars.current_sector].middle;
 
 						//calculate the color to place on the map
-						var percentageForColor=percentageLI;
-						if(percentageForColor<10)percentageForColor=10;
-						console.log(percentageForColor);
+						
+						var percentageForColor=(percentageLI-intLivesImprovedPercentageMin)/factor+minimumPercentage;
+						//if(percentageForColor<10)percentageForColor=10;
+						//console.log(regionId+' colorprc: '+percentageForColor);
 						var colorToSet=getColorForPercentage(percentageForColor, colors[objPageVars.current_sector].low, colors[objPageVars.current_sector].middle, colors[objPageVars.current_sector].high);
 
 						if(regionData.l == 0 && objPageVars.hideinactivecountries){
-							color = '#999';
+							colorToSet = '#999';
 						}
-						
-						//var opacity=((percentageLI/100) * 0.7) + 0.3;
-						//if(opacity < 0.2)opacity = 0.2;
-						region.style.fill=color;	
-						//region.style.opacity=opacity;
+
+						region.style.fill=colorToSet;	
 						
 						var paths=region.getElementsByTagName('*');
 						for ( var ii = 0; ii < paths.length; ii++) {
@@ -1307,23 +1321,23 @@ var objPageVars = {
 var colors = {
 	philips: {
 		low: '#7DABF1',
-		middle: '#0b5ed7',
-		high: '#3D7FDF' 
+		middle: '#3D7FDF',
+		high: '#0b5ed7' 
 	},
 	PD0900: {
 		low: '#99EAF0',
-		middle: '#2badb5',
-		high: '#30B6BF'		
+		middle: '#30B6BF',
+		high: '#2badb5'		
 	},
 	PD0100: {
 		low: '#CBF277',
-		middle: '#7dba00',
-		high: '#98C833'   		
+		middle: '#98C833',
+		high: '#7dba00'   		
 	},
 	PD0200:{
 		low: '#BE67E9',
-		middle: '#68049c',
-		high: '#8737B0'  		
+		middle: '#8737B0',
+		high: '#68049c'  		
 	}
 };
 
