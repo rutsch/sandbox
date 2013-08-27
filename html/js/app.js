@@ -815,6 +815,7 @@ function loadWorldmap(oru, cb){
 	getEl('region_name').innerHTML = objPageVars.currentsvgname;	
 	getEl('filter_breadcrumb').innerHTML = getMruFilterBreadcrumb();
 
+	//JT: start change
 	if(objPageVars.currentsvgid == oru){
 		//continue to the callback function
 		cb(null);
@@ -830,6 +831,7 @@ function loadWorldmap(oru, cb){
 		});		
 		
 	}
+	//JT: end change
 
 
 }
@@ -1060,6 +1062,7 @@ function updateWorldmap(regionIdToSelect){
 						if(percentageLI< 1)percentageLI=0;
 						objPageVars.worldmapdata[key].percentageLI = Math.round(percentageLI);
 						
+						//JT: start change
 						//add colors to the map
 						var color=colors[objPageVars.current_sector].middle;
 						objPageVars.worldmapdata[key].color = colors[objPageVars.current_sector].middle;
@@ -1084,7 +1087,8 @@ function updateWorldmap(regionIdToSelect){
 								paths[ii].style.fill=colorToSet;	
 								//paths[ii].style.opacity=1;
 							}
-						}								
+						}
+						//JT: end change							
 					} else {
 						region.style.fill = '#999';
 					}							
