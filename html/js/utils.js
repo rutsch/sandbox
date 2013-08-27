@@ -378,3 +378,46 @@ function serverSideRequest(objArguments){
 	
 }
 
+//JT: edit begin
+function roundLivesImprovedDataObject(objData){
+
+	if(objData.l>1000000){
+		objData.roundedl=Math.round(objData.l/1000000);
+	}else{
+		objData.roundedl=Math.round((objData.l/1000000)*10)/10;
+	}
+	objData.displayl=(objData.roundedl+'').replace(/\./,',');
+	objData.labell='million lives improved';
+
+	if(objData.g>1){
+		objData.roundedg=Math.round(objData.g/1);
+	}else{
+		objData.roundedg=Math.round((objData.g/1)*10)/10;
+	}
+	objData.displayg=(objData.roundedg+'').replace(/\./,',');
+	objData.labelg=' billion';	
+
+	if(objData.p>1000000){
+		objData.roundedp=Math.round(objData.p/1000000);
+	}else{
+		objData.roundedp=Math.round((objData.p/1000000)*10)/10;
+	}
+	objData.displayp=(objData.roundedp+'').replace(/\./,',');
+	objData.labelp=' million';	
+
+	return objData;
+}
+
+function setRoundedDataInUi(objData){
+	var objExtendedData=roundLivesImprovedDataObject(objData);
+	console.log(objExtendedData)
+
+	objPageElements.ellivesimprovednumber.innerHTML =objExtendedData.displayl;
+	getEl('nr_gdp').innerHTML=objExtendedData.labell;
+	getEl('nr_gdp').innerHTML='$'+objExtendedData.displayg+objExtendedData.labelg;
+	getEl('nr_population').innerHTML=objExtendedData.displayp+objExtendedData.labelp;
+}
+
+
+
+//JT: edit end

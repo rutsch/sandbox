@@ -416,9 +416,11 @@ function regionClick(idCountry) {
 			//	onComplete: function(){
 					//debugger;
 					//appPanels.map.style.display = 'none';
-					objPageElements.ellivesimprovednumber.innerHTML =regionData.l;
-					getEl('nr_gdp').innerHTML ='$'+regionData.g+' billion';
-					getEl('nr_population').innerHTML =regionData.p+ ' million';
+					
+					//sets rounded data in the ui
+					setRoundedDataInUi(regionData);
+
+
 					objPageElements.ellivesimprovedpercentage.textContent = regionData.percentageLI+'%';
 					getEl('region_name').innerHTML = getRegionNameById((idCountry.length < 4 ? idCountry : idCountry.toLowerCase()));
 					getEl('filter_breadcrumb').innerHTML = getMruFilterBreadcrumb();
