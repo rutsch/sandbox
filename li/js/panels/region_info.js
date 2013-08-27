@@ -1,0 +1,5 @@
+var objRegionInfo ={
+	init: function(){
+		
+	}
+}

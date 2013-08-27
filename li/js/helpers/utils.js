@@ -41,15 +41,6 @@ function collectionHas(a, b) { //helper function (see below)
     }
     return false;
 }
-function setLocalStorageItem(key, value){
-	store.setItem(key, value);
-}
-function getLocalStorageItem(key){
-	return store.getItem(key);
-}
-function removeLocalStorageItem(key){
-	store.removeItem(key);    
-}
 function getFirstLevelChildElementsById(parentId, childNodeType){
 	//debugger;
 	var selector = parentId ==='producttree_temp'?'#producttree_temp':'#producttree_temp #' + parentId;

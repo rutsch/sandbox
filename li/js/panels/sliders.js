@@ -1,4 +1,4 @@
-var objHeader = {
+var objSliders ={
 	init: function(){
 		
 	}
