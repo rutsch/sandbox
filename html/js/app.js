@@ -813,15 +813,17 @@ function loadWorldmap(oru, cb){
 	objPageVars.currentsvgname = strOru;
 	getEl('region_name').innerHTML = objPageVars.currentsvgname;	
 	getEl('filter_breadcrumb').innerHTML = getMruFilterBreadcrumb();
+
 	if(objPageVars.currentsvgid == oru){
-		cb();
+		//continue to the callback function
+		cb(null);
 	}else{
+		//ajax the svg map in
 		serverSideRequest({
 			url: objPageVars.maps[strOru.toLowerCase()].url, 
 			method: 'get', 
 			debug: false,
 			callback: function(strSvgData){
-
 				cb(strSvgData);
 			}
 		});		
@@ -1007,8 +1009,11 @@ function updateWorldmap(regionIdToSelect){
 				/*
 				1) stick the svg data into a div
 				*/
-				objPageElements.elsvgholder.innerHTML='';
-				objPageElements.elsvgholder.innerHTML=strSvgData;
+				if(strSvgData!=null){
+					objPageElements.elsvgholder.innerHTML='';
+					objPageElements.elsvgholder.innerHTML=strSvgData;
+				}
+
 
 
 				/*
