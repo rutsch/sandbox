@@ -26,11 +26,43 @@ var objMruFilter = {
 	getdefaultmru: function(){
 		return objStore.getlocalstorageitem('last_mru') || objConfig.defaultmru;
 	},
-	getsectorfrombreadcrumb: function(breadcrumb){
-		
+	getsectorfrombreadcrumb: function(str){
+		if(str.indexOf('ealthcare')> -1){
+			return 'PD0900';
+		}else if(str.indexOf('ighting')> -1){
+			return 'PD0100';
+		}else if(str.indexOf('ifestyle')> -1){
+			return 'PD0200';
+		}else{
+			return 'philips';
+		}	
 	},
-	getmmrufilterbreadcrumb: function(){
+	getmrufilterbreadcrumb: function(){
+		var self = this;
+		var mru = self.state.selectedmru;
+		var selector = '#filter_container #' + mru;
+		var el = Sizzle(selector)[0];
+		var name;
+		var arrParents = [];
 		
+		if(el.firstElementChild){
+			name = el.firstElementChild.innerHTML
+			arrParents.push(name);
+
+			while(el.parentNode !=null && el.parentNode.className !== 'filter_list'){
+			    el = el.parentNode; 
+			    if(el.localName == 'li'){
+			        arrParents.push(el.firstElementChild.innerHTML);
+			    }
+			    
+			}
+		}else{
+			name = 'Philips';
+			arrParents.push(name);
+		}
+
+		//if(name!='Philips')arrParents.push('Philips');
+		return(arrParents.reverse().join(' &bull; '));			
 	},
 	/*
 	 * UI functions
@@ -67,21 +99,20 @@ var objMruFilter = {
 				arrAllLi[a].setAttribute('onclick', strClick); 
 			}
 		}			
-		getEl('philips').onclick();
+		//getEl('philips').onclick();
 	},
 	selectmru: function(e, useless, strMru){
 		var self = this;
 		if(e)e.stopPropagation();
 		
-		self.state.selectedregion = strMru;
 		self.showlevel(strMru);
-		objMap.updatemap();
+		//objMap.updatemap();
 	},
 	showlevel: function(id){
 		var self = this;
 
 		self.state.selectedmru = id;
-		self.state.selectedsector = self.getsectorfrombreadcrumb(self.getmmrufilterbreadcrumb());
+		self.state.selectedsector = self.getsectorfrombreadcrumb(self.getmrufilterbreadcrumb());
 		
 		var elClicked=getEl(id),
 		parentNode = elClicked.parentNode,
@@ -123,12 +154,18 @@ var objMruFilter = {
 		self.state.tweening = false;
 		self.state.selectedmru = self.getdefaultmru();
 		
+		
 		self.el.mrufilter = getEl('filter_container');
 		self.el.tempmru = getEl('producttree_temp');
 		
 		self.getmruhtml(function(err, data){
-			self.preparehtml(data.html);
-			cb();
+			if(data.error){
+				objLogin.show();
+			}else{
+				self.preparehtml(data.html);
+				self.state.selectedsector = self.getsectorfrombreadcrumb(self.getmrufilterbreadcrumb());
+				cb();				
+			}
 		});
 
 	}

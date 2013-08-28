@@ -1,6 +1,8 @@
 var app = {
 	state: {
-
+		width: null,
+		height: null,
+		mobile: null
 	},
 	btnfilterclick: function(el){
 		objFilter.show();
@@ -14,11 +16,20 @@ var app = {
 	btnlogoutclick: function(el){
 		objLogin.logout();
 	},
+	isMobile: {
+		any : function() {
+			return 'ontouchstart' in document.documentElement;
+		}
+	},
 	start: function(){
 		objMap.updatemap();		
 	},
 	init: function(){
 		var self = this;
+		self.state.width = document.body.clientWidth;
+		self.state.height = document.documentElement["clientHeight"];
+		self.state.mobile = self.isMobile.any();
+		
 		//init storage
 		objStore.init();
 		//init panels

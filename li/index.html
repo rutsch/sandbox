@@ -14,14 +14,13 @@
 	<body>
 		<div id="app_panel" class="panel full">
 			<div id="title_bar">
-				<div id="btn_back" class="hide" onclick="btnBackToMapClick();"></div>
+				<div id="btn_back" class="hide" onclick="objRegionInfo.hide();objSliders.hide();"></div>
 				<div id="info">
 					<div class="info_wrapper">
 						<div id="region_name" onclick="location.reload();"></div>
 						<div id="filter_breadcrumb_wrapper">
 							<div id="filter_breadcrumb"></div>
 						</div>
-						
 					</div>
 				</div>
 				<div class="hide" id="toggle_favourite" onclick="toggleFavourite(this);"></div>
@@ -33,7 +32,7 @@
 						</div>
 					</div>				
 				</div>
-				<div id="region_info" onclick="btnBackToMapClick();">
+				<div id="region_info" onclick="objRegionInfo.hide();objSliders.hide();">
 					<div class="svg_wrapper">
 						<div id="holder">
 							<svg id="svg_circle" xmlns="http://www.w3.org/2000/svg" version="1.1" width="80%" height="80%" viewBox="-10 -10 240 240">
