@@ -191,9 +191,14 @@ function generateUniqueId(){
 	t=t+"x"+intSec+"x"+t2;
 	return t;
 }
-var matchFound= false,
-returnObj;
+var matchFound= false, returnObj={};
 function iterate(obj, type, value) {
+	//console.log('---------');
+	//console.log(obj);
+	//console.log(type);
+	//console.log(value);
+	//console.log('--------')
+	//var returnObj=null;
 	for (var property in obj) {
 	    
 	    if (obj.hasOwnProperty(property)) {

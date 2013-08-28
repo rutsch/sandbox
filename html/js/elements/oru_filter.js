@@ -27,7 +27,23 @@ var objOruFilter = {
 	},
 	getregionnamebyid: function(regionId){
 		var self = this;
-		return iterate(self.json, 'guid', regionId).name;
+		//console.log(regionId);
+		//console.trace();
+		//console.log(iterate(self.json, 'guid', regionId))
+		var result=iterate(self.json, 'guid', regionId).name;
+		
+		//JT: stupid fix for now to get the map up and running with a typo in the metadata id
+		if(result==null){
+			var regionIdNew='';
+			if(regionId=='cantral-east_europe')regionIdNew='central-east_europe';
+			if(regionId=='central-east_europe')regionIdNew='cantral-east_europe';
+			result=iterate(self.json, 'guid', regionIdNew).name;
+		}
+
+		//reset the object defined in utils.js
+		returnObj={};
+
+		return result;
 	},		
 	/*
 	 * UI functions

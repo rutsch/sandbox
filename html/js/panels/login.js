@@ -77,7 +77,7 @@ var objLogin = {
 
 		//update the id in the config file
 		objConfig.currentsnapshotid=strLatestSnapshotId;
-		console.log('latest snapshot id '+objConfig.currentsnapshotid);
+		//console.log('latest snapshot id '+objConfig.currentsnapshotid);
 
 	},
 	getsnapshotconfig: function(){
