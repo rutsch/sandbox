@@ -45,7 +45,7 @@ var objMruFilter = {
 		var name;
 		var arrParents = [];
 		
-		if(el.firstElementChild){
+		if(el && el.firstElementChild){
 			name = el.firstElementChild.innerHTML
 			arrParents.push(name);
 
@@ -153,7 +153,7 @@ var objMruFilter = {
 		var self = this;
 		self.state.tweening = false;
 		self.state.selectedmru = self.getdefaultmru();
-		
+		self.state.selectedsector = 'philips';
 		
 		self.el.mrufilter = getEl('filter_container');
 		self.el.tempmru = getEl('producttree_temp');

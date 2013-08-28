@@ -4,6 +4,9 @@ var app = {
 		height: null,
 		mobile: null
 	},
+	el: {
+		
+	},
 	btnfilterclick: function(el){
 		objFilter.show();
 	},
@@ -22,7 +25,27 @@ var app = {
 		}
 	},
 	start: function(){
-		objMap.updatemap();		
+		//init elements with async because elements require external data
+		async.parallel({
+			initOru: function(cb){
+				objOruFilter.init(function(){
+					cb();
+				});
+			},
+			initMru: function(cb){
+				objMruFilter.init(function(){
+					cb();	
+				});
+			}				
+		},function(err, results){
+			if(err){
+				objLogin.show();	
+			}else{
+				objLogin.hide();
+				objMap.updatemap();				
+			}
+		});			
+				
 	},
 	init: function(){
 		var self = this;
@@ -44,30 +67,11 @@ var app = {
 		objFilter.init();
 		objBookmarks.init();
 		objExplain.init();
-		
-		//check logged in?
+
 		if(objLogin.loggedin()){
-			//when signed in
-			//init elements with async because elements require external data
-			async.parallel({
-				initOru: function(cb){
-					objOruFilter.init(function(){
-						cb();
-					});
-				},
-				initMru: function(cb){
-					objMruFilter.init(function(){
-						cb();
-					});
-				}				
-			},function(err, results){
-				objLogin.hide();
-				self.start();
-			});			
-		}else{
-			//show login panel
-			objLogin.show();
-		}	
+			self.start();
+		}
+
 	}
 }
 
