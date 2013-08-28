@@ -46,5 +46,10 @@ var objRegionInfo = {
 		self.el.percentagelivesimproved = getEl('lives_improved_percentage');
 		self.el.population = getEl('nr_population');
 		self.el.gdp = getEl('nr_gdp');
+		
+		objArcProps.targetnode=getEl('arc_path');
+		objArcProps.targetleftwrapper=getEl('arc_path_left_wrapper');
+		objArcProps.targetleftnode=getEl('arc_path_left');	
+		renderInfographic({angle: 0});
 	}
 }

@@ -74,6 +74,7 @@ var objBookmarks = {
 		objOruFilter.state.selectedoru = oru;
 		objMruFilter.state.selectedmru = mru;
 		objMruFilter.state.selectedsector = sector;
+		objOruFilter.settocurrentoru();		
 		objMap.updatemap(region);
 		self.hide();
 	},

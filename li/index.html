@@ -111,18 +111,22 @@
 				</div>
 			</div>
 			<div id="menu_bar">
-				<div id="btn_bookmarks" class="btn" onclick="app.btnbookmarksclick(this);">Bookmarks</div>
-				<div id="btn_filter" class="btn" onclick="app.btnfilterclick(this);">Filters</div>
-				<div id="btn_explain" class="btn" onclick="app.btnexplainclick(this);">FAQ</div>			
-				<div id="btn_logout" class="btn" onclick="app.btnlogoutclick(this);">Log out</div>
+				<div id="btn_wrapper">
+					<div id="btn_bookmarks" class="btn" onclick="app.btnbookmarksclick(this);">Bookmarks</div>
+					<div id="btn_filter" class="btn" onclick="app.btnfilterclick(this);">Filters</div>
+					<div id="btn_explain" class="btn" onclick="app.btnexplainclick(this);">FAQ</div>			
+					<div id="btn_logout" class="btn" onclick="app.btnlogoutclick(this);">Log out</div>
+				</div>
 			</div>
 		</div>
 		<div id="login_panel" class="panel full">
 			<form id="login">
-			<span>Please log in using CODE1\*** and password.</span>
-				<input type="text" id="username" placeholder="Account" value=""/>
-				<input type="password" id="password" placeholder="Password" value=""/>
-				<input type="submit" id="btn_submit" class="btn btn_login" onclick="objLogin.btnsubmitclick(event);" value="Log in"/>
+				<div id="form_wrapper">
+					<span>Please log in using CODE1\*** and password.</span>
+					<input type="text" id="username" placeholder="Account" value=""/>
+					<input type="password" id="password" placeholder="Password" value=""/>
+					<input type="submit" id="btn_submit" class="btn btn_login" onclick="objLogin.btnsubmitclick(event);" value="Log in"/>
+				</div>
 			</form>
 		</div>
 		<div id="filter_panel" class="panel modal">
@@ -131,11 +135,6 @@
 				<div id="btn_close_filter" class="btn btn_close" onclick="objFilter.hide();">X</div>
 			</div>	
 			<div class="modal_content">
-				<h4>Select activity filter:</h4>
-				<div id="activity_filter_container">
-					<div id="btn_show_all" onclick="showAllCountries(this);">Show all countries</div>
-					<div id="btn_hide" onclick="hideInactiveCountries(this);" class="selected">Hide countries</div>
-				</div>
 				<h4>Select geography filter:</h4>
 				<div id="oru_filter_container">
 					<div id="btn_world" onclick="objOruFilter.selectoru(this, 1);">World</div>
@@ -145,6 +144,11 @@
 				</div>
 				<h4>Select sector filter:</h4>
 				<div id="filter_container"></div> 
+				<h4>Select activity filter:</h4>
+				<div id="activity_filter_container">
+					<div id="btn_show_all" onclick="showAllCountries(this);">Show all countries</div>
+					<div id="btn_hide" onclick="hideInactiveCountries(this);" class="selected">Hide countries</div>
+				</div>
 			</div>
 		</div>
 		<div id="explain_panel" class="panel modal">

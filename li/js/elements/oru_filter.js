@@ -44,6 +44,10 @@ var objOruFilter = {
 		objFilter.blink();
 		objMap.updatemap();
 	},
+	settocurrentoru: function(){
+		var self = this;
+		debugger;
+	},
 	init: function(cb){
 		var self = this;
 		self.state.selectedoru = this.getdefaultoru();

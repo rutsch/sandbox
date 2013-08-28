@@ -406,7 +406,10 @@ var objMap = {
 						objHeader.showbackbutton();
 						objHeader.showfavouritebutton();
 						TweenLite.to(elRegion, 0.5, {
-							opacity: 1
+							opacity: 1,
+							onComplete: function(){
+								animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);	
+							}
 						});
 				//	}
 				//});			
