@@ -14,16 +14,17 @@
 	<body>
 		<div id="app_panel" class="panel full">
 			<div id="title_bar">
-				<div id="btn_back" onclick="objHeader.btnbackclick();"></div>
+				<div id="btn_back" class="hide" onclick="btnBackToMapClick();"></div>
 				<div id="info">
 					<div class="info_wrapper">
 						<div id="region_name" onclick="location.reload();"></div>
 						<div id="filter_breadcrumb_wrapper">
 							<div id="filter_breadcrumb"></div>
 						</div>
+						
 					</div>
 				</div>
-				<div id="toggle_favourite" onclick="objHeader.togglefavourite(this);"></div>
+				<div class="hide" id="toggle_favourite" onclick="toggleFavourite(this);"></div>
 			</div>
 			<div id="app_wrapper">
 				<div id="map">
@@ -32,7 +33,7 @@
 						</div>
 					</div>				
 				</div>
-				<div id="region_info" onclick="objHeader.btnbackclick();">
+				<div id="region_info" onclick="btnBackToMapClick();">
 					<div class="svg_wrapper">
 						<div id="holder">
 							<svg id="svg_circle" xmlns="http://www.w3.org/2000/svg" version="1.1" width="80%" height="80%" viewBox="-10 -10 240 240">
@@ -88,7 +89,7 @@
 				</div>
 				<div id="simulation">
 					<div id="simulation_wrapper">
-						<h3>Simulation LivesImproved Year End</h3>
+						<h3>Simulation</h3>
 						<div id="section1">
 							<h4>Sales</h4>
 							<input id="slidersales" type="range" min="-20" max="30" value="0" step="0.1" class="philips"><div class="slider_value" id="value_sales">0%</div>		
@@ -108,56 +109,49 @@
 							</div>
 						</div>
 					</div>
-					<div id="simulation_error_wrapper">
-
-					</div>
 				</div>
 			</div>
 			<div id="menu_bar">
-				<div id="btn_wrapper">
-					<div id="btn_bookmarks" class="btn" onclick="app.btnbookmarksclick(this);">Bookmarks</div>
-					<div id="btn_filter" class="btn" onclick="app.btnfilterclick(this);">Filters</div>
-					<div id="btn_explain" class="btn" onclick="app.btnexplainclick(this);">FAQ</div>			
-					<div id="btn_logout" class="btn" onclick="app.btnlogoutclick(this);">Log out</div>
-				</div>
+				<div id="btn_bookmarks" class="btn" onclick="btnBookmarksClick(this);">Bookmarks</div>
+				<div id="btn_filter" class="btn" onclick="btnFilterClick(this);">Filters</div>
+				<div id="btn_explain" class="btn" onclick="btnExplainClick(this);">FAQ</div>			
+				<div id="btn_logout" class="btn" onclick="btnLogoutClick(this);">Log out</div>
 			</div>
 		</div>
 		<div id="login_panel" class="panel full">
 			<form id="login">
-				<div id="form_wrapper">
-					<span>Please log in using CODE1\*** and password.</span>
-					<input type="text" id="username" placeholder="Account" value=""/>
-					<input type="password" id="password" placeholder="Password" value=""/>
-					<input type="submit" id="btn_submit" class="btn btn_login" onclick="objLogin.btnsubmitclick(event);" value="Log in"/>
-				</div>
+			<span>Please log in using CODE1\*** and password.</span>
+				<input type="text" id="username" placeholder="Account" value=""/>
+				<input type="password" id="password" placeholder="Password" value=""/>
+				<input type="submit" id="btn_submit" class="btn btn_login" onclick="btnSubmitClick();return false;" value="Log in"/>
 			</form>
 		</div>
 		<div id="filter_panel" class="panel modal">
 			<div class="panel_header">
 				<h2>Filters</h2>
-				<div id="btn_close_filter" class="btn btn_close" onclick="objFilter.hide();">X</div>
+				<div id="btn_close_filter" class="btn btn_close" onclick="btnCloseFilterClick();">X</div>
 			</div>	
 			<div class="modal_content">
-				<h4>Select geography filter:</h4>
-				<div id="oru_filter_container">
-					<div id="btn_world" onclick="objOruFilter.selectoru(this, 1);">World</div>
-					<div id="btn_region" onclick="objOruFilter.selectoru(this, 2);">Region</div>
-					<div id="btn_bmc" onclick="objOruFilter.selectoru(this, 3);" class="selected">Market</div>
-					<div id="btn_country" onclick="objOruFilter.selectoru(this, 4);">Country</div>
-				</div>
-				<h4>Select sector filter:</h4>
-				<div id="filter_container"></div> 
 				<h4>Select activity filter:</h4>
 				<div id="activity_filter_container">
 					<div id="btn_show_all" onclick="showAllCountries(this);">Show all countries</div>
 					<div id="btn_hide" onclick="hideInactiveCountries(this);" class="selected">Hide countries</div>
 				</div>
+				<h4>Select geography filter:</h4>
+				<div id="oru_filter_container">
+					<div id="btn_world" onclick="setCurrentOru(this, 1);">World</div>
+					<div id="btn_region" onclick="setCurrentOru(this, 2);">Region</div>
+					<div id="btn_bmc" onclick="setCurrentOru(this, 3);" class="selected">Market</div>
+					<div id="btn_country" onclick="setCurrentOru(this, 4);">Country</div>
+				</div>
+				<h4>Select sector filter:</h4>
+				<div id="filter_container"></div> 
 			</div>
 		</div>
 		<div id="explain_panel" class="panel modal">
 			<div class="panel_header">
 				<h2>FAQ</h2>
-				<div id="btn_close_explain" class="btn btn_close" onclick="objExplain.hide();">X</div>
+				<div id="btn_close_explain" class="btn btn_close" onclick="btnCloseExplainClick();">X</div>
 			</div>
 			<div class="modal_content">
 				<div id="explain_content">
@@ -168,7 +162,7 @@
 		<div id="bookmarks_panel" class="panel modal">
 			<div class="panel_header">
 				<h2>Bookmarks</h2>
-				<div id="btn_close_bookmarks" class="btn btn_close" onclick="objBookmarks.hide(true);">X</div>
+				<div id="btn_close_bookmarks" class="btn btn_close" onclick="btnCloseBookmarksClick(true);">X</div>
 			</div>
 			<div class="modal_content" id="bookmarkslist">
 				
@@ -178,44 +172,28 @@
 		<div id="loading"></div>
 		<div id="producttree_temp"></div>
 		<div id="error" onclick="hideErrorDiv();"></div>
-		
-		<!-- Config files -->
-		<script type="text/javascript" src="js/config.js">//</script>
-				
-		<!-- Libs -->
-		<script type="text/javascript" src="js/lib/async.js">//</script>
-		<script type="text/javascript" src="js/lib/zoom_pan.js">//</script>
-		<script type="text/javascript" src="js/lib/svg_zoom_homegrown_v2.js">//</script>
-		<script type="text/javascript" src="js/lib/CSSPlugin.min.js">//</script>
-		<script type="text/javascript" src="js/lib/EasePack.min.js">//</script>
-		<script type="text/javascript" src="js/lib/TweenLite.js">//</script>
-		<script type="text/javascript" src="js/lib/hammer.js">//</script>
-		<script type="text/javascript" src="js/lib/sizzle.min.js">//</script>	
-		
-		<!-- Helper files files -->		
-		<script type="text/javascript" src="js/helpers/utils.js">//</script>
-		<script type="text/javascript" src="js/helpers/store.js">//</script>
-		<script type="text/javascript" src="js/helpers/infographic.js">//</script>
-		<script type="text/javascript" src="js/helpers/psv.js">//</script>
-		
-		<!-- Panels -->
-		<script type="text/javascript" src="js/panels/footer.js">//</script>
-		<script type="text/javascript" src="js/panels/header.js">//</script>
-		<script type="text/javascript" src="js/panels/map.js">//</script>
-		<script type="text/javascript" src="js/panels/overlay.js">//</script>
-		<script type="text/javascript" src="js/panels/region_info.js">//</script>
-		<script type="text/javascript" src="js/panels/sliders.js">//</script>
-		<script type="text/javascript" src="js/panels/login.js">//</script>
-		<script type="text/javascript" src="js/panels/error.js">//</script>
-		<script type="text/javascript" src="js/panels/filter.js">//</script>
-		<script type="text/javascript" src="js/panels/bookmarks.js">//</script>
-		<script type="text/javascript" src="js/panels/explain.js">//</script>
-		
-		<!-- Elements -->
-		<script type="text/javascript" src="js/elements/mru_filter.js">//</script>
-		<script type="text/javascript" src="js/elements/oru_filter.js">//</script>
 
-		<!-- App -->
+		
+		<script type="text/javascript" src="js/async.js">//</script>
+
+		<script type="text/javascript" src="js/zoom_pan.js">//</script>
+		<script type="text/javascript" src="js/svg_zoom_homegrown_v2.js">//</script>
+
+		<script type="text/javascript" src="js/plugins/CSSPlugin.min.js">//</script>
+		<!--
+		<script type="text/javascript" src="js/plugins/ThrowPropsPlugin.js">//</script>
+		-->
+		<script type="text/javascript" src="js/easing/EasePack.min.js">//</script>
+		<script type="text/javascript" src="js/TweenLite.js">//</script>
+
+		<script type="text/javascript" src="js/hammer.js">//</script>
+
+	
+		<script type="text/javascript" src="js/sizzle.min.js">//</script>	
+
+		<script type="text/javascript" src="js/utils.js">//</script>
+		<script type="text/javascript" src="js/simulator.js">//</script>
+		<script type="text/javascript" src="js/infographic.js">//</script>
 		<script type="text/javascript" src="js/app.js">//</script>
 	</body>
 </html>    
