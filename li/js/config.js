@@ -32,5 +32,7 @@ var objConfig = {
 	},
 	hideinactivecountries: true,
 	defaultmru: 'philips',
-	defaultoru: '3' 
+	defaultoru: '3',
+	snapshots: null,
+	currentsnapshotid: '1'
 }

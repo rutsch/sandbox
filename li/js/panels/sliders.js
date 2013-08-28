@@ -87,7 +87,7 @@ var objSliders = {
 			type: 'json',
 			oru: objOruFilter.state.selectedoruguid,
 			mru: objMruFilter.state.selectedmru,
-			snapshotid: 1,
+			snapshotid:  objConfig.currentsnapshotid,
 			token: objLogin.token
 		}
 		
@@ -136,10 +136,10 @@ var objSliders = {
 		self.vars.livesimprovedcurrent=intPopulation;
 
 		//set the values min/max for the slider labels
-		getEl('salesmin').innerHTML=self.vars.data.scenario.salesmin;
-		getEl('salesmax').innerHTML=self.vars.data.scenario.salesmax;
-		getEl('greensalesmin').innerHTML=self.vars.data.scenario.greensalesmin;
-		getEl('greensalesmax').innerHTML=self.vars.data.scenario.greensalesmax;
+		self.el.salesmin.innerHTML=self.vars.data.scenario.salesmin;
+		self.el.salesmax.innerHTML=self.vars.data.scenario.salesmax;
+		self.el.greensalesmin.innerHTML=self.vars.data.scenario.greensalesmin;
+		self.el.greensalesmax.innerHTML=self.vars.data.scenario.greensalesmax;
 
 		//set the min and max values on the input nodes
 		self.el.slidersales.setAttribute('min', self.vars.data.scenario.salesmin);
@@ -299,6 +299,14 @@ var objSliders = {
 		self.el.slidergreensaleslabel=getEl('value_green_sales');
 		self.el.livesimprovednumber=getEl('nr_lives_improved');
 		self.el.livesimprovedpercentage=getEl('lives_improved_percentage');
+
+
+		self.el.salesmin=getEl('salesmin');
+		self.el.salesmax=getEl('salesmax');
+		self.el.greensalesmin=getEl('greensalesmin');
+		self.el.greensalesmax=getEl('greensalesmax');
+		self.el.saleszero=getEl('saleszero');
+		self.el.greensaleszero=getEl('greensaleszero');
 
 		//store the content of the slider interface in a variable so that we can inject it
 		self.vars.content=self.el.wrapper.innerHTML;

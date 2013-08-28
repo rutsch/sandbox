@@ -100,7 +100,7 @@ var objMap = {
 			token: objLogin.token,
 			oru: objOruFilter.state.selectedoru,
 			mru: objMruFilter.state.selectedmru,
-			snapshotid:1
+			snapshotid: objConfig.currentsnapshotid
 		}
 		//showLoadingPanel();
 		psv('GET', objConfig.urls.snapshoturl, objData, function(data) {

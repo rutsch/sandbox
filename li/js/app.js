@@ -68,6 +68,9 @@ var app = {
 		objBookmarks.init();
 		objExplain.init();
 
+		//retrieve snapshot id
+		objLogin.getsnapshotconfig();
+
 		if(objLogin.loggedin()){
 			self.start();
 		}

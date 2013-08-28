@@ -16,7 +16,7 @@ var objOruFilter = {
 			method:'getorudata',
 			type:'json',
 			token: objLogin.token,
-			snapshotid:1	
+			snapshotid: objConfig.currentsnapshotid	
 		}
 		psv('GET', objConfig.urls.dynamicresourceurl, objData, function(data) {
 			cb(null, data);
