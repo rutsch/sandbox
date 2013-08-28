@@ -1031,8 +1031,8 @@ function updateWorldmap(regionIdToSelect){
 				var elSvgWrapper=getEl('svgcontentwrapper');
 				var arrRegions = getFirstLevelChildElements(elSvgWrapper, 'path') ;// getEl('viewport').getElementsByTagName('g');
 				if(arrRegions.length == 0) arrRegions = getFirstLevelChildElements(elSvgWrapper, 'g')
-				console.log(arrRegions);
-				/**/
+				//console.log(arrRegions);
+
 
 				//analyze the data we have received
 				var intLivesImprovedTotal=0;
@@ -1047,10 +1047,10 @@ function updateWorldmap(regionIdToSelect){
 						if(livesImprovedPercentage<intLivesImprovedPercentageMin)intLivesImprovedPercentageMin=livesImprovedPercentage;
 					}
 				}
-				console.log('- intLivesImprovedTotal: '+intLivesImprovedTotal+' - intLivesImprovedPercentageMax: '+intLivesImprovedPercentageMax+' - intLivesImprovedPercentageMin: '+intLivesImprovedPercentageMin);
+				//console.log('- intLivesImprovedTotal: '+intLivesImprovedTotal+' - intLivesImprovedPercentageMax: '+intLivesImprovedPercentageMax+' - intLivesImprovedPercentageMin: '+intLivesImprovedPercentageMin);
 
 				//settings for the coloring
-				var minimumPercentage=10; //anything below this percentage will get the 'low' color
+				var minimumPercentage=1; //anything below this percentage will get the 'low' color
 				var factor=(intLivesImprovedPercentageMax-intLivesImprovedPercentageMin)/(100-minimumPercentage);
 
 				for ( var i = 0; i < arrRegions.length; i++) {
@@ -1080,7 +1080,7 @@ function updateWorldmap(regionIdToSelect){
 						}
 
 						if(percentageForColor>=100)percentageForColor=99;
-						console.log(regionId+' colorprc: '+percentageForColor);
+						//console.log(regionId+' colorprc: '+percentageForColor);
 						var colorToSet=getColorForPercentage(percentageForColor, colors[objPageVars.current_sector].low, colors[objPageVars.current_sector].middle, colors[objPageVars.current_sector].high);
 
 						if(regionData.l <= 100 && objPageVars.hideinactivecountries){
