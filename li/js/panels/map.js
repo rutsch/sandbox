@@ -473,14 +473,48 @@ var objMap = {
 
 				
 	},
+	//updates the fields in the ui with new data
 	setroundeddatainui: function(objData){
-		var objExtendedData=roundLivesImprovedDataObject(objData);
+		var self=this;
+		var objExtendedData=self.roundlivesimproveddataobject(objData);
 		//console.log(objExtendedData)
 
 		objRegionInfo.el.nrlivesimproved.innerHTML =objExtendedData.displayl;
 		objRegionInfo.el.labellivesimproved.innerHTML=objExtendedData.labell;
 		objRegionInfo.el.gdp.innerHTML='$'+objExtendedData.displayg+objExtendedData.labelg;
 		objRegionInfo.el.population.innerHTML=objExtendedData.displayp+objExtendedData.labelp;
+	},
+	//rounds the data befor sending it to the app
+	roundlivesimproveddataobject: function(objData){
+		if(objData.l>1000000){
+			objData.roundedl=Math.round(objData.l/1000000);
+		}else{
+			if(objData.l>100000){
+				objData.roundedl=Math.round((objData.l/1000000)*10)/10;
+			}else{
+				objData.roundedl=Math.round((objData.l/1000000)*100)/100;
+			}
+		}
+		objData.displayl=(objData.roundedl+'').replace(/\./,',');
+		objData.labell='million lives improved';
+
+		if(objData.g>1){
+			objData.roundedg=Math.round(objData.g/1);
+		}else{
+			objData.roundedg=Math.round((objData.g/1)*10)/10;
+		}
+		objData.displayg=(objData.roundedg+'').replace(/\./,',');
+		objData.labelg=' billion';	
+
+		if(objData.p>1000000){
+			objData.roundedp=Math.round(objData.p/1000000);
+		}else{
+			objData.roundedp=Math.round((objData.p/1000000)*10)/10;
+		}
+		objData.displayp=(objData.roundedp+'').replace(/\./,',');
+		objData.labelp=' million';	
+
+		return objData;
 	},
 	init: function(){
 		var self = this;

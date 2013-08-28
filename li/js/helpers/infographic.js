@@ -141,7 +141,7 @@ function animateArc(objArgs, intAnimationDurationInSeconds){
 		},
 		onComplete: function(){
 			//store the final arc in a global variable
-			objPageVars.infographicangle=objArgs.end;
+			//objPageVars.infographicangle=objArgs.end;
 			objArcProps.anglestored=objArgs.end;
 		}
 	});
