@@ -11,8 +11,7 @@ function initSimulator(objSimulatorData){
 
 	//store the current lives improved number
 	var strKey=objPageVars["current_mru"]+"_"+objPageVars["current_region"];
-	var intPopulation=objPageVars.worldmapdata[strKey].l*1000000;
-	objPageVars.livesimprovedcurrent=intPopulation;
+	objPageVars.livesimprovedcurrent=objPageVars.worldmapdata[strKey].l;
 
 	//set the values min/max for the slider labels
 	getEl('salesmin').innerHTML=objPageVars.simulatordata.scenario.salesmin;
@@ -134,7 +133,7 @@ function simulatorCalculateValue(intCurrentSalesPercentage, intCurrentGreenSales
 	var strKey=objPageVars["current_mru"]+"_"+objPageVars["current_region"];
 	var intPopulation=objPageVars.worldmapdata[strKey].p;
 
-	var intLivesImprovedSimulatedPercentage=Math.round((intLivesImprovedSimulated/(intPopulation*1000000))*100);
+	var intLivesImprovedSimulatedPercentage=Math.round((intLivesImprovedSimulated/(intPopulation))*100);
 
 	//console.log(intLivesImprovedSimulatedPercentage);
 	//console.log(intLivesImprovedSimulated);
