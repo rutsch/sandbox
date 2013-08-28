@@ -46,15 +46,40 @@ var objHeader = {
 		TweenLite.to(self.el.togglefavouritebutton, 0.3, {
 			display : 'block',
 			onComplete: function(){
-
+				if(objBookmarks.isfavourite()){
+					self.el.togglefavouritebutton.className=self.el.togglefavouritebutton.className +' selected';		
+				}else{
+					self.el.togglefavouritebutton.className=self.el.togglefavouritebutton.className.replace(' selected','');
+				}
 			}
 		});					
 	},
 	/*
 	 * Button clicks
 	 */
-	togglefavourite: function(){
+	togglefavourite: function(el){
 		var self = this;
+		//alert('adding item to favourites');
+		var key = 'fav_' +objOruFilter.state.selectedoru+'_'+objMruFilter.state.selectedmru+'_'+objMap.state.selectedregion;
+		
+		if(objBookmarks.isfavourite()){
+			objStore.removelocalstorageitem(key);
+			el.className=el.className.replace(' selected','');
+
+		}else{
+			var obj = {
+				oru: objOruFilter.state.selectedoru,
+				mru: objMruFilter.state.selectedmru,
+				region_id: objMap.state.selectedregion,
+				region_name: objMruFilter.getregionnamebyid(objMruFilter.state.selectedregion),
+				breadcrumb: objMruFilter.getmrufilterbreadcrumb()
+			}
+			objStore.setlocalstorageitem(key, JSON.stringify(obj));	
+			el.className=el.className +' selected';		
+		}
+
+		//alert('added item to favourites');
+		objBookmarks.renderfavouritepanel();
 		
 	},
 	btnbackclick: function(){

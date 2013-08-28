@@ -64,6 +64,10 @@ var objMruFilter = {
 		//if(name!='Philips')arrParents.push('Philips');
 		return(arrParents.reverse().join(' &bull; '));			
 	},
+	getregionnamebyid: function(id){
+		var self = this;
+		return iterate(self.json, 'guid', id).name;
+	},
 	/*
 	 * UI functions
 	 */

@@ -2,7 +2,8 @@ var objMap = {
 	state: {
 		visible: null,
 		currentmap: null,
-		lastsvgdata: null
+		lastsvgdata: null,
+		selectedregion: null
 	},
 	el: {
 		mapwrapper: null
@@ -339,7 +340,7 @@ var objMap = {
 	},
 	regionclick: function(idCountry){
 		var self = this;
-		self.currentregion = idCountry;
+		self.state.selectedregion = idCountry;
 		if(objBookmarks.isfavourite()){
 			getEl('toggle_favourite').className=getEl('toggle_favourite').className +' selected';
 		}else{

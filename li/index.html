@@ -14,7 +14,7 @@
 	<body>
 		<div id="app_panel" class="panel full">
 			<div id="title_bar">
-				<div id="btn_back" onclick="objRegionInfo.hide();objSliders.hide();"></div>
+				<div id="btn_back" onclick="objHeader.btnbackclick();"></div>
 				<div id="info">
 					<div class="info_wrapper">
 						<div id="region_name" onclick="location.reload();"></div>
@@ -23,7 +23,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="toggle_favourite" onclick="toggleFavourite(this);"></div>
+				<div id="toggle_favourite" onclick="objHeader.togglefavourite(this);"></div>
 			</div>
 			<div id="app_wrapper">
 				<div id="map">
