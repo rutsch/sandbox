@@ -32,6 +32,18 @@ var objFilter = {
 				self.state.visible = false;
 			}
 		});	
+		objHeader.btnbackclick();
+	},
+	blink: function(){
+		var self = this;
+		TweenLite.to(self.el.wrapper, 0.2, {
+			opacity : 0.5,
+			onComplete: function(){
+				TweenLite.to(self.el.wrapper, 0.2, {
+					opacity : 1
+				});	
+			}
+		});				
 	},
 	init: function(){
 		var self = this;

@@ -41,6 +41,7 @@ var objOruFilter = {
 		}		
 		el.className='selected';
 		self.state.selectedoru = strOru;
+		objFilter.blink();
 		objMap.updatemap();
 	},
 	init: function(cb){

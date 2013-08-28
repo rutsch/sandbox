@@ -61,7 +61,6 @@ var objMruFilter = {
 			arrParents.push(name);
 		}
 
-		//if(name!='Philips')arrParents.push('Philips');
 		return(arrParents.reverse().join(' &bull; '));			
 	},
 	getregionnamebyid: function(id){
@@ -110,7 +109,6 @@ var objMruFilter = {
 		if(e)e.stopPropagation();
 		
 		self.showlevel(strMru);
-		//objMap.updatemap();
 	},
 	showlevel: function(id){
 		var self = this;
@@ -151,6 +149,7 @@ var objMruFilter = {
 				height: 'auto'
 			});		
 		}
+		objFilter.blink();
 		objMap.updatemap();		
 	},
 	init: function(cb){
