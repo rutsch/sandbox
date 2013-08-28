@@ -1083,7 +1083,7 @@ function updateWorldmap(regionIdToSelect){
 						console.log(regionId+' colorprc: '+percentageForColor);
 						var colorToSet=getColorForPercentage(percentageForColor, colors[objPageVars.current_sector].low, colors[objPageVars.current_sector].middle, colors[objPageVars.current_sector].high);
 
-						if(regionData.l == 0 && objPageVars.hideinactivecountries){
+						if(regionData.l <= 100 && objPageVars.hideinactivecountries){
 							colorToSet = '#999';
 						}
 
