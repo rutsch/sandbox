@@ -367,4 +367,8 @@ function serverSideRequest(objArguments){
 	}
 	
 }
-
+function countryClicked(idCountry) {
+	if (idCountry !== "") {
+		objMap.regionclick(idCountry);
+	}
+}

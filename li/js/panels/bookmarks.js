@@ -6,6 +6,11 @@ var objBookmarks = {
 	el: {
 		wrapper: null
 	},
+	isfavourite: function(){
+		var key = 'fav_' +objOruFilter.selectedoru+'_'+objMruFilter.selectedmru+'_'+objMruFilter.selectedregion;
+		var fav = objStore.getlocalstorageitem(key);
+		return fav!=null;
+	},
 	show: function(){
 		var self = this;
 		objOverlay.show();

@@ -24,21 +24,37 @@ var objOruFilter = {
 	getdefaultoru: function(){
 		return objStore.getlocalstorageitem('last_oru') || objConfig.defaultoru;
 	},
+	getregionnamebyid: function(regionId){
+		var self = this;
+		return iterate(self.json, 'guid', regionId).name;
+	},		
 	/*
 	 * UI functions
 	 */
-	selectoru: function(strOru){
+	selectoru: function(el, strOru){
 		var self = this;
+		
+		//remove all selected classes
+		var arrAllLi = self.el.wrapper.getElementsByTagName('div');
+		for ( var a = 0; a < arrAllLi.length; a++) {
+			arrAllLi[a].className = '';
+		}		
+		el.className='selected';
 		self.state.selectedoru = strOru;
 		objMap.updatemap();
 	},
 	init: function(cb){
 		var self = this;
 		self.state.selectedoru = this.getdefaultoru();
+		self.el.wrapper = getEl('oru_filter_container');
 		self.getorujson(function(err, data){
-			self.json = data;
-			self.selectoru(self.state.selectedoru);			
-			cb();
+			if(err || data.error){
+				objLogin.show();
+			}else{			
+				self.json = data;
+				//self.selectoru(self.state.selectedoru);			
+				cb();
+			}
 		});		
 	}
 }

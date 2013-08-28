@@ -1,6 +1,11 @@
 var app = {
 	state: {
-
+		width: null,
+		height: null,
+		mobile: null
+	},
+	el: {
+		
 	},
 	btnfilterclick: function(el){
 		objFilter.show();
@@ -14,11 +19,40 @@ var app = {
 	btnlogoutclick: function(el){
 		objLogin.logout();
 	},
+	isMobile: {
+		any : function() {
+			return 'ontouchstart' in document.documentElement;
+		}
+	},
 	start: function(){
-		objMap.updatemap();		
+		//init elements with async because elements require external data
+		async.parallel({
+			initOru: function(cb){
+				objOruFilter.init(function(){
+					cb();
+				});
+			},
+			initMru: function(cb){
+				objMruFilter.init(function(){
+					cb();	
+				});
+			}				
+		},function(err, results){
+			if(err){
+				objLogin.show();	
+			}else{
+				objLogin.hide();
+				objMap.updatemap();				
+			}
+		});			
+				
 	},
 	init: function(){
 		var self = this;
+		self.state.width = document.body.clientWidth;
+		self.state.height = document.documentElement["clientHeight"];
+		self.state.mobile = self.isMobile.any();
+		
 		//init storage
 		objStore.init();
 		//init panels
@@ -33,30 +67,11 @@ var app = {
 		objFilter.init();
 		objBookmarks.init();
 		objExplain.init();
-		
-		//check logged in?
+
 		if(objLogin.loggedin()){
-			//when signed in
-			//init elements with async because elements require external data
-			async.parallel({
-				initOru: function(cb){
-					objOruFilter.init(function(){
-						cb();
-					});
-				},
-				initMru: function(cb){
-					objMruFilter.init(function(){
-						cb();
-					});
-				}				
-			},function(err, results){
-				objLogin.hide();
-				self.start();
-			});			
-		}else{
-			//show login panel
-			objLogin.show();
-		}	
+			self.start();
+		}
+
 	}
 }
 

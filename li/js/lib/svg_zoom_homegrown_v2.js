@@ -160,7 +160,7 @@ function setupHandlers(){
 		Hammer.gestures.Drag.defaults.correct_for_drag_min_distance=true;
 
 		//setup a hammer object for the svg worldmap
-		objPageVars.hammersvg = Hammer(objTouchVars.elsvg, {
+		app.el.hammersvg = Hammer(objTouchVars.elsvg, {
 			prevent_default: true,
 			no_mouseevents: true,
 			
@@ -208,7 +208,7 @@ function setupHandlersDesktop(){
 function setupHandlersMobile(){
 	//a few "cheap" tricks to work around the tap-issue (sometimes you need to tap twice to trigger the event...)
 
-	objPageVars.hammersvg.on("dragstart", function(ev) {
+	app.el.hammersvg.on("dragstart", function(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 		}
@@ -221,7 +221,7 @@ function setupHandlersMobile(){
 
 		handleClickTouchStart(ev);
 	});
-	objPageVars.hammersvg.on("drag", function(ev) {
+	app.el.hammersvg.on("drag", function(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 		}
@@ -261,7 +261,7 @@ function setupHandlersMobile(){
 	});
 	*/
 
-	objPageVars.hammersvg.on("touch", function(ev) {
+	app.el.hammersvg.on("touch", function(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 		}
@@ -274,7 +274,7 @@ function setupHandlersMobile(){
 	});
 
 
-	objPageVars.hammersvg.on("pinch", function(ev) {
+	app.el.hammersvg.on("pinch", function(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			if(window.console) { console.log(ev); }
 			console.log('pinch');
@@ -349,7 +349,7 @@ function setupHandlersMobile(){
 		}
 	});	
 	*/    
-	objPageVars.hammersvg.on("release", function(ev) {
+	app.el.hammersvg.on("release", function(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 			console.log('release');
