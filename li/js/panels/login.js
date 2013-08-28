@@ -139,6 +139,10 @@ var objLogin = {
 	},
 	show: function(){
 		var self = this;
+
+		//reset some variables
+		objSimulator.vars.simulatorsampling=true;
+
 		self.state.tweening = true;
 		TweenLite.to(self.el.wrapper, 0.3, {
 			width : '100%',
