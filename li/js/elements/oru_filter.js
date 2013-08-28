@@ -54,13 +54,9 @@ var objOruFilter = {
 		self.state.selectedoru = this.getdefaultoru();
 		self.el.wrapper = getEl('oru_filter_container');
 		self.getorujson(function(err, data){
-			if(err || data.error){
-				objLogin.show();
-			}else{			
-				self.json = data;
-				//self.selectoru(self.state.selectedoru);			
-				cb();
-			}
+			self.json = data;
+			//self.selectoru(self.state.selectedoru);			
+			cb();			
 		});		
 	}
 }
