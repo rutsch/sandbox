@@ -1039,13 +1039,15 @@ function updateWorldmap(regionIdToSelect){
 				var intLivesImprovedPercentageMax=0;
 				var intLivesImprovedPercentageMin=100;
 				for (var key in objPageVars.worldmapdata) {
-					intLivesImprovedTotal+=objPageVars.worldmapdata[key].l;
-					var livesImprovedPercentage=(objPageVars.worldmapdata[key].l*100/objPageVars.worldmapdata[key].p);
-					if(livesImprovedPercentage>intLivesImprovedPercentageMax)intLivesImprovedPercentageMax=livesImprovedPercentage;
-					if(livesImprovedPercentage<intLivesImprovedPercentageMin)intLivesImprovedPercentageMin=livesImprovedPercentage;
-
+					if(objPageVars.worldmapdata[key].l>=0){
+						intLivesImprovedTotal+=objPageVars.worldmapdata[key].l;
+						
+						var livesImprovedPercentage=(objPageVars.worldmapdata[key].l*100/objPageVars.worldmapdata[key].p);
+						if(livesImprovedPercentage>intLivesImprovedPercentageMax)intLivesImprovedPercentageMax=livesImprovedPercentage;
+						if(livesImprovedPercentage<intLivesImprovedPercentageMin)intLivesImprovedPercentageMin=livesImprovedPercentage;
+					}
 				}
-				//console.log('- intLivesImprovedTotal: '+intLivesImprovedTotal+' - intLivesImprovedPercentageMax: '+intLivesImprovedPercentageMax+' - intLivesImprovedPercentageMin: '+intLivesImprovedPercentageMin);
+				console.log('- intLivesImprovedTotal: '+intLivesImprovedTotal+' - intLivesImprovedPercentageMax: '+intLivesImprovedPercentageMax+' - intLivesImprovedPercentageMin: '+intLivesImprovedPercentageMin);
 
 				//settings for the coloring
 				var minimumPercentage=10; //anything below this percentage will get the 'low' color
@@ -1072,10 +1074,13 @@ function updateWorldmap(regionIdToSelect){
 						objPageVars.worldmapdata[key].color = colors[objPageVars.current_sector].middle;
 
 						//calculate the color to place on the map
-						
-						var percentageForColor=(percentageLI-intLivesImprovedPercentageMin)/factor+minimumPercentage;
-						//if(percentageForColor<10)percentageForColor=10;
-						//console.log(regionId+' colorprc: '+percentageForColor);
+						var percentageForColor=80;
+						if(intLivesImprovedPercentageMax>intLivesImprovedPercentageMin){
+							percentageForColor=(percentageLI-intLivesImprovedPercentageMin)/factor+minimumPercentage;
+						}
+
+						if(percentageForColor>=100)percentageForColor=99;
+						console.log(regionId+' colorprc: '+percentageForColor);
 						var colorToSet=getColorForPercentage(percentageForColor, colors[objPageVars.current_sector].low, colors[objPageVars.current_sector].middle, colors[objPageVars.current_sector].high);
 
 						if(regionData.l == 0 && objPageVars.hideinactivecountries){
