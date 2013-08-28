@@ -418,7 +418,9 @@ function regionClick(idCountry) {
 					//appPanels.map.style.display = 'none';
 					
 					//sets rounded data in the ui
+					//JT: begin edit
 					setRoundedDataInUi(regionData);
+					//JT: end edit
 
 
 					objPageElements.ellivesimprovedpercentage.textContent = regionData.percentageLI+'%';
