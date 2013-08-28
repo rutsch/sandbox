@@ -17,34 +17,35 @@ var objMap = {
 	},
 	getcolorforpercentage: function(pct, low_color, middle_color, high_color) {
 		var self = this;
-	    pct /= 100;
+		pct /= 100;
 
-	    var percentColors = [
-	            { pct: 0.01, color: rgbFromHex(low_color) },
-	            { pct: 0.5, color: rgbFromHex(middle_color) },
-	            { pct: 1.0, color: rgbFromHex(high_color) } 
-	        ];
+		var percentColors = [
+				{ pct: 0.01, color: rgbFromHex(low_color) },
+				{ pct: 0.5, color: rgbFromHex(middle_color) },
+				{ pct: 1.0, color: rgbFromHex(high_color) } 
+			];
 
-	    for (var i = 0; i < percentColors.length; i++) {
-	        if (pct <= percentColors[i].pct) {
-	            var lower = percentColors[i - 1] || { pct: 0.1, color: { r: 0x0, g: 0x00, b: 0 } };
-	            var upper = percentColors[i];
-	            var range = upper.pct - lower.pct;
-	            var rangePct = (pct - lower.pct) / range;
-	            var pctLower = 1 - rangePct;
-	            var pctUpper = rangePct;
-	            var color = {
-	                r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
-	                g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
-	                b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
-	            };
-	            return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
-	        }
-	    }
+		for (var i = 0; i < percentColors.length; i++) {
+			if (pct <= percentColors[i].pct) {
+				var lower = percentColors[i - 1] || { pct: 0.1, color: { r: 0x0, g: 0x00, b: 0 } };
+				var upper = percentColors[i];
+				var range = upper.pct - lower.pct;
+				var rangePct = (pct - lower.pct) / range;
+				var pctLower = 1 - rangePct;
+				var pctUpper = rangePct;
+				var color = {
+					r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+					g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+					b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+				};
+				return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+			}
+		}
 	},
 	/*
 	 * Data functions
 	 */
+	//loads the svg data for the map
 	loadmap: function(cb){
 		var self = this;
 		//update svg if needed
@@ -72,6 +73,8 @@ var objMap = {
 					break;
 			}	
 			self.state.mapname = strOru;
+
+			//set labels in the interface
 			getEl('region_name').innerHTML = strOru;	
 			getEl('filter_breadcrumb').innerHTML = objMruFilter.getmrufilterbreadcrumb();
 
@@ -85,9 +88,10 @@ var objMap = {
 			});		
 		}	
 		else{
-			cb();
+			cb(null);
 		}
 	},
+	//retrieves the lives improved data
 	getworldmapdata: function(cb){
 		var objData = {
 			fulldomain: location.protocol+"//"+location.hostname,
@@ -104,7 +108,6 @@ var objMap = {
 			if(data.error){
 				cb(data.error.message);
 			}else{
-				//JT: this seems to be a really nasty hack...
 				cb(null, data);
 			}
 
@@ -115,26 +118,61 @@ var objMap = {
 	 */
 	updatemap: function(regionIdToSelect){
 		var self = this;
+
+		//JT: ????
 		self.el.elsvgholder.style.visibility = 'hidden';
-		//load correct map
+		//load correct svg map
 		self.loadmap(function(data){
 			
-			if(data){
+			if(data != null){
 				// update svg html
 				self.el.elsvgholder.innerHTML='';
 				self.el.elsvgholder.innerHTML=data;
 			}
-			//get worldmap data
+			//get worldmap livesimproved data
 			self.getworldmapdata(function(err, data){
 				if(err){
 					
 				}else{
+
+
+					/*
+					1) store the data in this object as a property
+					*/
 					self.data = data.snapshotdata;
-					//set colors
+
+					/*
+					2) retrieve the elements from the svg that we need to color
+					*/
 					var elSvgWrapper=getEl('svgcontentwrapper');
-					var arrRegions = getFirstLevelChildElements(elSvgWrapper, 'path') ;// getEl('viewport').getElementsByTagName('g');
-					if(arrRegions.length == 0) arrRegions = getFirstLevelChildElements(elSvgWrapper, 'g');
-					/**/
+					var arrRegions = getFirstLevelChildElements(elSvgWrapper, 'path') ;
+					if(arrRegions.length == 0) arrRegions = getFirstLevelChildElements(elSvgWrapper, 'g')
+					//console.log(arrRegions);
+
+					/*
+					2) set the proper coloring
+					*/
+
+					//analyze the data we have received
+					var intLivesImprovedTotal=0;
+					var intLivesImprovedPercentageMax=0;
+					var intLivesImprovedPercentageMin=100;
+					for (var key in self.data) {
+						if(self.data[key].l>=0){
+							intLivesImprovedTotal+=self.data[key].l;
+							
+							var livesImprovedPercentage=(self.data[key].l*100/self.data[key].p);
+							if(livesImprovedPercentage>intLivesImprovedPercentageMax)intLivesImprovedPercentageMax=livesImprovedPercentage;
+							if(livesImprovedPercentage<intLivesImprovedPercentageMin)intLivesImprovedPercentageMin=livesImprovedPercentage;
+						}
+					}
+					console.log('- intLivesImprovedTotal: '+intLivesImprovedTotal+' - intLivesImprovedPercentageMax: '+intLivesImprovedPercentageMax+' - intLivesImprovedPercentageMin: '+intLivesImprovedPercentageMin);
+
+
+					//settings for the coloring
+					var minimumPercentage=1; //anything below this percentage will get the 'low' color
+					var factor=(intLivesImprovedPercentageMax-intLivesImprovedPercentageMin)/(100-minimumPercentage);
+
 					for ( var i = 0; i < arrRegions.length; i++) {
 						var region = arrRegions[i],
 							regionId = region.id == 'UK' ? 'GB' : region.id,
@@ -142,38 +180,52 @@ var objMap = {
 							//JT: need a test here to check if the key really exists
 							regionData = (self.data[key])?self.data[key]:false;
 
+						//console.log(key+' - '+regionData);
+						//debugger;
 						if (regionData) {
-
+							//calculate percentage lives improved and store that in the worldmapdata object
 							var percentageLI = (regionData.l * 100) / regionData.p || 0;
 							if(percentageLI> 99)percentageLI=100;
 							if(percentageLI< 1)percentageLI=0;
 							self.data[key].percentageLI = Math.round(percentageLI);
 							
-							//JT - add colors to the map
-
-							var color=self.getcolorforpercentage(percentageLI, objConfig.colors[objMruFilter.state.selectedsector].low, objConfig.colors[objMruFilter.state.selectedsector].middle, objConfig.colors[objMruFilter.state.selectedsector].high);
-							self.data[key].color = color;
-
-							if(regionData.l == 0 && objConfig.hideinactivecountries){
-								color = '#999';
-							}
+							//JT: start change
+							//add colors to the map
 							
-							region.style.fill=color;	
+							var color=objConfig.colors[objMruFilter.state.selectedsector].middle;
+							self.data[key].color = objConfig.colors[objMruFilter.state.selectedsector].middle;
+
+							//calculate the color to place on the map
+							var percentageForColor=80;
+							if(intLivesImprovedPercentageMax>intLivesImprovedPercentageMin){
+								percentageForColor=(percentageLI-intLivesImprovedPercentageMin)/factor+minimumPercentage;
+							}
+
+							if(percentageForColor>=100)percentageForColor=99;
+							//console.log(regionId+' colorprc: '+percentageForColor);
+							var colorToSet=self.getcolorforpercentage(percentageForColor, objConfig.colors[objMruFilter.state.selectedsector].low, objConfig.colors[objMruFilter.state.selectedsector].middle, objConfig.colors[objMruFilter.state.selectedsector].high);
+							
+							//JT: shouldn't objConfig.hideinactivecountries be part of the MruFilter object??
+							if(regionData.l <= 100 && objConfig.hideinactivecountries){
+								colorToSet = '#999';
+							}
+
+							region.style.fill=colorToSet;	
 							
 							var paths=region.getElementsByTagName('*');
 							for ( var ii = 0; ii < paths.length; ii++) {
 								var path = paths[ii];
 								if(path.nodeName == 'path' || path.nodeName == 'polygon' || path.nodeName == 'rect' || path.nodeName == 'g'){
-									paths[ii].style.fill=color;	
+									paths[ii].style.fill=colorToSet;	
 									//paths[ii].style.opacity=1;
 								}
-							}								
+							}
+							//JT: end change							
 						} else {
 							region.style.fill = '#999';
 						}							
 					}
-
-					
+				
 					/*
 					3) perform post processing (set events and center map)
 					*/
@@ -390,10 +442,13 @@ var objMap = {
 				//	onComplete: function(){
 						//debugger;
 						//appPanels.map.style.display = 'none';
-						objRegionInfo.el.nrlivesimproved.innerHTML =regionData.l;
-						objRegionInfo.el.gdp.innerHTML = regionData.g+' billion';
-						objRegionInfo.el.population.innerHTML = regionData.p+ ' million';
+						
+						//set the rounded values in the ui
+						self.setroundeddatainui(regionData);
+
+						//set the percentage in the infographic
 						objRegionInfo.el.percentagelivesimproved.textContent = regionData.percentageLI+'%';
+
 						objHeader.setregionname(objOruFilter.getregionnamebyid((idCountry.length < 4 ? idCountry : idCountry.toLowerCase())));
 						objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
 
@@ -417,6 +472,15 @@ var objMap = {
 		});
 
 				
+	},
+	setroundeddatainui: function(objData){
+		var objExtendedData=roundLivesImprovedDataObject(objData);
+		//console.log(objExtendedData)
+
+		objRegionInfo.el.nrlivesimproved.innerHTML =objExtendedData.displayl;
+		objRegionInfo.el.labellivesimproved.innerHTML=objExtendedData.labell;
+		objRegionInfo.el.gdp.innerHTML='$'+objExtendedData.displayg+objExtendedData.labelg;
+		objRegionInfo.el.population.innerHTML=objExtendedData.displayp+objExtendedData.labelp;
 	},
 	init: function(){
 		var self = this;

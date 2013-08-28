@@ -6,6 +6,7 @@ var objRegionInfo = {
 	el: {
 		wrapper: null,
 		nrlivesimproved: null,
+		labellivesimproved: null,
 		percentagelivesimproved: null,
 		population: null, 
 		gdp: null
@@ -43,6 +44,7 @@ var objRegionInfo = {
 		
 		self.el.wrapper = getEl('region_info');
 		self.el.nrlivesimproved = getEl('nr_lives_improved');
+		self.el.labellivesimproved=getEl('nr_lives_improved_label');
 		self.el.percentagelivesimproved = getEl('lives_improved_percentage');
 		self.el.population = getEl('nr_population');
 		self.el.gdp = getEl('nr_gdp');
