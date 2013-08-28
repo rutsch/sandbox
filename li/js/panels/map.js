@@ -166,7 +166,7 @@ var objMap = {
 							if(livesImprovedPercentage<intLivesImprovedPercentageMin)intLivesImprovedPercentageMin=livesImprovedPercentage;
 						}
 					}
-					console.log('- intLivesImprovedTotal: '+intLivesImprovedTotal+' - intLivesImprovedPercentageMax: '+intLivesImprovedPercentageMax+' - intLivesImprovedPercentageMin: '+intLivesImprovedPercentageMin);
+					//console.log('- intLivesImprovedTotal: '+intLivesImprovedTotal+' - intLivesImprovedPercentageMax: '+intLivesImprovedPercentageMax+' - intLivesImprovedPercentageMin: '+intLivesImprovedPercentageMin);
 
 
 					//settings for the coloring
@@ -189,9 +189,8 @@ var objMap = {
 							if(percentageLI< 1)percentageLI=0;
 							self.data[key].percentageLI = Math.round(percentageLI);
 							
-							//JT: start change
+
 							//add colors to the map
-							
 							var color=objConfig.colors[objMruFilter.state.selectedsector].middle;
 							self.data[key].color = objConfig.colors[objMruFilter.state.selectedsector].middle;
 
@@ -393,6 +392,10 @@ var objMap = {
 	regionclick: function(idCountry){
 		var self = this;
 		self.state.selectedregion = idCountry;
+		//JT: unsure, but I feel that this is a property that we should store in the oru filter object
+		objOruFilter.state.selectedoruguid=idCountry; 
+
+
 		if(objBookmarks.isfavourite()){
 			getEl('toggle_favourite').className=getEl('toggle_favourite').className +' selected';
 		}else{
@@ -405,25 +408,11 @@ var objMap = {
 			//objPageElements.elslidergreensales.parentNode.style.display = 'block';
 		}
 
-		//start Ajax Call to get simulation data
-		var objData = {
-			fulldomain: location.protocol+"//"+location.hostname,
-			method: 'getlivesimprovedcachedata',
-			type: 'json',
-			oru: objOruFilter.state.selectedoru,
-			mru: objMruFilter.state.selectedmru,
-			snapshotid: 1,
-			token: objLogin.token
-		}
-		
+
 		//initiates the simulator
-		psv('GET', objConfig.urls.simulationdataurl, objData, function(response){
-			if(response.error) {
-				objError.show(response.error.message, true);
-			}else{
-				initSimulator(response);
-			}
-		});
+		objSliders.start();
+
+
 		
 		document.getElementsByTagName("body")[0].className = objMruFilter.state.selectedsector;
 		//var color=colors[objPageVars.current_sector].middle;

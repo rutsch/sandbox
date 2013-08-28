@@ -1,7 +1,8 @@
 var objOruFilter = {
 	json: null,
 	state: {
-		selectedoru: null
+		selectedoru: null,
+		selectedoruguid: null
 	},
 	el:{
 		mrufilter: null

@@ -29,6 +29,7 @@ var objLogin = {
 		});
 		objError.show(msg, true);		
 	},
+	//JT: this check is not valid anymore - all ajax utilities now return a message when authentication is required
 	loggedin: function(){
 		var self = this;
 		self.token  = objStore.getlocalstorageitem('token');
@@ -147,6 +148,11 @@ var objLogin = {
 				self.state.visible = true;
 			}
 		});		
+	},
+	//JT: this needs to be extended so that basically the app is resetted to it's original state
+	logout: function(){
+		var self = this;
+		objLogin.show();
 	},
 	changeauthenticatebutton: function(){
 		var self = this;
