@@ -70,6 +70,7 @@ var objMap = {
 				default:
 					break;
 			}	
+			self.state.mapname = strOru;
 			getEl('region_name').innerHTML = strOru;	
 			getEl('filter_breadcrumb').innerHTML = objMruFilter.getmrufilterbreadcrumb();
 
@@ -392,15 +393,17 @@ var objMap = {
 						objRegionInfo.el.gdp.innerHTML = regionData.g+' billion';
 						objRegionInfo.el.population.innerHTML = regionData.p+ ' million';
 						objRegionInfo.el.percentagelivesimproved.textContent = regionData.percentageLI+'%';
-						getEl('region_name').innerHTML = objOruFilter.getregionnamebyid((idCountry.length < 4 ? idCountry : idCountry.toLowerCase()));
-						getEl('filter_breadcrumb').innerHTML = objMruFilter.getmrufilterbreadcrumb();
+						objHeader.setregionname(objOruFilter.getregionnamebyid((idCountry.length < 4 ? idCountry : idCountry.toLowerCase())));
+						objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
 
-						if(getEl('btn_back').className.indexOf('hide')> -1){
-							toggleClass(getEl('btn_back'), 'hide');
-							toggleClass(getEl('toggle_favourite'), 'hide');
-						}
+						//if(getEl('btn_back').className.indexOf('hide')> -1){
+						//	toggleClass(getEl('btn_back'), 'hide');
+						//	toggleClass(getEl('toggle_favourite'), 'hide');
+						//}
 						objRegionInfo.show();
 						objSliders.show();
+						objHeader.showbackbutton();
+						objHeader.showfavouritebutton();
 						TweenLite.to(elRegion, 0.5, {
 							opacity: 1
 						});

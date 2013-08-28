@@ -11,6 +11,12 @@ var objBookmarks = {
 		var fav = objStore.getlocalstorageitem(key);
 		return fav!=null;
 	},
+	addbookmark: function(){
+		
+	},
+	removebookmark: function(){
+		
+	},
 	show: function(){
 		var self = this;
 		objOverlay.show();

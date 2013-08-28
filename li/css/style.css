@@ -122,6 +122,7 @@ body{
 	left: 0px;
 	background:url('../img/back_btn.png') no-repeat 20px 12px;
 	background-size: auto 55%;
+	display: none;
 }
 
 .hide{
@@ -135,6 +136,7 @@ body{
 	right: 0px;	
 	background:url('../img/topfavorite.svg') no-repeat 5px 15px;	
 	background-size: auto 45%;
+	display: none;
 }
 #toggle_favourite.selected{
 	background-image:url('../img/favorite.svg');	
