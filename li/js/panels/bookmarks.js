@@ -62,12 +62,20 @@ var objBookmarks = {
 			
 			liItem.innerHTML = '<div class="bookmark_color" style="background:'+objConfig.colors[sector].middle+'"></div><h2>'+obj.region_name+'</h2><span class="bookmark_sub">'+obj.breadcrumb+'</span><div class="remove_bookmark" onclick="objBookmarks.removefavourite(event, this);return false;"></div>';
 			liItem.onclick = function(){
-				openFavourite(this.getAttribute('data-oru'), this.getAttribute('data-mru'), this.getAttribute('data-region'), this.getAttribute('data-sector'));
+				self.openfavourite(this.getAttribute('data-oru'), this.getAttribute('data-mru'), this.getAttribute('data-region'), this.getAttribute('data-sector'));
 			}
 			ul.appendChild(liItem);
 		}
 		self.el.list.innerHTML = '';
 		self.el.list.appendChild(ul);		
+	},
+	openfavourite: function(oru, mru, region, sector){
+		var self = this;
+		objOruFilter.state.selectedoru = oru;
+		objMruFilter.state.selectedmru = mru;
+		objMruFilter.state.selectedsector = sector;
+		objMap.updatemap(region);
+		self.hide();
 	},
 	show: function(){
 		var self = this;

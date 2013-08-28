@@ -229,7 +229,7 @@ var objMap = {
 
 					//hideLoadingPanel();	
 					if(regionIdToSelect){
-						regionClick(regionIdToSelect);
+						self.regionclick(regionIdToSelect);
 					}
 					//post processing
 					self.el.elsvgholder.style.visibility = 'visible';
