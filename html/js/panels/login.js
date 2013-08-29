@@ -246,5 +246,7 @@ var objLogin = {
 		self.el.tbxusername = getEl('username');
 		self.el.tbxpassword = getEl('password');
 		self.el.submit = getEl('btn_submit');
+		
+		self.el.tbxusername.value = objStore.getlocalstorageitem('username');
 	}
 }
