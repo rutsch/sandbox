@@ -445,8 +445,9 @@ var objMap = {
 						//	toggleClass(getEl('btn_back'), 'hide');
 						//	toggleClass(getEl('toggle_favourite'), 'hide');
 						//}
-						objRegionInfo.show();
 						objSliders.show();
+						objRegionInfo.show();
+						
 						objHeader.showbackbutton();
 						objHeader.showfavouritebutton();
 						TweenLite.to(elRegion, 0.5, {

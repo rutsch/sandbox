@@ -164,24 +164,21 @@ body{
 	font-size: 22px;
 	height: 22px;
 	font-family: gill;
+	padding-top: 5px;
 }
 #filter_breadcrumb_wrapper{
 	display: block;
 	width: 100%;
-	position: absolute;
-	top: 25px;
-	padding: 2px 0px;
+	padding: 5px 0px;
 	color: #fff;
-	height: 24px;
 	font-size: 12px;
-	line-height: 12px;
+	overflow: hidden;
+	text-align: center;
 }
 #filter_breadcrumb{
-	height: auto;
-	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
+	height: 15px;
+	width: auto;
+	
 }
 #menu_bar{
 	position: absolute;
@@ -806,7 +803,7 @@ div#explain_panel div.faq_wrapper div.faq_content{
 	-webkit-transition: max-height 0.5s;	
 }
 div#explain_panel div.faq_wrapper div.faq_content.selected{
-	max-height: 2000px;
+	max-height: 600px;
 }
 div#explain_panel div.faq_wrapper div.faq_content p{
 	margin-top: 3px;

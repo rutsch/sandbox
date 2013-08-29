@@ -100,7 +100,7 @@ var objSliders = {
 				self.el.errorwrapper.innerHTML="<div class='simulator_data_error'>"+response.error.message+"</div>";
 
 				//show the interface
-				self.show();	
+				//self.show();	
 							
 				//objError.show(response.error.message, true);
 			}else{
@@ -111,7 +111,7 @@ var objSliders = {
 				self.el.errorwrapper.style.display='none';
 
 				//show the interface
-				self.show();
+				//self.show();
 
 				//initiate the base logic and start sampling the slider positions
 				self.setupsimulator();

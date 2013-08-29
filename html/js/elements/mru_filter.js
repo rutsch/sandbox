@@ -60,8 +60,16 @@ var objMruFilter = {
 			name = 'Philips';
 			arrParents.push(name);
 		}
-
-		return(arrParents.reverse().join(' &bull; '));			
+		
+		if(arrParents.length > 2){
+			arrParents = arrParents.reverse();
+			var el1 = arrParents[0],
+				el2 = arrParents[arrParents.length -1];
+			return el1 + ' ... ' + el2;
+		}else{
+			return(arrParents.reverse().join(' &bull; '));	
+		}
+					
 	},
 	getregionnamebyid: function(id){
 		var self = this;
