@@ -3,7 +3,9 @@ var objHeader = {
 		backbutton: null,
 		togglefavouritebutton: null,
 		regionname: null,
-		breadcrumb: null
+		breadcrumb: null,
+		breadcrumbmarquee: null,
+		regionnamemarquee: null
 	},
 	state: {
 		showbackbutton: false,
@@ -87,6 +89,8 @@ var objHeader = {
 		self.hidebackbutton();
 		self.hidefavouritebutton();
 		objHeader.setregionname(objMap.state.mapname);
+		objMap.el.elsvgholder.style.opacity = 1;
+		objMap.el.elsvgholder.style.display = 'block';
 		objRegionInfo.hide();
 		objSliders.hide();
 	},
@@ -98,7 +102,21 @@ var objHeader = {
 		TweenLite.to(self.el.regionname, 0.3, {
 			opacity : 0,
 			onComplete: function(){
+				
+				if(self.el.regionnamemarquee){
+					self.el.regionnamemarquee.el.innerHTML = '';
+					self.el.breadcrumb.scrollWidth = 0;
+				}
+				self.el.regionname = getEl('region_name');
 				self.el.regionname.innerHTML = name;
+				//debugger;
+				if(self.el.regionname.scrollWidth > self.el.regionname.clientWidth){
+					self.el.regionnamemarquee = new Marquee({el:self.el.regionname, mouseStops: false}).init();
+				}else{
+					if(self.el.regionnamemarquee){
+						self.el.regionnamemarquee.stop();
+					}
+				}				
 				TweenLite.to(self.el.regionname, 0.3, {
 					opacity : 1
 				});	
@@ -110,7 +128,22 @@ var objHeader = {
 		TweenLite.to(self.el.breadcrumb, 0.3, {
 			opacity : 0,
 			onComplete: function(){
+				if(self.el.breadcrumbmarquee){
+					debugger;
+					self.el.breadcrumbmarquee.el.innerHTML = '';
+					self.el.breadcrumb.scrollWidth = 0;
+				}
+				self.el.breadcrumb = getEl('filter_breadcrumb');
 				self.el.breadcrumb.innerHTML = value;
+				//debugger;
+				if(self.el.breadcrumb.scrollWidth > self.el.breadcrumb.clientWidth){
+					self.el.breadcrumbmarquee = new Marquee({el:self.el.breadcrumb, mouseStops: false}).init();
+				}else{
+					if(self.el.breadcrumbmarquee){
+						self.el.breadcrumbmarquee.stop();
+					}
+					debugger;
+				}
 				TweenLite.to(self.el.breadcrumb, 0.3, {
 					opacity : 1
 				});	

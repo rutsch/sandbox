@@ -27,7 +27,7 @@ var objOruFilter = {
 	},
 	getregionnamebyid: function(regionId){
 		var self = this;
-		//debugger;
+
 		//console.log(regionId);
 		//console.trace();
 		//console.log(iterate(self.json, 'guid', regionId))
@@ -59,6 +59,7 @@ var objOruFilter = {
 		}		
 		el.className='selected';
 		self.state.selectedoru = strOru;
+		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
 		objFilter.blink();
 		objMap.updatemap();
 	},
