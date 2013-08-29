@@ -98,6 +98,35 @@ var objLogin = {
 			self.findlatestsnapshotid(response);
 		});	
 	},
+	checksnapshotconfigforupdates: function(response){
+		//check if there are updates in the snapshotconfig
+		var storedConfig = objStore.getlocalstorageitem('snapshotconfig');
+		var newConfig = response.snapshotconfig;
+		if(storedConfig){
+			storedConfig = JSON.parse(storedConfig).snapshotconfig;
+			//loop through snapshots in newConfig
+			for ( var i = 0; i < newConfig.length; i++) {
+				//debugger;
+				var found = false;
+				for ( var ii = 0; ii < storedConfig.length; ii++) {
+					if(newConfig[i].snapshotid == storedConfig[ii].snapshotid){
+						found = true;
+						if(newConfig[i].lastmodified != storedConfig[ii].lastmodified){
+							//data updated
+							alert('There is updated data for "'+newConfig[i].name+'".');
+							break;
+						}	
+					}
+				}
+				if(!found){
+					// new dataset added
+					alert('A new data set "'+newConfig[i].name+'" has been added.');
+				}
+			}
+
+		}						
+		objStore.setlocalstorageitem('snapshotconfig', JSON.stringify(response));
+	},
 	/*
 	 * Authentication functions
 	 */
@@ -126,7 +155,9 @@ var objLogin = {
 
 						//finds the latest snapshot id and stores it in objConfig
 						self.findlatestsnapshotid(response);
-
+						//checks if there are updates in the snapshot config and display's a message
+						self.checksnapshotconfigforupdates(response);
+						
 						if(response.error) {
 							self.handleloginerror(response.error.message);
 						}else{	
@@ -213,7 +244,7 @@ var objLogin = {
 	//JT: this needs to be extended so that basically the app is resetted to it's original state
 	logout: function(){
 		var self = this;
-		
+		objStore.removelocalstorageitem('token');
 		objLogin.show();
 	},
 	changeauthenticatebutton: function(){
