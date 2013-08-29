@@ -8,7 +8,6 @@
 	font-family: gill;
 	src: url('../fonts/gsa_wg_l-webfont.woff')
 }
-family:'GillSansAltOneWGLLightRegular';src:url('/fonts/gsa_wg_l-webfont.eot');src:url('/fonts/gsa_wg_l-webfont.eot?#iefix') format('embedded-opentype'),url('/fonts/gsa_wg_l-webfont.woff') format('woff'),url('/fonts/gsa_wg_l-webfont.ttf') format('truetype'),url('/fonts/gsa_wg_l-webfont.svg#GillSansAltOneWGLLightRegular') format('svg');font-weight:normal;font-style:normal}@font-face{font-family:'GillSansAltOneWGLRegular';src:url('/fonts/gsa_wg-webfont.eot');src:url('/fonts/gsa_wg-webfont.eot?#iefix') format('embedded-opentype'),url('/fonts/gsa_wg-webfont.woff') format('woff'),url('/fonts/gsa_wg-webfont.ttf') format('truetype'),url('/fonts/gsa_wg-webfont.svg#GillSansAltOneWGLLightRegular') format('svg');font-weight:normal;font-style:normal}
 *{
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);	
 }
@@ -104,22 +103,22 @@ body{
 	color: #fff;
 }
 .panel_header h2{
-	padding-left: 30px;
+	padding-left: 15px;
 }
 .panel_header .btn{
 	border: none;
 }
 #filter_panel .panel_header{
 	background: #272c2d url('../img/filter.svg') no-repeat 5px 6px;	
-	background-size: auto 70%!important;
+	background-size: auto 45%!important;
 }
 #explain_panel .panel_header{
 	background: #272c2d url('../img/faq.svg') no-repeat 5px 6px;	
-	background-size: auto 70%!important;
+	background-size: auto 45%!important;
 }
 #bookmarks_panel .panel_header{
 	background: #272c2d url('../img/favorite.svg') no-repeat 5px 6px;	
-	background-size: auto 70%!important;	
+	background-size: auto 45%!important;	
 }
 .modal_content{
 	position: absolute;
@@ -177,27 +176,35 @@ body{
 	display: block;
   	vertical-align: middle;
 	margin: auto 0px;
+	overflow: hidden;
 }
 #region_name{
 	color: #fff;
 	font-size: 22px;
-	height: 22px;
 	font-family: gill;
-	padding-top: 5px;
+	padding-top: 4px;
+	white-space: nowrap;
+}
+#region_name div{
+	padding-right: 40px;
 }
 #filter_breadcrumb_wrapper{
 	display: block;
 	width: 100%;
-	padding: 5px 0px;
 	color: #fff;
 	font-size: 12px;
 	overflow: hidden;
 	text-align: center;
+
 }
 #filter_breadcrumb{
 	height: 15px;
 	width: auto;
-	
+	opacity: 1!important;
+	white-space: nowrap;
+}
+#filter_breadcrumb span{
+	padding-right: 40px;
 }
 #menu_bar{
 	position: absolute;
@@ -250,7 +257,7 @@ body{
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	right: 0px;
+	right: 0px;http://95.97.163.236/sandbox/html/index.html
 	bottom: 0px;
 	background-size: auto 100%;
 	background-position: fixed;
@@ -418,7 +425,6 @@ span{
 
 #lives_improved_percentage{
 	font-size: 4em;
-	font-weight: bold;
 	fill: #fff;
 }
 #lives_improved_percentage_sub{
@@ -836,7 +842,8 @@ div#explain_panel div.faq_wrapper div.faq_content p{
  g#svgcontentwrapper{
 	-webkit-transform: translateZ(0);
 }
-
+marquee{
+}
 
 
 /* Smartphones (portrait and landscape) ----------- */

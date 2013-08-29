@@ -4,7 +4,8 @@ var objFilter = {
 		tweening: null
 	},
 	el: {
-		wrapper: null
+		wrapper: null,
+		filtercontent: null
 	},
 	show: function(){
 		var self = this;
@@ -36,10 +37,10 @@ var objFilter = {
 	},
 	blink: function(){
 		var self = this;
-		TweenLite.to(self.el.wrapper, 0.4, {
+		TweenLite.to(self.el.filtercontent, 0.4, {
 			opacity : 0.5,
 			onComplete: function(){
-				TweenLite.to(self.el.wrapper, 0.2, {
+				TweenLite.to(self.el.filtercontent, 0.2, {
 					opacity : 1
 				});	
 			}
@@ -51,5 +52,6 @@ var objFilter = {
 		self.state.tweening = false;
 		
 		self.el.wrapper = getEl('filter_panel');
+		self.el.filtercontent = Sizzle('#filter_panel div.modal_content')[0];
 	}
 }

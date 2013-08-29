@@ -61,14 +61,14 @@ var objMruFilter = {
 			arrParents.push(name);
 		}
 		
-		if(arrParents.length > 2){
-			arrParents = arrParents.reverse();
-			var el1 = arrParents[0],
-				el2 = arrParents[arrParents.length -1];
-			return el1 + ' ... ' + el2;
-		}else{
+		//if(arrParents.length > 2){
+		//	arrParents = arrParents.reverse();
+		//	var el1 = arrParents[0],
+		//		el2 = arrParents[arrParents.length -1];
+		//	return el1 + ' ... ' + el2;
+		//}else{
 			return(arrParents.reverse().join(' &bull; '));	
-		}
+		//}
 					
 	},
 	/*
@@ -153,6 +153,7 @@ var objMruFilter = {
 				height: 'auto'
 			});		
 		}
+		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
 		objFilter.blink();
 		objMap.updatemap();		
 	},

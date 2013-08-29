@@ -75,8 +75,8 @@ var objMap = {
 			self.state.mapname = strOru;
 
 			//set labels in the interface
-			getEl('region_name').innerHTML = strOru;	
-			getEl('filter_breadcrumb').innerHTML = objMruFilter.getmrufilterbreadcrumb();
+			objHeader.setregionname(strOru);	
+			objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
 
 			serverSideRequest({
 				url: self.maps[strOru.toLowerCase()].url, 
@@ -421,11 +421,11 @@ var objMap = {
 		TweenLite.to(elRegion, 0.5, {
 			opacity: 0.7, 
 			onComplete: function(){
-				//TweenLite.to(appPanels.map, 0.2, {
-				//	opacity: 0, 
-				//	onComplete: function(){
+				TweenLite.to(self.el.elsvgholder, 0.2, {
+					opacity: 0, 
+					onComplete: function(){
 						//debugger;
-						//appPanels.map.style.display = 'none';
+						self.el.elsvgholder.style.display = 'none';
 						
 						//set the rounded values in the ui
 						self.setroundeddatainui(regionData);
@@ -435,7 +435,7 @@ var objMap = {
 
 						objHeader.setregionname(objOruFilter.getregionnamebyid((idCountry.length < 4 ? idCountry : idCountry.toLowerCase())));
 						objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
-
+						
 						//if(getEl('btn_back').className.indexOf('hide')> -1){
 						//	toggleClass(getEl('btn_back'), 'hide');
 						//	toggleClass(getEl('toggle_favourite'), 'hide');
@@ -451,8 +451,8 @@ var objMap = {
 								animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);	
 							}
 						});
-				//	}
-				//});			
+					}
+				});			
 			}
 		});
 
