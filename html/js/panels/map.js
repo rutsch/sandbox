@@ -421,42 +421,58 @@ var objMap = {
 		TweenLite.to(elRegion, 0.5, {
 			opacity: 0.7, 
 			onComplete: function(){
-				TweenLite.to(self.el.elsvgholder, 0.2, {
-					opacity: 0, 
-					onComplete: function(){
-						//debugger;
-						self.el.elsvgholder.style.display = 'none';
-						
-						//set the rounded values in the ui
-						self.setroundeddatainui(regionData);
+				//alert('in')
+				//debugger;
 
-						//set the percentage in the infographic
-						objRegionInfo.el.percentagelivesimproved.textContent = regionData.percentageLI+'%';
+				//JT: I introduced a very crappy way to check for a tablet - can this be improved and become app.state.tablet ?
+				if(app.state.width>1000 || app.state.height>1000){
+					self.updateui(regionData, idCountry, elRegion);
+				}else{
+					TweenLite.to(self.el.elsvgholder, 0.2, {
+						opacity: 0, 
+						onComplete: function(){
+							self.updateui(regionData, idCountry, elRegion);
+						}
+					});		
+				}
 
-						objHeader.setregionname(objOruFilter.getregionnamebyid((idCountry.length < 4 ? idCountry : idCountry.toLowerCase())));
-						objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
-						
-						//if(getEl('btn_back').className.indexOf('hide')> -1){
-						//	toggleClass(getEl('btn_back'), 'hide');
-						//	toggleClass(getEl('toggle_favourite'), 'hide');
-						//}
-						objSliders.show();
-						objRegionInfo.show();
-						
-						objHeader.showbackbutton();
-						objHeader.showfavouritebutton();
-						TweenLite.to(elRegion, 0.5, {
-							opacity: 1,
-							onComplete: function(){
-								animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);	
-							}
-						});
-					}
-				});			
+		
 			}
 		});
 
 				
+	},
+	updateui: function(regionData, idCountry, elRegion){
+		var self=this;
+
+		//debugger;
+		//if(app.state.width<1000 || app.state.height<1000)self.el.elsvgholder.style.display = 'none';
+		
+		//set the rounded values in the ui
+		self.setroundeddatainui(regionData);
+
+		//set the percentage in the infographic
+		objRegionInfo.el.percentagelivesimproved.textContent = regionData.percentageLI+'%';
+
+		objHeader.setregionname(objOruFilter.getregionnamebyid((idCountry.length < 4 ? idCountry : idCountry.toLowerCase())));
+		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
+		
+		//if(getEl('btn_back').className.indexOf('hide')> -1){
+		//	toggleClass(getEl('btn_back'), 'hide');
+		//	toggleClass(getEl('toggle_favourite'), 'hide');
+		//}
+		objSliders.show();
+		objRegionInfo.show();
+		
+		objHeader.showbackbutton();
+		objHeader.showfavouritebutton();
+		TweenLite.to(elRegion, 0.5, {
+			opacity: 1,
+			onComplete: function(){
+				animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);	
+			}
+		});		
+
 	},
 	//updates the fields in the ui with new data
 	setroundeddatainui: function(objData){
