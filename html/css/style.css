@@ -8,7 +8,7 @@
 	font-family: gill;
 	src: url('../fonts/gsa_wg_l-webfont.woff')
 }
-family:'GillSansAltOneWGLLightRegular';src:url('/fonts/gsa_wg_l-webfont.eot');src:url('/fonts/gsa_wg_l-webfont.eot?#iefix') format('embedded-opentype'),url('/fonts/gsa_wg_l-webfont.woff') format('woff'),url('/fonts/gsa_wg_l-webfont.ttf') format('truetype'),url('/fonts/gsa_wg_l-webfont.svg#GillSansAltOneWGLLightRegular') format('svg');font-weight:normal;font-style:normal}@font-face{font-family:'GillSansAltOneWGLRegular';src:url('/fonts/gsa_wg-webfont.eot');src:url('/fonts/gsa_wg-webfont.eot?#iefix') format('embedded-opentype'),url('/fonts/gsa_wg-webfont.woff') format('woff'),url('/fonts/gsa_wg-webfont.ttf') format('truetype'),url('/fonts/gsa_wg-webfont.svg#GillSansAltOneWGLLightRegular') format('svg');font-weight:normal;font-style:normal}
+
 *{
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);	
 }
@@ -276,6 +276,7 @@ body{
 	height: 100%;
 }
 
+
 path#arc_path, circle#background, path#arc_path_left{
 	fill: none;
 	stroke-width: 20;       	
@@ -417,8 +418,8 @@ span{
 }
 
 #lives_improved_percentage{
+	font-family: gill;
 	font-size: 4em;
-	font-weight: bold;
 	fill: #fff;
 }
 #lives_improved_percentage_sub{
