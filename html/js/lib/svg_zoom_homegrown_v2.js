@@ -369,7 +369,7 @@ function getEventPoint(evt) {
 	//console.log(evt);
 	if(objZoomPanSettings.mobile){
 		p.x = evt.gesture.center.pageX-objTouchVars.svgx;
-		if(app.state.ios){
+		if(app.state.ios && !app.state.ipad){
 			p.x = p.x-app.state.width/2;
 		}
 		p.y = evt.gesture.center.pageY-objTouchVars.svgy;
