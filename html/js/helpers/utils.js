@@ -191,9 +191,14 @@ function generateUniqueId(){
 	t=t+"x"+intSec+"x"+t2;
 	return t;
 }
-var matchFound= false,
-returnObj;
+var matchFound= false, returnObj={};
 function iterate(obj, type, value) {
+	//console.log('---------');
+	//console.log(obj);
+	//console.log(type);
+	//console.log(value);
+	//console.log('--------')
+	//var returnObj=null;
 	for (var property in obj) {
 	    
 	    if (obj.hasOwnProperty(property)) {
@@ -231,7 +236,22 @@ function psv(type, url, objParams, cb) {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			//alert(xmlhttp.responseText);
 			//JT: no check is done here if the JSON that was parsed was valid...
-			cb(JSON.parse(xmlhttp.responseText));
+
+			var objResponse=JSON.parse(xmlhttp.responseText);
+
+			//test if we have lost the session and need to login again
+			var bolAuthenticated=true;
+			if(objResponse.error){
+				if(objResponse.error.message=="Not authenticated")bolAuthenticated=false;
+			}
+
+
+			if(!bolAuthenticated){
+				//run the logout routine which will reset the app to it's original state and the show the login screen
+				objLogin.logout();
+			}else{	
+				cb(objResponse);
+			}
 		}
 		//JT: need to include handlers for errors etc..... 
 	};

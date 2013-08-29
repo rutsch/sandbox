@@ -29,6 +29,7 @@ var objLogin = {
 		});
 		objError.show(msg, true);		
 	},
+	//JT: this check is not valid anymore - all ajax utilities now return a message when authentication is required
 	loggedin: function(){
 		var self = this;
 		self.token  = objStore.getlocalstorageitem('token');
@@ -45,6 +46,57 @@ var objLogin = {
 		}else{
 			self.startauthentication();
 		}
+	},
+	findlatestsnapshotid: function(response){
+		var self=this;
+
+		//capture the snapshot configuration and store the config into the config object
+		objConfig.snapshots=response.snapshotconfig;
+
+		//find the latest snapshot id
+		var dateCurrent=new Date('1970-01-01');
+		//note - for IE old use new Date('2011', '04' - 1, '11', '11', '51', '00')
+		var strLatestSnapshotId='';
+		if(objConfig.snapshots!=null){
+			for ( var i = 0; i < objConfig.snapshots.length; i++) {
+				var objConfigSingle = objConfig.snapshots[i];
+				//console.log(objConfigSingle);
+				
+				var dateNew=new Date(objConfigSingle.dateend);
+				//console.log(dateNew)
+				//console.log(dateNew-dateCurrent);
+				
+				if((dateNew-dateCurrent)>0){
+				   //this snapshot is newer than the previous one
+				   strLatestSnapshotId=objConfigSingle.snapshotid;
+				   
+				   dateCurrent=new Date(objConfigSingle.dateend);
+				}
+			}
+		}
+
+		//update the id in the config file
+		objConfig.currentsnapshotid=strLatestSnapshotId;
+		//console.log('latest snapshot id '+objConfig.currentsnapshotid);
+
+	},
+	getsnapshotconfig: function(){
+		var self=this;
+		
+		var objData = {
+			type: 'json',
+			fulldomain: location.protocol+"//"+location.hostname,
+			method:'getsnapshotdetailssimple',
+			type:'json',
+			token: objLogin.token
+		};
+
+		psv('GET', objConfig.urls.authurl2, objData, function(response){
+			//debugger;
+
+			//finds the latest snapshot id and stores it in objConfig
+			self.findlatestsnapshotid(response);
+		});	
 	},
 	/*
 	 * Authentication functions
@@ -65,19 +117,23 @@ var objLogin = {
 				fulldomain: location.protocol+"//"+location.hostname
 			};
 			psv('GET', objConfig.urls.authurl1, objData, function(response){
-	        	if(response.error) {
-	        		self.handleloginerror(response.error.message);
-	        	}else{
+				if(response.error) {
+					self.handleloginerror(response.error.message);
+				}else{
 					objData.stay = true;
 					psv('GET', objConfig.urls.authurl1, objData, function(response){
 						//debugger;
-		            	if(response.error) {
-		            		self.handleloginerror(response.error.message);
-		            	}else{	
-		            	    self.getjsonvars(objData);
-		            	}
+
+						//finds the latest snapshot id and stores it in objConfig
+						self.findlatestsnapshotid(response);
+
+						if(response.error) {
+							self.handleloginerror(response.error.message);
+						}else{	
+							self.getjsonvars(objData);
+						}
 					});
-	        	}
+				}
 			});
 		}
 	},
@@ -85,6 +141,7 @@ var objLogin = {
 		var self = this;
 		objData.method='generatejsvarsjson';
 		psv('GET', objConfig.urls.authurl2, objData, function(response){
+			//console.log(response);
 			if(response.error) {
 				self.handleloginerror(response.error.message);
 			}else{
@@ -95,32 +152,32 @@ var objLogin = {
 	authenticate: function(token){
 		var self = this;
 		if(self.el.tbxusername.value.toLowerCase().indexOf('code1\\') == -1) self.el.tbxusername.value = 'code1\\' + self.el.tbxusername.value;
-        var objDataAuthenticate = {
-            username: self.el.tbxusername.value,
-            password: self.el.tbxpassword.value,
-            url: '/index.aspx',
-            token: token,
-            type: 'json',
-            fulldomain: location.protocol+"//"+location.hostname
-        };
-        
-        psv('POST', objConfig.urls.authurl3, objDataAuthenticate, function(response){
-        	//response = JSON.parse(response);
-        	if(response.error) {
-        		self.handleloginerror(response.error.message);
-        	}else{
-        		self.token = response.token;
-        		objStore.setlocalstorageitem('token', self.token);
-        		objStore.setlocalstorageitem('username', self.el.tbxusername.value);
-    			
-    			self.state.authenticating = false;
-    			self.changeauthenticatebutton();
-    				        
-    			objOverlay.hide();
-    			self.hide();
-        		app.start();                   		
-        	}
-        });	
+		var objDataAuthenticate = {
+			username: self.el.tbxusername.value,
+			password: self.el.tbxpassword.value,
+			url: '/index.aspx',
+			token: token,
+			type: 'json',
+			fulldomain: location.protocol+"//"+location.hostname
+		};
+		
+		psv('POST', objConfig.urls.authurl3, objDataAuthenticate, function(response){
+			//response = JSON.parse(response);
+			if(response.error) {
+				self.handleloginerror(response.error.message);
+			}else{
+				self.token = response.token;
+				objStore.setlocalstorageitem('token', self.token);
+				objStore.setlocalstorageitem('username', self.el.tbxusername.value);
+				
+				self.state.authenticating = false;
+				self.changeauthenticatebutton();
+							
+				objOverlay.hide();
+				self.hide();
+				app.start();                   		
+			}
+		});	
 	},
 	/*
 	 * UI functions
@@ -138,6 +195,10 @@ var objLogin = {
 	},
 	show: function(){
 		var self = this;
+
+		//reset some variables
+		objSliders.vars.simulatorsampling=true;
+
 		self.state.tweening = true;
 		TweenLite.to(self.el.wrapper, 0.3, {
 			width : '100%',
@@ -147,6 +208,11 @@ var objLogin = {
 				self.state.visible = true;
 			}
 		});		
+	},
+	//JT: this needs to be extended so that basically the app is resetted to it's original state
+	logout: function(){
+		var self = this;
+		objLogin.show();
 	},
 	changeauthenticatebutton: function(){
 		var self = this;

@@ -17,7 +17,7 @@ var objMruFilter = {
 			method:'getproductdata',
 			type:'json',
 			token: objLogin.token,
-			snapshotid:1	
+			snapshotid: objConfig.currentsnapshotid	
 		}
 		psv('GET', objConfig.urls.dynamicresourceurl, objData, function(data) {
 			cb(null, data);
@@ -162,13 +162,9 @@ var objMruFilter = {
 		self.el.tempmru = getEl('producttree_temp');
 		
 		self.getmruhtml(function(err, data){
-			if(data.error){
-				objLogin.show();
-			}else{
-				self.preparehtml(data.html);
-				self.state.selectedsector = self.getsectorfrombreadcrumb(self.getmrufilterbreadcrumb());
-				cb();				
-			}
+			self.preparehtml(data.html);
+			self.state.selectedsector = self.getsectorfrombreadcrumb(self.getmrufilterbreadcrumb());
+			cb();				
 		});
 
 	}

@@ -1,10 +1,12 @@
 var objExplain = {
 	state: {
 		visible: null,
-		tweening: null
+		tweening: null,
+		contentloaded: false
 	},
 	el: {
-		wrapper: null
+		wrapper: null,
+		content: null
 	},
 	show: function(){
 		var self = this;
@@ -17,6 +19,20 @@ var objExplain = {
 				//debugger;
 				self.state.tweening = false;
 				self.state.visible = true;
+
+				if(!self.state.contentloaded){
+					serverSideRequest({
+						url: 'data/faq.html', 
+						method: 'get', 
+						debug: false,
+						callback: function(strFaqContent){
+							//insert the SVG data into the holder div
+							self.el.content.innerHTML=strFaqContent;
+
+							self.state.contentloaded=true;
+						}
+					});
+				}
 			}
 		});		
 	},
@@ -39,5 +55,6 @@ var objExplain = {
 		self.state.tweening = false;
 		
 		self.el.wrapper = getEl('explain_panel');
+		self.el.content=getEl('explain_content');
 	}
 }
