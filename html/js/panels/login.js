@@ -175,6 +175,7 @@ var objLogin = {
 							
 				objOverlay.hide();
 				self.hide();
+				self.el.tbxpassword.value = '';
 				app.start();                   		
 			}
 		});	
@@ -212,6 +213,7 @@ var objLogin = {
 	//JT: this needs to be extended so that basically the app is resetted to it's original state
 	logout: function(){
 		var self = this;
+		
 		objLogin.show();
 	},
 	changeauthenticatebutton: function(){
