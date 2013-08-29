@@ -481,8 +481,8 @@ var objMap = {
 
 		objRegionInfo.el.nrlivesimproved.innerHTML =objExtendedData.displayl;
 		objRegionInfo.el.labellivesimproved.innerHTML=objExtendedData.labell;
-		objRegionInfo.el.gdp.innerHTML='$'+objExtendedData.displayg+objExtendedData.labelg;
-		objRegionInfo.el.population.innerHTML=objExtendedData.displayp+objExtendedData.labelp;
+		objRegionInfo.el.gdp.innerHTML='<span>GDP</span> $'+objExtendedData.displayg+objExtendedData.labelg;
+		objRegionInfo.el.population.innerHTML='<span>Population</span>' +objExtendedData.displayp+objExtendedData.labelp;
 	},
 	//rounds the data befor sending it to the app
 	roundlivesimproveddataobject: function(objData){
