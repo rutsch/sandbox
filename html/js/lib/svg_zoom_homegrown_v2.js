@@ -366,26 +366,17 @@ function setupHandlersMobile(){
  */
 function getEventPoint(evt) {
 	var p = objTouchVars.elsvg.createSVGPoint();
-	console.log(evt);
+	//console.log(evt);
 	if(objZoomPanSettings.mobile){
-		p.x = evt.gesture.center.pageX-objTouchVars.svgx-(app.state.width/2);
+		p.x = evt.gesture.center.pageX-objTouchVars.svgx;
+		if(app.state.ios){
+			p.x = p.x-app.state.width/2;
+		}
 		p.y = evt.gesture.center.pageY-objTouchVars.svgy;
-
-
-
 	}else{
 		p.x = evt.clientX-objTouchVars.svgx;
-		p.y = evt.clientY-objTouchVars.svgy;
-
-		//p.x = evt.clientX;
-		//p.y = evt.clientY;				
+		p.y = evt.clientY-objTouchVars.svgy;			
 	}
-
-	//console.log();
-	//var m=objTouchVars.elanimate.getCTM();
-	//console.log(p);
-	//console.log(m);
-	//setCTM(getEl('debugcircle'), {a:1,b:0,c:0,d:1,e: ((p.x)), f: ((p.y))});
 
 	return p;
 }
