@@ -785,7 +785,7 @@ div#explain_content {
     padding: 10px;
 }
 div#explain_panel div.faq_wrapper{
-	color: #252F47;
+	color: #000;
 
 }
 div#explain_panel div.faq_wrapper div.faq_header{
@@ -809,6 +809,8 @@ div#explain_panel div.faq_wrapper div.faq_content p{
 	margin-top: 3px;
 	margin-bottom: 7px;
 	font-family: Verdana, arial;
+	font-size: 12px;
+	color: #252F47;
 }
 
 /* attempt to hardware accelarate the worldmap */

@@ -401,12 +401,7 @@ var objMap = {
 		}else{
 			getEl('toggle_favourite').className=getEl('toggle_favourite').className.replace(' selected','');
 		}
-		//hide the green sales slider element for Healthcare
-		if(objMruFilter.selectedsector == 'PD0900'){
-			//objPageElements.elslidergreensales.parentNode.style.display = 'none';
-		}else{
-			//objPageElements.elslidergreensales.parentNode.style.display = 'block';
-		}
+
 
 
 		//initiates the simulator

@@ -80,6 +80,13 @@ var objSliders = {
 	//loads the data and sets up the interface 
 	start: function(){
 		var self=this;
+		//hide the green sales slider element for Healthcare
+		if(objMruFilter.selectedsector == 'PD0900'){
+			objSliders.el.slidergreensales.parentNode.style.display = 'none';
+		}else{
+			objSliders.el.slidergreensales.parentNode.style.display = 'block';
+		}
+		
 		//start Ajax Call to get simulation data
 		var objData = {
 			fulldomain: location.protocol+"//"+location.hostname,
