@@ -49,6 +49,19 @@ var objExplain = {
 			}
 		});	
 	},
+	showfaqcontent: function(el, id){
+		var self = this;
+		//close open faq
+		var arrAllLi = self.el.content.getElementsByTagName('div');
+		for ( var a = 0; a < arrAllLi.length; a++) {
+			arrAllLi[a].className = arrAllLi[a].className.replace(' selected', '');
+			if(a == arrAllLi.length -1){
+				//show new faq
+				el.className += ' selected';
+				getEl(id).className += ' selected';
+			}
+		}		
+	},
 	init: function(){
 		var self = this;
 		self.state.visible = false;
