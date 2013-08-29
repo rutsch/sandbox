@@ -71,7 +71,7 @@ var objHeader = {
 				oru: objOruFilter.state.selectedoru,
 				mru: objMruFilter.state.selectedmru,
 				region_id: objMap.state.selectedregion,
-				region_name: objMruFilter.getregionnamebyid(objMruFilter.state.selectedregion),
+				region_name: objOruFilter.getregionnamebyid(objMap.state.selectedregion),
 				breadcrumb: objMruFilter.getmrufilterbreadcrumb()
 			}
 			objStore.setlocalstorageitem(key, JSON.stringify(obj));	

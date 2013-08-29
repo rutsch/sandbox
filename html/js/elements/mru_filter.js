@@ -71,10 +71,6 @@ var objMruFilter = {
 		}
 					
 	},
-	getregionnamebyid: function(id){
-		var self = this;
-		return iterate(self.json, 'guid', id).name;
-	},
 	/*
 	 * UI functions
 	 */

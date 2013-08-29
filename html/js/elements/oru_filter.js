@@ -27,6 +27,7 @@ var objOruFilter = {
 	},
 	getregionnamebyid: function(regionId){
 		var self = this;
+		debugger;
 		//console.log(regionId);
 		//console.trace();
 		//console.log(iterate(self.json, 'guid', regionId))

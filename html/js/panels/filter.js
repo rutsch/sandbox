@@ -36,7 +36,7 @@ var objFilter = {
 	},
 	blink: function(){
 		var self = this;
-		TweenLite.to(self.el.wrapper, 0.2, {
+		TweenLite.to(self.el.wrapper, 0.4, {
 			opacity : 0.5,
 			onComplete: function(){
 				TweenLite.to(self.el.wrapper, 0.2, {
