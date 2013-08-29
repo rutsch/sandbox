@@ -366,9 +366,12 @@ function setupHandlersMobile(){
  */
 function getEventPoint(evt) {
 	var p = objTouchVars.elsvg.createSVGPoint();
-
+	//console.log(evt);
 	if(objZoomPanSettings.mobile){
 		p.x = evt.gesture.center.pageX-objTouchVars.svgx;
+		if(app.state.ios){
+			p.x = p.x-app.state.width/2;
+		}
 		p.y = evt.gesture.center.pageY-objTouchVars.svgy;
 	}else{
 		p.x = evt.clientX-objTouchVars.svgx;

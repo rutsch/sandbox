@@ -2,7 +2,8 @@ var app = {
 	state: {
 		width: null,
 		height: null,
-		mobile: null
+		mobile: null,
+		ios: ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false )
 	},
 	el: {
 		
