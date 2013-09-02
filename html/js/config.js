@@ -34,5 +34,5 @@ var objConfig = {
 	defaultmru: 'philips',
 	defaultoru: '3',
 	snapshots: null,
-	currentsnapshotid: '1'
+	currentsnapshotid: 'nothing'
 }
