@@ -214,7 +214,7 @@ var objMap = {
 							var paths=region.getElementsByTagName('*');
 							for ( var ii = 0; ii < paths.length; ii++) {
 								var path = paths[ii];
-								if(path.nodeName == 'path' || path.nodeName == 'polygon' || path.nodeName == 'rect' || path.nodeName == 'g'){
+								if(path.nodeName == 'path' || path.nodeName == 'polygon' || path.nodeName == 'rect' || path.nodeName == 'g' || path.nodeName == 'polyline'){
 									paths[ii].style.fill=colorToSet;	
 									//paths[ii].style.opacity=1;
 								}
