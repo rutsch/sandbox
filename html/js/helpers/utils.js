@@ -45,16 +45,24 @@ function getFirstLevelChildElementsById(parentId, childNodeType){
 	//debugger;
 	var selector = parentId ==='producttree_temp'?'#producttree_temp':'#producttree_temp #' + parentId;
 	var parent = Sizzle(selector);
-	parent = parent[0].getElementsByTagName('ul')[0];
-	
-	var	childElements = parent.getElementsByTagName('li'),
-		result = [];
+	var result=[];
 
-	for (i=0;i<childElements.length;i++) { 
-	    if (childElements[i].parentNode === parent){
-	    	result.push(childElements[i]);
-	    }
-	};	
+
+	//try{
+		parent = parent[0].getElementsByTagName('ul')[0];
+		
+		var	childElements = parent.getElementsByTagName('li');
+
+		for (i=0;i<childElements.length;i++) { 
+		    if (childElements[i].parentNode === parent){
+		    	result.push(childElements[i]);
+		    }
+		};
+
+	//}catch(err){
+		//nothing to handle here..
+	//}
+	
 	return result;
 }
 
@@ -387,13 +395,30 @@ function serverSideRequest(objArguments){
 	}
 	
 }
+
 function countryClicked(idCountry) {
 	if (idCountry !== "") {
 		objMap.regionclick(idCountry);
 	}
 }
 
+/* 
+Formats a generic integer as a money
+usage
+var myMoney=3543.75873;
+var formattedMoney = formatMoney(myMoney, 2,'.',',');
 
+*/
+function formatMoney(n, decPlaces, thouSeparator, decSeparator, currencySymbol) {
+    var decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+    decSeparator = decSeparator == undefined ? "." : decSeparator,
+    thouSeparator = thouSeparator == undefined ? "," : thouSeparator,
+    currencySymbol = currencySymbol == undefined ? "$" : currencySymbol,
+    sign = n < 0 ? "-" : "",
+    i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+    j = (j = i.length) > 3 ? j % 3 : 0;
+    return sign + currencySymbol + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
+};
 
 
 

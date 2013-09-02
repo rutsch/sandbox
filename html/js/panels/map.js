@@ -487,32 +487,39 @@ var objMap = {
 	},
 	//rounds the data befor sending it to the app
 	roundlivesimproveddataobject: function(objData){
+		var intDecimals=0;
 		if(objData.l>1000000){
 			objData.roundedl=Math.round(objData.l/1000000);
 		}else{
 			if(objData.l>100000){
 				objData.roundedl=Math.round((objData.l/1000000)*10)/10;
+				intDecimals=1;
 			}else{
 				objData.roundedl=Math.round((objData.l/1000000)*100)/100;
+				intDecimals=2;
 			}
 		}
-		objData.displayl=(objData.roundedl+'').replace(/\./,',');
+		objData.displayl=formatMoney(objData.roundedl, intDecimals,'.',',','');
 		objData.labell='million lives improved';
 
 		if(objData.g>1){
 			objData.roundedg=Math.round(objData.g/1);
+			intDecimals=0;
 		}else{
 			objData.roundedg=Math.round((objData.g/1)*10)/10;
+			intDecimals=1;
 		}
-		objData.displayg=(objData.roundedg+'').replace(/\./,',');
+		objData.displayg=formatMoney(objData.roundedg, intDecimals,'.',',','');
 		objData.labelg=' billion';	
 
 		if(objData.p>1000000){
 			objData.roundedp=Math.round(objData.p/1000000);
+			intDecimals=0;
 		}else{
 			objData.roundedp=Math.round((objData.p/1000000)*10)/10;
+			intDecimals=1;
 		}
-		objData.displayp=(objData.roundedp+'').replace(/\./,',');
+		objData.displayp=formatMoney(objData.roundedp, intDecimals,'.',',','');
 		objData.labelp=' million';	
 
 		return objData;
