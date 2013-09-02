@@ -499,7 +499,7 @@ var objMap = {
 				intDecimals=2;
 			}
 		}
-		objData.displayl=formatMoney(objData.roundedl, intDecimals,'.',',','');
+		objData.displayl=formatMoney(objData.roundedl, intDecimals,',','.','');
 		objData.labell='million lives improved';
 
 		if(objData.g>1){
@@ -509,7 +509,7 @@ var objMap = {
 			objData.roundedg=Math.round((objData.g/1)*10)/10;
 			intDecimals=1;
 		}
-		objData.displayg=formatMoney(objData.roundedg, intDecimals,'.',',','');
+		objData.displayg=formatMoney(objData.roundedg, intDecimals,',','.','');
 		objData.labelg=' billion';	
 
 		if(objData.p>1000000){
@@ -519,7 +519,7 @@ var objMap = {
 			objData.roundedp=Math.round((objData.p/1000000)*10)/10;
 			intDecimals=1;
 		}
-		objData.displayp=formatMoney(objData.roundedp, intDecimals,'.',',','');
+		objData.displayp=formatMoney(objData.roundedp, intDecimals,',','.','');
 		objData.labelp=' million';	
 
 		return objData;
