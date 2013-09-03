@@ -31,11 +31,13 @@ var app = {
 		async.parallel({
 			initOru: function(cb){
 				objOruFilter.init(function(){
+					//JT: this needs to become much simpler....
 					cb();
 				});
 			},
 			initMru: function(cb){
 				objMruFilter.init(function(){
+					//JT: this needs to become much simpler....
 					cb();	
 				});
 			}				

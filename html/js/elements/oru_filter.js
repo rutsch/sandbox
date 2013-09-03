@@ -71,6 +71,8 @@ var objOruFilter = {
 		var self = this;
 		self.state.selectedoru = this.getdefaultoru();
 		self.el.wrapper = getEl('oru_filter_container');
+
+		//JT: this is a strange construction... too complex as this is alreasy being called from another callback function
 		self.getorujson(function(err, data){
 			self.json = data;
 			//self.selectoru(self.state.selectedoru);			
