@@ -375,6 +375,12 @@ alert("OK")
 		var _count = ++Marquee._count;
 		Marquee._instances.push(self);
 		this.id = "marquee_"+_count;
+		if(this.el){
+			this.el.innerHTML = '';
+		}
+		if(this._orig){
+			this._orig = null;	
+		}
 		this.el = null;
 		this.dir = null;
 		this.jump = 1;

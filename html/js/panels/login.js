@@ -80,7 +80,7 @@ var objLogin = {
 		//console.log('latest snapshot id '+objConfig.currentsnapshotid);
 
 	},
-	getsnapshotconfig: function(){
+	getsnapshotconfig: function(cb){
 		var self=this;
 		
 		var objData = {
@@ -95,7 +95,8 @@ var objLogin = {
 			//debugger;
 
 			//finds the latest snapshot id and stores it in objConfig
-			self.findlatestsnapshotid(response);
+			var latestSnapshotId = self.findlatestsnapshotid(response);
+			cb(latestSnapshotId);
 		});	
 	},
 	checksnapshotconfigforupdates: function(response){

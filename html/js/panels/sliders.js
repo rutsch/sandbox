@@ -122,16 +122,105 @@ var objSliders = {
 
 				//initiate the base logic and start sampling the slider positions
 				self.setupsimulator();
+				self.setuphistorygraph();
 			}
 		});
+	},
+	setuphistorygraph: function(){
+		var self = this;
+		var data = self.vars.data.historicaldata,
+			arrValues = [];		
+		
+		
+		for ( var i = 0; i < data.length; i++) {
+			arrValues.push({
+				x: i, 
+				y: Math.round((data[i].l*100)/data[i].p * 100) / 100,
+				label: data[i].name
+			});
+		}
+		self.renderchart(arrValues);
 
+		
+		
+		/*
+		debugger;
+		var r = Raphael('region_history', '80%', '80%');
+		r.setViewBox(0, 0, 300, 150);
+		var root = r.canvas;
 
+		var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+		g.id = 'graph_wrapper';
+		g.setAttribute('transform', 'translate(0,0)');
+		root.appendChild(g);
+		r.canvas = g;		
+		
+		var chart = r.linechart(0, 0, 300, 140, arrPoints, arrValues, {smooth: true, colors: ['#FFF', '#0F0', '#FF0'], symbol: 'circle', axis: "0 0 1 0", axisxstep:5, axisystep: 1});
+		debugger;
+		var xText = chart.axis[0].text.items;      
+		for(var i in xText){ // Iterate through the array of dom elems, the current dom elem will be i
+			debugger;
+			var _oldLabel = (xText[i].attr('text') + "").split('.'), // Get the current dom elem in the loop, and split it on the decimal
+			_newLabel = _oldLabel[0] + ":" + (_oldLabel[1] == undefined ? '00' : '30'); // Format the result into time strings
+			xText[i].attr({'text': _newLabel}); // Set the text of the current elem with the result
+		};
+		
+		getEl('graph_wrapper').parentNode.setAttribute('style', '');*/
+		//2012-12-31, 2013-03-31, 2013-04-30
+	},
+	updatehistorygraph: function(newValue){
+		var self = this,
+			arrValues = [];
+		//clone current data object
+		var data = self.vars.data.historicaldata;
+		
+		for ( var i = 0; i < data.length; i++) {
+			arrValues.push({
+				x: i, 
+				y: data[i].l,
+				label: data[i].name
+			});
+		}
+		arrValues.push({x: data.length, y: newValue, label: 'Year end', markerColor: '#333'});
+		
+		self.renderchart(arrValues);
+	},
+	renderchart: function(data){
+		var self = this;
+		debugger;
+		self.el.history.innerHTML = '';
+		var chart = new CanvasJS.Chart("region_history",
+		{
+		  axisY:{
+		    gridThickness: 0,
+		    tickLength: 0,
+		    labelFontSize: 10,
+		    color: '#000',
+		    labelFontColor: '#fff'
+		  },
+		  axisX:{
+			  labelFontColor: '#fff'  
+		  },
+		  data: [
+		 
+		    {        
+		    	type: "line",
+		    	color: '#fff',
+		    	dataPoints: data
+		    }
+		  ]
+	    });
+	
+		chart.render();		
 	},
 	setupsimulator: function(){
 		var self=this;
 		//reset data
 		self.el.slidersales.value=0;
 		self.el.slidergreensales.value=0;
+		self.el.slidersaleslabel.innerHTML = '0%';
+		self.el.slidergreensaleslabel.innerHTML = '0%';
+		objRegionInfo.el.wrapper.className = '';
 		
 		self.vars.slidersalesvalue=0;
 		self.vars.slidergreensalesvalue=0;
@@ -279,7 +368,8 @@ var objSliders = {
 		//update the infographic
 		applyInfographicDelta((intLivesImprovedSimulatedPercentage*360) /100);
 
-
+		//self.updatehistorygraph(intLivesImprovedSimulated);
+		
 		if(intLivesImprovedSimulated>self.vars.livesimprovedcurrent){
 			objRegionInfo.el.wrapper.setAttribute('class', 'more');
 
@@ -306,7 +396,7 @@ var objSliders = {
 		self.el.slidergreensaleslabel=getEl('value_green_sales');
 		self.el.livesimprovednumber=getEl('nr_lives_improved');
 		self.el.livesimprovedpercentage=getEl('lives_improved_percentage');
-
+		self.el.history = getEl('region_history');
 
 		self.el.salesmin=getEl('salesmin');
 		self.el.salesmax=getEl('salesmax');

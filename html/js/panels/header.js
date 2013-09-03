@@ -132,6 +132,7 @@ var objHeader = {
 					//debugger;
 					self.el.breadcrumbmarquee.el.innerHTML = '';
 					self.el.breadcrumb.scrollWidth = 0;
+					self.el.breadcrumbmarquee = null;
 				}
 				self.el.breadcrumb = getEl('filter_breadcrumb');
 				self.el.breadcrumb.innerHTML = value;
