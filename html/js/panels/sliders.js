@@ -135,7 +135,7 @@ var objSliders = {
 		for ( var i = 0; i < data.length; i++) {
 			arrValues.push({
 				x: i, 
-				y: data[i].l,
+				y: Math.round((data[i].l*100)/data[i].p * 100) / 100,
 				label: data[i].name
 			});
 		}
@@ -194,8 +194,12 @@ var objSliders = {
 		  axisY:{
 		    gridThickness: 0,
 		    tickLength: 0,
-		    labelFontSize: 0,
-		    color: '#000'
+		    labelFontSize: 10,
+		    color: '#000',
+		    labelFontColor: '#fff'
+		  },
+		  axisX:{
+			  labelFontColor: '#fff'  
 		  },
 		  data: [
 		 
