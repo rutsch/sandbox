@@ -71,12 +71,11 @@ var app = {
 		objExplain.init();
 
 		//retrieve snapshot id
-		objLogin.getsnapshotconfig();
-
-		if(objLogin.loggedin()){
-			self.start();
-		}
-
+		objLogin.getsnapshotconfig(function(){
+			if(objLogin.loggedin()){
+				self.start();
+			}	
+		});
 	}
 }
 

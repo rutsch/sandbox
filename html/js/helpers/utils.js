@@ -47,21 +47,18 @@ function getFirstLevelChildElementsById(parentId, childNodeType){
 	var parent = Sizzle(selector);
 	var result=[];
 
-
-	//try{
+	if(parent.length > 0){
 		parent = parent[0].getElementsByTagName('ul')[0];
-		
-		var	childElements = parent.getElementsByTagName('li');
-
-		for (i=0;i<childElements.length;i++) { 
-		    if (childElements[i].parentNode === parent){
-		    	result.push(childElements[i]);
-		    }
-		};
-
-	//}catch(err){
-		//nothing to handle here..
-	//}
+		if(parent){
+			var	childElements = parent.getElementsByTagName('li');
+	
+			for (i=0;i<childElements.length;i++) { 
+			    if (childElements[i].parentNode === parent){
+			    	result.push(childElements[i]);
+			    }
+			};		
+		}
+	}
 	
 	return result;
 }
