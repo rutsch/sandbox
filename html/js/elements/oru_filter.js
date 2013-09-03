@@ -65,7 +65,7 @@ var objOruFilter = {
 	},
 	settocurrentoru: function(){
 		var self = this;
-		debugger;
+		//debugger;
 	},
 	init: function(cb){
 		var self = this;

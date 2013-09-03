@@ -214,7 +214,7 @@ var objMap = {
 							var paths=region.getElementsByTagName('*');
 							for ( var ii = 0; ii < paths.length; ii++) {
 								var path = paths[ii];
-								if(path.nodeName == 'path' || path.nodeName == 'polygon' || path.nodeName == 'rect' || path.nodeName == 'g'){
+								if(path.nodeName == 'path' || path.nodeName == 'polygon' || path.nodeName == 'rect' || path.nodeName == 'g' || path.nodeName == 'polyline'){
 									paths[ii].style.fill=colorToSet;	
 									//paths[ii].style.opacity=1;
 								}
@@ -421,42 +421,58 @@ var objMap = {
 		TweenLite.to(elRegion, 0.5, {
 			opacity: 0.7, 
 			onComplete: function(){
-				TweenLite.to(self.el.elsvgholder, 0.2, {
-					opacity: 0, 
-					onComplete: function(){
-						//debugger;
-						self.el.elsvgholder.style.display = 'none';
-						
-						//set the rounded values in the ui
-						self.setroundeddatainui(regionData);
+				//alert('in')
+				//debugger;
 
-						//set the percentage in the infographic
-						objRegionInfo.el.percentagelivesimproved.textContent = regionData.percentageLI+'%';
+				//JT: I introduced a very crappy way to check for a tablet - can this be improved and become app.state.tablet ?
+				if(app.state.width>1000 || app.state.height>1000){
+					self.updateui(regionData, idCountry, elRegion);
+				}else{
+					TweenLite.to(self.el.elsvgholder, 0.2, {
+						opacity: 0, 
+						onComplete: function(){
+							self.updateui(regionData, idCountry, elRegion);
+						}
+					});		
+				}
 
-						objHeader.setregionname(objOruFilter.getregionnamebyid((idCountry.length < 4 ? idCountry : idCountry.toLowerCase())));
-						objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
-						
-						//if(getEl('btn_back').className.indexOf('hide')> -1){
-						//	toggleClass(getEl('btn_back'), 'hide');
-						//	toggleClass(getEl('toggle_favourite'), 'hide');
-						//}
-						objSliders.show();
-						objRegionInfo.show();
-						
-						objHeader.showbackbutton();
-						objHeader.showfavouritebutton();
-						TweenLite.to(elRegion, 0.5, {
-							opacity: 1,
-							onComplete: function(){
-								animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);	
-							}
-						});
-					}
-				});			
+		
 			}
 		});
 
 				
+	},
+	updateui: function(regionData, idCountry, elRegion){
+		var self=this;
+
+		//debugger;
+		//if(app.state.width<1000 || app.state.height<1000)self.el.elsvgholder.style.display = 'none';
+		
+		//set the rounded values in the ui
+		self.setroundeddatainui(regionData);
+
+		//set the percentage in the infographic
+		objRegionInfo.el.percentagelivesimproved.textContent = regionData.percentageLI+'%';
+
+		objHeader.setregionname(objOruFilter.getregionnamebyid((idCountry.length < 4 ? idCountry : idCountry.toLowerCase())));
+		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
+		
+		//if(getEl('btn_back').className.indexOf('hide')> -1){
+		//	toggleClass(getEl('btn_back'), 'hide');
+		//	toggleClass(getEl('toggle_favourite'), 'hide');
+		//}
+		objSliders.show();
+		objRegionInfo.show();
+		
+		objHeader.showbackbutton();
+		objHeader.showfavouritebutton();
+		TweenLite.to(elRegion, 0.5, {
+			opacity: 1,
+			onComplete: function(){
+				animateArc({start: 0, end: (regionData.percentageLI*360) /100}, 1);	
+			}
+		});		
+
 	},
 	//updates the fields in the ui with new data
 	setroundeddatainui: function(objData){
@@ -471,32 +487,39 @@ var objMap = {
 	},
 	//rounds the data befor sending it to the app
 	roundlivesimproveddataobject: function(objData){
+		var intDecimals=0;
 		if(objData.l>1000000){
 			objData.roundedl=Math.round(objData.l/1000000);
 		}else{
 			if(objData.l>100000){
 				objData.roundedl=Math.round((objData.l/1000000)*10)/10;
+				intDecimals=1;
 			}else{
 				objData.roundedl=Math.round((objData.l/1000000)*100)/100;
+				intDecimals=2;
 			}
 		}
-		objData.displayl=(objData.roundedl+'').replace(/\./,',');
+		objData.displayl=formatMoney(objData.roundedl, intDecimals,',','.','');
 		objData.labell='million lives improved';
 
 		if(objData.g>1){
 			objData.roundedg=Math.round(objData.g/1);
+			intDecimals=0;
 		}else{
 			objData.roundedg=Math.round((objData.g/1)*10)/10;
+			intDecimals=1;
 		}
-		objData.displayg=(objData.roundedg+'').replace(/\./,',');
+		objData.displayg=formatMoney(objData.roundedg, intDecimals,',','.','');
 		objData.labelg=' billion';	
 
 		if(objData.p>1000000){
 			objData.roundedp=Math.round(objData.p/1000000);
+			intDecimals=0;
 		}else{
 			objData.roundedp=Math.round((objData.p/1000000)*10)/10;
+			intDecimals=1;
 		}
-		objData.displayp=(objData.roundedp+'').replace(/\./,',');
+		objData.displayp=formatMoney(objData.roundedp, intDecimals,',','.','');
 		objData.labelp=' million';	
 
 		return objData;

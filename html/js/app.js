@@ -3,7 +3,8 @@ var app = {
 		width: null,
 		height: null,
 		mobile: null,
-		ios: ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false )
+		ios: ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false ),
+		ipad: ( navigator.userAgent.match(/(iPad)/g) ? true : false )
 	},
 	el: {
 		

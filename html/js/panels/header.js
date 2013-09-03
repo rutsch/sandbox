@@ -129,7 +129,7 @@ var objHeader = {
 			opacity : 0,
 			onComplete: function(){
 				if(self.el.breadcrumbmarquee){
-					debugger;
+					//debugger;
 					self.el.breadcrumbmarquee.el.innerHTML = '';
 					self.el.breadcrumb.scrollWidth = 0;
 					self.el.breadcrumbmarquee = null;
@@ -143,7 +143,7 @@ var objHeader = {
 					if(self.el.breadcrumbmarquee){
 						self.el.breadcrumbmarquee.stop();
 					}
-					debugger;
+					//debugger;
 				}
 				TweenLite.to(self.el.breadcrumb, 0.3, {
 					opacity : 1
