@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]>    <html class="no-js iem7"> <![endif]-->
+<!--[if (gt IEMobile 7)|!(IEMobile)]><!--> <html class="no-js"> <!--<![endif]-->
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+
+		<style>
+
+			body {
+				background-color: #b2e9e4;
+			}
+			
+			svg.graph {
+				border: 1px solid red;
+			}
+			
+			svg.graph .grid {
+				stroke: white;
+				stroke-dasharray: 1 2;
+				stroke-width: 1;
+			}
+
+			svg.graph .points {
+				stroke: white;
+				stroke-width: 3;
+			}
+			svg.graph .first_set {
+				fill: #00554d;
+			}
+
+			svg.graph .surfaces {
+				fill-opacity: 0.5;
+			}
+
+			svg.graph .grid.double {
+				stroke-opacity: 0.4;
+			}
+
+			svg.graph .labels {
+				font-family: Arial;
+				font-size: 14px;
+				kerning: 1;
+			}
+
+			svg.graph .labels.x-labels {
+				text-anchor: middle;
+			}
+
+			svg.graph .labels.y-labels {
+				text-anchor: end;
+			}
+
+		</style>
+
+	
+	</head>
+	<body>
+
+
+<svg class="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="400" height="300">
+    
+    <!--
+    <g class="grid x-grid" id="xGrid">
+      <line x1="113" x2="113" y1="10" y2="380"></line>
+      <line x1="259" x2="259" y1="10" y2="380"></line>
+      <line x1="405" x2="405" y1="10" y2="380"></line>
+      <line x1="551" x2="551" y1="10" y2="380"></line>
+      <line x1="697" x2="697" y1="10" y2="380"></line>
+    </g>
+    <g class="grid y-grid" id="yGrid">
+      <line x1="86" x2="697" y1="10" y2="10"></line>
+      <line x1="86" x2="697" y1="68" y2="68"></line>
+      <line x1="86" x2="697" y1="126" y2="126"></line>
+      <line x1="86" x2="697" y1="185" y2="185"></line>
+      <line x1="86" x2="697" y1="243" y2="243"></line>
+      <line x1="86" x2="697" y1="301" y2="301"></line>
+      <line x1="86" x2="697" y1="360" y2="360"></line>
+    </g>
+    -->
+    <!--
+    <g class="surfaces">
+        <path class="first_set" d="M113,360 L113,192 L259,171 L405,179 L551,200 L697,204 L697,360 Z"></path>
+    </g>
+    -->
+    <!--
+    <use class="grid double" xlink:href="#xGrid" style=""></use>
+    <use class="grid double" xlink:href="#yGrid" style=""></use>
+    -->
+
+    <g id="line_wrapper">
+
+
+    </g>
+
+    <g id="data_point_wrapper" class="first_set points" data-setname="Our first data set">
+    <!--
+      <circle cx="80" cy="255" data-value="7.2" r="5"></circle>
+      <circle cx="259" cy="171" data-value="8.1" r="5"></circle>
+      <circle cx="405" cy="179" data-value="7.7" r="5"></circle>
+      <circle cx="551" cy="200" data-value="6.8" r="5"></circle>
+      <circle cx="697" cy="204" data-value="6.7" r="5"></circle>
+    -->
+    </g>
+        
+    <g id="x_axis_line" class="axis_line">
+		<line x1="20" y1="10" x2="20" y2="280" style="stroke:rgb(255,0,0);stroke-width:2"/>
+    </g>  
+    <g id="y_axis_line" class="axis_line">
+		<line x1="20" y1="280" x2="370" y2="280" style="stroke:rgb(255,0,0);stroke-width:2"/>
+    </g>
+
+    <g id="x_axislabel_wrapper" class="labels x-labels">
+
+    </g>
+    <g id="y_axislabel_wrapper" class="labels y-labels">
+
+    </g>
+</svg>
+
+		<script>
+			var objGraphProperties={
+				width: 400,
+				height: 300,
+				padding: {
+					top: 15,
+					bottom: 20,
+					left: 20,
+					right: 10
+				},
+				axis: {
+					ymin: 4,
+					ymax: 15,
+					ystep: 1
+				}
+			}
+
+			var objData={
+				points: [
+					{value: 5, label: 'Q4-12'},
+					{value: 7, label: 'Q1-13'},
+					{value: 11, label: 'Q2-13'},
+					{value: 14, label: 'Q3-13'}
+				]
+			}
+
+			//svg coordinates start at top left
+			function getSvgCoordinatesForPoint(intPointValue, intArrayPosition){
+				var intYRangePixels=objGraphProperties.height-objGraphProperties.padding.top-objGraphProperties.padding.bottom;
+				var intYRangeValues=objGraphProperties.axis.ymax-objGraphProperties.axis.ymin;
+				var intXRangePixels=objGraphProperties.width-objGraphProperties.padding.left-objGraphProperties.padding.right;
+				var intXRangeValues=objData.points.length;
+
+				return {
+					x: (objGraphProperties.padding.right + (( intXRangePixels/intXRangeValues ) * intArrayPosition) - (( intXRangePixels/intXRangeValues )/2)),
+					y: (objGraphProperties.padding.top+(intYRangePixels - (intYRangePixels/intYRangeValues)*(intPointValue-objGraphProperties.axis.ymin)))
+				}
+			}
+
+			function createCoordinatePoint(elWrapper, objCoords, objPoint){
+				var elCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+				elCircle.setAttributeNS(null,'cx',(objCoords.x+''));
+				elCircle.setAttributeNS(null,'cy',(objCoords.y+''));
+				elCircle.setAttributeNS(null,'r','5');
+				elCircle.setAttributeNS(null,'data-value',objPoint.value+'');
+				elCircle.setAttributeNS(null,'data-label',objPoint.label);
+				//elCircle.setAttributeNS(null,'id','test2');
+				elWrapper.appendChild(elCircle);
+			}
+
+			function createLabel(elWrapper, objCoords, objPoint){
+				var elText = document.createElementNS('http://www.w3.org/2000/svg','text');
+				elText.setAttributeNS(null,'x',(objCoords.x+''));
+				elText.setAttributeNS(null,'y',(objCoords.y+''));
+
+				var textNode = document.createTextNode(objPoint.label);
+				elText.appendChild(textNode);
+
+				elWrapper.appendChild(elText);
+			}
+
+			//console.log(getSvgCoordinatesForPoint(5, 1));
+
+			//create the data points
+			var elWrapperDataPoints=document.getElementById('data_point_wrapper');
+
+			for (var i=0; i<objData.points.length; i++)
+			{
+				var objPoint=objData.points[i];
+				var objCoords=getSvgCoordinatesForPoint(objPoint.value, (i+1));
+				//console.log(objCoords);
+				createCoordinatePoint(elWrapperDataPoints, objCoords, objPoint);
+
+			}
+
+			//create the line
+			var elWrapperLine=document.getElementById('line_wrapper');
+			var strCoordinatesAttrValue="";
+			for (var i=0; i<objData.points.length; i++)
+			{
+				var objPoint=objData.points[i];
+				var objCoords=getSvgCoordinatesForPoint(objPoint.value, (i+1));
+				//console.log(objCoords);
+				strCoordinatesAttrValue+=objCoords.x+','+objCoords.y+' ';
+
+			}			
+			var elPolyline = document.createElementNS('http://www.w3.org/2000/svg','polyline');
+			elPolyline.setAttributeNS(null,'points',strCoordinatesAttrValue);
+			elPolyline.setAttributeNS(null,'style','fill:none;stroke:black;stroke-width:3');
+			elWrapperLine.appendChild(elPolyline);
+
+			//create the x axis labels
+			var elWrapperLabelsX=document.getElementById('x_axislabel_wrapper');
+			var intY=295;
+
+			for (var i=0; i<objData.points.length; i++)
+			{
+				var objPoint=objData.points[i];
+				var objCoords=getSvgCoordinatesForPoint(objPoint.value, (i+1));
+				//console.log(objCoords);
+				objCoords.y=intY;
+				createLabel(elWrapperLabelsX, objCoords, objPoint);
+
+				var elline = document.createElementNS('http://www.w3.org/2000/svg','line');
+				elline.setAttributeNS(null,'x1',objCoords.x);				
+				elline.setAttributeNS(null,'y1', objGraphProperties.padding.top+objGraphProperties.height-objGraphProperties.padding.top-objGraphProperties.padding.bottom);
+				elline.setAttributeNS(null,'x2',objCoords.x);
+				elline.setAttributeNS(null,'y2',objGraphProperties.padding.top+objGraphProperties.height-objGraphProperties.padding.top-objGraphProperties.padding.bottom-8);				
+				elline.setAttributeNS(null,'style','fill:none;stroke:green;stroke-width:3');
+				elWrapperLabelsX.appendChild(elline);
+
+			}
+
+			//create the y axis labels
+			var elWrapperLabelsY=document.getElementById('y_axislabel_wrapper');
+			var intX=15;
+
+			for (var i=0; i<=(objGraphProperties.axis.ymax-objGraphProperties.axis.ymin); i=i+objGraphProperties.axis.ystep)
+			{
+				var objPoint={value: (i+objGraphProperties.axis.ymin), label: (i+objGraphProperties.axis.ymin)+''};
+				//console.log(objPoint);
+				var objCoords=getSvgCoordinatesForPoint(objPoint.value, (i+1));
+				//console.log(objCoords);
+				objCoords.x=intX;
+				createLabel(elWrapperLabelsY, objCoords, objPoint)
+
+			}
+
+			//create the y axis lines
+			intX=20
+			for (var i=0; i<=(objGraphProperties.axis.ymax-objGraphProperties.axis.ymin); i=i+objGraphProperties.axis.ystep)
+			{
+				var objPoint={value: (i+objGraphProperties.axis.ymin), label: (i+objGraphProperties.axis.ymin)+''};
+				console.log(objPoint);
+				var objCoords=getSvgCoordinatesForPoint(objPoint.value, (i+1));
+				console.log(objCoords);
+				objCoords.x=intX;
+				
+				var elline = document.createElementNS('http://www.w3.org/2000/svg','line');
+				elline.setAttributeNS(null,'x1',objCoords.x);				
+				elline.setAttributeNS(null,'y1',objCoords.y);
+				elline.setAttributeNS(null,'x2',objCoords.x+8);
+				elline.setAttributeNS(null,'y2',objCoords.y);				
+				elline.setAttributeNS(null,'style','fill:none;stroke:blue;stroke-width:3');
+				elWrapperLabelsY.appendChild(elline);
+
+			}
+
+
+		</script>	
+	</body>
+</html>    
