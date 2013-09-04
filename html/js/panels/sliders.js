@@ -81,7 +81,8 @@ var objSliders = {
 	start: function(){
 		var self=this;
 		//hide the green sales slider element for Healthcare
-		if(objMruFilter.selectedsector == 'PD0900'){
+		debugger;
+		if(objMruFilter.state.selectedsector == 'PD0900'){
 			objSliders.el.slidergreensales.parentNode.style.display = 'none';
 		}else{
 			objSliders.el.slidergreensales.parentNode.style.display = 'block';
