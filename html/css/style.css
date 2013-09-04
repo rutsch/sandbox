@@ -11,6 +11,13 @@
 *{
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);	
 }
+
+/* prevent selection of elements in web view 
+*:not(input):not(textarea) {
+	-webkit-user-select: none; 
+	-webkit-touch-callout: none; 
+}
+*/
 body{
 	position: absolute;
 	top: 0px;
