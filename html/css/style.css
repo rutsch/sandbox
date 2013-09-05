@@ -116,15 +116,15 @@ body{
 	border: none;
 }
 #filter_panel .panel_header{
-	background: #272c2d url('../img/filter.svg') no-repeat 5px 6px;	
+	background: #272c2d url('../img/filter.svg') no-repeat 5px 11px;	
 	background-size: auto 45%!important;
 }
 #explain_panel .panel_header{
-	background: #272c2d url('../img/faq.svg') no-repeat 5px 6px;	
+	background: #272c2d url('../img/faq.svg') no-repeat 5px 11px;	
 	background-size: auto 45%!important;
 }
 #bookmarks_panel .panel_header{
-	background: #272c2d url('../img/favorite.svg') no-repeat 5px 6px;	
+	background: #272c2d url('../img/favorite.svg') no-repeat 5px 11px;	
 	background-size: auto 45%!important;	
 }
 .modal_content{
@@ -651,6 +651,9 @@ li#philips.selected{
 	background: #2d2d2d;
 	color: #fff;
 }
+#messages_panel{
+	background: #fff;
+}
 #bookmarks_panel{
 	background: #fff;
 }
@@ -767,11 +770,11 @@ body.philips .slider_value {
 }
 input[type='range']::-webkit-slider-thumb {  
     -webkit-appearance: none;
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     border: 1px solid #ededed;
-    -webkit-border-radius: 15px;
-    border-radius: 15px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
     background-color: #fff;
     background-repeat: no-repeat;
     background-position: 50%;
@@ -794,7 +797,7 @@ input[type='range']::-webkit-slider-thumb {
 	width: 83%;
 	height: 20px;
 	position: relative;
-	padding-top: 15px;
+	padding-top: 5px;
 	color: #4a4a4a;
 	font-size: 9px;
 }
@@ -817,7 +820,7 @@ h2{
 }
 h3{
 	color: #4a4a4a;
-	font-size: 20px;
+	font-size: 18px;
 	font-weight: normal;
 	margin-top: 0.5em;
 	margin-bottom: 0.2em;

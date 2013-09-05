@@ -360,7 +360,7 @@ var objSliders = {
 		//console.log(intLivesImprovedSimulated);
 
 		//overwrite the livesimproved number in the interface
-		self.el.livesimprovednumber.innerHTML=Math.round(intLivesImprovedSimulated/1000000);
+		self.el.livesimprovednumber.innerHTML=Math.round(intLivesImprovedSimulated/100000) /10;
 
 		//set the infographic
 		self.el.livesimprovedpercentage.textContent=intLivesImprovedSimulatedPercentage+'%';

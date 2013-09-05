@@ -5,7 +5,8 @@ var objLogin = {
 		tweening: null,
 		usernamedisabled: null,
 		passworddisabled: null,
-		authenticating: null
+		authenticating: null,
+		messages: []
 	},
 	el: {
 		wrapper: null,
@@ -100,6 +101,7 @@ var objLogin = {
 		});	
 	},
 	checksnapshotconfigforupdates: function(response){
+		var self = this;
 		//check if there are updates in the snapshotconfig
 		var storedConfig = objStore.getlocalstorageitem('snapshotconfig');
 		var newConfig = response.snapshotconfig;
@@ -114,14 +116,14 @@ var objLogin = {
 						found = true;
 						if(newConfig[i].lastmodified != storedConfig[ii].lastmodified){
 							//data updated
-							alert('There is updated data for "'+newConfig[i].name+'".');
+							self.state.messages.push('There is updated data for "'+newConfig[i].name+'".');
 							break;
 						}	
 					}
 				}
 				if(!found){
 					// new dataset added
-					alert('A new data set "'+newConfig[i].name+'" has been added.');
+					self.state.messages.push('A new data set "'+newConfig[i].name+'" has been added.');
 				}
 			}
 
@@ -270,6 +272,46 @@ var objLogin = {
 			});				
 		}			
 	},
+	showupdatemessages: function(){
+		var self = this;
+		debugger;
+		getEl('messagelist').innerHTML = '';
+		if(self.state.messages.length > 0){
+			for ( var i = 0; i < self.state.messages.length; i++) {
+				getEl('messagelist').innerHTML += '<li>' + self.state.messages[i] + '</li>';
+			}
+			self.state.messages = [];
+			self.showmessages();
+		}
+
+	},
+	hidemessages: function(){
+		var self = this;
+		self.state.tweening = true;
+		TweenLite.to(self.el.messagespanel, 0.3, {
+			opacity : 0,
+			onComplete: function(){
+				objOverlay.hide();
+				self.el.messagespanel.style.display = 'none';
+				self.state.tweening = false;
+				self.state.visible = false;
+			}
+		});			
+	},
+	showmessages: function(){
+		var self = this;
+		objOverlay.show();
+		self.state.tweening = true;
+		self.el.messagespanel.style.display = 'block';
+		TweenLite.to(self.el.messagespanel, 0.3, {
+			opacity : 1,
+			onComplete: function(){
+				//debugger;
+				self.state.tweening = false;
+				self.state.visible = true;
+			}
+		});		
+	},
 	init: function(){
 		var self = this;
 		self.state.passworddisabled = false;
@@ -280,6 +322,7 @@ var objLogin = {
 		self.el.tbxusername = getEl('username');
 		self.el.tbxpassword = getEl('password');
 		self.el.submit = getEl('btn_submit');
+		self.el.messagespanel = getEl('messages_panel');
 		
 		self.el.tbxusername.value = objStore.getlocalstorageitem('username');
 	}

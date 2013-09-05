@@ -46,7 +46,8 @@ var app = {
 				objLogin.show();	
 			}else{
 				objLogin.hide();
-				objMap.updatemap();				
+				objMap.updatemap();		
+				objLogin.showupdatemessages();
 			}
 		});			
 				
