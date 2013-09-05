@@ -372,12 +372,15 @@ span{
 	left: 0px;
 	right: 0px;		
 }
+/* disabled because on phone they display over the lives improved number */
+/*
 #region_info.less #nr_lives_improved{
 	background:  url('../img/arrow_down.svg') no-repeat 0px 10px;	
 }
 #region_info.more #nr_lives_improved{
 	background:  url('../img/arrow_up.svg') no-repeat 0px 10px;	
 }
+*/
 #region_info.less #up{
 	display: none;
 }
