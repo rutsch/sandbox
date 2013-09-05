@@ -274,7 +274,7 @@ var objLogin = {
 	},
 	showupdatemessages: function(){
 		var self = this;
-		debugger;
+		//debugger;
 		getEl('messagelist').innerHTML = '';
 		if(self.state.messages.length > 0){
 			for ( var i = 0; i < self.state.messages.length; i++) {

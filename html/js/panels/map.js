@@ -488,39 +488,63 @@ var objMap = {
 	//rounds the data befor sending it to the app
 	roundlivesimproveddataobject: function(objData){
 		var intDecimals=0;
-		if(objData.l>1000000){
-			objData.roundedl=Math.round(objData.l/1000000);
-		}else{
-			if(objData.l>100000){
+		
+		//lives improved
+		if(objData.l>=0){
+			//always have 4 digits in the display
+			//more than 1000 million
+			if(objData.l>=1000000000){
+				//console.log('-2');
+				objData.roundedl=Math.round(objData.l/1000000);
+			}
+			//100 - 999.99 million
+			if(objData.l>=100000000 && objData.l<1000000000){
+				//console.log('-1');
 				objData.roundedl=Math.round((objData.l/1000000)*10)/10;
 				intDecimals=1;
-			}else{
+			}
+			//10 - 99.99 million
+			if(objData.l>=10000000 && objData.l<100000000){
+				//console.log('0');
 				objData.roundedl=Math.round((objData.l/1000000)*100)/100;
 				intDecimals=2;
 			}
-		}
-		objData.displayl=formatMoney(objData.roundedl, intDecimals,',','.','');
-		objData.labell='million lives improved';
+			//0.0001 - 9.99 million
+			if(objData.l>=1 && objData.l<10000000){
+				//console.log('1');
+				objData.roundedl=Math.round((objData.l/1000000)*1000)/1000;
+				intDecimals=3;
+			}
 
-		if(objData.g>1){
-			objData.roundedg=Math.round(objData.g/1);
-			intDecimals=0;
-		}else{
-			objData.roundedg=Math.round((objData.g/1)*10)/10;
-			intDecimals=1;
+			objData.displayl=formatMoney(objData.roundedl, intDecimals,',','.','');
+			objData.labell='million lives improved';
 		}
-		objData.displayg=formatMoney(objData.roundedg, intDecimals,',','.','');
-		objData.labelg=' billion';	
 
-		if(objData.p>1000000){
-			objData.roundedp=Math.round(objData.p/1000000);
-			intDecimals=0;
-		}else{
-			objData.roundedp=Math.round((objData.p/1000000)*10)/10;
-			intDecimals=1;
+		//gdp
+		if(objData.g>=0){
+			if(objData.g>1){
+				objData.roundedg=Math.round(objData.g/1);
+				intDecimals=0;
+			}else{
+				objData.roundedg=Math.round((objData.g/1)*10)/10;
+				intDecimals=1;
+			}
+			objData.displayg=formatMoney(objData.roundedg, intDecimals,',','.','');
+			objData.labelg=' billion';				
 		}
-		objData.displayp=formatMoney(objData.roundedp, intDecimals,',','.','');
-		objData.labelp=' million';	
+
+		//population
+		if(objData.p>=0){
+			if(objData.p>1000000){
+				objData.roundedp=Math.round(objData.p/1000000);
+				intDecimals=0;
+			}else{
+				objData.roundedp=Math.round((objData.p/1000000)*10)/10;
+				intDecimals=1;
+			}
+			objData.displayp=formatMoney(objData.roundedp, intDecimals,',','.','');
+			objData.labelp=' million';	
+		}
 
 		return objData;
 	},

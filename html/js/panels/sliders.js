@@ -81,7 +81,7 @@ var objSliders = {
 	start: function(){
 		var self=this;
 		//hide the green sales slider element for Healthcare
-		debugger;
+		//debugger;
 		if(objMruFilter.state.selectedsector == 'PD0900'){
 			objSliders.el.slidergreensales.parentNode.style.display = 'none';
 		}else{
@@ -361,7 +361,11 @@ var objSliders = {
 		//console.log(intLivesImprovedSimulated);
 
 		//overwrite the livesimproved number in the interface
-		self.el.livesimprovednumber.innerHTML=Math.round(intLivesImprovedSimulated/1000000 * 100) /100;
+
+		//console.log(objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl);
+
+		//use the utility in objMap to round the number in the correct format so that it can be displayed
+		self.el.livesimprovednumber.innerHTML=objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl;
 
 		//set the infographic
 		self.el.livesimprovedpercentage.textContent=intLivesImprovedSimulatedPercentage+'%';
