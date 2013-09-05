@@ -188,7 +188,6 @@ var objSliders = {
 	},
 	renderchart: function(data){
 		var self = this;
-		debugger;
 		self.el.history.innerHTML = '';
 		var chart = new CanvasJS.Chart("region_history",
 		{
@@ -197,10 +196,12 @@ var objSliders = {
 		    tickLength: 0,
 		    labelFontSize: 10,
 		    color: '#000',
-		    labelFontColor: '#fff'
+		    labelFontColor: '#fff',
+		    lineColor: '#333'
 		  },
 		  axisX:{
-			  labelFontColor: '#fff'  
+			  labelFontColor: '#fff',
+			  lineColor: '#333'
 		  },
 		  data: [
 		 
