@@ -714,7 +714,7 @@ input[type='range'] {
     width: 83%;
     height: 1px;
     padding: 0px;
-    margin-top: -3px;
+    margin: 20px;
     -webkit-border-radius: 15px;
     border-radius: 15px;
     border: 1px solid #007aa7;
@@ -774,7 +774,8 @@ body.philips .slider_value {
 input[type='range']::-webkit-slider-thumb {  
     -webkit-appearance: none;
     width: 20px;
-    height: 20px;
+    height: 40px;
+    margin: 50px;
     border: 1px solid #ededed;
     -webkit-border-radius: 10px;
     border-radius: 10px;
