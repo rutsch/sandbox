@@ -248,8 +248,8 @@ var objSliders = {
 
 		//position the "0" label
 		//self.vars.data.scenario.salesmin=-30;
-		var intLeftSales=(-self.vars.data.scenario.salesmin)/(-self.vars.data.scenario.salesmin+self.vars.data.scenario.salesmax)*100+1;
-		var intLeftGreensales=(-self.vars.data.scenario.greensalesmin)/(-self.vars.data.scenario.greensalesmin+self.vars.data.scenario.greensalesmax)*100+1;
+		var intLeftSales=(-self.vars.data.scenario.salesmin)/(-self.vars.data.scenario.salesmin+self.vars.data.scenario.salesmax)*100-1;
+		var intLeftGreensales=(-self.vars.data.scenario.greensalesmin)/(-self.vars.data.scenario.greensalesmin+self.vars.data.scenario.greensalesmax)*100-1;
 		getEl('saleszero').style.left=intLeftSales+'%';
 		getEl('greensaleszero').style.left=intLeftGreensales+'%';
 		//self.el.slidersaleslabel
