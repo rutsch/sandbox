@@ -7,394 +7,73 @@
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 
+		<link rel="stylesheet" type="text/css" href="../css/graph.css"/>
+
 		<style>
 
 			body {
 				background-color: #b2e9e4;
 			}
-			
-			svg.graph {
-				border: 1px solid red;
-				font-family: Arial;
-				font-size: 14px;
-			}
-			
-			/* line in the graph */
-			svg.graph g#line_wrapper *{
-				fill:none;
-				stroke:black;
-				stroke-width:3;
-			}
-			svg.graph g#line_wrapper *.last{
-				stroke-dasharray: 2 4;
-			}
-
-			/* value indicators */
-			svg.graph .points {
-				stroke: white;
-				stroke-width: 3;
-			}						
-
-			/* x and y axis lines */
-			svg.graph g.axis_line line{
-				stroke: rgb(255,0,0);
-				stroke-width: 2;
-			}
-
-			/* x axis value indicators (lines) */
-			svg.graph g#x_axislabel_wrapper line{
-				fill: none;
-				stroke: green;
-				stroke-width: 3
-			}
-
-
-			/* y axis value indicators (lines) */
-			svg.graph g#y_axislabel_wrapper line{
-				fill: none;
-				stroke: blue;
-				stroke-width: 3
-			}			
-
-
-			/* x and y axis labels */
-			svg.graph .labels {
-				kerning: 1;
-			}
-
-			svg.graph .labels.x-labels {
-				text-anchor: middle;
-			}
-
-			svg.graph .labels.y-labels {
-				text-anchor: end;
-			}
-
-			/* trend popup */
-			svg.graph path#popup_trend_base{
-				opacity: 0.8;
-				fill: #333333;
-				stroke: #000000;
-				stroke-width: 1px;
-				stroke-linecap: butt;
-				stroke-linejoin: miter;
-				stroke-opacity:1;
-			}
-
- 			svg.graph text#popup_trend_number,
- 			svg.graph text#popup_trend_text{
- 				font-size: 15px;
- 				font-style: normal;
- 				font-weight: normal;
- 				line-height: 125%;
- 				letter-spacing: 0px;
- 				word-spacing: 0px;
- 				fill: #ffffff;
- 				fill-opacity: 1;
- 				stroke: none;
- 				text-anchor: end;
- 			}
 
 		</style>
 
-	
+
 	</head>
 	<body>
+		<div style="width: 800px; height: 600px">
+			<!-- base svg construction for the line graph -->
+			<svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 400 300">
+				<g id="wrapper" transform="translate(0, 0)">
+					<text id="graph_title" y="15" x="0" xml:space="preserve">Trend</text>
 
-		<!-- base svg construction for the line graph -->
-		<svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
-			<!-- wrapper for the graph line -->
-			<g id="line_wrapper"> </g>
+					<g id="grid_wrapper"> </g>
 
-			<!-- wrapper for the data points -->
-			<g id="data_point_wrapper" class="first_set points" data-setname="Our first data set"> </g>
-			
-			<!-- axis lines -->  
-			<g class="axis_line">
-				<line id="x_axisline" x1="20" y1="10" x2="20" y2="280"/>
-			</g>  
-			<g class="axis_line">
-				<line id="y_axisline" x1="20" y1="280" x2="370" y2="280"/>
-			</g>
+					<!-- wrapper for the graph line -->
+					<g id="line_wrapper"> </g>
 
-			<!-- axis labels -->
-			<g id="x_axislabel_wrapper" class="labels x-labels"> </g>
-			<g id="y_axislabel_wrapper" class="labels y-labels"> </g>
+					<!-- wrapper for the data points -->
+					<g id="data_point_wrapper" class="first_set points" data-setname="Our first data set"> </g>
+
+					<!-- axis lines -->
+					<g class="axis_line">
+						<line id="x_axisline" x1="20" y1="10" x2="20" y2="280"/>
+					</g>
+					<g class="axis_line">
+						<line id="y_axisline" x1="20" y1="280" x2="370" y2="280"/>
+					</g>
+
+					<!-- axis labels -->
+					<g id="x_axislabel_wrapper" class="labels x-labels"> </g>
+					<g id="y_axislabel_wrapper" class="labels y-labels"> </g>
 
 
-			<g id="popup_trend" transform="translate(18.882713,11.364596) scale(0.8)">
-				<path id="popup_trend_base" d="m 0.826235,89.47513 171.590555,0.3268 -0.3268,-60.78434 -13.0719,0 -17.97385,-28.10457 -17.32026,28.10457 c 0,0 -117.342689,-0.65359 -123.22398,-0.65359 z" />
-				<text id="popup_trend_number" y="55" x="160" xml:space="preserve">2,23</text>
-				<text id="popup_trend_text" y="75" x="160" xml:space="preserve">Million Lives Improved</text>
-			</g>
+					<g id="popup_trend" transform="translate(18.882713,11.364596) scale(0.8)">
+						<path id="popup_trend_base" d="m 0.826235,89.47513 171.590555,0.3268 -0.3268,-60.78434 -13.0719,0 -17.97385,-28.10457 -17.32026,28.10457 c 0,0 -117.342689,-0.65359 -123.22398,-0.65359 z" />
+						<text id="popup_trend_number" y="55" x="160" xml:space="preserve">2,23</text>
+						<text id="popup_trend_text" y="75" x="160" xml:space="preserve">Million Lives Improved</text>
+					</g>
 
-			
-		</svg>
+					<g id="popup_value" onclick="objTrendGraph.showvaluepopup({show: false});" visibility="hidden">
+						<rect id="popup_value_base" width="54" height="54" x="0" y="0"/>
+						<text id="popup_value_number" y="20" x="27" xml:space="preserve">2,233</text>
+						<text id="popup_value_text" y="42" x="27" xml:space="preserve">Million</text>
+					</g>
+				</g>
+
+			</svg>
+		</div>
 		<div>
 			Last element value: <input type="text" id="future_info" /> <input type="button" onclick="objTrendGraph.updatelastpointingraph(parseFloat(document.getElementById('future_info').value))" value="Update" />
 		</div>
 
+		<script type="text/javascript" src="../js/panels/graph.js">//</script>
 		<script>
 
 
 
 
 
-			var objTrendGraph={
-				state: {
 
-				},
-				vars: {
-					popuptrendwidth: 0
-				},
-				el: {
-					lastsegment: null,
-					lastpoint: null,
-					popuptrend: null,
-					popuptrendnumber: null
-				},
-				props: {
-					width: 600,
-					height: 400,
-					padding: {
-						top: 15,
-						bottom: 20,
-						left: 20,
-						right: 30
-					},
-					axis: {
-						ymin: 4,
-						ymax: 15,
-						ystep: 5,
-						xlinelength: 8,
-						ylinelength: 8,
-						xpaddingleft: 20,
-						xpaddingright: 80,
-					},
-					coordinatepoint: {
-						radius: 5
-					}
-				},
-				getsvgcoordinatesforpoint: function(intPointValue, intArrayPosition){
-					var self=this;
-					var intYRangePixels=self.props.height-self.props.padding.top-self.props.padding.bottom;
-					var intYRangeValues=self.props.axis.ymax-self.props.axis.ymin;
-					var intXRangePixels=self.props.width-self.props.padding.left-self.props.padding.right-self.props.axis.xpaddingleft-self.props.axis.xpaddingright;
-					var intXRangeValues=objData.points.length-1;
-
-					//(self.props.padding.right + (( intXRangePixels/intXRangeValues ) * intArrayPosition) - (( intXRangePixels/intXRangeValues )/2))
-					return {
-						x: (self.props.padding.left + self.props.axis.xpaddingleft + (( intXRangePixels/intXRangeValues ) * intArrayPosition) - (( intXRangePixels/intXRangeValues ))),
-						y: (self.props.padding.top+(intYRangePixels - (intYRangePixels/intYRangeValues)*(intPointValue-self.props.axis.ymin)))
-					}
-				},
-				createcoordinatepoint: function(elWrapper, objCoords, objPoint, strId){
-					var self=this;
-					var elCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');
-					elCircle.setAttributeNS(null,'cx',(objCoords.x+''));
-					elCircle.setAttributeNS(null,'cy',(objCoords.y+''));
-					elCircle.setAttributeNS(null,'r',self.props.coordinatepoint.radius);
-					elCircle.setAttributeNS(null,'data-value',objPoint.value+'');
-					elCircle.setAttributeNS(null,'data-label',objPoint.label);
-					if(strId!='')elCircle.setAttributeNS(null,'id',strId);
-					elWrapper.appendChild(elCircle);
-				},
-				createlabel: function(elWrapper, objCoords, objPoint){
-					var elText = document.createElementNS('http://www.w3.org/2000/svg','text');
-					elText.setAttributeNS(null,'x',(objCoords.x+''));
-					elText.setAttributeNS(null,'y',(objCoords.y+''));
-
-					var textNode = document.createTextNode(objPoint.label);
-					elText.appendChild(textNode);
-
-					elWrapper.appendChild(elText);
-				},
-				setsvglinecoordinates: function(elLine, objCoords){
-					elLine.setAttributeNS(null,'x1',objCoords.x1);				
-					elLine.setAttributeNS(null,'y1',objCoords.y1);
-					elLine.setAttributeNS(null,'x2',objCoords.x2);
-					elLine.setAttributeNS(null,'y2',objCoords.y2);					
-				},
-				updatelastpointingraph: function(intNewValue){
-				 	var self=this;
-					var objCoords=self.getsvgcoordinatesforpoint(intNewValue, objData.points.length);
-
-					//update the line
-					self.el.lastsegment.setAttributeNS(null,'x2',objCoords.x);
-					self.el.lastsegment.setAttributeNS(null,'y2',objCoords.y);
-
-					//update the point
-					self.el.lastpoint.setAttributeNS(null,'cx',objCoords.x);
-					self.el.lastpoint.setAttributeNS(null,'cy',objCoords.y);
-					self.el.lastpoint.setAttributeNS(null,'data-value',intNewValue);
-
-					//position the trend popup
-					self.positiontrendpopupandsetvalue(objCoords, intNewValue)
-				},
-				positiontrendpopupandsetvalue: function(objCoords, intValue){
-				 	var self=this;
-
-					//align the popup
-					var strTranslateValue=self.el.popuptrend.getAttributeNS(null, 'transform').replace(/^.*\)\s+(.*)$/, '$1');
-					self.el.popuptrend.setAttributeNS(null,'transform','translate('+(objCoords.x-self.vars.popuptrendwidth+30)+', '+(objCoords.y+10)+') '+strTranslateValue);	
-
-					//set the content in the popup
-					self.el.popuptrendnumber.innerHTML=intValue;			
-				},
-				drawgraph: function(objData){
-					var self=this;
-
-					//0) update the graph properties by setting the y-axis max and min value dynamically
-					var intMaxValue=-1000000000000, intMinValue=1000000000000;
-					for (var i=0; i<objData.points.length; i++)
-					{
-						if(objData.points[i].value>intMaxValue)intMaxValue=objData.points[i].value;
-						if(objData.points[i].value<intMinValue)intMinValue=objData.points[i].value;
-					}
-					//console.log(intMaxValue+' '+intMinValue);
-					self.props.axis.ymin=intMinValue-1;
-					self.props.axis.ymax=intMaxValue+1;
-
-					//1) set the <svg /> node width and height
-					var elSvgRoot=document.getElementById('graph');
-					elSvgRoot.setAttributeNS(null,'width',(self.props.width+''));
-					elSvgRoot.setAttributeNS(null,'height',(self.props.height+''));
-
-					//2) set the length of the x- and y-axis lines
-					self.setsvglinecoordinates(document.getElementById('x_axisline'),{
-						x1: self.props.padding.left,
-						y1: self.props.padding.top,
-						x2: self.props.padding.left,
-						y2: (self.props.height-self.props.padding.bottom)
-					});			
-					self.setsvglinecoordinates(document.getElementById('y_axisline'),{
-						x1: self.props.padding.left,
-						y1: (self.props.height-self.props.padding.bottom),
-						x2: (self.props.width-self.props.padding.right),
-						y2: (self.props.height-self.props.padding.bottom)
-					});
-
-					//3) create the data points
-					var elWrapperDataPoints=document.getElementById('data_point_wrapper');
-					for (var i=0; i<objData.points.length; i++)
-					{
-						var objPoint=objData.points[i];
-						var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
-						var strId='';
-						if(i==(objData.points.length-1)){
-							strId='last_point';
-						}
-
-						//console.log(objCoords);
-						self.createcoordinatepoint(elWrapperDataPoints, objCoords, objPoint, strId);
-
-						//on the last data point - position the trend popup
-						if(i==objData.points.length-1){
-							self.positiontrendpopupandsetvalue(objCoords, objPoint.value);
-						}
-					}
-
-					//4) create the graph line (use seperate lines to differentiate the last line)
-					var elWrapperLine=document.getElementById('line_wrapper');
-					var strCoordinatesAttrValue="";
-					var objCoords={};
-					for (var i=0; i<objData.points.length; i++)
-					{
-						var objCoordsPrev={};
-						if(i>0){
-							objCoordsPrev.x=objCoords.x;
-							objCoordsPrev.y=objCoords.y;					
-						}
-
-
-						var objPoint=objData.points[i];
-						var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
-
-						if(i>0){
-							var elLine = document.createElementNS('http://www.w3.org/2000/svg','line');
-							self.setsvglinecoordinates(elLine,{
-								x1: objCoordsPrev.x,
-								y1: objCoordsPrev.y,
-								x2: objCoords.x,
-								y2: objCoords.y
-							});
-							if(i==(objData.points.length-1)){
-								elLine.setAttributeNS(null,'class','last');
-								elLine.setAttributeNS(null,'id','last_segment');
-							}
-							elWrapperLine.appendChild(elLine);
-						}
-
-					}			
-
-
-					//5) create the x axis labels
-					var elWrapperLabelsX=document.getElementById('x_axislabel_wrapper');
-					for (var i=0; i<objData.points.length; i++)
-					{
-						//label on x axis
-						var objPoint=objData.points[i];
-						var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
-						//console.log(objCoords);
-						objCoords.y=self.props.height-5;
-						self.createlabel(elWrapperLabelsX, objCoords, objPoint);
-
-						//lines on the x axis
-						var elline = document.createElementNS('http://www.w3.org/2000/svg','line');
-						self.setsvglinecoordinates(elline,{
-							x1: objCoords.x,
-							y1: (self.props.padding.top+self.props.height-self.props.padding.top-self.props.padding.bottom),
-							x2: objCoords.x,
-							y2: (self.props.padding.top+self.props.height-self.props.padding.top-self.props.padding.bottom-self.props.axis.xlinelength)
-						});
-
-						elWrapperLabelsX.appendChild(elline);
-					}
-
-					//6) create the y axis labels
-					var elWrapperLabelsY=document.getElementById('y_axislabel_wrapper');
-					var yCorrection=4;
-					for (var i=0; i<=(self.props.axis.ymax-self.props.axis.ymin); i=i+self.props.axis.ystep)
-					{
-						//label on y axis
-						var objPoint={value: (i+self.props.axis.ymin), label: (i+self.props.axis.ymin)+''};
-						//console.log(objPoint);
-						var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
-						//console.log(objCoords);
-						objCoords.x=self.props.padding.left-5;
-						//correct the y-position so that it aligns better with the little line
-						objCoords.y=objCoords.y+yCorrection;
-						self.createlabel(elWrapperLabelsY, objCoords, objPoint)
-
-						//lines on the y axis
-						objCoords.y=objCoords.y-yCorrection;
-						objCoords.x=self.props.padding.left;
-						
-						var elline = document.createElementNS('http://www.w3.org/2000/svg','line');
-						self.setsvglinecoordinates(elline,{
-							x1: objCoords.x,
-							y1: objCoords.y,
-							x2: (objCoords.x+self.props.axis.ylinelength),
-							y2: objCoords.y
-						});
-
-
-						elWrapperLabelsY.appendChild(elline);
-					}
-
-					//store commonly used elements in global variables for efficient use later
-					self.el.lastsegment=document.getElementById('last_segment');
-					self.el.lastpoint=document.getElementById('last_point');
-
-				},
-				init: function(){
-					var self=this;
-					self.el.popuptrend=document.getElementById('popup_trend');
-					self.el.popuptrendnumber=document.getElementById('popup_trend_number');
-
-					self.vars.popuptrendwidth=self.el.popuptrend.getBoundingClientRect().width;
-				}
-			}
 
 			//initiate the object
 			objTrendGraph.init();
@@ -418,6 +97,6 @@
 			}
 			objTrendGraph.drawgraph(objData);
 
-		</script>	
+		</script>
 	</body>
-</html>    
+</html>
