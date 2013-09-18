@@ -5,9 +5,12 @@ var objTrendGraph={
 	vars: {
 		popuptrendwidth: 0,
 		popupvaluewidth: 0,
-		popupvalueheight: 0
+		popupvalueheight: 0,
+		data: null,
+		template: null
 	},
 	el: {
+		root: null,
 		lastsegment: null,
 		lastpoint: null,
 		popuptrend: null,
@@ -46,7 +49,7 @@ var objTrendGraph={
 		var intYRangePixels=self.props.height-self.props.padding.top-self.props.padding.bottom;
 		var intYRangeValues=self.props.axis.ymax-self.props.axis.ymin;
 		var intXRangePixels=self.props.width-self.props.padding.left-self.props.padding.right-self.props.axis.xpaddingleft-self.props.axis.xpaddingright;
-		var intXRangeValues=objData.points.length-1;
+		var intXRangeValues=self.vars.data.points.length-1;
 
 		//(self.props.padding.right + (( intXRangePixels/intXRangeValues ) * intArrayPosition) - (( intXRangePixels/intXRangeValues )/2))
 		return {
@@ -84,7 +87,7 @@ var objTrendGraph={
 	},
 	updatelastpointingraph: function(intNewValue){
 	 	var self=this;
-		var objCoords=self.getsvgcoordinatesforpoint(intNewValue, objData.points.length);
+		var objCoords=self.getsvgcoordinatesforpoint(intNewValue, self.vars.data.points.length);
 
 		//update the line
 		self.el.lastsegment.setAttributeNS(null,'x2',objCoords.x);
@@ -125,8 +128,23 @@ var objTrendGraph={
 		}
 
 	},
+	reset: function(){
+		var self=this;
+		//1) throw the original svg node away
+		var elContainer=self.el.root.parentNode;
+		elContainer.removeChild(self.el.root);
+
+		//2) inject the original svg again
+		elContainer.innerHTML=self.vars.template;
+
+		//3) initiate the object again
+		self.init();
+	},
 	drawgraph: function(objData){
 		var self=this;
+
+		//store the data object for later reference
+		self.vars.data=objData;
 
 		//correct the properties of the graph if the y-axis labels are "inset"
 		if(self.props.axis.ylabelinset){
@@ -140,19 +158,26 @@ var objTrendGraph={
 		elTitle.textContent=self.props.title.text;
 
 		//0) update the graph properties by setting the y-axis max and min value dynamically
-		var intMaxValue=-1000000000000, intMinValue=1000000000000;
-		for (var i=0; i<objData.points.length; i++)
-		{
-			if(objData.points[i].value>intMaxValue)intMaxValue=objData.points[i].value;
-			if(objData.points[i].value<intMinValue)intMinValue=objData.points[i].value;
+		if(self.vars.data.ymax==null || self.vars.data.ymin==null){
+			console.log('a');
+			//attempt to autodetect the upper and bottom boundaries
+			var intMaxValue=-1000000000000, intMinValue=1000000000000;
+			for (var i=0; i<self.vars.data.points.length; i++)
+			{
+				if(self.vars.data.points[i].value>intMaxValue)intMaxValue=self.vars.data.points[i].value;
+				if(self.vars.data.points[i].value<intMinValue)intMinValue=self.vars.data.points[i].value;
+			}
+			//console.log(intMaxValue+' '+intMinValue);
+			self.props.axis.ymin=intMinValue-1;
+			self.props.axis.ymax=intMaxValue+1;			
+		}else{
+			self.props.axis.ymin=self.vars.data.ymin;
+			self.props.axis.ymax=self.vars.data.ymax;				
 		}
-		//console.log(intMaxValue+' '+intMinValue);
-		self.props.axis.ymin=intMinValue-1;
-		self.props.axis.ymax=intMaxValue+1;
+
 
 		//1) set the <svg /> node using the viewport
-		var elSvgRoot=document.getElementById('graph');
-		elSvgRoot.setAttributeNS(null,'viewBox','0 0 '+self.props.width+' '+self.props.height);
+		self.el.root.setAttributeNS(null,'viewBox','0 0 '+self.props.width+' '+self.props.height);
 		//elSvgRoot.setAttributeNS(null,'width',(self.props.width+''));
 		//elSvgRoot.setAttributeNS(null,'height',(self.props.height+''));
 
@@ -172,12 +197,12 @@ var objTrendGraph={
 
 		//3) create the data points
 		var elWrapperDataPoints=document.getElementById('data_point_wrapper');
-		for (var i=0; i<objData.points.length; i++)
+		for (var i=0; i<self.vars.data.points.length; i++)
 		{
-			var objPoint=objData.points[i];
+			var objPoint=self.vars.data.points[i];
 			var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
 			var strId='';
-			if(i==(objData.points.length-1)){
+			if(i==(self.vars.data.points.length-1)){
 				strId='last_point';
 			}
 
@@ -185,7 +210,7 @@ var objTrendGraph={
 			self.createcoordinatepoint(elWrapperDataPoints, objCoords, objPoint, strId);
 
 			//on the last data point - position the trend popup
-			if(i==objData.points.length-1){
+			if(i==self.vars.data.points.length-1){
 				self.positiontrendpopupandsetvalue(objCoords, objPoint.value);
 			}
 		}
@@ -194,7 +219,7 @@ var objTrendGraph={
 		var elWrapperLine=document.getElementById('line_wrapper');
 		var strCoordinatesAttrValue="";
 		var objCoords={};
-		for (var i=0; i<objData.points.length; i++)
+		for (var i=0; i<self.vars.data.points.length; i++)
 		{
 			var objCoordsPrev={};
 			if(i>0){
@@ -203,7 +228,7 @@ var objTrendGraph={
 			}
 
 
-			var objPoint=objData.points[i];
+			var objPoint=self.vars.data.points[i];
 			var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
 
 			if(i>0){
@@ -214,7 +239,7 @@ var objTrendGraph={
 					x2: objCoords.x,
 					y2: objCoords.y
 				});
-				if(i==(objData.points.length-1)){
+				if(i==(self.vars.data.points.length-1)){
 					elLine.setAttributeNS(null,'class','last');
 					elLine.setAttributeNS(null,'id','last_segment');
 				}
@@ -226,10 +251,10 @@ var objTrendGraph={
 
 		//5) create the x axis labels
 		var elWrapperLabelsX=document.getElementById('x_axislabel_wrapper');
-		for (var i=0; i<objData.points.length; i++)
+		for (var i=0; i<self.vars.data.points.length; i++)
 		{
 			//label on x axis
-			var objPoint=objData.points[i];
+			var objPoint=self.vars.data.points[i];
 			var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
 			//console.log(objCoords);
 			objCoords.y=self.props.height-5;
@@ -247,7 +272,7 @@ var objTrendGraph={
 			elWrapperLabelsX.appendChild(elline);
 		}
 
-		//6) create the y axis labels
+		//6) create the y axis labels and grid lines
 		var elWrapperLabelsY=document.getElementById('y_axislabel_wrapper');
 		var elWrapperGridLines=document.getElementById('grid_wrapper');
 		var yCorrection=4;
@@ -293,7 +318,7 @@ var objTrendGraph={
 
 				var elGridLine=document.createElementNS('http://www.w3.org/2000/svg','line');
 				self.setsvglinecoordinates(elGridLine,{
-					x1: self.props.padding.left,
+					x1: ((self.props.axis.ylabelinset)?(self.props.padding.left+self.props.axis.xpaddingleft-5):self.props.padding.left),
 					y1: objCoords.y,
 					x2: (self.props.width-self.props.padding.right),
 					y2: objCoords.y
@@ -312,6 +337,7 @@ var objTrendGraph={
 	},
 	init: function(){
 		var self=this;
+		self.el.root=document.getElementById('graph');
 		self.el.popuptrend=document.getElementById('popup_trend');
 		self.el.popuptrendnumber=document.getElementById('popup_trend_number');
 		self.el.popupvalue=document.getElementById('popup_value');
@@ -322,5 +348,7 @@ var objTrendGraph={
 		self.vars.popupvaluewidth=self.el.popupvalue.getBBox().width;
 		self.vars.popupvalueheight=self.el.popupvalue.getBBox().height;
 		//console.log(self.vars);
+		var objSerializer = new XMLSerializer();
+		self.vars.template=objSerializer.serializeToString(self.el.root);
 	}
 }

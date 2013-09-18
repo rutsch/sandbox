@@ -130,91 +130,81 @@ var objSliders = {
 	},
 	setuphistorygraph: function(){
 		var self = this;
-		var data = self.vars.data.historicaldata,
-			arrValues = [];		
-		
-		
-		for ( var i = 0; i < data.length; i++) {
-			arrValues.push({
-				x: i, 
-				y: Math.round((data[i].l*100)/data[i].p * 100) / 100,
-				label: data[i].name
-			});
-		}
-		self.renderchart(arrValues);
-
-		
-		
-		/*
-		debugger;
-		var r = Raphael('region_history', '80%', '80%');
-		r.setViewBox(0, 0, 300, 150);
-		var root = r.canvas;
-
-		var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-		g.id = 'graph_wrapper';
-		g.setAttribute('transform', 'translate(0,0)');
-		root.appendChild(g);
-		r.canvas = g;		
-		
-		var chart = r.linechart(0, 0, 300, 140, arrPoints, arrValues, {smooth: true, colors: ['#FFF', '#0F0', '#FF0'], symbol: 'circle', axis: "0 0 1 0", axisxstep:5, axisystep: 1});
-		debugger;
-		var xText = chart.axis[0].text.items;      
-		for(var i in xText){ // Iterate through the array of dom elems, the current dom elem will be i
-			debugger;
-			var _oldLabel = (xText[i].attr('text') + "").split('.'), // Get the current dom elem in the loop, and split it on the decimal
-			_newLabel = _oldLabel[0] + ":" + (_oldLabel[1] == undefined ? '00' : '30'); // Format the result into time strings
-			xText[i].attr({'text': _newLabel}); // Set the text of the current elem with the result
+		var data = self.vars.data.historicaldata;		
+		var objGraphData={
+			points: [],
+			ymin: null,
+			ymax: null
 		};
 		
-		getEl('graph_wrapper').parentNode.setAttribute('style', '');*/
-		//2012-12-31, 2013-03-31, 2013-04-30
-	},
-	updatehistorygraph: function(newValue){
-		var self = this,
-			arrValues = [];
-		//clone current data object
-		var data = self.vars.data.historicaldata;
-		
+		/* construct an object that we can sent to the graph utility */
+		var strLastLabel='';
+		var intMaxValue=-1000000000000, intMinValue=1000000000000;
 		for ( var i = 0; i < data.length; i++) {
-			arrValues.push({
-				x: i, 
-				y: data[i].l,
+			//add an element to the array
+			objGraphData.points.push({
+				value: objMap.roundlivesimproveddataobject({l:data[i].l, g:-1, p: -1}).displayl, 
 				label: data[i].name
 			});
+
+			//find out the label for the last element in the graph
+			if(i==(data.length-1)){
+				//determine what the last date should be
+				var myDate=new Date(data[i].dateend);
+				//if the last snapshot ends on xxxx-12-31, then we need to show the next year
+				strLastLabel='Q4 '+(((myDate.getMonth()+1)==12)?(myDate.getFullYear()+1):myDate.getFullYear());
+			}
+
+			//keep track of min and max values so that we can scale the graph properly
+			if(data[i].l>intMaxValue)intMaxValue=data[i].l;
+			if(data[i].l<intMinValue)intMinValue=data[i].l;
 		}
-		arrValues.push({x: data.length, y: newValue, label: 'Year end', markerColor: '#333'});
+		//console.log(intMinValue)
+
+		//add the last element (year end prediction)
+		if(self.vars.data.livesimproved.s0g0){
+			objGraphData.points.push({
+				value: objMap.roundlivesimproveddataobject({l:self.vars.data.livesimproved.s0g0, g:-1, p: -1}).displayl, 
+				label: strLastLabel
+			});
+
+			//grab the min and max values from the simulator data set
+			var strKeyMin='s'+(self.vars.data.scenario.salesmin+'').replace(/\-/, 'minus')+'g'+(self.vars.data.scenario.greensalesmin+'').replace(/\-/, 'minus');
+			var strKeyMax='s'+(self.vars.data.scenario.salesmax+'').replace(/\-/, 'minus')+'g'+(self.vars.data.scenario.greensalesmax+'').replace(/\-/, 'minus');
+
+			var intSimulatorMax=self.vars.data.livesimproved[strKeyMax];
+			var intSimulatorMin=self.vars.data.livesimproved[strKeyMin];
+			//check if these values are more extreme than the points we have already processed
+			if(intSimulatorMax>intMaxValue)intMaxValue=intSimulatorMax;
+			if(intSimulatorMin<intMinValue)intMinValue=intSimulatorMin;
+
+			//console.log(strKeyMax+' '+strKeyMin);
+
+			objGraphData.ymin=parseFloat(objMap.roundlivesimproveddataobject({l:intMinValue, g:-1, p: -1}).displayl);
+			objGraphData.ymin=objGraphData.ymin-Math.round(((objGraphData.ymin/100)*5));
+			objGraphData.ymax=parseFloat(objMap.roundlivesimproveddataobject({l:intMaxValue, g:-1, p: -1}).displayl);
+		}
+
+		//set the dimensions of the graph
+		objTrendGraph.props.width=self.el.history.offsetWidth;
+		objTrendGraph.props.height=self.el.history.offsetHeight;
+
+		//the steps on the y-axis -> we want 3 grid lines
+		var intDifference=Math.round(((objGraphData.ymax-objGraphData.ymin)/3)*10)/10;
+		if(intDifference>1){
+			objTrendGraph.props.axis.ystep=Math.round(intDifference);
+		}else{
+			objTrendGraph.props.axis.ystep=intDifference;
+		}
+		console.log(intDifference);
+
+
+		console.log(objGraphData);
+
+		//draw the graph
+		objTrendGraph.reset();
+		objTrendGraph.drawgraph(objGraphData);
 		
-		self.renderchart(arrValues);
-	},
-	renderchart: function(data){
-		var self = this;
-		self.el.history.innerHTML = '';
-		var chart = new CanvasJS.Chart("region_history",
-		{
-		  axisY:{
-		    gridThickness: 0,
-		    tickLength: 0,
-		    labelFontSize: 10,
-		    color: '#000',
-		    labelFontColor: '#fff',
-		    lineColor: '#333'
-		  },
-		  axisX:{
-			  labelFontColor: '#fff',
-			  lineColor: '#333'
-		  },
-		  data: [
-		 
-		    {        
-		    	type: "line",
-		    	color: '#fff',
-		    	dataPoints: data
-		    }
-		  ]
-	    });
-	
-		chart.render();		
 	},
 	setupsimulator: function(){
 		var self=this;
@@ -290,6 +280,7 @@ var objSliders = {
 	calculatevalue: function(intCurrentSalesPercentage, intCurrentGreenSalesPercentage){
 		var self=this;
 		var bolDebug=true;
+		var updateCurrent=false, updateTrendGraph=true;
 
 		//update the lables of the sliders
 		self.el.slidersaleslabel.innerHTML=(intCurrentSalesPercentage > 0 ? '+': '') + Math.round(intCurrentSalesPercentage*10)/10 + '%';
@@ -358,26 +349,34 @@ var objSliders = {
 
 		//console.log(objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl);
 
-		//use the utility in objMap to round the number in the correct format so that it can be displayed
-		self.el.livesimprovednumber.innerHTML=objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl;
+		// UPDATE INTERFACE
+		if(updateCurrent){
+			//use the utility in objMap to round the number in the correct format so that it can be displayed
+			self.el.livesimprovednumber.innerHTML=objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl;
 
-		//set the infographic text
-		self.el.livesimprovedpercentage.textContent=intLivesImprovedSimulatedPercentage+'%';
+			//set the infographic text
+			self.el.livesimprovedpercentage.textContent=intLivesImprovedSimulatedPercentage+'%';
 
-		//update the infographic circle
-		applyInfographicDelta((intLivesImprovedSimulatedPercentage*360) /100);
-		
-		//set the class in the wrapper div - that will trigger the "up" or "down" icon display
-		if(intLivesImprovedSimulated>self.vars.livesimprovedcurrent){
-			objRegionInfo.el.wrapper.setAttribute('class', 'more');
+			//update the infographic circle
+			applyInfographicDelta((intLivesImprovedSimulatedPercentage*360) /100);	
+			
+			//set the class in the wrapper div - that will trigger the "up" or "down" icon display
+			if(intLivesImprovedSimulated>self.vars.livesimprovedcurrent){
+				objRegionInfo.el.wrapper.setAttribute('class', 'more');
 
-		}else{
-			if(intLivesImprovedSimulated<self.vars.livesimprovedcurrent){
-				objRegionInfo.el.wrapper.setAttribute('class', 'less');
 			}else{
-				objRegionInfo.el.wrapper.setAttribute('class', 'equal');
-			}
+				if(intLivesImprovedSimulated<self.vars.livesimprovedcurrent){
+					objRegionInfo.el.wrapper.setAttribute('class', 'less');
+				}else{
+					objRegionInfo.el.wrapper.setAttribute('class', 'equal');
+				}
+			}		
 		}
+
+		if(updateTrendGraph){
+			objTrendGraph.updatelastpointingraph(parseFloat(objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl))
+		}
+
 
 	},
 	init: function(){
