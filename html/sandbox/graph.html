@@ -15,6 +15,8 @@
 			
 			svg.graph {
 				border: 1px solid red;
+				font-family: Arial;
+				font-size: 14px;
 			}
 			
 			/* line in the graph */
@@ -57,8 +59,6 @@
 
 			/* x and y axis labels */
 			svg.graph .labels {
-				font-family: Arial;
-				font-size: 14px;
 				kerning: 1;
 			}
 
@@ -70,7 +70,30 @@
 				text-anchor: end;
 			}
 
- 
+			/* trend popup */
+			svg.graph path#popup_trend_base{
+				opacity: 0.8;
+				fill: #333333;
+				stroke: #000000;
+				stroke-width: 1px;
+				stroke-linecap: butt;
+				stroke-linejoin: miter;
+				stroke-opacity:1;
+			}
+
+ 			svg.graph text#popup_trend_number,
+ 			svg.graph text#popup_trend_text{
+ 				font-size: 15px;
+ 				font-style: normal;
+ 				font-weight: normal;
+ 				line-height: 125%;
+ 				letter-spacing: 0px;
+ 				word-spacing: 0px;
+ 				fill: #ffffff;
+ 				fill-opacity: 1;
+ 				stroke: none;
+ 				text-anchor: end;
+ 			}
 
 		</style>
 
@@ -98,42 +121,17 @@
 			<g id="x_axislabel_wrapper" class="labels x-labels"> </g>
 			<g id="y_axislabel_wrapper" class="labels y-labels"> </g>
 
-<g id="popup_trend">
-	 <text
-	 	x="422.87582"
-	   y="117.39486"
-	   style="font-size:24px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans">bla</text>
-	<path
-	   style="fill:#333333;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1; opacity: 0.8"
-	   d="m 303.26797,150.4014 184.31373,0.3268 -0.3268,-60.784321 -13.0719,0 -17.97385,-28.10457 -17.32026,28.10457 -135.62092,-0.65359 z"
-	   id="path2996"/>
-	  
-	<text
-	   xml:space="preserve"
-	   style="font-size:24px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
-	   x="422.87582"
-	   y="117.39486"
-	   id="text3000"><tspan
-		 sodipodi:role="line"
-		 id="tspan3002"
-		 x="422.87582"
-		 y="117.39486">2,23</tspan></text>
-	<text
-	   xml:space="preserve"
-	   style="font-size:14px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
-	   x="320.58823"
-	   y="136.02231"
-	   id="text3004"
-	   sodipodi:linespacing="125%"><tspan
-		 sodipodi:role="line"
-		 id="tspan3006"
-		 x="320.58823"
-		 y="136.02231">Million Lives Improved</tspan></text>
-</g>
+
+			<g id="popup_trend" transform="translate(18.882713,11.364596) scale(0.8)">
+				<path id="popup_trend_base" d="m 0.826235,89.47513 171.590555,0.3268 -0.3268,-60.78434 -13.0719,0 -17.97385,-28.10457 -17.32026,28.10457 c 0,0 -117.342689,-0.65359 -123.22398,-0.65359 z" />
+				<text id="popup_trend_number" y="55" x="160" xml:space="preserve">2,23</text>
+				<text id="popup_trend_text" y="75" x="160" xml:space="preserve">Million Lives Improved</text>
+			</g>
+
 			
 		</svg>
 		<div>
-			Last element value: <input type="text" id="future_info" /> <input type="button" onclick="updateLastPointInGraph(parseFloat(document.getElementById('future_info').value))" value="Update" />
+			Last element value: <input type="text" id="future_info" /> <input type="button" onclick="objTrendGraph.updatelastpointingraph(parseFloat(document.getElementById('future_info').value))" value="Update" />
 		</div>
 
 		<script>
@@ -176,7 +174,7 @@
 					/**/
 				]
 			}
-
+/*
 			//svg coordinates start at top left
 			function getSvgCoordinatesForPoint(intPointValue, intArrayPosition){
 				var intYRangePixels=objGraphProperties.height-objGraphProperties.padding.top-objGraphProperties.padding.bottom;
@@ -230,6 +228,18 @@
 				elCircle.setAttributeNS(null,'cx',objCoords.x);
 				elCircle.setAttributeNS(null,'cy',objCoords.y);
 				elCircle.setAttributeNS(null,'data-value',intNewValue);
+
+				//position the trend popup
+				positionTrendPopupAndSetValue(objCoords, intNewValue)
+			}
+
+			function positionTrendPopupAndSetValue(objCoords, intValue){
+				//align the popup
+				var elPopup=document.getElementById('popup_trend');
+				var strTranslateValue=elPopup.getAttributeNS(null, 'transform').replace(/^.*\)\s+(.*)$/, '$1');
+				elPopup.setAttributeNS(null,'transform','translate('+(objCoords.x-elPopup.getBoundingClientRect().width+30)+', '+(objCoords.y+10)+') '+strTranslateValue);	
+
+				document.getElementById('popup_trend_number').innerHTML=intValue;			
 			}
 			//console.log(getSvgCoordinatesForPoint(5, 1));
 
@@ -365,8 +375,243 @@
 
 				elWrapperLabelsY.appendChild(elline);
 			}
+*/
+
+			var objTrendGraph={
+				state: {
+
+				},
+				vars: {
+					popuptrendwidth: 0
+				},
+				el: {
+					lastsegment: null,
+					lastpoint: null,
+					popuptrend: null,
+					popuptrendnumber: null
+				},
+				getsvgcoordinatesforpoint: function(intPointValue, intArrayPosition){
+					var self=this;
+					var intYRangePixels=objGraphProperties.height-objGraphProperties.padding.top-objGraphProperties.padding.bottom;
+					var intYRangeValues=objGraphProperties.axis.ymax-objGraphProperties.axis.ymin;
+					var intXRangePixels=objGraphProperties.width-objGraphProperties.padding.left-objGraphProperties.padding.right-objGraphProperties.axis.xpaddingleft-objGraphProperties.axis.xpaddingright;
+					var intXRangeValues=objData.points.length-1;
+
+					//(objGraphProperties.padding.right + (( intXRangePixels/intXRangeValues ) * intArrayPosition) - (( intXRangePixels/intXRangeValues )/2))
+					return {
+						x: (objGraphProperties.padding.left + objGraphProperties.axis.xpaddingleft + (( intXRangePixels/intXRangeValues ) * intArrayPosition) - (( intXRangePixels/intXRangeValues ))),
+						y: (objGraphProperties.padding.top+(intYRangePixels - (intYRangePixels/intYRangeValues)*(intPointValue-objGraphProperties.axis.ymin)))
+					}
+				},
+				createcoordinatepoint: function(elWrapper, objCoords, objPoint, strId){
+					var elCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+					elCircle.setAttributeNS(null,'cx',(objCoords.x+''));
+					elCircle.setAttributeNS(null,'cy',(objCoords.y+''));
+					elCircle.setAttributeNS(null,'r',objGraphProperties.coordinatepoint.radius);
+					elCircle.setAttributeNS(null,'data-value',objPoint.value+'');
+					elCircle.setAttributeNS(null,'data-label',objPoint.label);
+					if(strId!='')elCircle.setAttributeNS(null,'id',strId);
+					elWrapper.appendChild(elCircle);
+				},
+				createlabel: function(elWrapper, objCoords, objPoint){
+					var elText = document.createElementNS('http://www.w3.org/2000/svg','text');
+					elText.setAttributeNS(null,'x',(objCoords.x+''));
+					elText.setAttributeNS(null,'y',(objCoords.y+''));
+
+					var textNode = document.createTextNode(objPoint.label);
+					elText.appendChild(textNode);
+
+					elWrapper.appendChild(elText);
+				},
+				setsvglinecoordinates: function(elLine, objCoords){
+					elLine.setAttributeNS(null,'x1',objCoords.x1);				
+					elLine.setAttributeNS(null,'y1',objCoords.y1);
+					elLine.setAttributeNS(null,'x2',objCoords.x2);
+					elLine.setAttributeNS(null,'y2',objCoords.y2);					
+				},
+				updatelastpointingraph: function(intNewValue){
+				 	var self=this;
+					var objCoords=self.getsvgcoordinatesforpoint(intNewValue, objData.points.length);
+
+					//update the line
+					self.el.lastsegment.setAttributeNS(null,'x2',objCoords.x);
+					self.el.lastsegment.setAttributeNS(null,'y2',objCoords.y);
+
+					//update the point
+					self.el.lastpoint.setAttributeNS(null,'cx',objCoords.x);
+					self.el.lastpoint.setAttributeNS(null,'cy',objCoords.y);
+					self.el.lastpoint.setAttributeNS(null,'data-value',intNewValue);
+
+					//position the trend popup
+					self.positiontrendpopupandsetvalue(objCoords, intNewValue)
+				},
+				positiontrendpopupandsetvalue: function(objCoords, intValue){
+				 	var self=this;
+
+					//align the popup
+					var strTranslateValue=self.el.popuptrend.getAttributeNS(null, 'transform').replace(/^.*\)\s+(.*)$/, '$1');
+					self.el.popuptrend.setAttributeNS(null,'transform','translate('+(objCoords.x-self.vars.popuptrendwidth+30)+', '+(objCoords.y+10)+') '+strTranslateValue);	
+
+					//set the content in the popup
+					self.el.popuptrendnumber.innerHTML=intValue;			
+				},
+				drawgraph: function(objData){
+					var self=this;
+
+					//0) update the graph properties by setting the y-axis max and min value dynamically
+					var intMaxValue=-1000000000000, intMinValue=1000000000000;
+					for (var i=0; i<objData.points.length; i++)
+					{
+						if(objData.points[i].value>intMaxValue)intMaxValue=objData.points[i].value;
+						if(objData.points[i].value<intMinValue)intMinValue=objData.points[i].value;
+					}
+					//console.log(intMaxValue+' '+intMinValue);
+					objGraphProperties.axis.ymin=intMinValue-1;
+					objGraphProperties.axis.ymax=intMaxValue+1;
+
+					//1) set the <svg /> node width and height
+					var elSvgRoot=document.getElementById('graph');
+					elSvgRoot.setAttributeNS(null,'width',(objGraphProperties.width+''));
+					elSvgRoot.setAttributeNS(null,'height',(objGraphProperties.height+''));
+
+					//2) set the length of the x- and y-axis lines
+					self.setsvglinecoordinates(document.getElementById('x_axisline'),{
+						x1: objGraphProperties.padding.left,
+						y1: objGraphProperties.padding.top,
+						x2: objGraphProperties.padding.left,
+						y2: (objGraphProperties.height-objGraphProperties.padding.bottom)
+					});			
+					self.setsvglinecoordinates(document.getElementById('y_axisline'),{
+						x1: objGraphProperties.padding.left,
+						y1: (objGraphProperties.height-objGraphProperties.padding.bottom),
+						x2: (objGraphProperties.width-objGraphProperties.padding.right),
+						y2: (objGraphProperties.height-objGraphProperties.padding.bottom)
+					});
+
+					//3) create the data points
+					var elWrapperDataPoints=document.getElementById('data_point_wrapper');
+					for (var i=0; i<objData.points.length; i++)
+					{
+						var objPoint=objData.points[i];
+						var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
+						var strId='';
+						if(i==(objData.points.length-1)){
+							strId='last_point';
+						}
+
+						//console.log(objCoords);
+						self.createcoordinatepoint(elWrapperDataPoints, objCoords, objPoint, strId);
+
+						//on the last data point - position the trend popup
+						if(i==objData.points.length-1){
+							self.positiontrendpopupandsetvalue(objCoords, objPoint.value);
+						}
+					}
+
+					//4) create the graph line (use seperate lines to differentiate the last line)
+					var elWrapperLine=document.getElementById('line_wrapper');
+					var strCoordinatesAttrValue="";
+					var objCoords={};
+					for (var i=0; i<objData.points.length; i++)
+					{
+						var objCoordsPrev={};
+						if(i>0){
+							objCoordsPrev.x=objCoords.x;
+							objCoordsPrev.y=objCoords.y;					
+						}
 
 
+						var objPoint=objData.points[i];
+						var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
+
+						if(i>0){
+							var elLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+							self.setsvglinecoordinates(elLine,{
+								x1: objCoordsPrev.x,
+								y1: objCoordsPrev.y,
+								x2: objCoords.x,
+								y2: objCoords.y
+							});
+							if(i==(objData.points.length-1)){
+								elLine.setAttributeNS(null,'class','last');
+								elLine.setAttributeNS(null,'id','last_segment');
+							}
+							elWrapperLine.appendChild(elLine);
+						}
+
+					}			
+
+
+					//5) create the x axis labels
+					var elWrapperLabelsX=document.getElementById('x_axislabel_wrapper');
+					for (var i=0; i<objData.points.length; i++)
+					{
+						//label on x axis
+						var objPoint=objData.points[i];
+						var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
+						//console.log(objCoords);
+						objCoords.y=objGraphProperties.height-5;
+						self.createlabel(elWrapperLabelsX, objCoords, objPoint);
+
+						//lines on the x axis
+						var elline = document.createElementNS('http://www.w3.org/2000/svg','line');
+						self.setsvglinecoordinates(elline,{
+							x1: objCoords.x,
+							y1: (objGraphProperties.padding.top+objGraphProperties.height-objGraphProperties.padding.top-objGraphProperties.padding.bottom),
+							x2: objCoords.x,
+							y2: (objGraphProperties.padding.top+objGraphProperties.height-objGraphProperties.padding.top-objGraphProperties.padding.bottom-objGraphProperties.axis.xlinelength)
+						});
+
+						elWrapperLabelsX.appendChild(elline);
+					}
+
+					//6) create the y axis labels
+					var elWrapperLabelsY=document.getElementById('y_axislabel_wrapper');
+					var yCorrection=4;
+					for (var i=0; i<=(objGraphProperties.axis.ymax-objGraphProperties.axis.ymin); i=i+objGraphProperties.axis.ystep)
+					{
+						//label on y axis
+						var objPoint={value: (i+objGraphProperties.axis.ymin), label: (i+objGraphProperties.axis.ymin)+''};
+						//console.log(objPoint);
+						var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
+						//console.log(objCoords);
+						objCoords.x=objGraphProperties.padding.left-5;
+						//correct the y-position so that it aligns better with the little line
+						objCoords.y=objCoords.y+yCorrection;
+						self.createlabel(elWrapperLabelsY, objCoords, objPoint)
+
+						//lines on the y axis
+						objCoords.y=objCoords.y-yCorrection;
+						objCoords.x=objGraphProperties.padding.left;
+						
+						var elline = document.createElementNS('http://www.w3.org/2000/svg','line');
+						self.setsvglinecoordinates(elline,{
+							x1: objCoords.x,
+							y1: objCoords.y,
+							x2: (objCoords.x+objGraphProperties.axis.ylinelength),
+							y2: objCoords.y
+						});
+
+
+						elWrapperLabelsY.appendChild(elline);
+					}
+
+					//store commonly used elements in global variables for efficient use later
+					self.el.lastsegment=document.getElementById('last_segment');
+					self.el.lastpoint=document.getElementById('last_point');
+
+				},
+				init: function(){
+					var self=this;
+					self.el.popuptrend=document.getElementById('popup_trend');
+					self.el.popuptrendnumber=document.getElementById('popup_trend_number');
+
+					self.vars.popuptrendwidth=self.el.popuptrend.getBoundingClientRect().width;
+				}
+			}
+
+			objTrendGraph.init();
+			objTrendGraph.drawgraph(objData);
 
 		</script>	
 	</body>
