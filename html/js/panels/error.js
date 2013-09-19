@@ -9,7 +9,7 @@ var objError = {
 	},
 	hide: function(){
 		var self = this;
-		self.el.text = '';
+		self.el.wrapper.innerHTML = '';
 		self.state.tweening = true;
 		TweenLite.to(self.el.wrapper, 0.3, {
 			height : 0,
@@ -21,10 +21,10 @@ var objError = {
 	},
 	show: function(msg, autohide){
 		var self = this;
-		self.el.text = msg;
+		self.el.wrapper.innerHTML = msg;
 		self.state.tweening = true;
 		TweenLite.to(self.el.wrapper, 0.3, {
-			height : 0,
+			height : 50,
 			onComplete: function(){
 				self.state.tweening = false;
 				self.state.visible = true;
@@ -36,12 +36,16 @@ var objError = {
 			}
 		});		
 	},
+	handleError: function(callingFunction, err){
+		var self = this;
+		if(objOverlay.state.visible) objOverlay.hide();
+		self.show(err, true);
+	},
 	init: function(){
 		var self = this;
 		self.state.visible = false;
 		self.state.tweening = false;
 		
 		self.el.wrapper = getEl('error');
-		self.el.text = self.el.wrapper.innerHTML;
 	}
 }

@@ -238,27 +238,31 @@ function psv(type, url, objParams, cb) {
 		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 	xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			//alert(xmlhttp.responseText);
-			//JT: no check is done here if the JSON that was parsed was valid...
-
-			var objResponse=JSON.parse(xmlhttp.responseText);
-
-			//test if we have lost the session and need to login again
-			var bolAuthenticated=true;
-			if(objResponse.error){
-				if(objResponse.error.message=="Not authenticated")bolAuthenticated=false;
-			}
-
-
-			if(!bolAuthenticated){
-				//run the logout routine which will reset the app to it's original state and the show the login screen
-				objLogin.logout();
-			}else{	
-				cb(objResponse);
+		if (xmlhttp.readyState == 4){
+			console.log(xmlhttp.statusText);
+			if(xmlhttp.status == 200) {
+				try {
+					var objResponse=JSON.parse(xmlhttp.responseText);
+					
+					//test if we have lost the session and need to login again
+					var bolAuthenticated=true;
+					if(objResponse.error){
+						if(objResponse.error.message=="Not authenticated")bolAuthenticated=false;
+					}
+					if(!bolAuthenticated){
+						//run the logout routine which will reset the app to it's original state and the show the login screen
+						objLogin.logout();
+					}else{	
+						cb(null, objResponse);
+					}					
+				} catch (err) {
+					cb(err);
+				}
+			}else{
+				//error occured
+				cb(xmlhttp.statusText);
 			}
 		}
-		//JT: need to include handlers for errors etc..... 
 	};
 	
 	strParams = getParamStringFromObject(objParams);
@@ -349,10 +353,10 @@ function serverSideRequest(objArguments){
 				  //ok
 				  strResult=objXmlHttpLocal.responseText;
 				  if(bolDebug)alert("just before callback function\n\n"+strResult);
-				  callbackFunction(strResult);
+				  callbackFunction(null, strResult);
 				}else{
 					strResult="ERROR: There was a problem retrieving the server side data:\n" + objXmlHttpLocal.statusText;
-					alert(strResult);
+					callbackFunction(strResult);
 				}
 			}
 		}

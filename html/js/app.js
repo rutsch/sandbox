@@ -30,20 +30,23 @@ var app = {
 		//init elements with async because elements require external data
 		async.parallel({
 			initOru: function(cb){
-				objOruFilter.init(function(){
+				objOruFilter.init(function(err){
 					//JT: this needs to become much simpler....
-					cb();
+					if(err != null) cb(err)
+					else cb();
 				});
 			},
 			initMru: function(cb){
-				objMruFilter.init(function(){
+				objMruFilter.init(function(err){
 					//JT: this needs to become much simpler....
-					cb();	
+					if(err != null) cb(err)
+					else cb();	
 				});
 			}				
 		},function(err, results){
-			if(err){
-				objLogin.show();	
+			if(err != null){
+				objError.handleError('app.start', err);
+				//objLogin.show();	
 			}else{
 				objLogin.hide();
 				objMap.updatemap();		

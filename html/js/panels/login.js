@@ -92,12 +92,16 @@ var objLogin = {
 			token: objLogin.token
 		};
 
-		psv('GET', objConfig.urls.authurl2, objData, function(response){
+		psv('GET', objConfig.urls.authurl2, objData, function(err, response){
 			//debugger;
+			if(err != null){
+				cb(err);
+			}else{
+				//finds the latest snapshot id and stores it in objConfig
+				var latestSnapshotId = self.findlatestsnapshotid(response);
+				cb(null, latestSnapshotId);				
+			}
 
-			//finds the latest snapshot id and stores it in objConfig
-			var latestSnapshotId = self.findlatestsnapshotid(response);
-			cb(latestSnapshotId);
 		});	
 	},
 	checksnapshotconfigforupdates: function(response){
@@ -148,38 +152,51 @@ var objLogin = {
 				type: 'json',
 				fulldomain: location.protocol+"//"+location.hostname
 			};
-			psv('GET', objConfig.urls.authurl1, objData, function(response){
-				if(response.error) {
-					self.handleloginerror(response.error.message);
+			psv('GET', objConfig.urls.authurl1, objData, function(err, response){
+				if(err != null){
+					self.handleloginerror(err);
 				}else{
-					objData.stay = true;
-					psv('GET', objConfig.urls.authurl1, objData, function(response){
-						//debugger;
+					if(response.error) {
+						self.handleloginerror(response.error.message);
+					}else{
+						objData.stay = true;
+						psv('GET', objConfig.urls.authurl1, objData, function(err, response){
+							//debugger;
+							if(err != null){
+								self.handleloginerror(err);
+							}else{
+								//finds the latest snapshot id and stores it in objConfig
+								self.findlatestsnapshotid(response);
+								//checks if there are updates in the snapshot config and display's a message
+								self.checksnapshotconfigforupdates(response);
+								
+								if(response.error) {
+									self.handleloginerror(response.error.message);
+								}else{	
+									self.getjsonvars(objData);
+								}								
+							}
 
-						//finds the latest snapshot id and stores it in objConfig
-						self.findlatestsnapshotid(response);
-						//checks if there are updates in the snapshot config and display's a message
-						self.checksnapshotconfigforupdates(response);
-						
-						if(response.error) {
-							self.handleloginerror(response.error.message);
-						}else{	
-							self.getjsonvars(objData);
-						}
-					});
+						});
+					}					
 				}
+
 			});
 		}
 	},
 	getjsonvars: function(objData){
 		var self = this;
 		objData.method='generatejsvarsjson';
-		psv('GET', objConfig.urls.authurl2, objData, function(response){
+		psv('GET', objConfig.urls.authurl2, objData, function(err, response){
 			//console.log(response);
-			if(response.error) {
-				self.handleloginerror(response.error.message);
+			if(err != null){
+				self.handleloginerror(err);
 			}else{
-				self.authenticate(response.token);
+				if(response.error) {
+					self.handleloginerror(response.error.message);
+				}else{
+					self.authenticate(response.token);
+				}				
 			}
 		});
 	},
@@ -195,22 +212,26 @@ var objLogin = {
 			fulldomain: location.protocol+"//"+location.hostname
 		};
 		
-		psv('POST', objConfig.urls.authurl3, objDataAuthenticate, function(response){
-			//response = JSON.parse(response);
-			if(response.error) {
-				self.handleloginerror(response.error.message);
-			}else{
-				self.token = response.token;
-				objStore.setlocalstorageitem('token', self.token);
-				objStore.setlocalstorageitem('username', self.el.tbxusername.value);
-				
-				self.state.authenticating = false;
-				self.changeauthenticatebutton();
-							
-				objOverlay.hide();
-				self.hide();
-				self.el.tbxpassword.value = '';
-				app.start();                   		
+		psv('POST', objConfig.urls.authurl3, objDataAuthenticate, function(err, response){
+			if(err != null){
+				self.handleloginerror(err);
+			}else{			
+				//response = JSON.parse(response);
+				if(response.error) {
+					self.handleloginerror(response.error.message);
+				}else{
+					self.token = response.token;
+					objStore.setlocalstorageitem('token', self.token);
+					objStore.setlocalstorageitem('username', self.el.tbxusername.value);
+					
+					self.state.authenticating = false;
+					self.changeauthenticatebutton();
+								
+					objOverlay.hide();
+					self.hide();
+					self.el.tbxpassword.value = '';
+					app.start();                   		
+				}
 			}
 		});	
 	},
@@ -248,6 +269,10 @@ var objLogin = {
 	logout: function(){
 		var self = this;
 		objStore.removelocalstorageitem('token');
+		objFilters.hide();
+		objExplain.hide();
+		objBookmarks.hide();
+		objOverlay.hide();
 		objLogin.show();
 	},
 	changeauthenticatebutton: function(){

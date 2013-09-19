@@ -14,6 +14,7 @@ var objOverlay ={
 			opacity : 0.7,
 			delay : 0,
 			onComplete : function() {
+				self.state.visible = true;
 				self.state.tweening = false;
 				if(cb)cb();
 			}
@@ -26,6 +27,7 @@ var objOverlay ={
 			opacity : 0,
 			delay : 0,
 			onComplete : function() {
+				self.state.visible = false;
 				self.state.tweening = false;
 				self.el.wrapper.style.display = "none";
 				if(cb)cb();
