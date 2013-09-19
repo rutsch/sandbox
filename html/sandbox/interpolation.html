@@ -223,6 +223,12 @@ circle#background{
 				el: {wrapper: getEl('region_info_wrapper')}
 
 			}
+
+			var objTrendGraph = {
+				updatelastpointingraph: function(bla){}
+
+			}
+
 			var app = {
 				state: {
 					width: null,
@@ -234,7 +240,7 @@ circle#background{
 
 				start: function(){
 					//retrieve a set of simulator data for philips-world
-					psv('GET', 'js/simulator_philips_world.json', {}, function(response){
+					psv('GET', 'js/simulator_philips_world.json', {}, function(err, response){
 
 						if(response.error) {
 							alert(response.error.message);
@@ -264,6 +270,8 @@ circle#background{
 					objSliders.init();
 					//set the debug modus to true
 					objSliders.vars.debug=true;
+					objSliders.vars.updatetrendgraph=false;
+					objSliders.vars.updatecurrent=true;
 
 					self.start();
 

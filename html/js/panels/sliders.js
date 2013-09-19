@@ -16,7 +16,9 @@ var objSliders = {
 		slidergreensalesvalue: 0,
 		livesimprovedcurrent: 0,
 		simulatorsampling: false,
-		debug: false
+		debug: false,
+		updatetrendgraph: true,
+		updatecurrent: false
 	},
 	/*
 	 * UI functions
@@ -77,6 +79,37 @@ var objSliders = {
 			});					
 		}
 
+	},
+	/* helpers */
+	calculatefloorceil: function(s, step){
+		var sfloor=0, sceil=0;
+		var intermediate=Math.round(s / step) * step;
+		//console.log('- intermediate='+intermediate);
+		//console.log('- modulus='+(s%step));
+
+		if(s>=0){
+			if((s%step)>(step/2)){
+				//console.log('1');
+				sceil=intermediate;
+				sfloor=sceil-step;
+			}else{
+				//console.log('2');
+				sfloor=intermediate;
+				sceil=sfloor+step;
+			}
+		
+		}else{
+			if(Math.abs((s%step))>(step/2) || (s%step)==0){
+				//console.log('3');
+				sfloor=intermediate;
+				sceil=sfloor+step;
+			}else{
+				//console.log('4');
+				sceil=intermediate;
+				sfloor=sceil-step;
+			}
+		}
+		return {floor: sfloor, ceil: sceil};
 	},
 	//loads the data and sets up the interface 
 	start: function(){
@@ -181,7 +214,7 @@ var objSliders = {
 			if(intSimulatorMax>intMaxValue)intMaxValue=intSimulatorMax;
 			if(intSimulatorMin<intMinValue)intMinValue=intSimulatorMin;
 
-			//console.log(strKeyMax+' '+strKeyMin);
+			console.log(intMaxValue+' '+intMinValue);
 
 			objGraphData.ymin=parseFloat(objMap.roundlivesimproveddataobject({l:intMinValue, g:-1, p: -1}).displayl);
 			objGraphData.ymin=objGraphData.ymin-Math.round(((objGraphData.ymin/100)*5));
@@ -196,7 +229,7 @@ var objSliders = {
 		objTrendGraph.props.axis.ygridlines=4;
 
 
-		//console.log(objGraphData);
+		console.log(objGraphData);
 
 		//draw the graph
 		objTrendGraph.reset();
@@ -222,6 +255,7 @@ var objSliders = {
 		self.vars.livesimprovedcurrent=intPopulation;
 
 		//set the values min/max for the slider labels
+		//console.log(self.el.salesmin);
 		self.el.salesmin.innerHTML=self.vars.data.scenario.salesmin;
 		self.el.salesmax.innerHTML=self.vars.data.scenario.salesmax;
 		self.el.greensalesmin.innerHTML=self.vars.data.scenario.greensalesmin;
@@ -276,8 +310,8 @@ var objSliders = {
 	},
 	calculatevalue: function(intCurrentSalesPercentage, intCurrentGreenSalesPercentage){
 		var self=this;
-		var bolDebug=true;
-		var updateCurrent=false, updateTrendGraph=true;
+
+		var bolUseBiliniarInterpolation=false;
 
 		//update the lables of the sliders
 		self.el.slidersaleslabel.innerHTML=(intCurrentSalesPercentage > 0 ? '+': '') + Math.round(intCurrentSalesPercentage*10)/10 + '%';
@@ -287,50 +321,59 @@ var objSliders = {
 		var intSalesMin, intGreenSalesMin, intSalesMax, intGreenSalesMax;
 		intCurrentSalesPercentage=parseFloat(intCurrentSalesPercentage, 10);
 		intCurrentGreenSalesPercentage=parseFloat(intCurrentGreenSalesPercentage, 10);
+		var intLivesImprovedSimulated=0;
 
-		//correct for maximum values
-		if(intCurrentSalesPercentage==self.vars.data.scenario.salesmax)intCurrentSalesPercentage=self.vars.data.scenario.salesmax-0.000001;
-		if(intCurrentGreenSalesPercentage==self.vars.data.scenario.greensalesmax)intCurrentGreenSalesPercentage=self.vars.data.scenario.greensalesmax-0.000001;
-		
-		intSalesMin=Math.floor((intCurrentSalesPercentage+0.00001)/self.vars.data.scenario.salesstep)*self.vars.data.scenario.salesstep
-		//console.log(intSalesTemp)
-		intGreenSalesMin=Math.floor((intCurrentGreenSalesPercentage+0.00001)/self.vars.data.scenario.greensalesstep)*self.vars.data.scenario.greensalesstep
-		//console.log(intGreenSalesTemp)
-		var strKeyMin='s'+(intSalesMin+'').replace(/-/, 'minus')+'g'+(intGreenSalesMin+'').replace(/-/, 'minus');
-		//console.log(strKeyMin);
+		if(bolUseBiliniarInterpolation){
 
-		intSalesMax=Math.ceil((intCurrentSalesPercentage+0.000001)/self.vars.data.scenario.salesstep)*self.vars.data.scenario.salesstep
-		//console.log(intSalesTemp)
-		intGreenSalesMax=Math.ceil((intCurrentGreenSalesPercentage+0.000001)/self.vars.data.scenario.greensalesstep)*self.vars.data.scenario.greensalesstep
-		//console.log(intGreenSalesTemp)
-		var strKeyMax='s'+(intSalesMax+'').replace(/-/, 'minus')+'g'+(intGreenSalesMax+'').replace(/-/, 'minus');
-		//console.log(strKeyMax);
 
-		//attempt to find the values in the associative array
-		var intLivesImprovedMax=null, intLivesImprovedMin=null;
-		if(self.vars.data.livesimproved[strKeyMin]){
-		    intLivesImprovedMin=self.vars.data.livesimproved[strKeyMin];
+		}else{
+			//correct for maximum values
+			if(intCurrentSalesPercentage==self.vars.data.scenario.salesmax)intCurrentSalesPercentage=self.vars.data.scenario.salesmax-0.000001;
+			if(intCurrentGreenSalesPercentage==self.vars.data.scenario.greensalesmax)intCurrentGreenSalesPercentage=self.vars.data.scenario.greensalesmax-0.000001;
+			
+			intSalesMin=Math.floor((intCurrentSalesPercentage+0.00001)/self.vars.data.scenario.salesstep)*self.vars.data.scenario.salesstep
+			//console.log(intSalesTemp)
+			intGreenSalesMin=Math.floor((intCurrentGreenSalesPercentage+0.00001)/self.vars.data.scenario.greensalesstep)*self.vars.data.scenario.greensalesstep
+			//console.log(intGreenSalesTemp)
+			var strKeyMin='s'+(intSalesMin+'').replace(/-/, 'minus')+'g'+(intGreenSalesMin+'').replace(/-/, 'minus');
+			//console.log(strKeyMin);
+
+			intSalesMax=Math.ceil((intCurrentSalesPercentage+0.000001)/self.vars.data.scenario.salesstep)*self.vars.data.scenario.salesstep
+			//console.log(intSalesTemp)
+			intGreenSalesMax=Math.ceil((intCurrentGreenSalesPercentage+0.000001)/self.vars.data.scenario.greensalesstep)*self.vars.data.scenario.greensalesstep
+			//console.log(intGreenSalesTemp)
+			var strKeyMax='s'+(intSalesMax+'').replace(/-/, 'minus')+'g'+(intGreenSalesMax+'').replace(/-/, 'minus');
+			//console.log(strKeyMax);
+
+			//attempt to find the values in the associative array
+			var intLivesImprovedMax=null, intLivesImprovedMin=null;
+			if(self.vars.data.livesimproved[strKeyMin]){
+				intLivesImprovedMin=self.vars.data.livesimproved[strKeyMin];
+			}
+			if(self.vars.data.livesimproved[strKeyMax]){
+				intLivesImprovedMax=self.vars.data.livesimproved[strKeyMax];
+			}
+			if(self.vars.debug)getEl('debug').innerHTML="- strKeyMin="+strKeyMin+"<br/>"+"- intLivesImprovedMin="+intLivesImprovedMin+"<br/>"+"- strKeyMax="+strKeyMax+"<br/>"+"- intLivesImprovedMax="+intLivesImprovedMax+"<br/>"
+
+			//console.log('- strKeyMin: '+strKeyMin+' - strKeyMax: '+strKeyMax+'intLivesImprovedMin: '+intLivesImprovedMin+' - intLivesImprovedMax: '+intLivesImprovedMax);
+
+			//assume both sliders have the same influence
+			//var intDelta=(intLivesImprovedMax-intLivesImprovedMin);
+			var intSalesFactor=(((intLivesImprovedMax-intLivesImprovedMin)/2)/self.vars.data.scenario.salesstep);
+			var intGreenSalesFactor=(((intLivesImprovedMax-intLivesImprovedMin)/2)/self.vars.data.scenario.greensalesstep);
+			//console.log(' - intSalesFactor: '+intSalesFactor+' - intGreenSalesFactor: '+intGreenSalesFactor);
+
+			//use modulus to calculate the delta (precentage that the slider has moved from the "minimal" position)
+			var intSalesDelta=Math.abs(intCurrentSalesPercentage % self.vars.data.scenario.salesstep);
+			var intGreenSalesDelta=Math.abs(intCurrentGreenSalesPercentage % self.vars.data.scenario.greensalesstep);
+			//console.log('intSalesDelta: '+intSalesDelta+' - intGreenSalesDelta: '+intGreenSalesDelta);
+
+			//calculate the lives improved number
+			intLivesImprovedSimulated=intLivesImprovedMin+(intSalesDelta*intSalesFactor)+(intGreenSalesDelta*intGreenSalesFactor);			
 		}
-		if(self.vars.data.livesimproved[strKeyMax]){
-		    intLivesImprovedMax=self.vars.data.livesimproved[strKeyMax];
-		}
-		if(self.vars.debug)getEl('debug').innerHTML="- strKeyMin="+strKeyMin+"<br/>"+"- intLivesImprovedMin="+intLivesImprovedMin+"<br/>"+"- strKeyMax="+strKeyMax+"<br/>"+"- intLivesImprovedMax="+intLivesImprovedMax+"<br/>"
 
-		//console.log('- strKeyMin: '+strKeyMin+' - strKeyMax: '+strKeyMax+'intLivesImprovedMin: '+intLivesImprovedMin+' - intLivesImprovedMax: '+intLivesImprovedMax);
 
-		//assume both sliders have the same influence
-		//var intDelta=(intLivesImprovedMax-intLivesImprovedMin);
-		var intSalesFactor=(((intLivesImprovedMax-intLivesImprovedMin)/2)/self.vars.data.scenario.salesstep);
-		var intGreenSalesFactor=(((intLivesImprovedMax-intLivesImprovedMin)/2)/self.vars.data.scenario.greensalesstep);
-		//console.log(' - intSalesFactor: '+intSalesFactor+' - intGreenSalesFactor: '+intGreenSalesFactor);
 
-		//use modulus to calculate the delta (precentage that the slider has moved from the "minimal" position)
-		var intSalesDelta=Math.abs(intCurrentSalesPercentage % self.vars.data.scenario.salesstep);
-		var intGreenSalesDelta=Math.abs(intCurrentGreenSalesPercentage % self.vars.data.scenario.greensalesstep);
-		//console.log('intSalesDelta: '+intSalesDelta+' - intGreenSalesDelta: '+intGreenSalesDelta);
-
-		//calculate the lives improved number
-		var intLivesImprovedSimulated=intLivesImprovedMin+(intSalesDelta*intSalesFactor)+(intGreenSalesDelta*intGreenSalesFactor);
 
 		//get the poplation
 		//var strKey=objMruFilter.state.selectedmru+"_"+objOruFilter.state.selectedoruguid;
@@ -347,7 +390,7 @@ var objSliders = {
 		//console.log(objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl);
 
 		// UPDATE INTERFACE
-		if(updateCurrent){
+		if(self.vars.updatecurrent){
 			//use the utility in objMap to round the number in the correct format so that it can be displayed
 			self.el.livesimprovednumber.innerHTML=objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl;
 
@@ -370,7 +413,7 @@ var objSliders = {
 			}		
 		}
 
-		if(updateTrendGraph){
+		if(self.vars.updatetrendgraph){
 			objTrendGraph.updatelastpointingraph(parseFloat(objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl))
 		}
 

@@ -71,8 +71,11 @@ var objTrendGraph={
 		elCircle.setAttributeNS(null,'r',self.props.coordinatepoint.radius);
 		elCircle.setAttributeNS(null,'data-value',objPoint.value+'');
 		elCircle.setAttributeNS(null,'data-label',objPoint.label);
-		if(strId!='')elCircle.setAttributeNS(null,'id',strId);
-		elCircle.setAttributeNS(null,'onclick','objTrendGraph.showvaluepopup({show: true, x: '+objCoords.x+', y: '+objCoords.y+', value: \''+objPoint.value+'\', label: \''+objPoint.label+'\'})');
+		if(strId!=''){
+			elCircle.setAttributeNS(null,'id',strId);
+		}else{
+			elCircle.setAttributeNS(null,'onclick','objTrendGraph.showvaluepopup({show: true, x: '+objCoords.x+', y: '+objCoords.y+', value: \''+objPoint.value+'\', label: \''+objPoint.label+'\'})');
+		}
 		elWrapper.appendChild(elCircle);
 	},
 	createlabel: function(elWrapper, objCoords, objPoint){
@@ -116,9 +119,9 @@ var objTrendGraph={
 		//if((objCoords.y+self.vars.popuptrendheight)>=(self.props.height-self.props.padding.bottom)){
 		if((objCoords.y+self.vars.popuptrendheight)>=(self.props.height)){	
 			self.fliptrendpopup('flipped');
-			console.log('perform flip')
+			//console.log('perform flip')
 		}else{
-			console.log('set original')
+			//console.log('set original')
 			self.fliptrendpopup('original');
 		}
 
@@ -158,7 +161,7 @@ var objTrendGraph={
 		);
 	},
 	correctlabel: function(strLabel, intLength){
-		if(strLabel.indexOf('.')==-1)strLabel+='.';
+		if(strLabel.indexOf('.')==-1 && strLabel.indexOf(',')==-1)strLabel+='.';
 		var intLabelLength=strLabel.length;
 		if(intLabelLength<intLength){
 			for(var j=0; j<(intLength-intLabelLength); j++){
@@ -232,7 +235,7 @@ var objTrendGraph={
 		}
 
 
-		//1) set the <svg /> node using the viewport
+		//1) set the width and height of the <svg /> node using the viewport
 		self.el.root.setAttributeNS(null,'viewBox','0 0 '+self.props.width+' '+self.props.height);
 		//elSvgRoot.setAttributeNS(null,'width',(self.props.width+''));
 		//elSvgRoot.setAttributeNS(null,'height',(self.props.height+''));
@@ -267,7 +270,6 @@ var objTrendGraph={
 
 			//on the last data point - position the trend popup
 			if(i==self.vars.data.points.length-1){
-
 				self.positiontrendpopupandsetvalue(objCoords, objPoint.value);
 			}
 		}
@@ -361,7 +363,7 @@ var objTrendGraph={
 			//make sure we ramain in the same number formatting by capturing the decimal pages that were received
 			var intDecimalPlacesIn=self.decimalplaces(self.props.axis.ymax);
 			var intFactor=1, intPercentage=1, intLength=(self.props.axis.ymax+'').length;
-			console.log(intLength)
+			//console.log(intLength)
 			switch(intDecimalPlacesIn){
 				case 1:
 					intFactor=10;
@@ -469,5 +471,8 @@ var objTrendGraph={
 		//console.log(self.vars);
 		var objSerializer = new XMLSerializer();
 		self.vars.template=objSerializer.serializeToString(self.el.root);
+
+		//reset the state
+		self.state.trendpopupflipped=false;
 	}
 }
