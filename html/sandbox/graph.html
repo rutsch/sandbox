@@ -49,8 +49,10 @@
 
 					<g id="popup_trend" transform="translate(18.882713,11.364596) scale(0.8)">
 						<path id="popup_trend_base" d="m 0.826235,89.47513 171.590555,0.3268 -0.3268,-60.78434 -13.0719,0 -17.97385,-28.10457 -17.32026,28.10457 c 0,0 -117.342689,-0.65359 -123.22398,-0.65359 z" />
-						<text id="popup_trend_number" y="55" x="160" xml:space="preserve">2,23</text>
-						<text id="popup_trend_text" y="75" x="160" xml:space="preserve">Million Lives Improved</text>
+						<g id="popup_trend_text_wrapper">
+							<text id="popup_trend_number" y="55" x="160" xml:space="preserve">2,23</text>
+							<text id="popup_trend_text" y="75" x="160" xml:space="preserve">Million Lives Improved</text>
+						</g>
 					</g>
 
 					<g id="popup_value" onclick="objTrendGraph.showvaluepopup({show: false});" visibility="hidden">
@@ -91,7 +93,7 @@
 					,
 					{value: 13, label: 'Q4-13'}
 					,
-					{value: 16, label: 'Q1-14'}
+					{value: 6, label: 'Q1-14'}
 					/**/
 				],
 				ymin: null,

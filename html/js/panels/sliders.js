@@ -189,17 +189,11 @@ var objSliders = {
 		objTrendGraph.props.width=self.el.history.offsetWidth;
 		objTrendGraph.props.height=self.el.history.offsetHeight;
 
-		//the steps on the y-axis -> we want 3 grid lines
-		var intDifference=Math.round(((objGraphData.ymax-objGraphData.ymin)/3)*10)/10;
-		if(intDifference>1){
-			objTrendGraph.props.axis.ystep=Math.round(intDifference);
-		}else{
-			objTrendGraph.props.axis.ystep=intDifference;
-		}
-		console.log(intDifference);
+		//fix the number of grid lines
+		objTrendGraph.props.axis.ygridlines=4;
 
 
-		console.log(objGraphData);
+		//console.log(objGraphData);
 
 		//draw the graph
 		objTrendGraph.reset();

@@ -487,6 +487,7 @@ var objMap = {
 	},
 	//rounds the data befor sending it to the app
 	roundlivesimproveddataobject: function(objData){
+		//console.log(objData)
 		var intDecimals=0;
 		
 		//lives improved

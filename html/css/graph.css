@@ -1,9 +1,7 @@
 
 svg.graph {
-	border: 1px solid red;
-	font-family: Arial;
+	font-family: gill;
 	font-size: 14px;
-	/*padding: 10px;*/
 }
 
 svg.graph g#wrapper{
