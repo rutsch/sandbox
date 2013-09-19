@@ -141,6 +141,7 @@
 			</form>
 		</div>
 		<div id="filter_panel" class="panel modal">
+			<div id="filter_loader"></div>
 			<div class="panel_header">
 				<h2>Filters</h2>
 				<div id="btn_close_filter" class="btn btn_close" onclick="objFilter.hide();">X</div>
@@ -192,7 +193,9 @@
 				</ul>
 			</div>
 		</div>		
-		<div id="overlay"></div>
+		<div id="overlay">
+			<div id="loader"></div>
+		</div>
 		<div id="loading"></div>
 		<div id="producttree_temp"></div>
 		<div id="error" onclick="hideErrorDiv();"></div>

@@ -101,30 +101,33 @@ var objSliders = {
 		}
 		
 		
-		psv('GET', objConfig.urls.simulationdataurl, objData, function(response){
-
-			if(response.error) {
-				self.el.innerwrapper.style.display='none';
-				self.el.errorwrapper.style.display='block';
-				self.el.errorwrapper.innerHTML="<div class='simulator_data_error'>"+response.error.message+"</div>";
-
-				//show the interface
-				//self.show();	
-							
-				//objError.show(response.error.message, true);
+		psv('GET', objConfig.urls.simulationdataurl, objData, function(err, response){
+			if(err){
+				objError.handleError('objSliders.start', err);
 			}else{
-				//store the data we have received
-				self.vars.data=response;
+				if(response.error) {
+					self.el.innerwrapper.style.display='none';
+					self.el.errorwrapper.style.display='block';
+					self.el.errorwrapper.innerHTML="<div class='simulator_data_error'>"+response.error.message+"</div>";
 
-				self.el.innerwrapper.style.display='block';
-				self.el.errorwrapper.style.display='none';
+					//show the interface
+					//self.show();	
+								
+					//objError.show(response.error.message, true);
+				}else{
+					//store the data we have received
+					self.vars.data=response;
 
-				//show the interface
-				//self.show();
+					self.el.innerwrapper.style.display='block';
+					self.el.errorwrapper.style.display='none';
 
-				//initiate the base logic and start sampling the slider positions
-				self.setupsimulator();
-				self.setuphistorygraph();
+					//show the interface
+					//self.show();
+
+					//initiate the base logic and start sampling the slider positions
+					self.setupsimulator();
+					self.setuphistorygraph();
+				}				
 			}
 		});
 	},

@@ -82,8 +82,9 @@ var objMap = {
 				url: self.maps[strOru.toLowerCase()].url, 
 				method: 'get', 
 				debug: false,
-				callback: function(strSvgData){
-					cb(strSvgData);
+				callback: function(err, strSvgData){
+					if(err != null) cb(err)
+					else cb(strSvgData);
 				}
 			});		
 		}	
@@ -103,14 +104,17 @@ var objMap = {
 			snapshotid: objConfig.currentsnapshotid
 		}
 		//showLoadingPanel();
-		psv('GET', objConfig.urls.snapshoturl, objData, function(data) {
+		psv('GET', objConfig.urls.snapshoturl, objData, function(err, data) {
 			//hideLoadingPanel();
-			if(data.error){
-				cb(data.error.message);
+			if(err != null){
+				cb(err);
 			}else{
-				cb(null, data);
+				if(data.error){
+					cb(data.error.message);
+				}else{
+					cb(null, data);
+				}				
 			}
-
 		});		
 	},
 	/*
@@ -131,8 +135,8 @@ var objMap = {
 			}
 			//get worldmap livesimproved data
 			self.getworldmapdata(function(err, data){
-				if(err){
-					
+				if(err != null){
+					objError.handleError('map.updatemap', err);
 				}else{
 
 

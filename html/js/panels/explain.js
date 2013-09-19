@@ -25,7 +25,7 @@ var objExplain = {
 						url: 'data/faq.html', 
 						method: 'get', 
 						debug: false,
-						callback: function(strFaqContent){
+						callback: function(err, strFaqContent){
 							//insert the SVG data into the holder div
 							self.el.content.innerHTML=strFaqContent;
 

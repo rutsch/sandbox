@@ -37,11 +37,16 @@ var objFilter = {
 	},
 	blink: function(){
 		var self = this;
-		TweenLite.to(self.el.filtercontent, 0.4, {
+		
+		TweenLite.to(self.el.filtercontent, 0.2, {
 			opacity : 0.5,
 			onComplete: function(){
-				TweenLite.to(self.el.filtercontent, 0.2, {
-					opacity : 1
+				self.el.loader.style.display = 'block';
+				TweenLite.to(self.el.filtercontent, 0.4, {
+					opacity : 1,
+					onComplete: function(){
+						self.el.loader.style.display = 'none';
+					}
 				});	
 			}
 		});				
@@ -52,6 +57,7 @@ var objFilter = {
 		self.state.tweening = false;
 		
 		self.el.wrapper = getEl('filter_panel');
+		self.el.loader = getEl('filter_loader');
 		self.el.filtercontent = Sizzle('#filter_panel div.modal_content')[0];
 	}
 }

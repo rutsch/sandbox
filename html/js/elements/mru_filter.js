@@ -19,8 +19,12 @@ var objMruFilter = {
 			token: objLogin.token,
 			snapshotid: objConfig.currentsnapshotid	
 		}
-		psv('GET', objConfig.urls.dynamicresourceurl, objData, function(data) {
-			cb(null, data);
+		psv('GET', objConfig.urls.dynamicresourceurl, objData, function(err, data) {
+			if(err != null) {
+				cb(err);
+			}else{ 
+				cb(null, data);
+			}
 		});		
 	},
 	getdefaultmru: function(){
@@ -167,9 +171,13 @@ var objMruFilter = {
 		self.el.tempmru = getEl('producttree_temp');
 		
 		self.getmruhtml(function(err, data){
-			self.preparehtml(data.html);
-			self.state.selectedsector = self.getsectorfrombreadcrumb(self.getmrufilterbreadcrumb());
-			cb();				
+			if(err != null){
+				cb(err);
+			}else{
+				self.preparehtml(data.html);
+				self.state.selectedsector = self.getsectorfrombreadcrumb(self.getmrufilterbreadcrumb());
+				cb();	
+			}
 		});
 
 	}

@@ -18,8 +18,12 @@ var objOruFilter = {
 			token: objLogin.token,
 			snapshotid: objConfig.currentsnapshotid	
 		}
-		psv('GET', objConfig.urls.dynamicresourceurl, objData, function(data) {
-			cb(null, data);
+		psv('GET', objConfig.urls.dynamicresourceurl, objData, function(err, data) {
+			if(err){
+				cb(err);
+			}else{
+				cb(null, data);
+			}
 		});			
 	},
 	getdefaultoru: function(){
@@ -74,9 +78,12 @@ var objOruFilter = {
 
 		//JT: this is a strange construction... too complex as this is alreasy being called from another callback function
 		self.getorujson(function(err, data){
-			self.json = data;
-			//self.selectoru(self.state.selectedoru);			
-			cb();			
+			if(err != null){
+				cb(err);
+			}else{
+				self.json = data;
+				cb();
+			}
 		});		
 	}
 }
