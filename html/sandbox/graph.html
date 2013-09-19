@@ -7,159 +7,78 @@
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 
+		<link rel="stylesheet" type="text/css" href="../css/graph.css"/>
+
 		<style>
 
 			body {
 				background-color: #b2e9e4;
 			}
-			
-			svg.graph {
-				border: 1px solid red;
-			}
-			
-			/* line in the graph */
-			svg.graph g#line_wrapper *{
-				fill:none;
-				stroke:black;
-				stroke-width:3;
-			}
-			svg.graph g#line_wrapper *.last{
-				stroke-dasharray: 2 4;
-			}
-
-			/* value indicators */
-			svg.graph .points {
-				stroke: white;
-				stroke-width: 3;
-			}						
-
-			/* x and y axis lines */
-			svg.graph g.axis_line line{
-				stroke: rgb(255,0,0);
-				stroke-width: 2;
-			}
-
-			/* x axis value indicators (lines) */
-			svg.graph g#x_axislabel_wrapper line{
-				fill: none;
-				stroke: green;
-				stroke-width: 3
-			}
-
-
-			/* y axis value indicators (lines) */
-			svg.graph g#y_axislabel_wrapper line{
-				fill: none;
-				stroke: blue;
-				stroke-width: 3
-			}			
-
-
-			/* x and y axis labels */
-			svg.graph .labels {
-				font-family: Arial;
-				font-size: 14px;
-				kerning: 1;
-			}
-
-			svg.graph .labels.x-labels {
-				text-anchor: middle;
-			}
-
-			svg.graph .labels.y-labels {
-				text-anchor: end;
-			}
-
- 
 
 		</style>
 
-	
+
 	</head>
 	<body>
+		<div style="width: 800px; height: 600px">
+			<!-- base svg construction for the line graph -->
+			<svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 400 300">
+				<g id="wrapper" transform="translate(0, 0)">
+					<text id="graph_title" y="15" x="0" xml:space="preserve">Trend</text>
 
-		<!-- base svg construction for the line graph -->
-		<svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
-			<!-- wrapper for the graph line -->
-			<g id="line_wrapper"> </g>
+					<g id="grid_wrapper"> </g>
 
-			<!-- wrapper for the data points -->
-			<g id="data_point_wrapper" class="first_set points" data-setname="Our first data set"> </g>
-			
-			<!-- axis lines -->  
-			<g class="axis_line">
-				<line id="x_axisline" x1="20" y1="10" x2="20" y2="280"/>
-			</g>  
-			<g class="axis_line">
-				<line id="y_axisline" x1="20" y1="280" x2="370" y2="280"/>
-			</g>
+					<!-- wrapper for the graph line -->
+					<g id="line_wrapper"> </g>
 
-			<!-- axis labels -->
-			<g id="x_axislabel_wrapper" class="labels x-labels"> </g>
-			<g id="y_axislabel_wrapper" class="labels y-labels"> </g>
+					<!-- wrapper for the data points -->
+					<g id="data_point_wrapper" class="first_set points" data-setname="Our first data set"> </g>
 
-<g id="popup_trend">
-	 <text
-	 	x="422.87582"
-	   y="117.39486"
-	   style="font-size:24px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans">bla</text>
-	<path
-	   style="fill:#333333;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1; opacity: 0.8"
-	   d="m 303.26797,150.4014 184.31373,0.3268 -0.3268,-60.784321 -13.0719,0 -17.97385,-28.10457 -17.32026,28.10457 -135.62092,-0.65359 z"
-	   id="path2996"/>
-	  
-	<text
-	   xml:space="preserve"
-	   style="font-size:24px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
-	   x="422.87582"
-	   y="117.39486"
-	   id="text3000"><tspan
-		 sodipodi:role="line"
-		 id="tspan3002"
-		 x="422.87582"
-		 y="117.39486">2,23</tspan></text>
-	<text
-	   xml:space="preserve"
-	   style="font-size:14px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
-	   x="320.58823"
-	   y="136.02231"
-	   id="text3004"
-	   sodipodi:linespacing="125%"><tspan
-		 sodipodi:role="line"
-		 id="tspan3006"
-		 x="320.58823"
-		 y="136.02231">Million Lives Improved</tspan></text>
-</g>
-			
-		</svg>
+					<!-- axis lines -->
+					<g class="axis_line">
+						<line id="x_axisline" x1="20" y1="10" x2="20" y2="280"/>
+					</g>
+					<g class="axis_line">
+						<line id="y_axisline" x1="20" y1="280" x2="370" y2="280"/>
+					</g>
+
+					<!-- axis labels -->
+					<g id="x_axislabel_wrapper" class="labels x-labels"> </g>
+					<g id="y_axislabel_wrapper" class="labels y-labels"> </g>
+
+
+					<g id="popup_trend" transform="translate(18.882713,11.364596) scale(0.8)">
+						<path id="popup_trend_base" d="m 0.826235,89.47513 171.590555,0.3268 -0.3268,-60.78434 -13.0719,0 -17.97385,-28.10457 -17.32026,28.10457 c 0,0 -117.342689,-0.65359 -123.22398,-0.65359 z" />
+						<text id="popup_trend_number" y="55" x="160" xml:space="preserve">2,23</text>
+						<text id="popup_trend_text" y="75" x="160" xml:space="preserve">Million Lives Improved</text>
+					</g>
+
+					<g id="popup_value" onclick="objTrendGraph.showvaluepopup({show: false});" visibility="hidden">
+						<rect id="popup_value_base" width="54" height="54" x="0" y="0"/>
+						<text id="popup_value_number" y="20" x="27" xml:space="preserve">2,233</text>
+						<text id="popup_value_text" y="42" x="27" xml:space="preserve">Million</text>
+					</g>
+				</g>
+
+			</svg>
+		</div>
 		<div>
-			Last element value: <input type="text" id="future_info" /> <input type="button" onclick="updateLastPointInGraph(parseFloat(document.getElementById('future_info').value))" value="Update" />
+			Last element value: <input type="text" id="future_info" /> <input type="button" onclick="objTrendGraph.updatelastpointingraph(parseFloat(document.getElementById('future_info').value))" value="Update" />
 		</div>
 
+		<script type="text/javascript" src="../js/panels/graph.js">//</script>
 		<script>
-			var objGraphProperties={
-				width: 600,
-				height: 400,
-				padding: {
-					top: 15,
-					bottom: 20,
-					left: 20,
-					right: 30
-				},
-				axis: {
-					ymin: 4,
-					ymax: 15,
-					ystep: 5,
-					xlinelength: 8,
-					ylinelength: 8,
-					xpaddingleft: 20,
-					xpaddingright: 80,
-				},
-				coordinatepoint: {
-					radius: 5
-				}
-			}
 
+
+
+
+
+
+
+			//initiate the object
+			objTrendGraph.init();
+
+			//draw a graph with data
 			var objData={
 				points: [
 					{value: 5, label: 'Q4-12'}
@@ -174,200 +93,12 @@
 					,
 					{value: 16, label: 'Q1-14'}
 					/**/
-				]
+				],
+				ymin: null,
+				ymax: null
 			}
+			objTrendGraph.drawgraph(objData);
 
-			//svg coordinates start at top left
-			function getSvgCoordinatesForPoint(intPointValue, intArrayPosition){
-				var intYRangePixels=objGraphProperties.height-objGraphProperties.padding.top-objGraphProperties.padding.bottom;
-				var intYRangeValues=objGraphProperties.axis.ymax-objGraphProperties.axis.ymin;
-				var intXRangePixels=objGraphProperties.width-objGraphProperties.padding.left-objGraphProperties.padding.right-objGraphProperties.axis.xpaddingleft-objGraphProperties.axis.xpaddingright;
-				var intXRangeValues=objData.points.length-1;
-
-				//(objGraphProperties.padding.right + (( intXRangePixels/intXRangeValues ) * intArrayPosition) - (( intXRangePixels/intXRangeValues )/2))
-				return {
-					x: (objGraphProperties.padding.left + objGraphProperties.axis.xpaddingleft + (( intXRangePixels/intXRangeValues ) * intArrayPosition) - (( intXRangePixels/intXRangeValues ))),
-					y: (objGraphProperties.padding.top+(intYRangePixels - (intYRangePixels/intYRangeValues)*(intPointValue-objGraphProperties.axis.ymin)))
-				}
-			}
-
-			function createCoordinatePoint(elWrapper, objCoords, objPoint, strId){
-				var elCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');
-				elCircle.setAttributeNS(null,'cx',(objCoords.x+''));
-				elCircle.setAttributeNS(null,'cy',(objCoords.y+''));
-				elCircle.setAttributeNS(null,'r',objGraphProperties.coordinatepoint.radius);
-				elCircle.setAttributeNS(null,'data-value',objPoint.value+'');
-				elCircle.setAttributeNS(null,'data-label',objPoint.label);
-				if(strId!='')elCircle.setAttributeNS(null,'id',strId);
-				elWrapper.appendChild(elCircle);
-			}
-
-			function createLabel(elWrapper, objCoords, objPoint){
-				var elText = document.createElementNS('http://www.w3.org/2000/svg','text');
-				elText.setAttributeNS(null,'x',(objCoords.x+''));
-				elText.setAttributeNS(null,'y',(objCoords.y+''));
-
-				var textNode = document.createTextNode(objPoint.label);
-				elText.appendChild(textNode);
-
-				elWrapper.appendChild(elText);
-			}
-
-			function setSvgLineCoordinates(elLine, objCoords){
-				elLine.setAttributeNS(null,'x1',objCoords.x1);				
-				elLine.setAttributeNS(null,'y1',objCoords.y1);
-				elLine.setAttributeNS(null,'x2',objCoords.x2);
-				elLine.setAttributeNS(null,'y2',objCoords.y2);					
-			}
-
-			function updateLastPointInGraph(intNewValue){
-				var objCoords=getSvgCoordinatesForPoint(intNewValue, objData.points.length);
-				var elLine=document.getElementById('last_segment');
-				elLine.setAttributeNS(null,'x2',objCoords.x);
-				elLine.setAttributeNS(null,'y2',objCoords.y);
-
-				var elCircle=document.getElementById('last_point');
-				elCircle.setAttributeNS(null,'cx',objCoords.x);
-				elCircle.setAttributeNS(null,'cy',objCoords.y);
-				elCircle.setAttributeNS(null,'data-value',intNewValue);
-			}
-			//console.log(getSvgCoordinatesForPoint(5, 1));
-
-			//0) update the graph properties by setting the y-axis max and min value dynamically
-			var intMaxValue=-1000000000000, intMinValue=1000000000000;
-			for (var i=0; i<objData.points.length; i++)
-			{
-				if(objData.points[i].value>intMaxValue)intMaxValue=objData.points[i].value;
-				if(objData.points[i].value<intMinValue)intMinValue=objData.points[i].value;
-			}
-			//console.log(intMaxValue+' '+intMinValue);
-			objGraphProperties.axis.ymin=intMinValue-1;
-			objGraphProperties.axis.ymax=intMaxValue+1;
-
-			//1) set the <svg /> node width and height
-			var elSvgRoot=document.getElementById('graph');
-			elSvgRoot.setAttributeNS(null,'width',(objGraphProperties.width+''));
-			elSvgRoot.setAttributeNS(null,'height',(objGraphProperties.height+''));
-
-			//2) set the length of the x- and y-axis lines
-			setSvgLineCoordinates(document.getElementById('x_axisline'),{
-				x1: objGraphProperties.padding.left,
-				y1: objGraphProperties.padding.top,
-				x2: objGraphProperties.padding.left,
-				y2: (objGraphProperties.height-objGraphProperties.padding.bottom)
-			});			
-			setSvgLineCoordinates(document.getElementById('y_axisline'),{
-				x1: objGraphProperties.padding.left,
-				y1: (objGraphProperties.height-objGraphProperties.padding.bottom),
-				x2: (objGraphProperties.width-objGraphProperties.padding.right),
-				y2: (objGraphProperties.height-objGraphProperties.padding.bottom)
-			});
-
-			//3) create the data points
-			var elWrapperDataPoints=document.getElementById('data_point_wrapper');
-			for (var i=0; i<objData.points.length; i++)
-			{
-				var objPoint=objData.points[i];
-				var objCoords=getSvgCoordinatesForPoint(objPoint.value, (i+1));
-				var strId='';
-				if(i==(objData.points.length-1)){
-					strId='last_point';
-				}
-
-				//console.log(objCoords);
-				createCoordinatePoint(elWrapperDataPoints, objCoords, objPoint, strId);
-			}
-
-			//4) create the graph line (use seperate lines to differentiate the last line)
-			var elWrapperLine=document.getElementById('line_wrapper');
-			var strCoordinatesAttrValue="";
-			var objCoords={};
-			for (var i=0; i<objData.points.length; i++)
-			{
-				var objCoordsPrev={};
-				if(i>0){
-					objCoordsPrev.x=objCoords.x;
-					objCoordsPrev.y=objCoords.y;					
-				}
-
-
-				var objPoint=objData.points[i];
-				var objCoords=getSvgCoordinatesForPoint(objPoint.value, (i+1));
-
-				if(i>0){
-					var elLine = document.createElementNS('http://www.w3.org/2000/svg','line');
-					setSvgLineCoordinates(elLine,{
-						x1: objCoordsPrev.x,
-						y1: objCoordsPrev.y,
-						x2: objCoords.x,
-						y2: objCoords.y
-					});
-					if(i==(objData.points.length-1)){
-						elLine.setAttributeNS(null,'class','last');
-						elLine.setAttributeNS(null,'id','last_segment');
-					}
-					elWrapperLine.appendChild(elLine);
-				}
-
-			}			
-
-
-			//5) create the x axis labels
-			var elWrapperLabelsX=document.getElementById('x_axislabel_wrapper');
-			for (var i=0; i<objData.points.length; i++)
-			{
-				//label on x axis
-				var objPoint=objData.points[i];
-				var objCoords=getSvgCoordinatesForPoint(objPoint.value, (i+1));
-				//console.log(objCoords);
-				objCoords.y=objGraphProperties.height-5;
-				createLabel(elWrapperLabelsX, objCoords, objPoint);
-
-				//lines on the x axis
-				var elline = document.createElementNS('http://www.w3.org/2000/svg','line');
-				setSvgLineCoordinates(elline,{
-					x1: objCoords.x,
-					y1: (objGraphProperties.padding.top+objGraphProperties.height-objGraphProperties.padding.top-objGraphProperties.padding.bottom),
-					x2: objCoords.x,
-					y2: (objGraphProperties.padding.top+objGraphProperties.height-objGraphProperties.padding.top-objGraphProperties.padding.bottom-objGraphProperties.axis.xlinelength)
-				});
-			
-				elWrapperLabelsX.appendChild(elline);
-			}
-
-			//6) create the y axis labels
-			var elWrapperLabelsY=document.getElementById('y_axislabel_wrapper');
-			var yCorrection=4;
-			for (var i=0; i<=(objGraphProperties.axis.ymax-objGraphProperties.axis.ymin); i=i+objGraphProperties.axis.ystep)
-			{
-				//label on y axis
-				var objPoint={value: (i+objGraphProperties.axis.ymin), label: (i+objGraphProperties.axis.ymin)+''};
-				//console.log(objPoint);
-				var objCoords=getSvgCoordinatesForPoint(objPoint.value, (i+1));
-				//console.log(objCoords);
-				objCoords.x=objGraphProperties.padding.left-5;
-				//correct the y-position so that it aligns better with the little line
-				objCoords.y=objCoords.y+yCorrection;
-				createLabel(elWrapperLabelsY, objCoords, objPoint)
-
-				//lines on the y axis
-				objCoords.y=objCoords.y-yCorrection;
-				objCoords.x=objGraphProperties.padding.left;
-				
-				var elline = document.createElementNS('http://www.w3.org/2000/svg','line');
-				setSvgLineCoordinates(elline,{
-					x1: objCoords.x,
-					y1: objCoords.y,
-					x2: (objCoords.x+objGraphProperties.axis.ylinelength),
-					y2: objCoords.y
-				});
-			
-
-				elWrapperLabelsY.appendChild(elline);
-			}
-
-
-
-		</script>	
+		</script>
 	</body>
-</html>    
+</html>

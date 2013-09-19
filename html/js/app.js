@@ -75,6 +75,7 @@ var app = {
 		objFilter.init();
 		objBookmarks.init();
 		objExplain.init();
+		objTrendGraph.init();
 
 		//retrieve snapshot id
 		objLogin.getsnapshotconfig(function(){

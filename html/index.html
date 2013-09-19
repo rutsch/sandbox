@@ -7,6 +7,7 @@
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="css/graph.css"/>
 		<script>
 
 		</script>		
@@ -90,7 +91,50 @@
 						</div>
 					</div>
 					<div id="region_history">
-						
+						<!-- base svg construction for the line graph -->
+						<svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 400 300">
+							<g id="wrapper" transform="translate(0, 0)">
+								<text id="graph_title" y="15" x="0" xml:space="preserve">Trend</text>
+
+								<g id="grid_wrapper"> </g>
+
+								<!-- wrapper for the graph line -->
+								<g id="line_wrapper"> </g>
+
+								<!-- wrapper for the data points -->
+								<g id="data_point_wrapper" class="first_set points" data-setname="Our first data set"> </g>
+
+								<!-- axis lines -->
+								<g class="axis_line">
+									<line id="x_axisline" x1="20" y1="10" x2="20" y2="280"/>
+								</g>
+								<g class="axis_line">
+									<line id="y_axisline" x1="20" y1="280" x2="370" y2="280"/>
+								</g>
+
+								<!-- axis labels -->
+								<g id="x_axislabel_wrapper" class="labels x-labels"> </g>
+								<g id="y_axislabel_wrapper" class="labels y-labels"> </g>
+
+
+								<g id="popup_trend" transform="translate(18.882713,11.364596) scale(0.8)">
+									<path id="popup_trend_base" d="m 0.826235,89.47513 171.590555,0.3268 -0.3268,-60.78434 -13.0719,0 -17.97385,-28.10457 -17.32026,28.10457 c 0,0 -117.342689,-0.65359 -123.22398,-0.65359 z" />
+									<text id="popup_trend_number" y="55" x="160" xml:space="preserve">2,23</text>
+									<text id="popup_trend_text" y="75" x="160" xml:space="preserve">Million Lives Improved</text>
+								</g>
+
+								<g id="popup_value" onclick="objTrendGraph.showvaluepopup({show: false});" visibility="hidden">
+									<rect id="popup_value_base" width="54" height="54" x="0" y="0"/>
+									<text id="popup_value_number" y="20" x="27" xml:space="preserve">2,233</text>
+									<text id="popup_value_text" y="42" x="27" xml:space="preserve">Million</text>
+								</g>
+							</g>
+
+						</svg>						
+
+
+
+
 					</div>
 					<div id="slider_indicator"></div>
 				</div>
@@ -215,8 +259,7 @@
 		<script type="text/javascript" src="js/lib/marquee.js">//</script>	
 		<script type="text/javascript" src="js/lib/raphael.js">//</script>
 		<script type="text/javascript" src="js/lib/g.raphael.js">//</script>	
-		<script type="text/javascript" src="js/lib/g.line.js">//</script>	
-		<script type="text/javascript" src="js/lib/canvas.js">//</script>			
+		<script type="text/javascript" src="js/lib/g.line.js">//</script>				
 		
 		<!-- Helper files files -->		
 		<script type="text/javascript" src="js/helpers/utils.js">//</script>
@@ -236,6 +279,7 @@
 		<script type="text/javascript" src="js/panels/filter.js">//</script>
 		<script type="text/javascript" src="js/panels/bookmarks.js">//</script>
 		<script type="text/javascript" src="js/panels/explain.js">//</script>
+		<script type="text/javascript" src="js/panels/graph.js">//</script>
 		
 		<!-- Elements -->
 		<script type="text/javascript" src="js/elements/mru_filter.js">//</script>

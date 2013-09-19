@@ -1,0 +1,138 @@
+
+svg.graph {
+	border: 1px solid red;
+	font-family: Arial;
+	font-size: 14px;
+	/*padding: 10px;*/
+}
+
+svg.graph g#wrapper{
+
+}
+
+/* graph title */
+svg.graph #graph_title{
+	font-size: 20px;
+	fill: #ffffff;
+		fill-opacity: 1;
+		stroke: none;
+}
+
+/* line in the graph */
+svg.graph g#line_wrapper *{
+	fill:none;
+	stroke:black;
+	stroke-width:3;
+}
+svg.graph g#line_wrapper *.last{
+	stroke-dasharray: 2 4;
+}
+
+/* value indicators */
+svg.graph .points {
+	stroke: white;
+	stroke-width: 3;
+}
+
+/* x and y axis lines */
+svg.graph g.axis_line line{
+	stroke: #000;
+	stroke-width: 2;
+}
+
+/* x axis value indicators (lines) */
+svg.graph g#x_axislabel_wrapper line{
+	fill: none;
+	stroke: #000;
+	stroke-width: 2
+}
+
+
+/* y axis value indicators (lines) */
+svg.graph g#y_axislabel_wrapper line{
+	fill: none;
+	stroke: #000;
+	stroke-width: 2
+}
+
+
+/* x and y axis labels */
+svg.graph .labels {
+	kerning: 1;
+}
+
+svg.graph .labels.x-labels {
+	text-anchor: middle;
+}
+
+svg.graph .labels.y-labels {
+	text-anchor: end;
+}
+svg.graph g.inset .labels.y-labels {
+	text-anchor: start;
+}
+
+/* grid lines */
+svg.graph g#grid_wrapper line{
+	fill: none;
+	stroke: #fff;
+	stroke-width: 1;
+	stroke-dasharray: 8 4;
+}
+
+/* trend popup */
+svg.graph path#popup_trend_base{
+	opacity: 0.8;
+	fill: #333333;
+	stroke: #000000;
+	stroke-width: 1px;
+	stroke-linecap: butt;
+	stroke-linejoin: miter;
+	stroke-opacity:1;
+}
+
+	svg.graph text#popup_trend_number,
+	svg.graph text#popup_trend_text{
+		font-size: 15px;
+		font-style: normal;
+		font-weight: normal;
+		line-height: 125%;
+		letter-spacing: 0px;
+		word-spacing: 0px;
+		fill: #ffffff;
+		fill-opacity: 1;
+		stroke: none;
+		text-anchor: end;
+	}
+
+	/* value popup */
+	svg.graph g#popup_value{
+		/*visibility: hidden;*/
+	}
+svg.graph #popup_value_base{
+	fill: #ffffff;
+	stroke: #000000;
+	stroke-width: 1px;
+	stroke-linecap: butt;
+	stroke-linejoin: miter;
+	stroke-opacity:1;
+}
+svg.graph text#popup_value_number,
+svg.graph text#popup_value_text{
+	font-size: 15px;
+	font-style: normal;
+	font-weight: normal;
+	line-height: 125%;
+	letter-spacing: 0px;
+	word-spacing: 0px;
+	fill: #000;
+	fill-opacity: 1;
+	stroke: none;
+	text-anchor: middle;
+}
+svg.graph text#popup_value_number{
+	font-size: 18px;
+}
+svg.graph text#popup_value_text{
+font-size: 12px;
+}

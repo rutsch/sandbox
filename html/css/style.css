@@ -396,16 +396,8 @@ span{
 #region_info #up, #region_info #down{
 	display: none;
 }
-#region_history svg{
-	margin: 10px 10px;
-}
 
-#region_history div a{
-	display: none!important;
-}
-#region_history canvas{
-	background: transparent!important;
-}
+
 #region_history{
 	position: absolute;
 	width: 100%;
