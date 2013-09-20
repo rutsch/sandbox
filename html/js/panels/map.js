@@ -501,7 +501,7 @@ var objMap = {
 			if(objData.l>=1000000000){
 				//console.log('-2');
 				objData.roundedl=Math.round(objData.l/1000000);
-				console.log(objData.roundedl)
+				//console.log(objData.roundedl)
 			}
 			//100 - 999.99 million
 			if(objData.l>=100000000 && objData.l<1000000000){

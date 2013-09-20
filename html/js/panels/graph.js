@@ -57,6 +57,9 @@ var objTrendGraph={
 		var intXRangePixels=self.props.width-self.props.padding.left-self.props.padding.right-self.props.axis.xpaddingleft-self.props.axis.xpaddingright;
 		var intXRangeValues=self.vars.data.points.length-1;
 
+		//corrent the value if a string with "comma" notation is passed
+		if(isNaN(intPointValue))intPointValue=parseFloat((intPointValue+'').replace(/,/,''));
+
 		//(self.props.padding.right + (( intXRangePixels/intXRangeValues ) * intArrayPosition) - (( intXRangePixels/intXRangeValues )/2))
 		return {
 			x: (self.props.padding.left + self.props.axis.xpaddingleft + (( intXRangePixels/intXRangeValues ) * intArrayPosition) - (( intXRangePixels/intXRangeValues ))),
@@ -90,6 +93,7 @@ var objTrendGraph={
 	},
 	setsvglinecoordinates: function(elLine, objCoords){
 		elLine.setAttributeNS(null,'x1',objCoords.x1);
+		if(isNaN(objCoords.y1))console.trace(objCoords.y1)
 		elLine.setAttributeNS(null,'y1',objCoords.y1);
 		elLine.setAttributeNS(null,'x2',objCoords.x2);
 		elLine.setAttributeNS(null,'y2',objCoords.y2);
@@ -161,7 +165,7 @@ var objTrendGraph={
 		);
 	},
 	correctlabel: function(strLabel, intLength){
-		if(strLabel.indexOf('.')==-1 && strLabel.indexOf(',')==-1)strLabel+='.';
+		if(strLabel.indexOf('.')==-1 && strLabel.indexOf(',')==-1 && strLabel.length<4)strLabel+='.';
 		var intLabelLength=strLabel.length;
 		if(intLabelLength<intLength){
 			for(var j=0; j<(intLength-intLabelLength); j++){

@@ -239,7 +239,7 @@ function psv(type, url, objParams, cb) {
 	}
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4){
-			console.log(xmlhttp.statusText);
+			//console.log(xmlhttp.statusText);
 			if(xmlhttp.status == 200) {
 				try {
 					var objResponse=JSON.parse(xmlhttp.responseText);

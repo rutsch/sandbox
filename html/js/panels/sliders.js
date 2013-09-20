@@ -18,7 +18,9 @@ var objSliders = {
 		simulatorsampling: false,
 		debug: false,
 		updatetrendgraph: true,
-		updatecurrent: false
+		updatecurrent: false,
+		usebiliniarinterpolation: true,
+		debugstring: ''
 	},
 	/*
 	 * UI functions
@@ -81,35 +83,35 @@ var objSliders = {
 
 	},
 	/* helpers */
-	calculatefloorceil: function(s, step){
-		var sfloor=0, sceil=0;
-		var intermediate=Math.round(s / step) * step;
+	calculatefloorceil: function(intValue, intStep){
+		var intFloor=0, intCeil=0;
+		var intermediate=Math.round(intValue / intStep) * intStep;
 		//console.log('- intermediate='+intermediate);
 		//console.log('- modulus='+(s%step));
 
-		if(s>=0){
-			if((s%step)>(step/2)){
+		if(intValue>=0){
+			if((intValue%intStep)>(intStep/2)){
 				//console.log('1');
-				sceil=intermediate;
-				sfloor=sceil-step;
+				intCeil=intermediate;
+				intFloor=intCeil-intStep;
 			}else{
 				//console.log('2');
-				sfloor=intermediate;
-				sceil=sfloor+step;
+				intFloor=intermediate;
+				intCeil=intFloor+intStep;
 			}
 		
 		}else{
-			if(Math.abs((s%step))>(step/2) || (s%step)==0){
+			if(Math.abs((intValue%intStep))>(intStep/2) || (intValue%intStep)==0){
 				//console.log('3');
-				sfloor=intermediate;
-				sceil=sfloor+step;
+				intFloor=intermediate;
+				intCeil=intFloor+intStep;
 			}else{
 				//console.log('4');
-				sceil=intermediate;
-				sfloor=sceil-step;
+				intCeil=intermediate;
+				intFloor=intCeil-intStep;
 			}
 		}
-		return {floor: sfloor, ceil: sceil};
+		return {floor: intFloor, ceil: intCeil};
 	},
 	//loads the data and sets up the interface 
 	start: function(){
@@ -216,9 +218,9 @@ var objSliders = {
 
 			console.log(intMaxValue+' '+intMinValue);
 
-			objGraphData.ymin=parseFloat(objMap.roundlivesimproveddataobject({l:intMinValue, g:-1, p: -1}).displayl);
+			objGraphData.ymin=parseFloat(objMap.roundlivesimproveddataobject({l:intMinValue, g:-1, p: -1}).displayl.replace(/,/, ''));
 			objGraphData.ymin=objGraphData.ymin-Math.round(((objGraphData.ymin/100)*5));
-			objGraphData.ymax=parseFloat(objMap.roundlivesimproveddataobject({l:intMaxValue, g:-1, p: -1}).displayl);
+			objGraphData.ymax=parseFloat(objMap.roundlivesimproveddataobject({l:intMaxValue, g:-1, p: -1}).displayl.replace(/,/, ''));
 		}
 
 		//set the dimensions of the graph
@@ -311,8 +313,6 @@ var objSliders = {
 	calculatevalue: function(intCurrentSalesPercentage, intCurrentGreenSalesPercentage){
 		var self=this;
 
-		var bolUseBiliniarInterpolation=false;
-
 		//update the lables of the sliders
 		self.el.slidersaleslabel.innerHTML=(intCurrentSalesPercentage > 0 ? '+': '') + Math.round(intCurrentSalesPercentage*10)/10 + '%';
 		self.el.slidergreensaleslabel.innerHTML=(intCurrentGreenSalesPercentage > 0 ? '+': '') + Math.round(intCurrentGreenSalesPercentage*10)/10 + '%';
@@ -323,9 +323,54 @@ var objSliders = {
 		intCurrentGreenSalesPercentage=parseFloat(intCurrentGreenSalesPercentage, 10);
 		var intLivesImprovedSimulated=0;
 
-		if(bolUseBiliniarInterpolation){
+		if(self.vars.usebiliniarinterpolation){
+			var sfloor=0, sceil=0, gsfloor=0, gsceil=0, objCeilFloor={};
+			var q11=0, q21=0, q21=0, q22=0, key='';
+			var r1=0, r2=0;
 
+			if(intCurrentSalesPercentage==self.vars.data.scenario.salesmax)intCurrentSalesPercentage-=0.0001;
+			if(intCurrentGreenSalesPercentage==self.vars.data.scenario.greensalesmax)intCurrentGreenSalesPercentage-=0.0001;
+			//console.log('- intCurrentSalesPercentage='+intCurrentSalesPercentage+' - intCurrentGreenSalesPercentage='+intCurrentGreenSalesPercentage);
 
+			//clear debug string
+			if(self.vars.debug)self.vars.debugstring='';
+
+			//get ceil and floor
+			objCeilFloor=self.calculatefloorceil(intCurrentSalesPercentage, self.vars.data.scenario.salesstep);
+			sfloor=objCeilFloor.floor;
+			sceil=objCeilFloor.ceil;
+
+			objCeilFloor=self.calculatefloorceil(intCurrentGreenSalesPercentage, self.vars.data.scenario.greensalesstep);
+			gsfloor=objCeilFloor.floor;
+			gsceil=objCeilFloor.ceil;
+			if(self.vars.debug)self.vars.debugstring+="- sfloor="+sfloor+"<br/>"+"- sceil="+sceil+"<br/>"+"- gsfloor="+gsfloor+"<br/>"+"- gsceil="+gsceil+"<br/>"
+
+			//get all combinations
+			key='s'+(sfloor+'').replace(/-/, 'minus')+'g'+(gsfloor+'').replace(/-/, 'minus');
+			q11=self.vars.data.livesimproved[key];
+			if(self.vars.debug)self.vars.debugstring+='- q11 key='+key+', value='+q11+'<br/>';
+
+			key='s'+(sceil+'').replace(/-/, 'minus')+'g'+(gsfloor+'').replace(/-/, 'minus');
+			q21=self.vars.data.livesimproved[key];
+			if(self.vars.debug)self.vars.debugstring+='- q21 key='+key+', value='+q21+'<br/>';
+
+			key='s'+(sfloor+'').replace(/-/, 'minus')+'g'+(gsceil+'').replace(/-/, 'minus');
+			q12=self.vars.data.livesimproved[key];
+			if(self.vars.debug)self.vars.debugstring+='- q12 key='+key+', value='+q12+'<br/>';
+
+			key='s'+(sceil+'').replace(/-/, 'minus')+'g'+(gsceil+'').replace(/-/, 'minus');
+			q22=self.vars.data.livesimproved[key];
+			if(self.vars.debug)self.vars.debugstring+='- q22 key='+key+', value='+q22+'<br/>';
+
+			//interpolation phase1
+			r1=((sceil - intCurrentSalesPercentage)/(sceil - sfloor) * q11) + ((intCurrentSalesPercentage - sfloor)/(sceil - sfloor) * q21);
+			r2=((sceil - intCurrentSalesPercentage)/(sceil - sfloor) * q12) + ((intCurrentSalesPercentage - sfloor)/(sceil - sfloor) * q22);
+
+			//interpolation phase2
+			intLivesImprovedSimulated=((gsceil - intCurrentGreenSalesPercentage)/(gsceil - gsfloor) * r1) + ((intCurrentGreenSalesPercentage - gsfloor)/(gsceil - gsfloor) * r2);
+
+			if(self.vars.debug)getEl('debug').innerHTML=self.vars.debugstring;
+			if(self.vars.debug)self.vars.debugstring='';
 		}else{
 			//correct for maximum values
 			if(intCurrentSalesPercentage==self.vars.data.scenario.salesmax)intCurrentSalesPercentage=self.vars.data.scenario.salesmax-0.000001;
@@ -372,50 +417,53 @@ var objSliders = {
 			intLivesImprovedSimulated=intLivesImprovedMin+(intSalesDelta*intSalesFactor)+(intGreenSalesDelta*intGreenSalesFactor);			
 		}
 
+		//check if the new lives improved number is actually a number
+		if(isNaN(intLivesImprovedSimulated)==false){
+			//get the poplation
+			//var strKey=objMruFilter.state.selectedmru+"_"+objOruFilter.state.selectedoruguid;
+			var intPopulation=objMap.data[objMruFilter.state.selectedmru+"_"+objOruFilter.state.selectedoruguid].p;
 
+			//calculate the lives improved percentage
+			var intLivesImprovedSimulatedPercentage=Math.round((intLivesImprovedSimulated/(intPopulation))*100);
 
+			//console.log(intLivesImprovedSimulatedPercentage);
+			//console.log(intLivesImprovedSimulated);
 
-		//get the poplation
-		//var strKey=objMruFilter.state.selectedmru+"_"+objOruFilter.state.selectedoruguid;
-		var intPopulation=objMap.data[objMruFilter.state.selectedmru+"_"+objOruFilter.state.selectedoruguid].p;
+			//overwrite the livesimproved number in the interface
 
-		//calculate the lives improved percentage
-		var intLivesImprovedSimulatedPercentage=Math.round((intLivesImprovedSimulated/(intPopulation))*100);
+			//console.log(objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl);
 
-		//console.log(intLivesImprovedSimulatedPercentage);
-		//console.log(intLivesImprovedSimulated);
+			// UPDATE INTERFACE
+			if(self.vars.updatecurrent){
+				//use the utility in objMap to round the number in the correct format so that it can be displayed
+				self.el.livesimprovednumber.innerHTML=objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl.replace(/,/, '');
 
-		//overwrite the livesimproved number in the interface
+				//set the infographic text
+				self.el.livesimprovedpercentage.textContent=intLivesImprovedSimulatedPercentage+'%';
 
-		//console.log(objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl);
+				//update the infographic circle
+				applyInfographicDelta((intLivesImprovedSimulatedPercentage*360) /100);	
+				
+				//set the class in the wrapper div - that will trigger the "up" or "down" icon display
+				if(intLivesImprovedSimulated>self.vars.livesimprovedcurrent){
+					objRegionInfo.el.wrapper.setAttribute('class', 'more');
 
-		// UPDATE INTERFACE
-		if(self.vars.updatecurrent){
-			//use the utility in objMap to round the number in the correct format so that it can be displayed
-			self.el.livesimprovednumber.innerHTML=objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl;
-
-			//set the infographic text
-			self.el.livesimprovedpercentage.textContent=intLivesImprovedSimulatedPercentage+'%';
-
-			//update the infographic circle
-			applyInfographicDelta((intLivesImprovedSimulatedPercentage*360) /100);	
-			
-			//set the class in the wrapper div - that will trigger the "up" or "down" icon display
-			if(intLivesImprovedSimulated>self.vars.livesimprovedcurrent){
-				objRegionInfo.el.wrapper.setAttribute('class', 'more');
-
-			}else{
-				if(intLivesImprovedSimulated<self.vars.livesimprovedcurrent){
-					objRegionInfo.el.wrapper.setAttribute('class', 'less');
 				}else{
-					objRegionInfo.el.wrapper.setAttribute('class', 'equal');
-				}
-			}		
+					if(intLivesImprovedSimulated<self.vars.livesimprovedcurrent){
+						objRegionInfo.el.wrapper.setAttribute('class', 'less');
+					}else{
+						objRegionInfo.el.wrapper.setAttribute('class', 'equal');
+					}
+				}		
+			}
+
+			if(self.vars.updatetrendgraph){
+				objTrendGraph.updatelastpointingraph(parseFloat(objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl.replace(/,/, '')))
+			}			
 		}
 
-		if(self.vars.updatetrendgraph){
-			objTrendGraph.updatelastpointingraph(parseFloat(objMap.roundlivesimproveddataobject({l:intLivesImprovedSimulated, g:-1, p: -1}).displayl))
-		}
+
+
 
 
 	},
