@@ -104,7 +104,7 @@ var objMap = {
 			snapshotid: objConfig.currentsnapshotid
 		}
 		//showLoadingPanel();
-		psv('GET', objConfig.urls.snapshoturl, objData, function(err, data) {
+		psv('GET', objConfig.urls.dynamicresourceurl, objData, function(err, data) {
 			//hideLoadingPanel();
 			if(err != null){
 				cb(err);

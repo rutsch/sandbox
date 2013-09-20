@@ -101,7 +101,7 @@ var objSliders = {
 		}
 		
 		
-		psv('GET', objConfig.urls.simulationdataurl, objData, function(err, response){
+		psv('GET', objConfig.urls.dynamicresourceurl, objData, function(err, response){
 			if(err){
 				objError.handleError('objSliders.start', err);
 			}else{

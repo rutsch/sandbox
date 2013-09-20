@@ -269,7 +269,7 @@ var objLogin = {
 	logout: function(){
 		var self = this;
 		objStore.removelocalstorageitem('token');
-		objFilters.hide();
+		objFilter.hide();
 		objExplain.hide();
 		objBookmarks.hide();
 		objOverlay.hide();
