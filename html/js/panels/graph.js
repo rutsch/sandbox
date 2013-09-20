@@ -1,9 +1,12 @@
 var objTrendGraph={
 	state: {
-		valuepopupopen: false
+		valuepopupopen: false,
+		trendpopupflipped: false
 	},
 	vars: {
 		popuptrendwidth: 0,
+		popuptrendheight: 0,
+		popuptrendtextwrapperheight: 0,
 		popupvaluewidth: 0,
 		popupvalueheight: 0,
 		data: null,
@@ -14,7 +17,9 @@ var objTrendGraph={
 		lastsegment: null,
 		lastpoint: null,
 		popuptrend: null,
+		popuptrendbase: null,
 		popuptrendnumber: null,
+		popuptrendtextwrapper: null,
 		popupvalue: null,
 		popupvaluenumber: null
 	},
@@ -31,6 +36,7 @@ var objTrendGraph={
 			ymin: 4,
 			ymax: 15,
 			ystep: 2.5,
+			ygridlines: null,
 			xlinelength: 8,
 			ylinelength: 8,
 			ylabelinset: true,
@@ -51,6 +57,9 @@ var objTrendGraph={
 		var intXRangePixels=self.props.width-self.props.padding.left-self.props.padding.right-self.props.axis.xpaddingleft-self.props.axis.xpaddingright;
 		var intXRangeValues=self.vars.data.points.length-1;
 
+		//corrent the value if a string with "comma" notation is passed
+		if(isNaN(intPointValue))intPointValue=parseFloat((intPointValue+'').replace(/,/,''));
+
 		//(self.props.padding.right + (( intXRangePixels/intXRangeValues ) * intArrayPosition) - (( intXRangePixels/intXRangeValues )/2))
 		return {
 			x: (self.props.padding.left + self.props.axis.xpaddingleft + (( intXRangePixels/intXRangeValues ) * intArrayPosition) - (( intXRangePixels/intXRangeValues ))),
@@ -65,8 +74,11 @@ var objTrendGraph={
 		elCircle.setAttributeNS(null,'r',self.props.coordinatepoint.radius);
 		elCircle.setAttributeNS(null,'data-value',objPoint.value+'');
 		elCircle.setAttributeNS(null,'data-label',objPoint.label);
-		if(strId!='')elCircle.setAttributeNS(null,'id',strId);
-		elCircle.setAttributeNS(null,'onclick','objTrendGraph.showvaluepopup({show: true, x: '+objCoords.x+', y: '+objCoords.y+', value: \''+objPoint.value+'\', label: \''+objPoint.label+'\'})');
+		if(strId!=''){
+			elCircle.setAttributeNS(null,'id',strId);
+		}else{
+			elCircle.setAttributeNS(null,'onclick','objTrendGraph.showvaluepopup({show: true, x: '+objCoords.x+', y: '+objCoords.y+', value: \''+objPoint.value+'\', label: \''+objPoint.label+'\'})');
+		}
 		elWrapper.appendChild(elCircle);
 	},
 	createlabel: function(elWrapper, objCoords, objPoint){
@@ -81,6 +93,7 @@ var objTrendGraph={
 	},
 	setsvglinecoordinates: function(elLine, objCoords){
 		elLine.setAttributeNS(null,'x1',objCoords.x1);
+		if(isNaN(objCoords.y1))console.trace(objCoords.y1)
 		elLine.setAttributeNS(null,'y1',objCoords.y1);
 		elLine.setAttributeNS(null,'x2',objCoords.x2);
 		elLine.setAttributeNS(null,'y2',objCoords.y2);
@@ -104,12 +117,25 @@ var objTrendGraph={
 	positiontrendpopupandsetvalue: function(objCoords, intValue){
 	 	var self=this;
 
+	 	//determine if the popup needs to be flipped
+	 	//console.log(objCoords.y+self.vars.popuptrendheight);
+	 	//console.log(self.props.height-self.props.padding.bottom);
+		//if((objCoords.y+self.vars.popuptrendheight)>=(self.props.height-self.props.padding.bottom)){
+		if((objCoords.y+self.vars.popuptrendheight)>=(self.props.height)){	
+			self.fliptrendpopup('flipped');
+			//console.log('perform flip')
+		}else{
+			//console.log('set original')
+			self.fliptrendpopup('original');
+		}
+
 		//align the popup
+		//var intCorrection=((self.state.trendpopupflipped)?-10:10);
 		var strTranslateValue=self.el.popuptrend.getAttributeNS(null, 'transform').replace(/^.*\)\s+(.*)$/, '$1');
-		self.el.popuptrend.setAttributeNS(null,'transform','translate('+(objCoords.x-self.vars.popuptrendwidth+60)+', '+(objCoords.y+10)+') '+strTranslateValue);
+		self.el.popuptrend.setAttributeNS(null,'transform','translate('+(objCoords.x-self.vars.popuptrendwidth+60)+', '+(objCoords.y+((self.state.trendpopupflipped)?-10:10))+') '+strTranslateValue);
 
 		//set the content in the popup
-		self.el.popuptrendnumber.textContent=(intValue+'');
+		self.el.popuptrendnumber.textContent=self.correctlabel((intValue+''), (self.props.axis.ymax+'').length);
 	},
 	showvaluepopup: function(objArgs){
 		var self=this;
@@ -125,6 +151,43 @@ var objTrendGraph={
 		}else{
 			//hide the popup
 			self.el.popupvalue.setAttributeNS(null,'visibility','hidden');
+		}
+
+	},
+	decimalplaces: function(num) {
+		var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+		if (!match) { return 0; }
+		return Math.max( 0,
+			// Number of digits right of decimal point.
+			(match[1] ? match[1].length : 0)
+			// Adjust for scientific notation.
+			- (match[2] ? +match[2] : 0)
+		);
+	},
+	correctlabel: function(strLabel, intLength){
+		if(strLabel.indexOf('.')==-1 && strLabel.indexOf(',')==-1 && strLabel.length<4)strLabel+='.';
+		var intLabelLength=strLabel.length;
+		if(intLabelLength<intLength){
+			for(var j=0; j<(intLength-intLabelLength); j++){
+				strLabel+='0';
+			}
+		}
+		return strLabel;
+	},
+	fliptrendpopup: function(strType){
+		var self=this;
+		//undo the flip and repositioning of the text elements
+		if(strType=='original' && self.state.trendpopupflipped){
+			self.el.popuptrendbase.removeAttributeNS(null, 'transform');
+			self.el.popuptrendtextwrapper.removeAttributeNS(null, 'transform');
+			self.state.trendpopupflipped=false;
+		}
+
+		//perform a vertical flip and replace the text elements
+		if(strType=='flipped' && !self.state.trendpopupflipped){
+			self.el.popuptrendbase.setAttributeNS(null, 'transform', 'scale(1,-1)');
+			self.el.popuptrendtextwrapper.setAttributeNS(null, 'transform', 'translate(0,-'+(self.vars.popuptrendheight+self.vars.popuptrendtextwrapperheight)+')');
+			self.state.trendpopupflipped=true;
 		}
 
 	},
@@ -176,7 +239,7 @@ var objTrendGraph={
 		}
 
 
-		//1) set the <svg /> node using the viewport
+		//1) set the width and height of the <svg /> node using the viewport
 		self.el.root.setAttributeNS(null,'viewBox','0 0 '+self.props.width+' '+self.props.height);
 		//elSvgRoot.setAttributeNS(null,'width',(self.props.width+''));
 		//elSvgRoot.setAttributeNS(null,'height',(self.props.height+''));
@@ -277,58 +340,116 @@ var objTrendGraph={
 		var elWrapperGridLines=document.getElementById('grid_wrapper');
 		var yCorrection=4;
 		var bolFractional=(self.props.axis.ystep % 1 === 0)?false:true;
+		var arrPoints=[];
 
 		//this class determines how the labels are popsitioned
 		document.getElementById('wrapper').setAttributeNS(null,'class',((self.props.axis.ylabelinset)?'inset':'normal'))
 
 		//console.log(self.props.axis.ymax)
-		for (var i=parseFloat(self.props.axis.ymin); i<=(self.props.axis.ymax); (i=i+0.1))
-		{
-			//round the number to one decimal to make sure the logic will work
-			i=Math.round(i*10)/10
-			//console.log(i+' '+i%self.props.axis.ystep);
-			if(i%self.props.axis.ystep==0){
-				//console.log('in i='+i)
+		if(self.props.axis.ygridlines==null){
+			//calculate the labels and the gid lines based on the "ystep" variable
+			for (var i=parseFloat(self.props.axis.ymin); i<=(self.props.axis.ymax); (i=i+0.1))
+			{
+				//round the number to one decimal to make sure the logic will work
+				i=Math.round(i*10)/10
+				//console.log(i+' '+i%self.props.axis.ystep);
+				if(i%self.props.axis.ystep==0){
+					//console.log('in i='+i)
 
-				//label on y axis
-				var objPoint={value: i, label: ((bolFractional && (i%1===0))?(i+'.0'):(i+''))};
-				//console.log(objPoint);
-				var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
-				//console.log(objCoords);
-				objCoords.x=self.props.padding.left+((self.props.axis.ylabelinset)?3:-5);
-				//correct the y-position so that it aligns better with the little line
-				objCoords.y=objCoords.y+yCorrection;
-				self.createlabel(elWrapperLabelsY, objCoords, objPoint)
-
-				//lines on the y axis
-				objCoords.y=objCoords.y-yCorrection;
-				objCoords.x=self.props.padding.left;
-
-				if(!self.props.axis.ylabelinset){
-					var elline = document.createElementNS('http://www.w3.org/2000/svg','line');
-					self.setsvglinecoordinates(elline,{
-						x1: objCoords.x,
-						y1: objCoords.y,
-						x2: (objCoords.x+self.props.axis.ylinelength),
-						y2: objCoords.y
-					});
-					elWrapperLabelsY.appendChild(elline);								
+					//fill the array with points
+					arrPoints.push({value: i, label: ((bolFractional && (i%1===0))?(i+'.0'):(i+''))})
 				}
+			}			
+		}else{
+			//calculate the grid lines and labels based on the number og grid lines given
 
+			
+			//make sure we ramain in the same number formatting by capturing the decimal pages that were received
+			var intDecimalPlacesIn=self.decimalplaces(self.props.axis.ymax);
+			var intFactor=1, intPercentage=1, intLength=(self.props.axis.ymax+'').length;
+			//console.log(intLength)
+			switch(intDecimalPlacesIn){
+				case 1:
+					intFactor=10;
+					intPercentage=10;
+					break;
+				case 2:
+					intFactor=100;
+					intPercentage=15;
+					break;
+				case 3:
+					intFactor=1000;
+					intPercentage=20;
+					break;
+				case 4:
+					intFactor=10000;
+					intPercentage=25;
+					break;
+			}
 
-				var elGridLine=document.createElementNS('http://www.w3.org/2000/svg','line');
-				self.setsvglinecoordinates(elGridLine,{
-					x1: ((self.props.axis.ylabelinset)?(self.props.padding.left+self.props.axis.xpaddingleft-5):self.props.padding.left),
-					y1: objCoords.y,
-					x2: (self.props.width-self.props.padding.right),
-					y2: objCoords.y
+			var intMargin=((self.props.axis.ymax-self.props.axis.ymin)/100)*intPercentage;
+			//% from top
+			var intValueTopLine=Math.round((self.props.axis.ymax-intMargin)*intFactor)/intFactor;
+			arrPoints.push({value: intValueTopLine, label: self.correctlabel(intValueTopLine+'', intLength)});
+
+			//% from bottom
+			var intValueBottomLine=Math.round((self.props.axis.ymin+intMargin)*intFactor)/intFactor;
+			arrPoints.push({value: intValueBottomLine, label: self.correctlabel(intValueBottomLine+'', intLength)});
+
+			//devide the rest...
+			var intFactorRemainder=(intValueTopLine-intValueBottomLine)/(self.props.axis.ygridlines-1);
+
+			//fill the array with points
+			for (var i=2; i<self.props.axis.ygridlines; i++){
+				var intValue=Math.round((intValueBottomLine+(intFactorRemainder*(i-1)))*intFactor)/intFactor;
+				arrPoints.push({
+					value: intValue, 
+					label: self.correctlabel(intValue+'', intLength)
 				});
-				elWrapperGridLines.appendChild(elGridLine);
 
 			}
 
-
 		}
+		
+		//draw the labels and grid lines
+		for (var i=0; i<arrPoints.length; i++){
+
+			var objPoint=arrPoints[i];
+			var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
+			//console.log(objCoords);
+			objCoords.x=self.props.padding.left+((self.props.axis.ylabelinset)?3:-5);
+			//correct the y-position so that it aligns better with the little line
+			objCoords.y=objCoords.y+yCorrection;
+
+			//label on y-axis
+			self.createlabel(elWrapperLabelsY, objCoords, objPoint)
+
+			//lines on y-axis
+			objCoords.y=objCoords.y-yCorrection;
+			objCoords.x=self.props.padding.left;
+
+			if(!self.props.axis.ylabelinset){
+				var elline = document.createElementNS('http://www.w3.org/2000/svg','line');
+				self.setsvglinecoordinates(elline,{
+					x1: objCoords.x,
+					y1: objCoords.y,
+					x2: (objCoords.x+self.props.axis.ylinelength),
+					y2: objCoords.y
+				});
+				elWrapperLabelsY.appendChild(elline);								
+			}
+
+			//grid lines
+			var elGridLine=document.createElementNS('http://www.w3.org/2000/svg','line');
+			self.setsvglinecoordinates(elGridLine,{
+				x1: ((self.props.axis.ylabelinset)?(self.props.padding.left+self.props.axis.xpaddingleft-5):self.props.padding.left),
+				y1: objCoords.y,
+				x2: (self.props.width-self.props.padding.right),
+				y2: objCoords.y
+			});
+			elWrapperGridLines.appendChild(elGridLine);
+		}
+
 
 		//store commonly used elements in global variables for efficient use later
 		self.el.lastsegment=document.getElementById('last_segment');
@@ -341,14 +462,21 @@ var objTrendGraph={
 		self.el.popuptrend=document.getElementById('popup_trend');
 		self.el.popuptrendnumber=document.getElementById('popup_trend_number');
 		self.el.popupvalue=document.getElementById('popup_value');
+		self.el.popuptrendbase=document.getElementById('popup_trend_base');
 		self.el.popupvaluenumber=document.getElementById('popup_value_number');
+		self.el.popuptrendtextwrapper=document.getElementById('popup_trend_text_wrapper');
 
 		//getBoundingClientRect() gets the width & height in "scale" size, getBBox() gets the original size.... 
 		self.vars.popuptrendwidth=self.el.popuptrend.getBBox().width;
+		self.vars.popuptrendheight=self.el.popuptrend.getBBox().height;
 		self.vars.popupvaluewidth=self.el.popupvalue.getBBox().width;
 		self.vars.popupvalueheight=self.el.popupvalue.getBBox().height;
+		self.vars.popuptrendtextwrapperheight=self.el.popuptrendtextwrapper.getBBox().height;
 		//console.log(self.vars);
 		var objSerializer = new XMLSerializer();
 		self.vars.template=objSerializer.serializeToString(self.el.root);
+
+		//reset the state
+		self.state.trendpopupflipped=false;
 	}
 }
