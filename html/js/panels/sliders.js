@@ -216,7 +216,7 @@ var objSliders = {
 			if(intSimulatorMax>intMaxValue)intMaxValue=intSimulatorMax;
 			if(intSimulatorMin<intMinValue)intMinValue=intSimulatorMin;
 
-			console.log(intMaxValue+' '+intMinValue);
+			//console.log(intMaxValue+' '+intMinValue);
 
 			objGraphData.ymin=parseFloat(objMap.roundlivesimproveddataobject({l:intMinValue, g:-1, p: -1}).displayl.replace(/,/, ''));
 			objGraphData.ymin=objGraphData.ymin-Math.round(((objGraphData.ymin/100)*5));
@@ -231,7 +231,7 @@ var objSliders = {
 		objTrendGraph.props.axis.ygridlines=4;
 
 
-		console.log(objGraphData);
+		//console.log(objGraphData);
 
 		//draw the graph
 		objTrendGraph.reset();

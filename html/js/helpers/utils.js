@@ -288,7 +288,7 @@ function serverSideRequest(objArguments){
 	Use named argument syntax:
 	serverSideRequest({url: '/bla.html', callback: 'performTask()', method: 'get', formdata: arrFormData, debug: false})
 	*/
-	var bolAsync=true, bolSubmitFormData=false, bolDebug=false, bolSubmitXmlFile=false;
+	var bolAsync=true, bolSubmitFormData=false, bolDebug=false, bolSubmitXmlFile=false, bolBypassCache=false;
 	var strDebug, strKey, strValue, strFormData='', strResult;
 	var strUrl='', strMethod='post', arrFormData='';
 	var callbackFunction=null;
@@ -297,7 +297,9 @@ function serverSideRequest(objArguments){
 	strUrl=typeof objArguments.url != 'undefined'? objArguments.url : '';
 
 	callbackFunction=typeof objArguments.callback != 'undefined'? objArguments.callback : null;
-
+	if(typeof objArguments.bypasscache != 'undefined'){
+		if(objArguments.bypasscache==='true')bolBypassCache=true;
+	}
 	strMethod=typeof objArguments.method != 'undefined'? objArguments.method.toLowerCase() : 'get';
 	strDebug=typeof objArguments.debug != 'undefined'? objArguments.debug+'' : 'false';
 	if(strDebug.toLowerCase()=='true')bolDebug=true;
@@ -316,17 +318,21 @@ function serverSideRequest(objArguments){
 
 
 	//bypass caching by adding a querystring to the url
-	if(strMethod=='post'){
-		strUrl+=(strUrl.indexOf('?')>0)?'&rnd=' + generateUniqueId():'?rnd=' + generateUniqueId();
-	}else{
-		if(typeof(arrFormData)!='string'){
-			arrFormData['rnd']=generateUniqueId();
+	if(bolBypassCache){
+		if(strMethod=='post'){
+			strUrl+=(strUrl.indexOf('?')>0)?'&rnd=' + generateUniqueId():'?rnd=' + generateUniqueId();
 		}else{
-			arrFormData=new Array();
-			arrFormData['rnd']=generateUniqueId();
-			bolSubmitFormData=true;
-		}
+			if(typeof(arrFormData)!='string'){
+				arrFormData['rnd']=generateUniqueId();
+			}else{
+				arrFormData=new Array();
+				arrFormData['rnd']=generateUniqueId();
+				bolSubmitFormData=true;
+			}
+		}		
 	}
+
+	
 
 	//form data to sent
 	if(bolSubmitFormData){
@@ -371,7 +377,7 @@ function serverSideRequest(objArguments){
 
 
 	//perform request
-	if(strMethod.toLowerCase()=="get")strUrl+="?"+strFormData;
+	if(strMethod.toLowerCase()=="get" && strFormData.length>0)strUrl+="?"+strFormData;
 	objXmlHttpLocal.open(strMethod.toUpperCase(), strUrl, bolAsync);
 	if(bolSubmitFormData && strMethod.toLowerCase()=="post"){
 		objXmlHttpLocal.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
