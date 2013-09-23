@@ -232,6 +232,8 @@ function psv(type, url, objParams, cb) {
 	var xmlhttp,
 	strParams = '';
 	
+	objLoading.show();
+	
 	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
 		xmlhttp = new XMLHttpRequest();
 	} else {// code for IE6, IE5
@@ -241,6 +243,7 @@ function psv(type, url, objParams, cb) {
 		if (xmlhttp.readyState == 4){
 			//console.log(xmlhttp.statusText);
 			if(xmlhttp.status == 200) {
+				objLoading.hide();
 				try {
 					var objResponse=JSON.parse(xmlhttp.responseText);
 					

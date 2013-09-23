@@ -83,6 +83,7 @@ var objMap = {
 			arrFormData['file']=self.maps[strOru.toLowerCase()].url;
 			arrFormData['method']='getsvgworldmap';
 			arrFormData['fulldomain']=location.protocol+"//"+location.hostname;
+			arrFormData['token']=objLogin.token;
 
 			serverSideRequest({
 				url: objConfig.urls.authurl2, 
@@ -472,7 +473,7 @@ var objMap = {
 		//	toggleClass(getEl('btn_back'), 'hide');
 		//	toggleClass(getEl('toggle_favourite'), 'hide');
 		//}
-		objSliders.show();
+		//objSliders.show();
 		objRegionInfo.show();
 		
 		objHeader.showbackbutton();

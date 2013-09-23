@@ -38,8 +38,13 @@ var objError = {
 	},
 	handleError: function(callingFunction, err){
 		var self = this;
+		if(objLoading.state.visible) objLoading.hide();
 		if(objOverlay.state.visible) objOverlay.hide();
-		self.show(err, true);
+		if(err.toLowerCase() == 'token mismatch'){
+			objLogin.show();
+		}else{
+			self.show(err, true);			
+		}
 	},
 	init: function(){
 		var self = this;

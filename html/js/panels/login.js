@@ -242,8 +242,9 @@ var objLogin = {
 		var self = this;
 		self.state.tweening = true;
 		TweenLite.to(self.el.wrapper, 0.3, {
-			width : 0,
+			opacity : 0,
 			onComplete: function(){
+				self.el.wrapper.style.display = "none";
 				self.state.tweening = false;
 				self.state.visible = false;
 			}
@@ -254,10 +255,10 @@ var objLogin = {
 
 		//reset some variables
 		objSliders.vars.simulatorsampling=true;
-
+		self.el.wrapper.style.display = "block";
 		self.state.tweening = true;
 		TweenLite.to(self.el.wrapper, 0.3, {
-			width : '100%',
+			opacity : 1,
 			onComplete: function(){
 				//debugger;
 				self.state.tweening = false;
@@ -274,6 +275,7 @@ var objLogin = {
 		objBookmarks.hide();
 		objOverlay.hide();
 		objLogin.show();
+		objLoading.hide();
 	},
 	changeauthenticatebutton: function(){
 		var self = this;
@@ -350,5 +352,7 @@ var objLogin = {
 		self.el.messagespanel = getEl('messages_panel');
 		
 		self.el.tbxusername.value = objStore.getlocalstorageitem('username');
+		
+		self.token  = objStore.getlocalstorageitem('token');
 	}
 }

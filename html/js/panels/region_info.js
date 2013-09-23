@@ -18,12 +18,27 @@ var objRegionInfo = {
 		var self = this;
 		self.state.tweening = true;
 		TweenLite.to(self.el.wrapper, 0.3, {
+			top : '-100%',
+			onComplete: function(){
+				self.state.tweening = false;
+				self.state.visible = false;
+				TweenLite.to(objSliders.el.wrapper, 0.3, {
+					opacity : 0,
+					onComplete: function(){
+						//debugger;
+						objSliders.state.tweening = false;
+						objSliders.state.visible = false;
+					}
+				});						
+			}
+		});
+		TweenLite.to(self.el.regionhistorywrapper, 0.3, {
 			top : '-40%',
 			onComplete: function(){
 				self.state.tweening = false;
 				self.state.visible = false;
 			}
-		});
+		});			
 	},
 	show: function(){
 		var self = this;
@@ -34,20 +49,36 @@ var objRegionInfo = {
 				//debugger;
 				self.state.tweening = false;
 				self.state.visible = true;
+				TweenLite.to(objSliders.el.wrapper, 0.3, {
+					opacity : 1,
+					onComplete: function(){
+						//debugger;
+						objSliders.state.tweening = false;
+						objSliders.state.visible = true;
+					}
+				});		
 			}
 		});		
+		TweenLite.to(self.el.regionhistorywrapper, 0.3, {
+			top : '50%',
+			onComplete: function(){
+				self.state.tweening = false;
+				self.state.visible = false;				
+			}
+		});	
+		
 	},	
 	showhistory: function(self){
 		if(app.state.width<700){
 			TweenLite.to(self.el.regioninfowrapper, 0.3, {
-				left : '-100%',
+				top : '-40%',
 				onComplete: function(){
 					self.state.tweening = false;
 					self.state.visible = false;
 				}
 			});
 			TweenLite.to(self.el.regionhistorywrapper, 0.3, {
-				left : '0%',
+				top : '50%',
 				onComplete: function(){
 					self.state.tweening = false;
 					self.state.visible = false;

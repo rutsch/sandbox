@@ -46,6 +46,7 @@ var app = {
 			}				
 		},function(err, results){
 			if(err != null){
+				debugger;
 				objError.handleError('app.start', err);
 				//objLogin.show();	
 			}else{
@@ -77,6 +78,7 @@ var app = {
 		objBookmarks.init();
 		objExplain.init();
 		objTrendGraph.init();
+		objLoading.init();
 
 		//change the settings for the zoom/pan based on the device
 		if(self.state.ios){
@@ -86,9 +88,9 @@ var app = {
 
 		//retrieve snapshot id
 		objLogin.getsnapshotconfig(function(){
-			if(objLogin.loggedin()){
+			//if(objLogin.loggedin()){
 				self.start();
-			}	
+			//}	
 		});
 	}
 }

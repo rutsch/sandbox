@@ -51,7 +51,7 @@ body{
 	margin-top: -25px;
 	background: url('../img/ajax-loader.gif') no-repeat center;	
 	z-index: 10000;
-	display: none;
+	opacity: 0;
 }
 .panel{
 	position: absolute;
@@ -280,16 +280,16 @@ body{
 }
 #region_info{
 	position: absolute;
-	top: -40%;
+	top: -50%;
 	left: 0px;
 	right: 0px;
-	height: 40%;
+	height: 50%;
 	width: 100%;
 	background-color: #007aa7;
 	z-index: 20;
-	-webkit-box-shadow: inset 0 8px 6px -6px black;
+	/*-webkit-box-shadow: inset 0 8px 6px -6px black;
 	-moz-box-shadow: inset 0 8px 6px -6px black;
-	box-shadow: inset 0 10px 60px -20px black;	
+	box-shadow: inset 0 10px 60px -20px black;*/	
 }
 .svg_wrapper{
 	position: absolute;
@@ -397,13 +397,20 @@ span{
 	display: none;
 }
 
-
+#panel_slider{
+	position: relative;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	height: auto;
+}
 #region_history{
 	position: absolute;
 	width: 100%;
-	height: 100%;
-	left: 100%;
-	height: 100%;
+	height: 40%;
+	left: 0%;
+	top: -40%;	
 }
 #nr_lives_improved{
 	padding-right: 0px!important;
@@ -457,9 +464,10 @@ span{
 
 #simulation{
 	position: absolute;
-	bottom: -60%;
+	top: 90%;
 	left: 0px;
 	right: 0px;
+	opacity: 0;
 	height: 60%;
 	width: 100%;
 	border-top: 1px solid #e7e7e7;
@@ -469,7 +477,6 @@ span{
 }
 #simulation_wrapper{
 	margin: 0px 30px;
-	opacity: 0;
 }
 #simulation_wrapper h3{
 	height: 20%;
@@ -496,6 +503,7 @@ span{
 	background-position: top;
 	background-size: 100% auto;
 	z-index: 2;
+	opacity: 0;
 }
 #login_panel span{
 	font-size: 12px;
@@ -552,7 +560,7 @@ span{
 	top: 50%;
 	left: 50%;
 	z-index: 10000000;
-	background: url('../img/ajax-loader_white.gif') no-repeat;
+	/*background: url('../img/ajax-loader_white.gif') no-repeat;*/
 	display: none;
 }
 #loader{
@@ -562,7 +570,7 @@ span{
 	top: 50%;
 	left: 50%;
 	z-index: 10000000;
-	background: url('../img/ajax-loader.gif') no-repeat;
+	/*background: url('../img/ajax-loader.gif') no-repeat;*/
 }
 #filter_panel{
 	background: #fff;
@@ -757,16 +765,16 @@ body.philips input[type='range'] {
 	background: #0b5ed7;
 }
 
-body.PD0100 #region_info{
+body.PD0100 #region_info, body.PD0100 #region_history{
 	background: #7dba00;
 }
-body.PD0200 #region_info{
+body.PD0200 #region_info, body.PD0200 #region_history{
 	background: #68049c;
 }
-body.PD0900 #region_info {
+body.PD0900 #region_info, body.PD0900 #region_history {
 	background: #2badb5;
 }
-body.philips #region_info {
+body.philips #region_info, body.philips #region_history {
 	background: #0b5ed7;
 }
 

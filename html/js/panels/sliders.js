@@ -45,7 +45,7 @@ var objSliders = {
 		}else{
 			self.state.tweening = true;
 			TweenLite.to(self.el.wrapper, 0.3, {
-				bottom : '-60%',
+				bottom : '-50%',
 				onComplete: function(){
 					self.state.tweening = false;
 					self.el.innerwrapper.style.opacity = 0;
