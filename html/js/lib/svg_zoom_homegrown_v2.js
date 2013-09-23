@@ -102,6 +102,7 @@ var objTouchVars={
 	timer2: null,
 	timer3: null,
 	timer4: null,
+	timer5: null,
 	zoom: 1,
 	zoomworking: 1,
 	fingerx: null,
@@ -111,7 +112,7 @@ var objTouchVars={
 	sampling: false,
 	action: '',
 
-	state: 'none',
+	state: '',
 	elsvg: null,
 	elanimate: null,
 	eldragtarget: null,
@@ -135,6 +136,8 @@ function initSgvZoomPan(elSvgRoot, elSvgNodeToAnimate){
 
 	//setup the handlers
 	setupHandlers(elSvgRoot);
+
+	//handleRelease(null);
 
 	function retrievePosition(obj) {
 		var curleft = 0, curtop = 0;
@@ -221,12 +224,11 @@ function setupHandlersMobile(){
 
 		handleClickTouchStart(ev);
 	});
+
 	app.el.hammersvg.on("drag", function(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 		}
-
-
 
 		objTouchVars.dragging=true;
 		
@@ -235,7 +237,6 @@ function setupHandlersMobile(){
 			//store details about the event in the global variable
 			objTouchVars.fingerx=ev.gesture.srcEvent.pageX;
 			objTouchVars.fingery=ev.gesture.srcEvent.pageY;
-
 			//debugLog();
 
 			//start the sampling
@@ -282,9 +283,7 @@ function setupHandlersMobile(){
 
 		objTouchVars.dragging=true;
 
-
 		if(objZoomPanSettings.usesamplingformobile){
-
 			//store details about the event in the global variable
 			objTouchVars.fingerx=ev.gesture.startEvent.center.pageX;
 			objTouchVars.fingery=ev.gesture.startEvent.center.pageX;
@@ -369,7 +368,8 @@ function getEventPoint(evt) {
 	//console.log(evt);
 	if(objZoomPanSettings.mobile){
 		p.x = evt.gesture.center.pageX-objTouchVars.svgx;
-		if(app.state.ios && !app.state.ipad){
+		/* hack to zoom in center - seems to be solved in ios 7 */
+		if(app.state.ios && !app.state.ipad && !app.state.ios7){
 			p.x = p.x-app.state.width/2;
 		}
 		p.y = evt.gesture.center.pageY-objTouchVars.svgy;
@@ -404,20 +404,33 @@ function handleClick(ev){
  */
 function handleRelease(ev){
 
-	//in case of pinch: remember the reached zoomlevel
+	//in case of pinch: remember the reached zoomlevel (pinch & zoom)
 	if(objTouchVars.action.indexOf('zoom') > -1){
 		objTouchVars.zoom=objTouchVars.zoomworking;
 		objTouchVars.pinchscale=1;
-		//objTouchVars.zoomworking=1;
+
+		//avoid that the touch event will fire even after we have released the finger from the screen
+		if(objTouchVars.timer5)clearTimeout(objTouchVars.timer5);
+		objTouchVars.timer5=setTimeout(function(){
+			objTouchVars.dragging=false;
+		}, objZoomPanSettings.touchtimerdelay);
+
 		clearTimeout(objTouchVars.timer3);
 	}
 
 	if(objTouchVars.action='drag'){
 		objTouchVars.zoom=objTouchVars.zoomworking;
-		objTouchVars.dragging=false;
+		
+		//avoid that the touch event will fire even after we have released the finger from the screen
+		if(objTouchVars.timer5)clearTimeout(objTouchVars.timer5);
+		objTouchVars.timer5=setTimeout(function(){
+			objTouchVars.dragging=false;
+		}, objZoomPanSettings.touchtimerdelay);
 
 		clearTimeout(objTouchVars.timer3);
 	}
+
+
 
 	//stop the sampling
 	objTouchVars.sampling=false;
@@ -641,7 +654,7 @@ function handleClickTouchEnd(evt) {
 		if(evt.preventDefault)evt.preventDefault();
 	}
 
-	evt.returnValue = false;
+	if(evt!=null)evt.returnValue = false;
 
 	if(objTouchVars.state == 'pan' || objTouchVars.state == 'drag') {
 		// Quit pan mode

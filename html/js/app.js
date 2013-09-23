@@ -4,6 +4,7 @@ var app = {
 		height: null,
 		mobile: null,
 		ios: ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false ),
+		ios7: ( navigator.userAgent.match(/OS 7_/g) ? true : false ),
 		ipad: ( navigator.userAgent.match(/(iPad)/g) ? true : false )
 	},
 	el: {
@@ -76,6 +77,12 @@ var app = {
 		objBookmarks.init();
 		objExplain.init();
 		objTrendGraph.init();
+
+		//change the settings for the zoom/pan based on the device
+		if(self.state.ios){
+			objZoomPanSettings.dragtimerdelay=800;
+			objZoomPanSettings.touchtimerdelay=300;
+		}
 
 		//retrieve snapshot id
 		objLogin.getsnapshotconfig(function(){

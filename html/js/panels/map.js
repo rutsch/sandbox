@@ -10,10 +10,10 @@ var objMap = {
 	},
 	data: null,
 	maps: {
-		world: {url: 'svg/jvector_world.svg'},
-		region: {url: 'svg/jvector_continents.svg'},
-		market: {url: 'svg/jvector_markets.svg'},
-		country: {url: 'svg/jvector_countries.svg'}
+		world: {url: 'jvector_world.svg'},
+		region: {url: 'jvector_continents.svg'},
+		market: {url: 'jvector_markets.svg'},
+		country: {url: 'jvector_countries.svg'}
 	},
 	getcolorforpercentage: function(pct, low_color, middle_color, high_color) {
 		var self = this;
@@ -78,8 +78,15 @@ var objMap = {
 			objHeader.setregionname(strOru);	
 			objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
 
+			var arrFormData=[];
+			arrFormData['type']='xml';
+			arrFormData['file']=self.maps[strOru.toLowerCase()].url;
+			arrFormData['method']='getsvgworldmap';
+			arrFormData['fulldomain']=location.protocol+"//"+location.hostname;
+
 			serverSideRequest({
-				url: self.maps[strOru.toLowerCase()].url, 
+				url: objConfig.urls.authurl2, 
+				formdata: arrFormData,
 				method: 'get', 
 				debug: false,
 				callback: function(err, strSvgData){
