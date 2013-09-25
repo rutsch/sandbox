@@ -46,12 +46,14 @@ var app = {
 			}				
 		},function(err, results){
 			if(err != null){
-				debugger;
+				//debugger;
 				objError.handleError('app.start', err);
 				//objLogin.show();	
 			}else{
 				objLogin.hide();
 				objMap.updatemap();		
+				//TODO: add logic to show bookmarks, filter or messages
+				objFilter.show();
 				objLogin.showupdatemessages();
 			}
 		});			

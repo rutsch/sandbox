@@ -24,64 +24,11 @@ var objSliders = {
 	},
 	/*
 	 * UI functions
+	 * 
+	 * !!!!!!!!!!!!!!!!!!!!! NOT USED, ALL ANIMATIONS ARE STARTED FROM OBJREGIONINFO !!!!!!!!!!!!!!!!!!!!!!!! 
+	 * 
 	 */
-	hide: function(){
-		var self = this;
-		
-		//stop the sampling of the sliders
-		self.vars.simulatorsampling=true;
 
-
-		if(app.state.width>700){
-			self.state.tweening = true;
-			TweenLite.to(self.el.wrapper, 0.3, {
-				top : '-40%',
-				onComplete: function(){
-					self.state.tweening = false;
-					self.el.innerwrapper.style.opacity = 0;
-					self.state.visible = false;
-				}
-			});			
-		}else{
-			self.state.tweening = true;
-			TweenLite.to(self.el.wrapper, 0.3, {
-				bottom : '-50%',
-				onComplete: function(){
-					self.state.tweening = false;
-					self.el.innerwrapper.style.opacity = 0;
-					self.state.visible = false;
-				}
-			});			
-		}
-
-	},
-	show: function(){
-		var self = this;
-		if(app.state.width>700){
-			self.state.tweening = true;
-			TweenLite.to(self.el.wrapper, 0.3, {
-				top : '0%',
-				onComplete: function(){
-					//debugger;
-					self.state.tweening = false;
-					self.el.innerwrapper.style.opacity = 1;
-					self.state.visible = true;
-				}
-			});					
-		}else{
-			self.state.tweening = true;
-			TweenLite.to(self.el.wrapper, 0.3, {
-				bottom : '0%',
-				onComplete: function(){
-					//debugger;
-					self.state.tweening = false;
-					self.el.innerwrapper.style.opacity = 1;
-					self.state.visible = true;
-				}
-			});					
-		}
-
-	},
 	/* helpers */
 	calculatefloorceil: function(intValue, intStep){
 		var intFloor=0, intCeil=0;
@@ -141,7 +88,7 @@ var objSliders = {
 				objError.handleError('objSliders.start', err);
 			}else{
 				if(response.error) {
-					self.el.innerwrapper.style.display='none';
+					//self.el.innerwrapper.style.display='none';
 					self.el.errorwrapper.style.display='block';
 					self.el.errorwrapper.innerHTML="<div class='simulator_data_error'>"+response.error.message+"</div>";
 
@@ -153,7 +100,7 @@ var objSliders = {
 					//store the data we have received
 					self.vars.data=response;
 
-					self.el.innerwrapper.style.display='block';
+					//self.el.innerwrapper.style.display='block';
 					self.el.errorwrapper.style.display='none';
 
 					//show the interface

@@ -146,7 +146,7 @@ var objMap = {
 				if(err != null){
 					objError.handleError('map.updatemap', err);
 				}else{
-
+					objLoading.show();
 
 					/*
 					1) store the data in this object as a property
@@ -289,7 +289,7 @@ var objMap = {
 					self.centerworldmap(self.el.rootanimate);
 
 					self.currentmap=objOruFilter.state.selectedoru;
-
+					objLoading.hide();
 					//hideLoadingPanel();	
 					if(regionIdToSelect){
 						self.regionclick(regionIdToSelect);
