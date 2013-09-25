@@ -130,9 +130,9 @@ var objTrendGraph={
 	 	//console.log(objCoords.y+self.vars.popuptrendheight);
 	 	//console.log(self.props.height-self.props.padding.bottom);
 		//if((objCoords.y+self.vars.popuptrendheight)>=(self.props.height-self.props.padding.bottom)){
-		if((objCoords.y+self.vars.popuptrendheight)>=(self.props.height)){	
+		if((objCoords.y+self.vars.popuptrendheight)>=(self.props.height-self.props.padding.bottom)){	
 			self.fliptrendpopup('flipped');
-			//console.log('perform flip')
+			//console.log('perform flip') 53
 		}else{
 			//console.log('set original')
 			self.fliptrendpopup('original');
@@ -141,15 +141,18 @@ var objTrendGraph={
 		//align the popup
 		//var intCorrection=((self.state.trendpopupflipped)?-10:10);
 		var strTranslateValue=self.el.popuptrend.getAttributeNS(null, 'transform').replace(/^.*\)\s+(.*)$/, '$1');
-		self.el.popuptrend.setAttributeNS(null,'transform','translate('+(objCoords.x-self.vars.popuptrendwidth+60)+', '+(objCoords.y+((self.state.trendpopupflipped)?-10:10))+') '+strTranslateValue);
+		self.el.popuptrend.setAttributeNS(null,'transform','translate('+(objCoords.x-self.vars.popuptrendwidth+18)+', '+(objCoords.y+((self.state.trendpopupflipped)?-10:10))+') '+strTranslateValue);
 
 		//set the content in the popup
+		console.log(intValue);
+		intValue=objMap.roundlivesimproveddataobject({l:intValue, g:-1, p: -1}).displayl.replace(/,/, '')
+		console.log(intValue);
 		self.el.popuptrendnumber.textContent=self.correctlabel((intValue+''), (self.props.axis.ymax+'').length);
 	},
 	showvaluepopup: function(objArgs){
 		var self=this;
-		alert('in showvaluepopup')
-		console.log(objArgs);
+		//alert('in showvaluepopup')
+		//console.log(objArgs);
 
 		if(objArgs.show){
 			//align the popup and the show it
@@ -177,6 +180,7 @@ var objTrendGraph={
 	correctlabel: function(strLabel, intLength){
 		if(strLabel.indexOf('.')==-1 && strLabel.indexOf(',')==-1 && strLabel.length<4)strLabel+='.';
 		var intLabelLength=strLabel.length;
+		//console.log(intLength+' - '+intLabelLength)
 		if(intLabelLength<intLength){
 			for(var j=0; j<(intLength-intLabelLength); j++){
 				strLabel+='0';
@@ -196,7 +200,7 @@ var objTrendGraph={
 		//perform a vertical flip and replace the text elements
 		if(strType=='flipped' && !self.state.trendpopupflipped){
 			self.el.popuptrendbase.setAttributeNS(null, 'transform', 'scale(1,-1)');
-			self.el.popuptrendtextwrapper.setAttributeNS(null, 'transform', 'translate(0,-'+(self.vars.popuptrendheight+self.vars.popuptrendtextwrapperheight)+')');
+			self.el.popuptrendtextwrapper.setAttributeNS(null, 'transform', 'translate(0,-53)');
 			self.state.trendpopupflipped=true;
 		}
 

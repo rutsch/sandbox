@@ -27,6 +27,7 @@ body{
 	overflow: hidden;
 	margin: 0px;
 	font-family: gill;
+	font-size: 100%;
 }
 #error{
 	position: absolute;
