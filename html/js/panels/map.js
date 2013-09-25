@@ -136,6 +136,7 @@ var objMap = {
 		//load correct svg map
 		self.loadmap(function(data){
 			
+
 			if(data != null){
 				// update svg html
 				self.el.elsvgholder.innerHTML='';
@@ -290,12 +291,19 @@ var objMap = {
 
 					self.currentmap=objOruFilter.state.selectedoru;
 
-					//hideLoadingPanel();	
+					//if from bookmarks then open info panel of the bookmark that you selected	
 					if(regionIdToSelect){
 						self.regionclick(regionIdToSelect);
 					}
 					//post processing
 					self.el.elsvgholder.style.visibility = 'visible';
+
+					//hack
+					//objFilter.show();
+					//window.setTimeout(function(){objFilter.hide();}, 2000);
+					//getEl('title_bar').scrollIntoView()
+
+					//getEl('app_panel').focus();
 				}
 			});
 		});

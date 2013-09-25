@@ -20,7 +20,8 @@ var app = {
 		objExplain.show();
 	},
 	btnlogoutclick: function(el){
-		objLogin.logout();
+		location.reload();
+		//objLogin.logout();
 	},
 	isMobile: {
 		any : function() {
@@ -52,6 +53,8 @@ var app = {
 			}else{
 				objLogin.hide();
 				objMap.updatemap();		
+				//objFilter.show();
+				//window.setTimeout(function(){objFilter.hide();}, 2000);
 				objLogin.showupdatemessages();
 			}
 		});			

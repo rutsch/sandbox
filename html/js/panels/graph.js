@@ -24,24 +24,33 @@ var objTrendGraph={
 		popupvaluenumber: null
 	},
 	props: {
-		width: 600,
-		height: 400,
+		width: 640,
+		height: 300,
 		padding: {
-			top: 20,
-			bottom: 20,
-			left: 35,
-			right: 20
+			top: 60,
+			bottom: 40,
+			left: 45,
+			right: 45
 		},
 		axis: {
 			ymin: 4,
 			ymax: 15,
 			ystep: 2.5,
 			ygridlines: null,
+			showxlines: false,
 			xlinelength: 8,
+			showylines: false,
 			ylinelength: 8,
 			ylabelinset: true,
 			xpaddingleft: 20,
 			xpaddingright: 30,
+		},
+		labels: {
+			x: {
+				padding: {
+					bottom: 20
+				}
+			}
 		},
 		coordinatepoint: {
 			radius: 5
@@ -211,7 +220,7 @@ var objTrendGraph={
 
 		//correct the properties of the graph if the y-axis labels are "inset"
 		if(self.props.axis.ylabelinset){
-			self.props.padding.left=0;
+			//self.props.padding.left=0;
 			self.props.axis.xpaddingleft=45;
 		}
 
@@ -222,7 +231,7 @@ var objTrendGraph={
 
 		//0) update the graph properties by setting the y-axis max and min value dynamically
 		if(self.vars.data.ymax==null || self.vars.data.ymin==null){
-			console.log('a');
+			//console.log('a');
 			//attempt to autodetect the upper and bottom boundaries
 			var intMaxValue=-1000000000000, intMinValue=1000000000000;
 			for (var i=0; i<self.vars.data.points.length; i++)
@@ -320,19 +329,22 @@ var objTrendGraph={
 			var objPoint=self.vars.data.points[i];
 			var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
 			//console.log(objCoords);
-			objCoords.y=self.props.height-5;
+			objCoords.y=self.props.height-self.props.labels.x.padding.bottom;
 			self.createlabel(elWrapperLabelsX, objCoords, objPoint);
 
 			//lines on the x axis
-			var elline = document.createElementNS('http://www.w3.org/2000/svg','line');
-			self.setsvglinecoordinates(elline,{
-				x1: objCoords.x,
-				y1: (self.props.padding.top+self.props.height-self.props.padding.top-self.props.padding.bottom),
-				x2: objCoords.x,
-				y2: (self.props.padding.top+self.props.height-self.props.padding.top-self.props.padding.bottom-self.props.axis.xlinelength)
-			});
+			if(self.props.axis.showxlines){
+				var elline = document.createElementNS('http://www.w3.org/2000/svg','line');
+				self.setsvglinecoordinates(elline,{
+					x1: objCoords.x,
+					y1: (self.props.padding.top+self.props.height-self.props.padding.top-self.props.padding.bottom),
+					x2: objCoords.x,
+					y2: (self.props.padding.top+self.props.height-self.props.padding.top-self.props.padding.bottom-self.props.axis.xlinelength)
+				});
 
-			elWrapperLabelsX.appendChild(elline);
+				elWrapperLabelsX.appendChild(elline);				
+			}
+
 		}
 
 		//6) create the y axis labels and grid lines
