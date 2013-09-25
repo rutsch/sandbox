@@ -53,11 +53,10 @@ var app = {
 				objLogin.hide();
 				objMap.updatemap();		
 				//TODO: add logic to show bookmarks, filter or messages
-				objFilter.show();
+				//objFilter.show();
 				objLogin.showupdatemessages();
 			}
 		});			
-				
 	},
 	init: function(){
 		var self = this;
