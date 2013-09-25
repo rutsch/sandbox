@@ -274,14 +274,14 @@ body{
 
 .svg_wrapper{
 	position: absolute;
-	width: 50%;
+	width: 100%;
 	bottom: 0px;
 	height: 100%;
 }
 
 path#arc_path, circle#background, path#arc_path_left{
 	fill: none;
-	stroke-width: 20;       	
+	stroke-width: 25;       	
 }
 
 path#arc_path {
@@ -295,6 +295,9 @@ path#arc_path_left{
 circle#background{
 	stroke-opacity: .1;
 	stroke: #efefef;
+}
+.nr_label{
+	font-size: 2em;
 }
 .data_wrapper{
 	position: absolute;
@@ -430,6 +433,11 @@ span{
 
 #show_simulation{
 	text-align: center;
+	background: inherit;
+	position: absolute;
+	top: 0%;
+	height: 20%;
+	width: 100%;
 }
 #show_current{
 	position: absolute;
@@ -450,28 +458,17 @@ span{
 }
 
 #nr_lives_improved{
-	padding-right: 0px!important;
-	font-size: 4em;
-	height: 70px;
+	font-size: 6em;
 	color: #fff;
 }
 .lives_improved_sub{
-	clear: both;
-	display: block!important;
 	font-family: Verdana, arial;
-	font-size: 10px;
+	font-size: 1em;
 	color: #000000;
 	opacity: .4;
-	padding-right: 0px!important;
-	padding-left: 5px!important;
-	
 }
 #nr_gdp{
-	color: #fff;
-	padding-top: 2px;
-	height: 25px;
-	background-size: 25px auto;
-	padding-right: 5px!important;
+	font-size: 2em;
 }
 #nr_gdp span, #nr_population span{
 	font-family:Verdana,arial;
@@ -480,20 +477,17 @@ span{
 	opacity: 0.4;
 }
 #nr_population{
-	color: #fff;
-	padding-top: 5px;
-	padding-right: 5px!important;
-	height: 25px;
-	background-size: 25px auto;
+	font-size: 2em;
 }
 
 #lives_improved_percentage{
-	font-size: 4em;
+	font-size: 3.5em;
+	font-weight: bold;
 	fill: #fff;
 }
 #lives_improved_percentage_sub{
 	font-family: Verdana, arial;
-	font-size: 1.4em;
+	font-size: 1em;
 	color: #000000;
 	opacity: .4;
 }
@@ -506,16 +500,13 @@ span{
 	height: 20%;
 }
 #simulation_wrapper #section1{
-	position: absolute;
+	margin-top: 20px;
 	height: 40%;
-	top: 20%;
-	width: 85%;
+	top: 5%;
 }
 #simulation_wrapper #section2{
-	position: absolute;
 	height: 40%;
-	top: 60%;
-	width: 85%;
+	top: 50%;
 }
 
 

@@ -3,8 +3,8 @@ var objArcProps={
 	targetnode: null,
 	targetleftwrapper: null,
 	targetleftnode: null,
-	centerx: 200,
-	centery: 200,
+	centerx: 150,
+	centery: 50,
 	radius: 100,
 	angle: 0,
 	anglestored: 0
