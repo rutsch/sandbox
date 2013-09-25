@@ -531,9 +531,9 @@ var objMap = {
 			}
 
 			if(objData.l<1000){
-				console.log('...')
+				//console.log('...')
 				objData.roundedl=objData.l;
-				intDecimals=3;
+				intDecimals=2;
 			}
 
 			objData.displayl=formatMoney(objData.roundedl, intDecimals,',','.','');

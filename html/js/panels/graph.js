@@ -144,9 +144,9 @@ var objTrendGraph={
 		self.el.popuptrend.setAttributeNS(null,'transform','translate('+(objCoords.x-self.vars.popuptrendwidth+18)+', '+(objCoords.y+((self.state.trendpopupflipped)?-10:10))+') '+strTranslateValue);
 
 		//set the content in the popup
-		console.log(intValue);
-		intValue=objMap.roundlivesimproveddataobject({l:intValue, g:-1, p: -1}).displayl.replace(/,/, '')
-		console.log(intValue);
+		//console.log(intValue);
+		//intValue=objMap.roundlivesimproveddataobject({l:intValue, g:-1, p: -1}).displayl.replace(/,/, '')
+		//console.log(intValue);
 		self.el.popuptrendnumber.textContent=self.correctlabel((intValue+''), (self.props.axis.ymax+'').length);
 	},
 	showvaluepopup: function(objArgs){
