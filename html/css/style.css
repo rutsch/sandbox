@@ -269,7 +269,6 @@ body{
 	bottom: 0px;
 	background-size: auto 100%;
 	background-attachment: fixed;
-	z-index: 10;
 }
 
 .svg_wrapper{
@@ -443,10 +442,6 @@ span{
 }
 #show_current div{
 	padding-top: 10px;
-}
-
-#wrapper{
-	text-anchor: middle;
 }
 
 #nr_lives_improved{

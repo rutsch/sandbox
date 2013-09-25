@@ -100,7 +100,7 @@
 					<div id="bottom_panel">
 						<div id="region_history">
 							<!-- base svg construction for the line graph -->
-							<svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 400 300">
+							<svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 400 300" preserveAspectRatio="none">
 								<g id="wrapper" transform="translate(0, 0)">
 									<text id="graph_title" y="15" x="0" xml:space="preserve">Trend</text>
 		
@@ -131,7 +131,9 @@
 										</g>
 									</g>
 									<g id="popup_value" onclick="objTrendGraph.showvaluepopup({show: false});" visibility="hidden">
-										<rect id="popup_value_base" width="54" height="54" x="0" y="0"/>
+										<path
+										   d="M 50,25.279 C 50,11.470998 38.808,0.2789983 25,0.2789983 11.193,0.2789983 0,11.470998 0,25.279 c 0,9.007 4.7660001,16.899 11.911,21.3 L 25.332,60 40.246,45.086 C 46.176,40.514 50,33.344 50,25.279 z"
+										   id="popup_value_base" />
 										<text id="popup_value_number" y="20" x="27" xml:space="preserve">2,233</text>
 										<text id="popup_value_text" y="42" x="27" xml:space="preserve">Million</text>
 									</g>

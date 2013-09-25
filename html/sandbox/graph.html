@@ -20,7 +20,7 @@
 
 	</head>
 	<body>
-		<div style="width: 800px; height: 600px; border: 1px solid red">
+		<div style="width: 100%; height: 100%; border: 1px solid red">
 			<!-- base svg construction for the line graph -->
 			<svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 400 300">
 				<g id="wrapper" transform="translate(0, 0)">
@@ -47,8 +47,14 @@
 					<g id="y_axislabel_wrapper" class="labels y-labels"> </g>
 
 
-					<g id="popup_trend" transform="translate(18.882713,11.364596) scale(0.8)">
+					<g id="popup_trend" transform="translate(18.882713,11.364596)">
+						<!--
 						<path id="popup_trend_base" d="m 0.826235,89.47513 171.590555,0.3268 -0.3268,-60.78434 -13.0719,0 -17.97385,-28.10457 -17.32026,28.10457 c 0,0 -117.342689,-0.65359 -123.22398,-0.65359 z" />
+					-->
+						<path
+						   d="m 107,7.5187448 h -6.979 L 92.5,-0.00225557 84.979,7.5187448 H 3 c -1.6570001,0 -3,1.343 -3,3.0000002 v 31 c 0,1.657 1.3429999,3 3,3 h 104 c 1.657,0 3,-1.343 3,-3 v -31 c 0,-1.6570002 -1.343,-3.0000002 -3,-3.0000002 z"
+						   id="popup_trend_base"
+						   style="fill:#00454a" />
 						<g id="popup_trend_text_wrapper">
 							<text id="popup_trend_number" y="55" x="160" xml:space="preserve">2,23</text>
 							<text id="popup_trend_text" y="75" x="160" xml:space="preserve">Million Lives Improved</text>
@@ -56,15 +62,19 @@
 					</g>
 
 					<g id="popup_value" onclick="objTrendGraph.showvaluepopup({show: false});" visibility="hidden">
-						<rect id="popup_value_base" width="54" height="54" x="0" y="0"/>
+						<path
+						   d="M 50,25.279 C 50,11.470998 38.808,0.2789983 25,0.2789983 11.193,0.2789983 0,11.470998 0,25.279 c 0,9.007 4.7660001,16.899 11.911,21.3 L 25.332,60 40.246,45.086 C 46.176,40.514 50,33.344 50,25.279 z"
+						   id="popup_value_base" />
 						<text id="popup_value_number" y="20" x="27" xml:space="preserve">2,233</text>
 						<text id="popup_value_text" y="42" x="27" xml:space="preserve">Million</text>
 					</g>
+
+
 				</g>
 
 			</svg>
 		</div>
-		<div>
+		<div style="display: none">
 			Last element value: <input type="text" id="future_info" /> <input type="button" onclick="objTrendGraph.updatelastpointingraph(parseFloat(document.getElementById('future_info').value))" value="Update" />
 		</div>
 

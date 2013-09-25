@@ -148,7 +148,8 @@ var objTrendGraph={
 	},
 	showvaluepopup: function(objArgs){
 		var self=this;
-		//console.log(objArgs);
+		alert('in showvaluepopup')
+		console.log(objArgs);
 
 		if(objArgs.show){
 			//align the popup and the show it
@@ -226,7 +227,7 @@ var objTrendGraph={
 
 		//set the position of the graph title
 		var elTitle=document.getElementById('graph_title');
-		elTitle.setAttributeNS(null,'x', (self.props.padding.left+2));
+		elTitle.setAttributeNS(null,'x', (self.props.padding.left+((self.props.axis.ylabelinset)?0:2)));
 		elTitle.textContent=self.props.title.text;
 
 		//0) update the graph properties by setting the y-axis max and min value dynamically
