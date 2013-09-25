@@ -20,8 +20,7 @@ var app = {
 		objExplain.show();
 	},
 	btnlogoutclick: function(el){
-		location.reload();
-		//objLogin.logout();
+		objLogin.logout();
 	},
 	isMobile: {
 		any : function() {
@@ -47,14 +46,14 @@ var app = {
 			}				
 		},function(err, results){
 			if(err != null){
-				debugger;
+				//debugger;
 				objError.handleError('app.start', err);
 				//objLogin.show();	
 			}else{
 				objLogin.hide();
 				objMap.updatemap();		
-				//objFilter.show();
-				//window.setTimeout(function(){objFilter.hide();}, 2000);
+				//TODO: add logic to show bookmarks, filter or messages
+				objFilter.show();
 				objLogin.showupdatemessages();
 			}
 		});			

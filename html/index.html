@@ -13,7 +13,7 @@
 		</script>		
 	</head>
 	<body>
-		<div id="app_panel" class="panel full" tabindex="-1">
+		<div id="app_panel" class="panel full">
 			<div id="title_bar">
 				<div id="btn_back" onclick="objHeader.btnbackclick();"></div>
 				<div id="info">
@@ -31,136 +31,144 @@
 			<div id="app_wrapper">
 				<div id="map">
 					<div id="main_wrapper" style="opacity: 1; display: block">
-						<div id="holder_1000" style="opacity: 1">
+						<div id="holder_1000" style="opactiy: 1">
 						</div>
 					</div>				
 				</div>
 				
-				<div id="region_info" onclicks="objHeader.btnbackclick();">
-					<div id="region_info_wrapper">
-						<div class="svg_wrapper">
-							<div id="holder">
-								<svg id="svg_circle" xmlns="http://www.w3.org/2000/svg" version="1.1" width="80%" height="80%" viewBox="-10 -10 240 240">
-								  <g id="g" fill="none" transform="translate(-80,-80)">
-									<circle id="background" width="100" cx="200" cy="200" r="100" />
-									<path id="arc_path" />
-									<g id="arc_path_left_wrapper" transform="rotate(0,200,200)">
-										<path id="arc_path_left" />
-									</g>
-									<g transform="translate(20,0)">
-										<text id="lives_improved_percentage" x="140" y="210" fill="#000">100%</text>
-										<text id="lives_improved_percentage_sub" x="0" y="220" fill="#000" width="200">
-											<tspan x="5.3em" dy="1.1em">of population</tspan>
-										</text>
-									</g>
-								  </g>
-									<g transform="translate(50,50)" id="down">
-										<path fill="#FFFFFF" d="M25.719,25.599c4.455-4.459,4.455-11.681-0.002-16.136c-4.453-4.457-11.679-4.458-16.133,0
-											c-4.458,4.455-4.457,11.679,0,16.136C14.04,30.054,21.266,30.055,25.719,25.599z M15.816,23.015
-											c-0.603-0.001-1.094-0.491-1.095-1.096c0.001-0.603,0.493-1.093,1.093-1.094l3.523,0.001l-6.847-6.847
-											c-0.215-0.215-0.322-0.495-0.323-0.772c0.001-0.281,0.108-0.564,0.321-0.773c0.425-0.429,1.119-0.429,1.546,0l6.848,6.849
-											l0.002-3.521c0-0.605,0.488-1.094,1.095-1.094c0.603-0.002,1.091,0.491,1.093,1.09v6.163c0,0.012-0.006,0.017-0.006,0.027
-											c-0.003,0.138-0.029,0.267-0.078,0.392c-0.05,0.115-0.123,0.215-0.207,0.305c-0.014,0.018-0.018,0.037-0.029,0.051
-											c-0.017,0.017-0.037,0.02-0.055,0.037c-0.091,0.078-0.191,0.151-0.303,0.198c-0.133,0.056-0.275,0.084-0.42,0.084L15.816,23.015z"
-											/>
-									</g>
-									<g transform="translate(50,50)" id="up">
-										<path fill="#FFFFFF" d="M25.719,9.462c-4.457-4.455-11.681-4.455-16.137,0c-4.457,4.457-4.457,11.682,0,16.137
-											c4.456,4.457,11.68,4.457,16.137,0C30.174,21.145,30.174,13.917,25.719,9.462z M23.133,19.367c0,0.604-0.49,1.094-1.093,1.094
-											c-0.604,0-1.093-0.49-1.093-1.094v-3.522l-6.85,6.848c-0.213,0.215-0.493,0.32-0.773,0.32c-0.279,0-0.561-0.105-0.774-0.32
-											c-0.427-0.426-0.427-1.119,0-1.547l6.848-6.848h-3.52c-0.603,0-1.094-0.489-1.094-1.094c0-0.604,0.491-1.093,1.094-1.093h6.161
-											c0.011,0,0.019,0.005,0.028,0.006c0.135,0.003,0.266,0.027,0.389,0.079c0.117,0.047,0.217,0.121,0.309,0.203
-											c0.015,0.014,0.035,0.018,0.049,0.031c0.016,0.017,0.02,0.038,0.035,0.055c0.081,0.09,0.152,0.188,0.199,0.301
-											c0.058,0.135,0.084,0.277,0.084,0.421V19.367z"/>
-									</g>
-								</svg>
-							</div>					
-						</div>
-						<div class="data_wrapper">
-							<div id="region_data">
-								<div id="region_lives_improved">
-									<div id="nr_lives_improved">70.3</div>
-									<div id="nr_lives_improved_label" class="lives_improved_sub">million lives improved</div>
+					<div id="top_panel">
+						<div id="region_info" onclicks="objHeader.btnbackclick();">
+							<div id="region_info_wrapper">
+								
+								<div class="svg_wrapper">
+									<div id="holder">
+										<svg id="svg_circle" xmlns="http://www.w3.org/2000/svg" version="1.1" width="80%" height="80%" viewBox="-10 -10 240 240">
+										  <g id="g" fill="none" transform="translate(-80,-80)">
+											<circle id="background" width="100" cx="200" cy="200" r="100" />
+											<path id="arc_path" />
+											<g id="arc_path_left_wrapper" transform="rotate(0,200,200)">
+												<path id="arc_path_left" />
+											</g>
+											<g transform="translate(20,0)">
+												<text id="lives_improved_percentage" x="140" y="210" fill="#000">100%</text>
+												<text id="lives_improved_percentage_sub" x="0" y="220" fill="#000" width="200">
+													<tspan x="5.3em" dy="1.1em">of population</tspan>
+												</text>
+											</g>
+										  </g>
+											<g transform="translate(50,50)" id="down">
+												<path fill="#FFFFFF" d="M25.719,25.599c4.455-4.459,4.455-11.681-0.002-16.136c-4.453-4.457-11.679-4.458-16.133,0
+													c-4.458,4.455-4.457,11.679,0,16.136C14.04,30.054,21.266,30.055,25.719,25.599z M15.816,23.015
+													c-0.603-0.001-1.094-0.491-1.095-1.096c0.001-0.603,0.493-1.093,1.093-1.094l3.523,0.001l-6.847-6.847
+													c-0.215-0.215-0.322-0.495-0.323-0.772c0.001-0.281,0.108-0.564,0.321-0.773c0.425-0.429,1.119-0.429,1.546,0l6.848,6.849
+													l0.002-3.521c0-0.605,0.488-1.094,1.095-1.094c0.603-0.002,1.091,0.491,1.093,1.09v6.163c0,0.012-0.006,0.017-0.006,0.027
+													c-0.003,0.138-0.029,0.267-0.078,0.392c-0.05,0.115-0.123,0.215-0.207,0.305c-0.014,0.018-0.018,0.037-0.029,0.051
+													c-0.017,0.017-0.037,0.02-0.055,0.037c-0.091,0.078-0.191,0.151-0.303,0.198c-0.133,0.056-0.275,0.084-0.42,0.084L15.816,23.015z"
+													/>
+											</g>
+											<g transform="translate(50,50)" id="up">
+												<path fill="#FFFFFF" d="M25.719,9.462c-4.457-4.455-11.681-4.455-16.137,0c-4.457,4.457-4.457,11.682,0,16.137
+													c4.456,4.457,11.68,4.457,16.137,0C30.174,21.145,30.174,13.917,25.719,9.462z M23.133,19.367c0,0.604-0.49,1.094-1.093,1.094
+													c-0.604,0-1.093-0.49-1.093-1.094v-3.522l-6.85,6.848c-0.213,0.215-0.493,0.32-0.773,0.32c-0.279,0-0.561-0.105-0.774-0.32
+													c-0.427-0.426-0.427-1.119,0-1.547l6.848-6.848h-3.52c-0.603,0-1.094-0.489-1.094-1.094c0-0.604,0.491-1.093,1.094-1.093h6.161
+													c0.011,0,0.019,0.005,0.028,0.006c0.135,0.003,0.266,0.027,0.389,0.079c0.117,0.047,0.217,0.121,0.309,0.203
+													c0.015,0.014,0.035,0.018,0.049,0.031c0.016,0.017,0.02,0.038,0.035,0.055c0.081,0.09,0.152,0.188,0.199,0.301
+													c0.058,0.135,0.084,0.277,0.084,0.421V19.367z"/>
+											</g>
+
+										</svg>
+									</div>					
 								</div>
-								<div id="region_gdp">
-									<div id="nr_gdp">$305 trillion</div>
+								<div class="data_wrapper">
+									<div id="region_data">
+										<div id="region_lives_improved">
+											<div id="nr_lives_improved">70.3</div>
+											<div id="nr_lives_improved_label" class="lives_improved_sub">million lives improved</div>
+										</div>
+										<div id="region_gdp">
+											<div id="nr_gdp">$305 trillion</div>
+										</div>
+										<div id="region_population">
+											<div id="nr_population">70 million</div>
+										</div>
+									</div>					
 								</div>
-								<div id="region_population">
-									<div id="nr_population">70 million</div>
-								</div>
-							</div>					
-						</div>
+							</div>
+							<div id="show_current" onclick="objRegionInfo.showcurrent();"><div>Current</div></div>
+						</div>					
 					</div>
-			
-				</div>
-				<div id="region_history">
-					<!-- base svg construction for the line graph -->
-					<svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 400 300">
-						<g id="wrapper" transform="translate(0, 0)">
-							<text id="graph_title" y="15" x="0" xml:space="preserve">Trend</text>
-
-							<g id="grid_wrapper"> </g>
-
-							<!-- axis lines -->
-							<g class="axis_line">
-								<line id="x_axisline" x1="20" y1="10" x2="20" y2="280"/>
-							</g>
-							<g class="axis_line">
-								<line id="y_axisline" x1="20" y1="280" x2="370" y2="280"/>
-							</g>
-
-							<!-- axis labels -->
-							<g id="x_axislabel_wrapper" class="labels x-labels"> </g>
-							<g id="y_axislabel_wrapper" class="labels y-labels"> </g>
-
-							<!-- wrapper for the graph line -->
-							<g id="line_wrapper"> </g>
-
-							<!-- wrapper for the data points -->
-							<g id="data_point_wrapper" class="first_set points" data-setname="Our first data set"> </g>
-							<g id="popup_trend" transform="translate(18.882713,11.364596) scale(0.8)">
-								<path id="popup_trend_base" d="m 0.826235,89.47513 171.590555,0.3268 -0.3268,-60.78434 -13.0719,0 -17.97385,-28.10457 -17.32026,28.10457 c 0,0 -117.342689,-0.65359 -123.22398,-0.65359 z" />
-								<g id="popup_trend_text_wrapper">
-									<text id="popup_trend_number" y="55" x="160" xml:space="preserve">2,23</text>
-									<text id="popup_trend_text" y="75" x="160" xml:space="preserve">Million Lives Improved</text>
+					<div id="bottom_panel">
+						<div id="region_history">
+							<!-- base svg construction for the line graph -->
+							<svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 400 300">
+								<g id="wrapper" transform="translate(0, 0)">
+									<text id="graph_title" y="15" x="0" xml:space="preserve">Trend</text>
+		
+									<g id="grid_wrapper"> </g>
+		
+									<!-- axis lines -->
+									<g class="axis_line">
+										<line id="x_axisline" x1="20" y1="10" x2="20" y2="280"/>
+									</g>
+									<g class="axis_line">
+										<line id="y_axisline" x1="20" y1="280" x2="370" y2="280"/>
+									</g>
+		
+									<!-- axis labels -->
+									<g id="x_axislabel_wrapper" class="labels x-labels"> </g>
+									<g id="y_axislabel_wrapper" class="labels y-labels"> </g>
+		
+									<!-- wrapper for the graph line -->
+									<g id="line_wrapper"> </g>
+		
+									<!-- wrapper for the data points -->
+									<g id="data_point_wrapper" class="first_set points" data-setname="Our first data set"> </g>
+									<g id="popup_trend" transform="translate(18.882713,11.364596) scale(0.8)">
+										<path id="popup_trend_base" d="m 0.826235,89.47513 171.590555,0.3268 -0.3268,-60.78434 -13.0719,0 -17.97385,-28.10457 -17.32026,28.10457 c 0,0 -117.342689,-0.65359 -123.22398,-0.65359 z" />
+										<g id="popup_trend_text_wrapper">
+											<text id="popup_trend_number" y="55" x="160" xml:space="preserve">2,23</text>
+											<text id="popup_trend_text" y="75" x="160" xml:space="preserve">Million Lives Improved</text>
+										</g>
+									</g>
+									<g id="popup_value" onclick="objTrendGraph.showvaluepopup({show: false});" visibility="hidden">
+										<rect id="popup_value_base" width="54" height="54" x="0" y="0"/>
+										<text id="popup_value_number" y="20" x="27" xml:space="preserve">2,233</text>
+										<text id="popup_value_text" y="42" x="27" xml:space="preserve">Million</text>
+									</g>
 								</g>
-							</g>
-							<g id="popup_value" onclick="objTrendGraph.showvaluepopup({show: false});" visibility="hidden">
-								<rect id="popup_value_base" width="54" height="54" x="0" y="0"/>
-								<text id="popup_value_number" y="20" x="27" xml:space="preserve">2,233</text>
-								<text id="popup_value_text" y="42" x="27" xml:space="preserve">Million</text>
-							</g>
-						</g>
-					</svg>						
-				</div>
-				<div id="slider_indicator"></div>
-				<div id="simulation">
-					<div id="simulation_wrapper">
-						<div id="show_simulation">Simulation</div>
-						<h3>Lives Improved Year End</h3>
-						<div id="section1">
-							<h4>Sales</h4>
-							<input id="slidersales" type="range" min="-20" max="30" value="0" step="0.1" class="philips"><div class="slider_value" id="value_sales">0%</div>		
-							<div class="range_indicator">
-								<div class="min" id="salesmin">-20</div>
-								<div class="zero" id="saleszero">0</div>
-								<div class="max" id="salesmax">30</div>
-							</div>								
-						</div>
-						<div id="section2">
-							<h4>Green sales</h4>
-							<input id="slidergreensales" type="range" min="-20" max="30" value="0" step="0.1" class="philips"><div class="slider_value" id="value_green_sales">0%</div>		
-							<div class="range_indicator">
-								<div class="min" id="greensalesmin">-20</div>
-								<div class="zero" id="greensaleszero">0</div>
-								<div class="max" id="greensalesmax">30</div>
+							</svg>						
+						</div>				
+						<div id="simulation">
+							<div id="simulation_wrapper">
+								<div id="show_simulation" onclick="objRegionInfo.showsimulation();">
+									Simulation
+								</div>
+								<div id="section1">
+									<h4>Sales</h4>
+									<input id="slidersales" type="range" min="-20" max="30" value="0" step="0.1" class="philips"><div class="slider_value" id="value_sales">0%</div>		
+									<div class="range_indicator">
+										<div class="min" id="salesmin">-20</div>
+										<div class="zero" id="saleszero">0</div>
+										<div class="max" id="salesmax">30</div>
+									</div>								
+								</div>
+								<div id="section2">
+									<h4>Green sales</h4>
+									<input id="slidergreensales" type="range" min="-20" max="30" value="0" step="0.1" class="philips"><div class="slider_value" id="value_green_sales">0%</div>		
+									<div class="range_indicator">
+										<div class="min" id="greensalesmin">-20</div>
+										<div class="zero" id="greensaleszero">0</div>
+										<div class="max" id="greensalesmax">30</div>
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div id="simulation_error_wrapper">
-
-					</div>
-				</div>		
+						<div id="simulation_error_wrapper">
+	
+						</div>					
+					
+				</div>
+				<div id="slider_indicator"></div>
 			</div>
 			<div id="menu_bar">
 				<div id="btn_wrapper">

@@ -136,7 +136,6 @@ var objMap = {
 		//load correct svg map
 		self.loadmap(function(data){
 			
-
 			if(data != null){
 				// update svg html
 				self.el.elsvgholder.innerHTML='';
@@ -147,7 +146,7 @@ var objMap = {
 				if(err != null){
 					objError.handleError('map.updatemap', err);
 				}else{
-
+					objLoading.show();
 
 					/*
 					1) store the data in this object as a property
@@ -290,20 +289,13 @@ var objMap = {
 					self.centerworldmap(self.el.rootanimate);
 
 					self.currentmap=objOruFilter.state.selectedoru;
-
-					//if from bookmarks then open info panel of the bookmark that you selected	
+					objLoading.hide();
+					//hideLoadingPanel();	
 					if(regionIdToSelect){
 						self.regionclick(regionIdToSelect);
 					}
 					//post processing
 					self.el.elsvgholder.style.visibility = 'visible';
-
-					//hack
-					//objFilter.show();
-					//window.setTimeout(function(){objFilter.hide();}, 2000);
-					//getEl('title_bar').scrollIntoView()
-
-					//getEl('app_panel').focus();
 				}
 			});
 		});

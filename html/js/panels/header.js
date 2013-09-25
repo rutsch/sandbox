@@ -89,10 +89,9 @@ var objHeader = {
 		self.hidebackbutton();
 		self.hidefavouritebutton();
 		objHeader.setregionname(objMap.state.mapname);
-		objMap.el.elsvgholder.style.opacity = 1;
-		objMap.el.elsvgholder.style.display = 'block';
+
 		objRegionInfo.hide();
-		objSliders.hide();
+		//objSliders.hide();
 	},
 	/*
 	 * Change field values
