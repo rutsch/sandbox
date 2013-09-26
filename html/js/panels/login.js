@@ -254,7 +254,7 @@ var objLogin = {
 		var self = this;
 
 		//reset some variables
-		objSliders.vars.simulatorsampling=true;
+		objSliders.vars.simulatorsampling=false;
 		self.el.wrapper.style.display = "block";
 		self.state.tweening = true;
 		TweenLite.to(self.el.wrapper, 0.3, {
@@ -263,6 +263,14 @@ var objLogin = {
 				//debugger;
 				self.state.tweening = false;
 				self.state.visible = true;
+
+				//set the focus
+				if(self.el.tbxusername.value==''){
+					setTimeout(function(){self.el.tbxusername.focus()}, 500);
+				}else{
+					setTimeout(function(){self.el.tbxpassword.focus()}, 500);
+				}
+
 			}
 		});		
 	},
