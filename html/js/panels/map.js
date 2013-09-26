@@ -504,10 +504,10 @@ var objMap = {
 		var objExtendedData=self.roundlivesimproveddataobject(objData);
 		//console.log(objExtendedData)
 
-		objRegionInfo.el.nrlivesimproved.innerHTML =objExtendedData.displayl;
-		objRegionInfo.el.labellivesimproved.innerHTML=objExtendedData.labell;
-		objRegionInfo.el.gdp.innerHTML='<span>GDP</span> $'+objExtendedData.displayg+objExtendedData.labelg;
-		objRegionInfo.el.population.innerHTML='<span>Population</span>' +objExtendedData.displayp+objExtendedData.labelp;
+		objRegionInfo.el.nrlivesimproved.textContent =objExtendedData.displayl;
+		objRegionInfo.el.labellivesimproved.textContent=objExtendedData.labell;
+		objRegionInfo.el.gdp.textContent='$'+objExtendedData.displayg+objExtendedData.labelg;
+		objRegionInfo.el.population.textContent=objExtendedData.displayp+objExtendedData.labelp;
 	},
 	//rounds the data befor sending it to the app
 	roundlivesimproveddataobject: function(objData){
