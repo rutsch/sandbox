@@ -358,6 +358,27 @@ function setupHandlersMobile(){
 					
 }
 
+//detaches the events from the map so that the map can safely be destroyed
+function removeHandlers(cb){
+	if(objZoomPanSettings.mobile){
+		app.el.hammersvg.off("dragstart")
+		app.el.hammersvg.off("drag")
+		app.el.hammersvg.off("touch")
+		app.el.hammersvg.off("pinch")
+		app.el.hammersvg.off("release")
+	}else{
+		if(navigator.userAgent.toLowerCase().indexOf('webkit') >= 0){
+			window.removeEventListener('mousewheel', handleZoomDesktop, false); // Chrome/Safari
+		}else{
+			window.removeEventListener('DOMMouseScroll', handleZoomDesktop, false); // Others
+		}
+
+	}
+	objTouchVars.timer1=setTimeout(function(){
+		cb()
+	}, 50);
+}
+
 
 
 /**

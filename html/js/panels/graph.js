@@ -464,9 +464,6 @@ var objTrendGraph={
 
 			//grid lines
 			var elGridLine=document.createElementNS('http://www.w3.org/2000/svg','line');
-			console.log(self.props.axis.ylabelinset)
-			console.log(self.props.padding.left+' - '+self.props.axis.xpaddingleft)
-			console.log(((self.props.axis.ylabelinset)?(self.props.padding.left+self.props.axis.xpaddingleft-5):self.props.padding.left))
 			self.setsvglinecoordinates(elGridLine,{
 				x1: ((self.props.axis.ylabelinset)?(self.props.padding.left+self.props.axis.xpaddingleft-5):self.props.padding.left),
 				y1: objCoords.y,

@@ -137,9 +137,11 @@ var objMap = {
 		self.loadmap(function(data){
 			
 			if(data != null){
-				// update svg html
-				self.el.elsvgholder.innerHTML='';
-				self.el.elsvgholder.innerHTML=data;
+				// remove the handlers of the previous map and update svg html
+				removeHandlers(function(){
+					self.el.elsvgholder.innerHTML='';
+					self.el.elsvgholder.innerHTML=data;					
+				});
 			}
 			//get worldmap livesimproved data
 			self.getworldmapdata(function(err, data){
@@ -278,6 +280,7 @@ var objMap = {
 
 							if(strElementName=='path' || strElementName == 'g' || strElementName == 'polygon')countryClicked(strElementId);
 						}
+
 						initSgvZoomPan(self.el.rootsvg, self.el.rootanimate);
 
 						//console.log(objPageElements.rootanimateattributevalues);
