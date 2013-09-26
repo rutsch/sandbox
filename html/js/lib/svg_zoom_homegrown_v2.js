@@ -1,9 +1,9 @@
-/** 
+/**
  *  SVGPan library 1.2.2
  * ======================
  *
- * Given an unique existing element with id "viewport" (or when missing, the 
- * first g-element), including the the library into any SVG adds the following 
+ * Given an unique existing element with id "viewport" (or when missing, the
+ * first g-element), including the the library into any SVG adds the following
  * capabilities:
  *
  *  - Mouse panning
@@ -41,17 +41,17 @@
  * This code is licensed under the following BSD license:
  *
  * Copyright 2009-2010 Andrea Leofreddi <a.leofreddi@itcharm.com>. All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
- * 
+ *
  *    1. Redistributions of source code must retain the above copyright notice, this list of
  *       conditions and the following disclaimer.
- * 
+ *
  *    2. Redistributions in binary form must reproduce the above copyright notice, this list
  *       of conditions and the following disclaimer in the documentation and/or other materials
  *       provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY Andrea Leofreddi ``AS IS'' AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Andrea Leofreddi OR
@@ -61,7 +61,7 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of Andrea Leofreddi.
@@ -69,14 +69,14 @@
 
 "use strict";
 
-/// CONFIGURATION 
+/// CONFIGURATION
 /// ====>
 
 var objZoomPanSettings={
 	pan: 1, // 1 or 0: enable or disable panning (default enabled)
 	zoom: 1, // 1 or 0: enable or disable zooming (default enabled)
 	drag: 0, // 1 or 0: enable or disable dragging (default disabled)
-	zoomscale: 0.2, // Zoom sensitivity
+	zoomscale: 0.4, // Zoom sensitivity
 	mobile: false,
 	clickcallback: null,
 	usesamplingformobile: false,
@@ -88,12 +88,14 @@ var objTouchSettings={
 	debug: true,
 	debugtoconsole: true,
 	debugtointerface: true,
-	zoommax: 5,
-	zoommin: 0.2
+	zoommax: 8,
+	zoommin: 0.2,
+	testzoom: true,
+	testpan: true
 }
 
 /// <====
-/// END OF CONFIGURATION 
+/// END OF CONFIGURATION
 
 
 var objTouchVars={
@@ -120,7 +122,14 @@ var objTouchVars={
 	svgmatrix: null,
 	svgx: 0,
 	svgy: 0,
-	clickstart: false
+	clickstart: false,
+	mapsize: {
+		orig: {},
+		current: {}
+	},
+	realzoom: 1,
+	zoomlimit: false,
+	eventcount: 1
 }
 
 function initSgvZoomPan(elSvgRoot, elSvgNodeToAnimate){
@@ -128,6 +137,10 @@ function initSgvZoomPan(elSvgRoot, elSvgNodeToAnimate){
 	objTouchVars.elsvg=elSvgRoot;
 	//this function sets the svg node to animate and does some viewport magic
 	objTouchVars.elanimate=getRoot(elSvgNodeToAnimate);
+
+	//store the original size in a variable so that we can use this to limit the zoom and panning actions
+	//objTouchVars.mapsize.orig=objTouchVars.elsvg.getBoundingClientRect();
+	objTouchVars.mapsize.orig=objTouchVars.elsvg.getBBox();
 
 	//retrieve the position of the svg element
 	var arrPos=retrievePosition(elSvgRoot);
@@ -157,7 +170,7 @@ function setupHandlers(){
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			if(window.console) { console.log('setting up for mobile'); }
 		}
-		
+
 		//finetune hammer object
 		Hammer.gestures.Drag.defaults.drag_min_distance=1;
 		Hammer.gestures.Drag.defaults.correct_for_drag_min_distance=true;
@@ -166,7 +179,7 @@ function setupHandlers(){
 		app.el.hammersvg = Hammer(objTouchVars.elsvg, {
 			prevent_default: true,
 			no_mouseevents: true,
-			
+
 			tap: false,
 			pinch: true,
 			hold: false,
@@ -183,7 +196,7 @@ function setupHandlers(){
 			if(window.console) { console.log('setting up for desktop'); }
 		}
 		setupHandlersDesktop();
-	}	
+	}
 }
 
 
@@ -215,8 +228,11 @@ function setupHandlersMobile(){
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 		}
-		objTouchVars.dragging=true;
 		
+		objTouchVars.eventcount++;
+
+		objTouchVars.dragging=true;
+
 		if(objTouchVars.timer1)clearTimeout(objTouchVars.timer1);
 		objTouchVars.timer1=setTimeout(function(){
 			objTouchVars.dragging=false;
@@ -230,8 +246,10 @@ function setupHandlersMobile(){
 			//if(window.console) { console.log(ev); }
 		}
 
+		objTouchVars.eventcount++;
+
 		objTouchVars.dragging=true;
-		
+
 		if(objZoomPanSettings.usesamplingformobile){
 
 			//store details about the event in the global variable
@@ -250,12 +268,12 @@ function setupHandlersMobile(){
 				},50);
 			}
 		}else{
-			handleDrag(ev);	
+			handleDrag(ev);
 		}
 
-		
-	});	
-	/*	    
+
+	});
+	/*
 	objPageVars.hammersvg.on("dragend release", function(ev) {
 		//if(window.console) { console.log(ev); }
 		//handleClickTouchEnd(ev);
@@ -266,12 +284,14 @@ function setupHandlersMobile(){
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 		}
-		
+
+		objTouchVars.eventcount++;
+
 		objTouchVars.timer2=setTimeout(function(){
 			if(!objTouchVars.dragging)handleClick(ev);
 			objTouchVars.dragging=false;
 		},300)
-		
+
 	});
 
 
@@ -280,6 +300,8 @@ function setupHandlersMobile(){
 			if(window.console) { console.log(ev); }
 			console.log('pinch');
 		}
+
+		objTouchVars.eventcount++;
 
 		objTouchVars.dragging=true;
 
@@ -310,52 +332,55 @@ function setupHandlersMobile(){
 			objTouchVars.dragging=false;
 		},500);
 
-		
-	});	
 
-	/*	    
+	});
+
+	/*
 	objPageVars.hammersvg.on("pinchin", function(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 		}
 
-	});	
+	});
 	objPageVars.hammersvg.on("pinchout", function(ev) {
 		if(objTouchSettings.debug &oion(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 			console.log('tap');
 		}
-	});		    
-	
+	});
+
 	objPageVars.hammersvg.on("doubletap", function(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 			console.log('doubletap');
 		}
-	});		    
-	
+	});
+
 	objPageVars.hammersvg.on("transform", function(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 			console.log('transform');
 		}
-	});		    
+	});
 	objPageVars.hammersvg.on("rotate", function(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 			//console.log('rotate');
 		}
-	});	
-	*/    
+	});
+	*/
 	app.el.hammersvg.on("release", function(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 			console.log('release');
 		}
+
+		objTouchVars.eventcount++;
+
 		handleRelease(ev)
-	});		    
-					
+	});
+
 }
 
 //detaches the events from the map so that the map can safely be destroyed
@@ -396,7 +421,7 @@ function getEventPoint(evt) {
 		p.y = evt.gesture.center.pageY-objTouchVars.svgy;
 	}else{
 		p.x = evt.clientX-objTouchVars.svgx;
-		p.y = evt.clientY-objTouchVars.svgy;			
+		p.y = evt.clientY-objTouchVars.svgy;
 	}
 
 	return p;
@@ -412,7 +437,7 @@ function handleClick(ev){
 			console.log('in handleClick');
 		}
 
-	}	
+	}
 
 	if(objZoomPanSettings.clickcallback!=null){
 		objZoomPanSettings.clickcallback(ev);
@@ -441,7 +466,7 @@ function handleRelease(ev){
 
 	if(objTouchVars.action='drag'){
 		objTouchVars.zoom=objTouchVars.zoomworking;
-		
+
 		//avoid that the touch event will fire even after we have released the finger from the screen
 		if(objTouchVars.timer5)clearTimeout(objTouchVars.timer5);
 		objTouchVars.timer5=setTimeout(function(){
@@ -472,6 +497,47 @@ function handleRelease(ev){
 /**
  * Handle zoom.
  */
+
+function shouldStillZoom(){
+	var bolExecuteZoom=true;
+	//console.log(objTouchVars.eventcount%10)
+	//console.log(10%objTouchVars.eventcount)
+	objTouchVars.zoomlimit
+	if(objTouchSettings.testzoom){
+		if(objTouchVars.eventcount%10==0){
+			//test for the zoom settings
+			console.log('in test')
+
+			objTouchVars.realzoom=parseFloat(objTouchVars.elanimate.getAttributeNS(null, 'transform').replace(/^matrix\((.*?)(,|\s).*$/, '$1'));
+			//console.log(intZoomLevel)
+
+			if((objTouchVars.realzoom>objTouchSettings.zoommax && objTouchVars.action=='zoomin') || (objTouchVars.realzoom<objTouchSettings.zoommin && objTouchVars.action=='zoomout'))bolExecuteZoom=false;
+
+			//store for later reference
+			objTouchVars.zoomlimit=bolExecuteZoom;
+
+			/*
+			use bbox is more cpu intense...
+			objTouchVars.mapsize.current=objTouchVars.elsvg.getBBox();
+			//console.log('objTouchVars.mapsize.current.width: '+objTouchVars.mapsize.current.width+' - objTouchVars.mapsize.orig.width*objTouchSettings.zoommax: '+(objTouchVars.mapsize.orig.width*objTouchSettings.zoommax)+' - objTouchVars.action: '+objTouchVars.action)
+
+			//max zoom
+			if(objTouchVars.mapsize.current.width>(objTouchVars.mapsize.orig.width*objTouchSettings.zoommax) && objTouchVars.action=='zoomin')bolExecuteZoom=false;
+
+			//min zoom
+			if(bolExecuteZoom){
+				if(objTouchVars.mapsize.current.width<(objTouchVars.mapsize.orig.width*objTouchSettings.zoommin) && objTouchVars.action=='zoomout')bolExecuteZoom=false;
+			}
+			*/
+		}else{
+			//return the previously calculated value
+			bolExecuteZoom=objTouchVars.zoomlimit;
+		}		
+	}
+
+	return bolExecuteZoom;
+}
+
 function handleZoomMobile(ev){
 	//set the action parameter
 	if(objTouchVars.pinchscale!=ev.gesture.scale){
@@ -486,50 +552,64 @@ function handleZoomMobile(ev){
 		objTouchVars.action='zoom';
 	}
 
-	
-	//capture the center of the pinch effect
-	objTouchVars.fingerx=ev.gesture.startEvent.center.pageX;
-	objTouchVars.fingery=ev.gesture.startEvent.center.pageY;
+	//handle maximum zoom
 
-	//calculate a new zoom level and assure that this stays within limits
-	var intOldZoomLevel=objTouchVars.zoomworking;
-	var intNewZoomLevel=objTouchVars.zoom*ev.gesture.scale;
 
-	//var intZoomDelta=1-(intOldZoomLevel-intNewZoomLevel);
-	var intZoomDelta=1-(objTouchVars.pinchscale-ev.gesture.scale);
-	if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
-		if(window.console) { 
-			console.log(intZoomDelta); 
+
+
+	if(shouldStillZoom()){
+		//capture the center of the pinch effect
+		objTouchVars.fingerx=ev.gesture.startEvent.center.pageX;
+		objTouchVars.fingery=ev.gesture.startEvent.center.pageY;
+
+		//calculate a new zoom level and assure that this stays within limits
+		var intOldZoomLevel=objTouchVars.zoomworking;
+		var intNewZoomLevel=objTouchVars.zoom*ev.gesture.scale;
+
+		//var intZoomDelta=1-(intOldZoomLevel-intNewZoomLevel);
+		var intZoomDelta=1-(objTouchVars.pinchscale-ev.gesture.scale);
+		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
+			if(window.console) {
+				console.log(intZoomDelta);
+			}
 		}
-	}
 
-	/*
-	if(intNewZoomLevel<=objTouchSettings.zoommax && intNewZoomLevel>=objTouchSettings.zoommin){
-		objTouchVars.zoomworking=objTouchVars.zoom*ev.gesture.scale;
-	}else{
-		if(intNewZoomLevel>=1){
-			objTouchVars.zoomworking=objTouchSettings.zoommax;
-			intZoomDelta=1;
+
+
+
+
+		/*
+		if(intNewZoomLevel<=objTouchSettings.zoommax && intNewZoomLevel>=objTouchSettings.zoommin){
+			objTouchVars.zoomworking=objTouchVars.zoom*ev.gesture.scale;
 		}else{
-			objTouchVars.zoomworking=objTouchSettings.zoommin;
-			intZoomDelta=1;
+			if(intNewZoomLevel>=1){
+				objTouchVars.zoomworking=objTouchSettings.zoommax;
+				intZoomDelta=1;
+			}else{
+				objTouchVars.zoomworking=objTouchSettings.zoommin;
+				intZoomDelta=1;
+			}
 		}
+		*/
+		//store the scale mode
+		objTouchVars.pinchscale=ev.gesture.scale;
+
+
+		if(objTouchSettings.debug && objTouchSettings.debugtointerface){
+			debugLog();
+		}
+
+		handleZoom(ev, intZoomDelta);
+
 	}
-	*/
-	//store the scale mode
-	objTouchVars.pinchscale=ev.gesture.scale;
 
-
-	if(objTouchSettings.debug && objTouchSettings.debugtointerface){
-		debugLog();
-	}
-
-	handleZoom(ev, intZoomDelta);
 }
 
 
 function handleZoomDesktop(evt){
 	if(!objZoomPanSettings.zoom)return;
+
+	objTouchVars.eventcount++;
 
 	//preventDefault is handled by hammer
 	if(!objZoomPanSettings.mobile){
@@ -558,10 +638,10 @@ function handleZoom(evt, z) {
 	if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 		if(window.console)console.log(z);
 	}
-	
+
 	//var g = getRoot(evt.target.ownerDocument);
 	var g=(objTouchVars.elanimate==null)?getRoot(evt.target.ownerDocument):objTouchVars.elanimate;
-	
+
 	var p = getEventPoint(evt);
 
 	p = p.matrixTransform(g.getCTM().inverse());
@@ -590,12 +670,12 @@ function handleDrag(evt) {
 	if(!objZoomPanSettings.mobile){
 		if(evt.preventDefault)evt.preventDefault();
 	}
-	
+
 	if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 		if(window.console)console.log(evt);
 	}
 	evt.returnValue = false;
-	
+
 	//console.log('+++++++')
 	//console.log(evt);
 	//var g = getRoot(evt.target.ownerDocument);
@@ -624,7 +704,7 @@ function handleDrag(evt) {
 
 	if(objTouchSettings.debug && objTouchSettings.debugtointerface){
 		debugLog();
-	}	
+	}
 }
 
 /**
@@ -641,7 +721,7 @@ function handleClickTouchStart(evt) {
 	//var g = getRoot(evt.target.ownerDocument);
 	var g=(objTouchVars.elanimate==null)?getRoot(evt.target.ownerDocument):objTouchVars.elanimate;
 	//var g=(objTouchVars.elanimate==null && !objZoomPanSettings.mobile)?getRoot(evt.target.ownerDocument):objTouchVars.elanimate;
-	
+
 	// Pan anyway when drag is disabled and the user clicked on an element
 	if(evt.target.tagName == "svg" || !objZoomPanSettings.drag){
 		// Pan mode
@@ -654,7 +734,7 @@ function handleClickTouchStart(evt) {
 	}
 
 	objTouchVars.svgmatrix = g.getCTM().inverse();
-	objTouchVars.svgpointorigin = getEventPoint(evt).matrixTransform(objTouchVars.svgmatrix);	
+	objTouchVars.svgpointorigin = getEventPoint(evt).matrixTransform(objTouchVars.svgmatrix);
 
 	//run the test to see if the user clicked on an element or not
 	if(!objZoomPanSettings.mobile){
@@ -682,7 +762,7 @@ function handleClickTouchEnd(evt) {
 		objTouchVars.state = '';
 	}
 
-	//fire the click event on 
+	//fire the click event on
 	if(!objZoomPanSettings.mobile){
 		if(objTouchVars.clickstart){
 			handleClick(evt);
@@ -720,8 +800,8 @@ function startDragSampling(){
 			tagName: 'svg'
 		}
 	});
-	
-	
+
+
 	if(objTouchVars.sampling){
 		objTouchVars.timer3=setTimeout(function(){
 			startDragSampling();
@@ -764,7 +844,7 @@ function startPinchSampling(){
 	objAnimationProperties.svgpoint=objTouchVars.svgpoint;
 	objAnimationProperties.ctmorig=objTouchVars.ctmorig
 	*/
-	
+
 	if(objTouchVars.sampling){
 		objTouchVars.timer3=setTimeout(function(){
 			startPinchSampling();
@@ -830,7 +910,7 @@ function startPinchSampling(){
  */
 function getRoot(root) {
 	if(objTouchVars.elanimate == null) {
-		
+
 		var r = document.getElementById("viewport") ? document.getElementById("viewport") : document.documentElement, t = r;
 
 		while(t != root) {
@@ -896,7 +976,7 @@ function debugLog(){
 		if(prop != 'timer1' && prop != 'timer2' && prop != 'timer3' && prop != 'timer4'){
 			arrContent.push('- '+prop+'='+objTouchVars[prop]);
 		}
-		
+
 	}
 
 	objPageElements.debugdetails.innerHTML=arrContent.join('<br/>');
