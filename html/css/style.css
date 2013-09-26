@@ -761,24 +761,7 @@ li#philips.selected{
 #producttree_temp{
 	display: none;
 }
-input[type='range'] {
-    -webkit-appearance: none;
-    width: 83%;
-    height: 1px;
-    padding: 0px;
-    margin: 0px;
-    -webkit-border-radius: 15px;
-    border-radius: 15px;
-    border: 1px solid #007aa7;
-    background-image: -webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        color-stop(0, #00495d),
-        color-stop(1, #00495d)
-    );
-    z-index: 10000;
-}
+
 
 /* Lighting*/
 body.PD0100 input[type='range']{
@@ -883,7 +866,24 @@ body.philips .nr_label, body.philips #lives_improved_percentage_sub tspan, body.
 	fill: #fff;
 }
 
-
+input[type='range'] {
+    -webkit-appearance: none;
+    width: 83%;
+    height: 1px;
+    padding: 0px;
+    margin: 0px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    border: 1px solid #007aa7;
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #00495d),
+        color-stop(1, #00495d)
+    );
+    z-index: 10000;
+}
 
 body.PD0100 .slider_value{
 	color: #7dba00;
@@ -897,12 +897,13 @@ body.PD0900 .slider_value {
 body.philips .slider_value {
 	color: #0b5ed7;
 }
+
 input[type='range']::-webkit-slider-thumb {  
     -webkit-appearance: none;
-    width: 20px;
+    width: 24px;
     height: 60px;
     border: 0px solid transparent;
-    background-color: transparent;
+    background-color: green;
 
     background-image: url('../img/slider_thumb.svg');
     background-repeat: no-repeat;
