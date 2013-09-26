@@ -76,7 +76,7 @@ var objZoomPanSettings={
 	pan: 1, // 1 or 0: enable or disable panning (default enabled)
 	zoom: 1, // 1 or 0: enable or disable zooming (default enabled)
 	drag: 0, // 1 or 0: enable or disable dragging (default disabled)
-	zoomscale: 0.4, // Zoom sensitivity
+	zoomscale: 0.2, // Zoom sensitivity
 	mobile: false,
 	clickcallback: null,
 	usesamplingformobile: false,
@@ -89,7 +89,7 @@ var objTouchSettings={
 	debugtoconsole: true,
 	debugtointerface: true,
 	zoommax: 8,
-	zoommin: 0.2,
+	zoommin: 0.4,
 	testzoom: true,
 	testpan: true
 }
