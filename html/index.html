@@ -153,8 +153,24 @@
 					
 				</div>
 				<div id="slider_indicator"></div>
-				<div id="show_simulation" onclick="objRegionInfo.showsimulation();">Simulation</div>				
-				<div id="show_current" onclick="objRegionInfo.showcurrent();">Current</div>				
+				<div id="show_simulation" onclick="objRegionInfo.showsimulation();">
+					<svg id="svg_show_simulation" style="text-anchor: middle;" width="100%" height="100%" viewBox="0 0 640 120">
+						<text id="show_simulation_text" x="320" y="50">Simulation</text>
+						<g transform="translate(0, -750)">
+							<polygon id="arrow_down" fill="#00454A" points="320.5,837.935 303.529,820.965 299.994,824.5 316.964,841.471 320.5,845.006 324.035,841.471 
+									341.006,824.5 337.471,820.965 		"/>
+						</g>						
+					</svg>
+				</div>				
+				<div id="show_current" onclick="objRegionInfo.showcurrent();">
+					<svg id="svg_show_current" style="text-anchor: middle;" width="100%" height="100%" viewBox="0 0 640 90">
+						<text id="show_current_text" x="320" y="85">Current</text>
+						<g transform="translate(0, -135)">
+							<polygon points="337.471,180.036 341.006,176.5 324.035,159.53 320.5,155.995 316.964,159.53 299.994,176.5 303.529,180.036 320.5,163.066 "
+									   id="arrow_up"/>
+						</g>			   
+					</svg>
+				</div>				
 			</div>
 			<div id="menu_bar">
 				<div id="btn_wrapper">
