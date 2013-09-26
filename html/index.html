@@ -44,37 +44,35 @@
 									<div id="holder">
 										<svg id="svg_circle" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" viewBox="0 0 640 300"  preserveAspectRatio="xMidYMid meet">
 											<g id="g" fill="none" transform="translate(0,0)" style="text-anchor: middle;">
-												<circle id="background" width="100" cx="150" cy="50" r="100" />
+												<circle id="background" width="100" cx="150" cy="125" r="100" />
 												<path id="arc_path" />
 												<g id="arc_path_left_wrapper" transform="rotate(0,200,200)">
 													<path id="arc_path_left" />
 												</g>
 												<g transform="translate(0,0)">
-													<text id="lives_improved_percentage" x="150" y="50" fill="#000">100%</text>
-													<text id="lives_improved_percentage_sub" x="150" y="65" fill="#000" width="200">
+													<text id="lives_improved_percentage" x="150" y="125" fill="#000">100%</text>
+													<text id="lives_improved_percentage_sub" x="150" y="140" fill="#000" width="200">
 														<tspan dy="0.8em">of total population</tspan>
 													</text>
 												</g>
 											</g>
 											<g transform="translate(0, 0)" style="text-anchor: end;">
-												<text id="nr_lives_improved" x="600" y="0" fill="#fff">70.3</text>
-												<text id="nr_lives_improved_label" x="600" y="25" width="200">million lives improved</text>
+												<text id="nr_lives_improved" x="600" y="75" fill="#fff">70.3</text>
+												<text id="nr_lives_improved_label" x="600" y="100" width="200">million lives improved</text>
 												
-												<text class="nr_label" x="600" y="65" width="200">GDP</text>
-												<text id="nr_gdp" x="600" y="105" fill="#fff">$305 billion</text>
+												<text class="nr_label" x="600" y="140" width="200">GDP</text>
+												<text id="nr_gdp" x="600" y="180" fill="#fff">$305 billion</text>
 												
-												<text class="nr_label" x="600" y="145" width="200">Population</text>
-												<text id="nr_population" x="600" y="185" fill="#fff">70 million</text>
+												<text class="nr_label" x="600" y="220" width="200">Population</text>
+												<text id="nr_population" x="600" y="260" fill="#fff">70 million</text>
 											</g>
 
 										</svg>
 									</div>					
 								</div>
 							</div>
-							<div id="show_current" onclick="objRegionInfo.showcurrent();"><div>Current</div></div>
+							
 						</div>					
-					</div>
-					<div id="bottom_panel">
 						<div id="region_history">
 							<!-- base svg construction for the line graph -->
 							<svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 640 300" preserveAspectRatio="xMidYMid meet">
@@ -123,11 +121,11 @@
 									</g>
 								</g>
 							</svg>						
-						</div>				
+						</div>							
+					</div>
+					<div id="bottom_panel">			
 						<div id="simulation">
-							<div id="show_simulation" onclick="objRegionInfo.showsimulation();">
-								Simulation
-							</div>
+
 							<div id="simulation_wrapper">
 								<div id="section1">
 									<h4>Sales</h4>
@@ -155,6 +153,8 @@
 					
 				</div>
 				<div id="slider_indicator"></div>
+				<div id="show_simulation" onclick="objRegionInfo.showsimulation();">Simulation</div>				
+				<div id="show_current" onclick="objRegionInfo.showcurrent();">Current</div>				
 			</div>
 			<div id="menu_bar">
 				<div id="btn_wrapper">
