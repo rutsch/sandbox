@@ -1080,13 +1080,13 @@ and (min-width : 768px) {
 		border-bottom: 1px solid #ececec;
 	}
 	#bottom_panel{
-		top: -38%;
+		top: -30%;
 		bottom: 0%;
-		height: 38%;
+		height: 30%;
 	}
 	#top_panel{
-		height: 38%;
-		top: -38%;
+		height: 30%;
+		top: -30%;
 	}
 	#show_current, #show_simulation{
 		display: none;

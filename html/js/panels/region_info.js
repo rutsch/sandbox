@@ -79,7 +79,7 @@ var objRegionInfo = {
 		self.state.tweening = true;
 		if(app.state.width > 700){
 			TweenLite.to(self.el.toppanel, 0.3, {
-				top : '-38%',
+				top : '-30%',
 				onComplete: function(){
 					//debugger;
 					self.state.tweening = false;
@@ -88,7 +88,7 @@ var objRegionInfo = {
 				}
 			});			
 			TweenLite.to(self.el.bottompanel, 0.3, {
-				top : '-38%',
+				top : '-30%',
 				onComplete: function(){
 					self.state.tweening = false;
 					self.state.visible = false;				
