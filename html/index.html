@@ -166,14 +166,16 @@
 			</div>
 		</div>
 		<div id="login_panel" class="panel full">
-			<form id="login">
-				<div id="form_wrapper">
-					<span>Please log in using CODE1\*** and password.</span>
-					<input type="text" id="username" placeholder="Account" value=""/>
-					<input type="password" id="password" placeholder="Password" value=""/>
-					<input type="submit" id="btn_submit" class="btn btn_login" onclick="objLogin.btnsubmitclick(event);" value="Log in"/>
-				</div>
-			</form>
+			<div class="form_outer_wrapper">
+				<form id="login">
+					<div id="form_wrapper">
+						<span>Please log in using CODE1\*** and password.</span>
+						<input type="text" id="username" placeholder="Account" value=""/>
+						<input type="password" id="password" placeholder="Password" value=""/>
+						<input type="submit" id="btn_submit" class="btn btn_login" onclick="objLogin.btnsubmitclick(event);" value="Log in"/>
+					</div>
+				</form>
+			</div>
 		</div>
 		<div id="filter_panel" class="panel modal">
 			<div id="filter_loader"></div>

@@ -518,9 +518,6 @@ span{
 	height: 40%;
 	top: 50%;
 }
-
-
-
 #login_panel{
 	background-color: #f4f4f4;
 	background-image:url('../img/worldmap.svg');
@@ -538,15 +535,18 @@ span{
 	position: absolute;
 	left: 50px;
 	right: 50px;
-	bottom: 0px;
+	top: 30%;
 	height: 300px;
-	background-image:url('../img/philips_wordmark.svg');
-	background-repeat: no-repeat;
-	background-position: bottom;
-	background-size: auto 10%;	
 }
 #form_wrapper{
 	
+}
+.form_outer_wrapper{
+	height: 100%;
+	background-image:url('../img/philips_wordmark.svg');
+	background-repeat: no-repeat;
+	background-position: bottom;
+	background-size: auto 6%;	
 }
 #login input{
 	width: 100%;

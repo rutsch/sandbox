@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="../js/helpers/infographic.js">//</script>
 		<script type="text/javascript" src="../js/panels/region_info.js">//</script>
 		<script type="text/javascript" src="../js/panels/sliders.js">//</script>
+		<script type="text/javascript" src="../js/panels/loading.js">//</script>
 
 		<style>
 
@@ -71,11 +72,40 @@ circle#background{
 	left: 98%;	
 }
 
+div #simulation_wrapper input[type='range']::-webkit-slider-thumb {  
+    -webkit-appearance: none!important;
+    /*
+    width: 20px;
+    height: 20px;
+    */
+    border: 40px solid #ededed;
+    -webkit-border-radius: 40px;
+    border-radius: 40px;
+    background-color: #fff;
+
+	background-image: url('../img/slider_thumb.svg');	
+	background-size: auto 100%!important;
+	background-position: 0px 100%;
+	background-repeat: no-repeat;
+
+  	z-index: 10000;
+}
+div.test_svg{
+	border: 1px solid red;
+	width: 40px;
+	height: 40px;
+	background-image: url('../img/slider_thumb.svg');	
+	background-size: auto 100%!important;
+	background-position: 0px 100%;
+	background-repeat: no-repeat;
+}
+
 		</style>
 
 	
 	</head>
 	<body>
+		<div class="test_svg">.</div>
 
 		<div id="region_info_wrapper">
 			<div class="svg_wrapper">
