@@ -87,7 +87,7 @@ var objTrendGraph={
 			elCircle.setAttributeNS(null,'data-label',objPoint.label);
 			elCircle.setAttributeNS(null,'class',((i==0)?'hitarea':'point'));
 
-			if(strId!='' && i==1){
+			if(strId!=''){
 				elCircle.setAttributeNS(null,'id',strId);
 			}else{
 				elCircle.setAttributeNS(null,'onclick','objTrendGraph.showvaluepopup({show: true, x: '+objCoords.x+', y: '+(objCoords.y-8)+', value: \''+objPoint.value+'\', label: \''+objPoint.label+'\'})');
