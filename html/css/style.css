@@ -456,15 +456,22 @@ span{
 	opacity: 0;
 	z-index: 100;
 }
+#show_simulation_text{
+	font-size: 2em;
+}
 #show_current{
 	position: absolute;
 	opacity: 0;
 	z-index: 100;
 	top: 0%;
-	height: 10%;
+	height: 11%;
 	width: 100%;
 	background: inherit;
 	text-align: center;
+}
+#show_current_text{
+	font-size: 2em;
+	fill: #fff;
 }
 #show_current div{
 	padding-top: 10px;
@@ -793,8 +800,14 @@ body.philips input[type='range'] {
 	background: #0b5ed7;
 }
 
-body.PD0100 #region_info, body.PD0100 #region_history, body.PD0100 #show_current{
+body.PD0100 #region_info, body.PD0100 #region_history, body.PD0100 #show_current, body.PD0100 #arrow_down {
 	background: #7dba00;
+}
+body.PD0100 #arrow_up{
+	fill: #446500;
+}
+body.PD0100 #show_current_text{
+	fill: #446500; 
 }
 body.PD0100 #arc_path{
 	stroke: #a2dc2b;
@@ -806,8 +819,14 @@ body.PD0100 .nr_label, body.PD0100 #lives_improved_percentage_sub tspan, body.PD
 	fill: #446500; 
 }
 
-body.PD0200 #region_info, body.PD0200 #region_history, body.PD0200 #show_current{
+body.PD0200 #region_info, body.PD0200 #region_history, body.PD0200 #show_current, body.PD0200 #arrow_down{
 	background: #68049c;
+}
+body.PD0200 #arrow_down{
+	fill: #68049c;
+}
+body.PD0200 #arrow_up{
+	fill: #999;
 }
 body.PD0200 #arc_path{
 	stroke: #9b4bc5;
@@ -819,8 +838,14 @@ body.PD0200 .nr_label, body.PD0200 #lives_improved_percentage_sub tspan, body.PD
 	fill: #999; 
 }
 
-body.PD0900 #region_info, body.PD0900 #region_history, body.PD0900 #show_current {
+body.PD0900 #region_info, body.PD0900 #region_history, body.PD0900 #show_current, body.PD0900 #arrow_down {
 	background: #2badb5;
+}
+body.PD0900 #arrow_down{
+	fill: #2badb5;
+}
+body.PD0900 #arrow_up{
+	fill: #124a4d;
 }
 body.PD0900 #arc_path{
 	stroke: #64d3da;
@@ -832,8 +857,14 @@ body.PD0900 .nr_label, body.PD0900 #lives_improved_percentage_sub tspan, body.PD
 	fill: #124a4d; 
 }
 
-body.philips #region_info, body.philips #region_history, body.philips #show_current {
+body.philips #region_info, body.philips #region_history, body.philips #show_current, body.philips #arrow_down {
 	background: #0b5ed7;
+}
+body.philips #arrow_down{
+	fill: #0b5ed7;
+}
+body.philips #arrow_up{
+	fill: #022a64;
 }
 body.philips #arc_path{
 	stroke: #4286ea;
@@ -844,6 +875,11 @@ body.philips #arc_path_left{
 body.philips .nr_label, body.philips #lives_improved_percentage_sub tspan, body.philips #nr_lives_improved_label{
 	fill: #022a64; 
 }
+
+#arrow_up{
+	fill: #fff;
+}
+
 
 
 body.PD0100 .slider_value{
