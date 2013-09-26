@@ -81,12 +81,12 @@ var objTrendGraph={
 		elCircle.setAttributeNS(null,'cx',(objCoords.x+''));
 		elCircle.setAttributeNS(null,'cy',(objCoords.y+''));
 		elCircle.setAttributeNS(null,'r',self.props.coordinatepoint.radius);
-		elCircle.setAttributeNS(null,'data-value',objPoint.value+'');
+		elCircle.setAttributeNS(null,'data-value',self.correctlabeldecimals((objPoint.value+''), (self.props.axis.ymax+'')));
 		elCircle.setAttributeNS(null,'data-label',objPoint.label);
 		if(strId!=''){
 			elCircle.setAttributeNS(null,'id',strId);
 		}else{
-			elCircle.setAttributeNS(null,'onclick','objTrendGraph.showvaluepopup({show: true, x: '+objCoords.x+', y: '+objCoords.y+', value: \''+objPoint.value+'\', label: \''+objPoint.label+'\'})');
+			elCircle.setAttributeNS(null,'onclick','objTrendGraph.showvaluepopup({show: true, x: '+objCoords.x+', y: '+(objCoords.y-8)+', value: \''+objPoint.value+'\', label: \''+objPoint.label+'\'})');
 		}
 		elWrapper.appendChild(elCircle);
 	},
@@ -144,10 +144,7 @@ var objTrendGraph={
 		self.el.popuptrend.setAttributeNS(null,'transform','translate('+(objCoords.x-self.vars.popuptrendwidth+18)+', '+(objCoords.y+((self.state.trendpopupflipped)?-10:10))+') '+strTranslateValue);
 
 		//set the content in the popup
-		//console.log(intValue);
-		//intValue=objMap.roundlivesimproveddataobject({l:intValue, g:-1, p: -1}).displayl.replace(/,/, '')
-		//console.log(intValue);
-		self.el.popuptrendnumber.textContent=self.correctlabel((intValue+''), (self.props.axis.ymax+'').length);
+		self.el.popuptrendnumber.textContent=self.correctlabeldecimals((intValue+''), (self.props.axis.ymax+''));
 	},
 	showvaluepopup: function(objArgs){
 		var self=this;
@@ -187,6 +184,21 @@ var objTrendGraph={
 			}
 		}
 		return strLabel;
+	},
+	correctlabeldecimals: function(strLabel, strReferenceLabel){
+		var intReferenceLabelDecimals=0;
+
+		//remove the commas so that we can actually calculate with the numbers
+		strReferenceLabel=strReferenceLabel.replace(/,/, '');
+		strLabel=strLabel.replace(/,/, '');
+
+		//get the number of decimals used in the reference label
+		if(strReferenceLabel.indexOf('.')>-1){
+			intReferenceLabelDecimals=(strReferenceLabel.split('.')[1]).length;
+		}
+
+		return formatMoney(parseFloat(strLabel), intReferenceLabelDecimals,',','.','');
+
 	},
 	fliptrendpopup: function(strType){
 		var self=this;
@@ -407,11 +419,11 @@ var objTrendGraph={
 			var intMargin=((self.props.axis.ymax-self.props.axis.ymin)/100)*intPercentage;
 			//% from top
 			var intValueTopLine=Math.round((self.props.axis.ymax-intMargin)*intFactor)/intFactor;
-			arrPoints.push({value: intValueTopLine, label: self.correctlabel(intValueTopLine+'', intLength)});
+			arrPoints.push({value: intValueTopLine, label: self.correctlabeldecimals(intValueTopLine+'', (self.props.axis.ymax+''))});
 
 			//% from bottom
 			var intValueBottomLine=Math.round((self.props.axis.ymin+intMargin)*intFactor)/intFactor;
-			arrPoints.push({value: intValueBottomLine, label: self.correctlabel(intValueBottomLine+'', intLength)});
+			arrPoints.push({value: intValueBottomLine, label: self.correctlabeldecimals(intValueBottomLine+'', (self.props.axis.ymax+''))});
 
 			//devide the rest...
 			var intFactorRemainder=(intValueTopLine-intValueBottomLine)/(self.props.axis.ygridlines-1);
@@ -421,7 +433,7 @@ var objTrendGraph={
 				var intValue=Math.round((intValueBottomLine+(intFactorRemainder*(i-1)))*intFactor)/intFactor;
 				arrPoints.push({
 					value: intValue, 
-					label: self.correctlabel(intValue+'', intLength)
+					label: self.correctlabeldecimals(intValue+'', (self.props.axis.ymax+''))
 				});
 
 			}
