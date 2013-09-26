@@ -4,7 +4,7 @@ var objArcProps={
 	targetleftwrapper: null,
 	targetleftnode: null,
 	centerx: 150,
-	centery: 50,
+	centery: 125,
 	radius: 100,
 	angle: 0,
 	anglestored: 0
