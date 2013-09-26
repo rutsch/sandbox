@@ -270,6 +270,12 @@ var objSliders = {
 		intCurrentGreenSalesPercentage=parseFloat(intCurrentGreenSalesPercentage, 10);
 		var intLivesImprovedSimulated=0;
 
+		//move background image along with the sliders
+		//self.el.slidersales.style.backgroundPosition='30% 50%';
+		//var selector = 'input::-webkit-slider-thumb';
+		//var el = Sizzle(selector)[0];
+		//console.log(el);
+
 		if(self.vars.usebiliniarinterpolation){
 			var sfloor=0, sceil=0, gsfloor=0, gsceil=0, objCeilFloor={};
 			var q11=0, q21=0, q21=0, q22=0, key='';
