@@ -42,8 +42,8 @@ var objTrendGraph={
 			showylines: false,
 			ylinelength: 8,
 			ylabelinset: true,
-			xpaddingleft: 20,
-			xpaddingright: 30,
+			xpaddingleft: 55,
+			xpaddingright: 10,
 		},
 		labels: {
 			x: {
@@ -77,18 +77,23 @@ var objTrendGraph={
 	},
 	createcoordinatepoint: function(elWrapper, objCoords, objPoint, strId){
 		var self=this;
-		var elCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');
-		elCircle.setAttributeNS(null,'cx',(objCoords.x+''));
-		elCircle.setAttributeNS(null,'cy',(objCoords.y+''));
-		elCircle.setAttributeNS(null,'r',self.props.coordinatepoint.radius);
-		elCircle.setAttributeNS(null,'data-value',objPoint.value+'');
-		elCircle.setAttributeNS(null,'data-label',objPoint.label);
-		if(strId!=''){
-			elCircle.setAttributeNS(null,'id',strId);
-		}else{
-			elCircle.setAttributeNS(null,'onclick','objTrendGraph.showvaluepopup({show: true, x: '+objCoords.x+', y: '+objCoords.y+', value: \''+objPoint.value+'\', label: \''+objPoint.label+'\'})');
+		//draw two circles: one as a visual indicator and another as hitarea
+		for (var i=0; i<2; i++){
+			var elCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+			elCircle.setAttributeNS(null,'cx',(objCoords.x+''));
+			elCircle.setAttributeNS(null,'cy',(objCoords.y+''));
+			elCircle.setAttributeNS(null,'r',((i==0)?30:self.props.coordinatepoint.radius));
+			elCircle.setAttributeNS(null,'data-value',self.correctlabeldecimals((objPoint.value+''), (self.props.axis.ymax+'')));
+			elCircle.setAttributeNS(null,'data-label',objPoint.label);
+			elCircle.setAttributeNS(null,'class',((i==0)?'hitarea':'point'));
+
+			if(strId!='' && i==1){
+				elCircle.setAttributeNS(null,'id',strId);
+			}else{
+				elCircle.setAttributeNS(null,'onclick','objTrendGraph.showvaluepopup({show: true, x: '+objCoords.x+', y: '+(objCoords.y-8)+', value: \''+objPoint.value+'\', label: \''+objPoint.label+'\'})');
+			}
+			elWrapper.appendChild(elCircle);
 		}
-		elWrapper.appendChild(elCircle);
 	},
 	createlabel: function(elWrapper, objCoords, objPoint){
 		var elText = document.createElementNS('http://www.w3.org/2000/svg','text');
@@ -144,10 +149,7 @@ var objTrendGraph={
 		self.el.popuptrend.setAttributeNS(null,'transform','translate('+(objCoords.x-self.vars.popuptrendwidth+18)+', '+(objCoords.y+((self.state.trendpopupflipped)?-10:10))+') '+strTranslateValue);
 
 		//set the content in the popup
-		//console.log(intValue);
-		//intValue=objMap.roundlivesimproveddataobject({l:intValue, g:-1, p: -1}).displayl.replace(/,/, '')
-		//console.log(intValue);
-		self.el.popuptrendnumber.textContent=self.correctlabel((intValue+''), (self.props.axis.ymax+'').length);
+		self.el.popuptrendnumber.textContent=self.correctlabeldecimals((intValue+''), (self.props.axis.ymax+''));
 	},
 	showvaluepopup: function(objArgs){
 		var self=this;
@@ -177,16 +179,20 @@ var objTrendGraph={
 			- (match[2] ? +match[2] : 0)
 		);
 	},
-	correctlabel: function(strLabel, intLength){
-		if(strLabel.indexOf('.')==-1 && strLabel.indexOf(',')==-1 && strLabel.length<4)strLabel+='.';
-		var intLabelLength=strLabel.length;
-		//console.log(intLength+' - '+intLabelLength)
-		if(intLabelLength<intLength){
-			for(var j=0; j<(intLength-intLabelLength); j++){
-				strLabel+='0';
-			}
+	correctlabeldecimals: function(strLabel, strReferenceLabel){
+		var intReferenceLabelDecimals=0;
+
+		//remove the commas so that we can actually calculate with the numbers
+		strReferenceLabel=strReferenceLabel.replace(/,/, '');
+		strLabel=strLabel.replace(/,/, '');
+
+		//get the number of decimals used in the reference label
+		if(strReferenceLabel.indexOf('.')>-1){
+			intReferenceLabelDecimals=(strReferenceLabel.split('.')[1]).length;
 		}
-		return strLabel;
+
+		return formatMoney(parseFloat(strLabel), intReferenceLabelDecimals,',','.','');
+
 	},
 	fliptrendpopup: function(strType){
 		var self=this;
@@ -226,7 +232,7 @@ var objTrendGraph={
 		//correct the properties of the graph if the y-axis labels are "inset"
 		if(self.props.axis.ylabelinset){
 			//self.props.padding.left=0;
-			self.props.axis.xpaddingleft=45;
+			//self.props.axis.xpaddingleft=45;
 		}
 
 		//set the position of the graph title
@@ -407,11 +413,11 @@ var objTrendGraph={
 			var intMargin=((self.props.axis.ymax-self.props.axis.ymin)/100)*intPercentage;
 			//% from top
 			var intValueTopLine=Math.round((self.props.axis.ymax-intMargin)*intFactor)/intFactor;
-			arrPoints.push({value: intValueTopLine, label: self.correctlabel(intValueTopLine+'', intLength)});
+			arrPoints.push({value: intValueTopLine, label: self.correctlabeldecimals(intValueTopLine+'', (self.props.axis.ymax+''))});
 
 			//% from bottom
 			var intValueBottomLine=Math.round((self.props.axis.ymin+intMargin)*intFactor)/intFactor;
-			arrPoints.push({value: intValueBottomLine, label: self.correctlabel(intValueBottomLine+'', intLength)});
+			arrPoints.push({value: intValueBottomLine, label: self.correctlabeldecimals(intValueBottomLine+'', (self.props.axis.ymax+''))});
 
 			//devide the rest...
 			var intFactorRemainder=(intValueTopLine-intValueBottomLine)/(self.props.axis.ygridlines-1);
@@ -421,7 +427,7 @@ var objTrendGraph={
 				var intValue=Math.round((intValueBottomLine+(intFactorRemainder*(i-1)))*intFactor)/intFactor;
 				arrPoints.push({
 					value: intValue, 
-					label: self.correctlabel(intValue+'', intLength)
+					label: self.correctlabeldecimals(intValue+'', (self.props.axis.ymax+''))
 				});
 
 			}
@@ -458,6 +464,9 @@ var objTrendGraph={
 
 			//grid lines
 			var elGridLine=document.createElementNS('http://www.w3.org/2000/svg','line');
+			console.log(self.props.axis.ylabelinset)
+			console.log(self.props.padding.left+' - '+self.props.axis.xpaddingleft)
+			console.log(((self.props.axis.ylabelinset)?(self.props.padding.left+self.props.axis.xpaddingleft-5):self.props.padding.left))
 			self.setsvglinecoordinates(elGridLine,{
 				x1: ((self.props.axis.ylabelinset)?(self.props.padding.left+self.props.axis.xpaddingleft-5):self.props.padding.left),
 				y1: objCoords.y,

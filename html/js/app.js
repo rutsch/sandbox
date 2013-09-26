@@ -85,6 +85,14 @@ var app = {
 		if(self.state.ios){
 			objZoomPanSettings.dragtimerdelay=800;
 			objZoomPanSettings.touchtimerdelay=300;
+			
+			//for status/carrier bar issue
+			if(self.state.ios7){
+				getEl('title_bar').style.height="65px";
+				getEl('info').style.top="10px";
+				getEl('btn_back').style.top="10px";
+				getEl('toggle_favourite').style.top="10px";
+			}
 		}
 
 		//retrieve snapshot id

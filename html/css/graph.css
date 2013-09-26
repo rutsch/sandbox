@@ -27,9 +27,13 @@ svg.graph g#line_wrapper *.last{
 }
 
 /* value indicators */
-svg.graph .points {
+svg.graph .points .point{
 	stroke: white;
 	stroke-width: 3;
+}
+svg.graph .points .hitarea{
+	fill: transparent;
+	stroke-width: 0;
 }
 
 /* x and y axis lines */
@@ -104,7 +108,7 @@ svg.graph text#popup_trend_text{
 }
 svg.graph text#popup_trend_number{
 	text-anchor: middle;
-	font-size: 1em;
+	font-size: 1.3em;
 }
 /* value popup */
 svg.graph g#popup_value{
