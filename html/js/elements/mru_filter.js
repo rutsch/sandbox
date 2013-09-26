@@ -159,7 +159,7 @@ var objMruFilter = {
 		}
 		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
 		objFilter.blink();
-		objMap.updatemap();		
+		//objMap.updatemap();		
 	},
 	init: function(cb){
 		var self = this;

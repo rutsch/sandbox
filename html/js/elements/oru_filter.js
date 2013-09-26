@@ -65,7 +65,7 @@ var objOruFilter = {
 		self.state.selectedoru = strOru;
 		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
 		objFilter.blink();
-		objMap.updatemap();
+		//objMap.updatemap();
 	},
 	settocurrentoru: function(){
 		var self = this;

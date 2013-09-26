@@ -46,10 +46,19 @@ var objFilter = {
 					opacity : 1,
 					onComplete: function(){
 						self.el.loader.style.display = 'none';
+						if(self.el.btnapply.style.display == 'none'){
+							self.el.btnapply.style.display = 'block';
+						}
 					}
 				});	
 			}
 		});				
+	},
+	applyfilter: function(){
+		var self = this;
+		self.el.btnapply.style.display = 'none';
+		objMap.updatemap();
+		self.hide();
 	},
 	init: function(){
 		var self = this;
@@ -59,5 +68,7 @@ var objFilter = {
 		self.el.wrapper = getEl('filter_panel');
 		self.el.loader = getEl('filter_loader');
 		self.el.filtercontent = Sizzle('#filter_panel div.modal_content')[0];
+		self.el.btnapply = getEl('btn_apply_filter');
+		self.el.btnapply.style.display = 'none';
 	}
 }
