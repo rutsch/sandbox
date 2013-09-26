@@ -816,7 +816,7 @@ body.PD0200 #arc_path_left{
 	stroke: #27003c;
 }
 body.PD0200 .nr_label, body.PD0200 #lives_improved_percentage_sub tspan, body.PD0200 #nr_lives_improved_label{
-	fill: #27003c; 
+	fill: #999; 
 }
 
 body.PD0900 #region_info, body.PD0900 #region_history, body.PD0900 #show_current {

@@ -85,16 +85,25 @@ var objMap = {
 			arrFormData['fulldomain']=location.protocol+"//"+location.hostname;
 			arrFormData['token']=objLogin.token;
 
-			serverSideRequest({
-				url: objConfig.urls.authurl2, 
-				formdata: arrFormData,
-				method: 'get', 
-				debug: false,
-				callback: function(err, strSvgData){
-					if(err != null) cb(err)
-					else cb(strSvgData);
-				}
-			});		
+			var svgdata = objStore.getlocalstorageitem('map_' + self.state.mapname);
+			
+			if(svgdata){
+				cb(svgdata);
+			}else{
+				serverSideRequest({
+					url: objConfig.urls.authurl2, 
+					formdata: arrFormData,
+					method: 'get', 
+					debug: false,
+					callback: function(err, strSvgData){
+						if(err != null) cb(err)
+						else{
+							objStore.setlocalstorageitem('map_'+ self.state.mapname, strSvgData);
+							cb(strSvgData);
+						}
+					}
+				});						
+			}
 		}	
 		else{
 			cb(null);
