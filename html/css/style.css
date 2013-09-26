@@ -803,6 +803,9 @@ body.philips input[type='range'] {
 body.PD0100 #region_info, body.PD0100 #region_history, body.PD0100 #show_current, body.PD0100 #arrow_down {
 	background: #7dba00;
 }
+body.PD0100 #arrow_down{
+	fill: #7dba00;
+}
 body.PD0100 #arrow_up{
 	fill: #446500;
 }
@@ -826,7 +829,7 @@ body.PD0200 #arrow_down{
 	fill: #68049c;
 }
 body.PD0200 #arrow_up{
-	fill: #999;
+	fill: #27003c;
 }
 body.PD0200 #arc_path{
 	stroke: #9b4bc5;
@@ -1052,31 +1055,43 @@ and (orientation : portrait) {
 and (min-width : 768px) {
 /* Styles */
 	#region_info{
-		height: 32%;
-		width: 66%;
-		top: -32%;
+		height: 100%;
+		width: 33%;
+		top: 0%;
 		border-bottom: 1px solid #ececec;
 	}
 	#simulation{
 	overflow: hidden;
 		left: 66%;
-		top: -32%;
+		top: 0%;
 		width: 34%;
-		height: 32%;
+		height: 100%;
 		border-bottom: 1px solid #ececec;
 	}
-	.svg_wrapper{
-		width: 25%;
-	}
+
 	.data_wrapper{
 		width: 25%;
 		left: 25%;
 	}
 	#region_history{
 		position: absolute;
-		width: 50%;
-		left: 50%;
+		width: 33%;
+		left: 33%;
 		height: 100%;
+		top: 0%;
+		border-bottom: 1px solid #ececec;
+	}
+	#bottom_panel{
+		top: -38%;
+		bottom: 0%;
+		height: 38%;
+	}
+	#top_panel{
+		height: 38%;
+		top: -38%;
+	}
+	#show_current, #show_simulation{
+		display: none;
 	}
 	#region_history span{
 	 	color: #000!important;

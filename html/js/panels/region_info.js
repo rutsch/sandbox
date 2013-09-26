@@ -20,85 +20,122 @@ var objRegionInfo = {
 		// slide down top_panel
 		
 		// slide up bottom_panel
-		
-		TweenLite.to(self.el.toppanel, 0.3, {
-			top : '0%',
-			onComplete: function(){
-				//debugger;
-				self.state.tweening = false;
-				self.state.visible = true;
+		if(app.state.width > 700){
+			TweenLite.to(self.el.toppanel, 0.3, {
+				top : '0%',
+				onComplete: function(){
+					//debugger;
+					self.state.tweening = false;
+					self.state.visible = true;
 
-			}
-		});		
-		TweenLite.to(self.el.btnshowsimulation, 0, {
-			opacity: 1,
-			onComplete: function(){
-				//debugger;
-				self.state.tweening = false;
-				self.state.visible = true;
+				}
+			});			
+			TweenLite.to(self.el.bottompanel, 0.3, {
+				top : '0%',
+				onComplete: function(){
+					self.state.tweening = false;
+					self.state.visible = false;				
+				}
+			});	
+		}else{
+			TweenLite.to(self.el.toppanel, 0.3, {
+				top : '0%',
+				onComplete: function(){
+					//debugger;
+					self.state.tweening = false;
+					self.state.visible = true;
 
-			}
-		});	
-		TweenLite.to(self.el.btnshowcurrent, 0, {
-			opacity: 0,
-			onComplete: function(){
-				//debugger;
-				self.state.tweening = false;
-				self.state.visible = true;
+				}
+			});		
+			TweenLite.to(self.el.btnshowsimulation, 0, {
+				opacity: 1,
+				onComplete: function(){
+					//debugger;
+					self.state.tweening = false;
+					self.state.visible = true;
 
-			}
-		});			
-		TweenLite.to(self.el.bottompanel, 0.3, {
-			bottom : '-35%',
-			onComplete: function(){
-				self.state.tweening = false;
-				self.state.visible = false;				
-			}
-		});	
+				}
+			});	
+			TweenLite.to(self.el.btnshowcurrent, 0, {
+				opacity: 0,
+				onComplete: function(){
+					//debugger;
+					self.state.tweening = false;
+					self.state.visible = true;
 
+				}
+			});			
+			TweenLite.to(self.el.bottompanel, 0.3, {
+				bottom : '-35%',
+				onComplete: function(){
+					self.state.tweening = false;
+					self.state.visible = false;				
+				}
+			});				
+		}
 	},	
 	hide: function(){
 		var self = this;
 		self.state.tweening = true;
-		TweenLite.to(self.el.toppanel, 0.3, {
-			top : '-86%',
-			onComplete: function(){
-				self.state.tweening = false;
-				self.state.visible = false;					
-			}
-		});
-		TweenLite.to(self.el.bottompanel, 0.3, {
-			bottom : '-50%',
-			onComplete: function(){
-				self.state.tweening = false;
-				self.state.visible = false;
-				TweenLite.to(objMap.el.elsvgholder, 0.3, {
-					opacity : 1,
-					onComplete: function(){		
-						objMap.el.elsvgholder.style.display = 'block';
-						
-					}
-				});				
-			}
-		});			
-		TweenLite.to(self.el.btnshowsimulation, 0.3, {
-			opacity: 0,
-			onComplete: function(){
-				//debugger;
-				self.state.tweening = false;
-				self.state.visible = true;
+		if(app.state.width > 700){
+			TweenLite.to(self.el.toppanel, 0.3, {
+				top : '-38%',
+				onComplete: function(){
+					//debugger;
+					self.state.tweening = false;
+					self.state.visible = true;
 
-			}
-		});	
-		TweenLite.to(self.el.btnshowcurrent, 0, {
-			opacity: 0,
-			onComplete: function(){
-				//debugger;
-				self.state.tweening = false;
-				self.state.visible = true;
+				}
+			});			
+			TweenLite.to(self.el.bottompanel, 0.3, {
+				top : '-38%',
+				onComplete: function(){
+					self.state.tweening = false;
+					self.state.visible = false;				
+				}
+			});				
+		}else{
+			TweenLite.to(self.el.toppanel, 0.3, {
+				top : '-86%',
+				onComplete: function(){
+					self.state.tweening = false;
+					self.state.visible = false;					
+				}
+			});
+			TweenLite.to(self.el.bottompanel, 0.3, {
+				bottom : '-50%',
+				onComplete: function(){
+					self.state.tweening = false;
+					self.state.visible = false;
+					TweenLite.to(objMap.el.elsvgholder, 0.3, {
+						opacity : 1,
+						onComplete: function(){		
+							objMap.el.elsvgholder.style.display = 'block';
+							
+						}
+					});				
+				}
+			});			
+			TweenLite.to(self.el.btnshowsimulation, 0.3, {
+				opacity: 0,
+				onComplete: function(){
+					//debugger;
+					self.state.tweening = false;
+					self.state.visible = true;
 
-			}
-		});			
+				}
+			});	
+			TweenLite.to(self.el.btnshowcurrent, 0, {
+				opacity: 0,
+				onComplete: function(){
+					//debugger;
+					self.state.tweening = false;
+					self.state.visible = true;
+
+				}
+			});				
+		}
+		
 	},	
 	showsimulation: function(self){
 		var self = this;
