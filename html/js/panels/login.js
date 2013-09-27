@@ -99,6 +99,7 @@ var objLogin = {
 			}else{
 				//finds the latest snapshot id and stores it in objConfig
 				var latestSnapshotId = self.findlatestsnapshotid(response);
+				self.checkappconfigforupdates(response);
 				cb(null, latestSnapshotId);				
 			}
 
@@ -133,6 +134,22 @@ var objLogin = {
 
 		}						
 		objStore.setlocalstorageitem('snapshotconfig', JSON.stringify(response));
+	},
+	//RS: hier loop ik door de config heen en kijk ik of er een verschil is in id's de apps
+	//Dan wordt er een melding in de array self.state.messages gestopt en die wordt getoond in app.start (objLogin.showupdatemessages)
+	//Hieronder zouden we dus ook bij wijzigingen iets van een lijst op kunnen bouwen en die ook in die messages array kunnen proppen, dan worden ze automatisch getoond
+	checkappconfigforupdates: function(response){
+		var self = this;
+		//check if there are updates in the appinfo
+		var storedConfig = objStore.getlocalstorageitem('appconfig');
+		var newConfig = response.appinfo;
+		if(storedConfig){
+			storedConfig = JSON.parse(storedConfig);
+			if(storedConfig.androidid != newConfig.androidid || storedConfig.iosid != newConfig.iosid){
+				self.state.messages.push('The app has been updated, see the new features below...');
+			}
+		}						
+		objStore.setlocalstorageitem('appconfig', JSON.stringify(response.appinfo));
 	},
 	/*
 	 * Authentication functions
@@ -169,6 +186,7 @@ var objLogin = {
 								self.findlatestsnapshotid(response);
 								//checks if there are updates in the snapshot config and display's a message
 								self.checksnapshotconfigforupdates(response);
+								
 								
 								if(response.error) {
 									self.handleloginerror(response.error.message);
