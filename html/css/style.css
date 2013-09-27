@@ -509,8 +509,8 @@ span{
 #simulation_wrapper{
 	position: relative;
 	margin: auto 7%;
-	top: 50%;
-	margin-top: -25%;
+	/*top: 50%;
+	margin-top: -25%;*/
 	-webkit-user-select: none; 
  	-webkit-touch-callout: none; 
 }
