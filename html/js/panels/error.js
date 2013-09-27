@@ -31,7 +31,7 @@ var objError = {
 				if(autohide){
 					var hide = setTimeout(function(){
 						self.hide();
-					}, 2000);
+					}, 4000);
 				}
 			}
 		});		
@@ -40,12 +40,18 @@ var objError = {
 		var self = this;
 		if(objLoading.state.visible) objLoading.hide();
 		if(objOverlay.state.visible) objOverlay.hide();
-		debugger;
-		if(err.toLowerCase() == 'token mismatch'){
-			objLogin.show();
+		//debugger;
+		if(err.line){
+			self.show('JS Error: line='+err.line+', message='+err.message+', stack='+err.stack, true)
 		}else{
-			self.show(err, true);			
+			console.trace(err);
+			if(err.toLowerCase() == 'token mismatch'){
+				objLogin.show();
+			}else{
+				self.show(err, true);			
+			}			
 		}
+
 	},
 	init: function(){
 		var self = this;

@@ -84,7 +84,6 @@ function ColorLuminance(hex, lum) {
 }
 function getFirstLevelChildElements(parent, childNodeType){
 	//debugger;
-	
 	var	childElements = parent.getElementsByTagName(childNodeType),
 		result = [];
 
