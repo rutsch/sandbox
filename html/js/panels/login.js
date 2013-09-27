@@ -135,18 +135,26 @@ var objLogin = {
 		}						
 		objStore.setlocalstorageitem('snapshotconfig', JSON.stringify(response));
 	},
-	//RS: hier loop ik door de config heen en kijk ik of er een verschil is in id's de apps
-	//Dan wordt er een melding in de array self.state.messages gestopt en die wordt getoond in app.start (objLogin.showupdatemessages)
-	//Hieronder zouden we dus ook bij wijzigingen iets van een lijst op kunnen bouwen en die ook in die messages array kunnen proppen, dan worden ze automatisch getoond
 	checkappconfigforupdates: function(response){
 		var self = this;
 		//check if there are updates in the appinfo
 		var storedConfig = objStore.getlocalstorageitem('appconfig');
 		var newConfig = response.appinfo;
+		var strBaseMessage='<b>New release available</b><p>A new version ('+((app.state.ios)?newConfig.iosid:newConfig.androidid)+') of the Lives Improved app is available.</p>';
+		strBaseMessage+='<p>Please visit the Lives Improved website <a href="https://www.livesimproved.philips.com">www.livesimproved.philips.com</a> to download and install this new version.</p>';
+		strBaseMessage+='<p>Details:</p>';
 		if(storedConfig){
 			storedConfig = JSON.parse(storedConfig);
-			if(storedConfig.androidid != newConfig.androidid || storedConfig.iosid != newConfig.iosid){
-				self.state.messages.push('The app has been updated, see the new features below...');
+			if(app.state.ios){
+				if(storedConfig.iosid != newConfig.iosid){
+					self.state.messages.push(strBaseMessage);
+					self.state.messages.push(newConfig.iosdescription)
+				}
+			}else{
+				if(storedConfig.androidid != newConfig.androidid){
+					self.state.messages.push(strBaseMessage);
+					self.state.messages.push(newConfig.andrioddescription)
+				}
 			}
 		}						
 		objStore.setlocalstorageitem('appconfig', JSON.stringify(response.appinfo));
