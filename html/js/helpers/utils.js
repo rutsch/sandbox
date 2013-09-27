@@ -407,7 +407,8 @@ function serverSideRequest(objArguments){
 }
 
 function countryClicked(idCountry) {
-	if (idCountry !== "") {
+	var elRegion = getEl(idCountry);
+	if (idCountry !== "" && elRegion.style.fill !== '#999999' && elRegion.style.fill !== '#999') {
 		objMap.regionclick(idCountry);
 	}
 }

@@ -425,7 +425,8 @@ var objMap = {
 		}else{
 			getEl('toggle_favourite').className=getEl('toggle_favourite').className.replace(' selected','');
 		}
-
+		objHeader.showbackbutton();
+		objHeader.showfavouritebutton();
 
 
 		//initiates the simulator
@@ -488,8 +489,7 @@ var objMap = {
 		//objSliders.show();
 		objRegionInfo.show();
 		
-		objHeader.showbackbutton();
-		objHeader.showfavouritebutton();
+
 		TweenLite.to(elRegion, 0.5, {
 			opacity: 1,
 			onComplete: function(){

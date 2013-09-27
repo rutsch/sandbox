@@ -312,7 +312,7 @@ circle#background{
 	stroke: #efefef;
 }
 .nr_label{
-	font-size: 2em;
+	font-size: 1em;
 }
 .data_wrapper{
 	position: absolute;
@@ -455,9 +455,10 @@ span{
 	width: 100%;
 	opacity: 0;
 	z-index: 100;
+	display: none;
 }
 #show_simulation_text{
-	font-size: 2em;
+	font-size: 1.5em;
 }
 #show_current{
 	position: absolute;
@@ -468,9 +469,10 @@ span{
 	width: 100%;
 	background: inherit;
 	text-align: center;
+	display: none;
 }
 #show_current_text{
-	font-size: 2em;
+	font-size: 1.5em;
 	fill: #fff;
 }
 #show_current div{
@@ -482,14 +484,14 @@ span{
 	color: #fff;
 }
 .lives_improved_sub{
-	font-family: Verdana, arial;
+	font-family: Tahoma, Verdana, arial;
 	font-size: 1em;
 }
 #nr_gdp{
 	font-size: 2em;
 }
 #nr_gdp span, #nr_population span{
-	font-family:Verdana,arial;
+	font-family: Tahoma, Verdana,arial;
 	font-size: 14px;
 }
 #nr_population{
@@ -501,7 +503,7 @@ span{
 	fill: #fff;
 }
 #lives_improved_percentage_sub{
-	font-family: Verdana, arial;
+	font-family: Tahoma, Verdana, arial;
 	font-size: 1em;
 }
 
@@ -509,8 +511,8 @@ span{
 #simulation_wrapper{
 	position: relative;
 	margin: auto 7%;
-	/*top: 50%;
-	margin-top: -25%;*/
+	top: 50%;
+	margin-top: -25%;
 	-webkit-user-select: none; 
  	-webkit-touch-callout: none; 
 }
@@ -792,6 +794,9 @@ body.PD0100 #arrow_down{
 body.PD0100 #arrow_up{
 	fill: #446500;
 }
+body.PD0100 #show_simulation_text{
+	fill: #7dba00;
+}
 body.PD0100 #show_current_text{
 	fill: #446500; 
 }
@@ -814,6 +819,12 @@ body.PD0200 #arrow_down{
 body.PD0200 #arrow_up{
 	fill: #27003c;
 }
+body.PD0200 #show_current_text{
+	fill: #27003c; 
+}
+body.PD0200 #show_simulation_text{
+	fill: #68049c;
+}
 body.PD0200 #arc_path{
 	stroke: #9b4bc5;
 }
@@ -832,6 +843,12 @@ body.PD0900 #arrow_down{
 }
 body.PD0900 #arrow_up{
 	fill: #124a4d;
+}
+body.PD0900 #show_current_text{
+	fill: #124a4d; 
+}
+body.PD0900 #show_simulation_text{
+	fill: #2badb5;
 }
 body.PD0900 #arc_path{
 	stroke: #64d3da;
@@ -852,6 +869,12 @@ body.philips #arrow_down{
 body.philips #arrow_up{
 	fill: #022a64;
 }
+body.philips #show_current_text{
+	fill: #022a64; 
+}
+body.philips #show_simulation_text{
+	fill: #0b5ed7;
+}
 body.philips #arc_path{
 	stroke: #4286ea;
 }
@@ -861,7 +884,9 @@ body.philips #arc_path_left{
 body.philips .nr_label, body.philips #lives_improved_percentage_sub tspan, body.philips #nr_lives_improved_label{
 	fill: #022a64; 
 }
-
+#nr_lives_improved_label, .nr_label{
+	font-family: Verdana, arial;	
+}
 #arrow_up{
 	fill: #fff;
 }
