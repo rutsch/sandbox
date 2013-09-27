@@ -38,6 +38,8 @@ var objRegionInfo = {
 				}
 			});	
 		}else{
+			self.el.btnshowcurrent.style.display = 'block';
+			self.el.btnshowsimulation.style.display = 'block';	
 			TweenLite.to(self.el.toppanel, 0.3, {
 				top : '0%',
 				onComplete: function(){
@@ -69,7 +71,8 @@ var objRegionInfo = {
 				bottom : '-35%',
 				onComplete: function(){
 					self.state.tweening = false;
-					self.state.visible = false;				
+					self.state.visible = false;		
+				
 				}
 			});				
 		}
@@ -131,7 +134,8 @@ var objRegionInfo = {
 					//debugger;
 					self.state.tweening = false;
 					self.state.visible = true;
-
+					self.el.btnshowcurrent.style.display = 'none';
+					self.el.btnshowsimulation.style.display = 'none';
 				}
 			});				
 		}
