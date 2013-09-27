@@ -40,6 +40,7 @@ var objError = {
 		var self = this;
 		if(objLoading.state.visible) objLoading.hide();
 		if(objOverlay.state.visible) objOverlay.hide();
+		debugger;
 		if(err.toLowerCase() == 'token mismatch'){
 			objLogin.show();
 		}else{

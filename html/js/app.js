@@ -54,7 +54,13 @@ var app = {
 				objMap.updatemap();		
 				//TODO: add logic to show bookmarks, filter or messages
 				//objFilter.show();
-				objLogin.showupdatemessages();
+				var usedAppBefore = objStore.getlocalstorageitem('usedAppBefore');
+				if(usedAppBefore){
+					objLogin.showupdatemessages();	
+				}else{
+					objFirstLogin.show();
+							
+				}
 			}
 		});			
 	},
@@ -80,6 +86,7 @@ var app = {
 		objExplain.init();
 		objTrendGraph.init();
 		objLoading.init();
+		objFirstLogin.init();
 
 		//change the settings for the zoom/pan based on the device
 		if(self.state.ios){

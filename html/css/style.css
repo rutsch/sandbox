@@ -755,7 +755,7 @@ li#philips.selected{
 	background-size: 15px auto;
 }
 
-#explain_panel{
+#explain_panel, #first_login_panel{
 	background: #fff;
 }
 #producttree_temp{
@@ -963,7 +963,18 @@ h4{
 	margin-top: 2%;
 	font-family: Verdana, arial;
 }
-
+#first_login_content{
+	padding: 10px;
+}
+#first_login_content h2{
+	margin: 10px 0px;
+}
+#first_login_content h3{
+	font-size: 14px;
+	color: #000;
+	font-weight: normal;
+	
+}
 /* FAQ */
 div#explain_content {
     padding: 10px;
