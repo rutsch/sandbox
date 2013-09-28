@@ -1,7 +1,8 @@
 var objRegionInfo = {
 	state: {
 		visible: null,
-		tweening: null
+		tweening: null,
+		panel: 'current'
 	},
 	el: {
 		wrapper: null,
@@ -80,6 +81,7 @@ var objRegionInfo = {
 	hide: function(){
 		var self = this;
 		self.state.tweening = true;
+		objSliders.vars.simulatorsampling=false;
 		if(app.state.width > 700){
 			TweenLite.to(self.el.toppanel, 0.3, {
 				top : '-30%',
@@ -125,7 +127,7 @@ var objRegionInfo = {
 					//debugger;
 					self.state.tweening = false;
 					self.state.visible = true;
-
+					self.el.btnshowsimulation.style.display = 'none';
 				}
 			});	
 			TweenLite.to(self.el.btnshowcurrent, 0, {
@@ -135,7 +137,6 @@ var objRegionInfo = {
 					self.state.tweening = false;
 					self.state.visible = true;
 					self.el.btnshowcurrent.style.display = 'none';
-					self.el.btnshowsimulation.style.display = 'none';
 				}
 			});				
 		}
@@ -149,7 +150,7 @@ var objRegionInfo = {
 				//debugger;
 				self.state.tweening = false;
 				self.state.visible = true;
-
+				self.state.panel = 'simulation';
 			}
 		});		
 		TweenLite.to(self.el.btnshowcurrent, 0.3, {
@@ -186,7 +187,7 @@ var objRegionInfo = {
 				//debugger;
 				self.state.tweening = false;
 				self.state.visible = true;
-
+				self.state.panel = 'current';
 			}
 		});			
 		TweenLite.to(self.el.bottompanel, 0.3, {
@@ -239,12 +240,23 @@ var objRegionInfo = {
 		objArcProps.targetleftwrapper=getEl('arc_path_left_wrapper');
 		objArcProps.targetleftnode=getEl('arc_path_left');	
 		renderInfographic({angle: 0});
-		
-		Hammer(self.el.wrapper).on('swipeleft', function(){
-			//self.showhistory(self);
-		});
-		Hammer(self.el.wrapper).on('swiperight', function(){
-			//self.showdetails(self);
-		});
+
+		//setup swipe effect on the top panel
+		Hammer(self.el.toppanel).on('drag', function(ev){
+			//console.log('drag top panel');
+			//console.log(ev.gesture.direction +' - ' +ev.gesture.distance)
+
+			if(ev.gesture.direction=='up' && ev.gesture.distance>10)self.showsimulation(self);
+			if(self.state.panel == 'simulation' && ev.gesture.direction=='down' && ev.gesture.distance>10)self.showcurrent(self);
+		});	
+
+		//setup swipe effect on bottom panel
+		Hammer(self.el.bottompanel).on('drag', function(ev){
+			//console.log('drag bottom panel');
+			//console.log(ev.gesture.direction +' - ' +ev.gesture.distance)
+
+			if(ev.gesture.direction=='down' && ev.gesture.distance>10)self.showcurrent(self);
+		});	
+
 	}
 }

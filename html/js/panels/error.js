@@ -45,11 +45,16 @@ var objError = {
 			self.show('JS Error: line='+err.line+', message='+err.message+', stack='+err.stack, true)
 		}else{
 			console.trace(err);
-			if(err.toLowerCase() == 'token mismatch'){
-				objLogin.show();
+			if(typeof err==='string'){
+				if(err.toLowerCase() == 'token mismatch'){
+					objLogin.show();
+				}else{
+					self.show(err, true);			
+				}
 			}else{
-				self.show(err, true);			
-			}			
+				self.show(JSON.stringify(err), true);
+			}
+						
 		}
 
 	},

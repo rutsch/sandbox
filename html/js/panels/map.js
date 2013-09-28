@@ -548,18 +548,18 @@ var objMap = {
 				intDecimals=2;
 			}
 			//0.0001 - 9.99 million
-			if(objData.l>=1000 && objData.l<10000000){
+			if(objData.l<10000000){
 				//console.log('1');
 				objData.roundedl=Math.round((objData.l/1000000)*1000)/1000;
 				intDecimals=3;
 			}
-
+			/*
 			if(objData.l<1000){
 				//console.log('...')
 				objData.roundedl=objData.l;
 				intDecimals=2;
 			}
-
+			*/
 			objData.displayl=formatMoney(objData.roundedl, intDecimals,',','.','');
 			objData.labell='million lives improved';
 		}
