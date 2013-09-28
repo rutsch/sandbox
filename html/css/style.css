@@ -1103,6 +1103,11 @@ and (min-width : 768px) {
 		height: 100%;
 		border-bottom: 1px solid #ececec;
 	}
+	#simulation_wrapper{
+		position: relative;
+		top: 0%;
+		margin-top: 0%;
+	}
 
 	.data_wrapper{
 		width: 25%;
@@ -1151,6 +1156,7 @@ and (min-width : 768px) {
 	#login_panel{
 		background-position: bottom;
 	}	
+
 }
 
 /* Large screens ----------- */
