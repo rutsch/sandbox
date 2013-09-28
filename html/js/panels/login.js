@@ -43,7 +43,7 @@ var objLogin = {
 		e.preventDefault();
 		var self = this;
 		if(self.el.tbxpassword.value == '' || self.el.tbxusername.value == ''){
-			alert('Please enter a code1 account and a password');
+			alert('Please enter a Philips CODE1 account and a password');
 		}else{
 			self.startauthentication();
 		}

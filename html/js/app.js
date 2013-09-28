@@ -66,6 +66,10 @@ var app = {
 	},
 	init: function(){
 		var self = this;
+
+		//load the main content in the wrapper
+		getEl('content_outer_wrapper').innerHTML=serverSideRequest({url: strBaseUrl+'/data/body_content.html', method: 'get', debug: false});
+		alert('in...')
 		self.state.width = document.body.clientWidth;
 		self.state.height = document.documentElement["clientHeight"];
 		self.state.mobile = self.isMobile.any();
@@ -110,5 +114,3 @@ var app = {
 		});
 	}
 }
-
-app.init();

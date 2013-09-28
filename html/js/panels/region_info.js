@@ -144,6 +144,9 @@ var objRegionInfo = {
 	},	
 	showsimulation: function(self){
 		var self = this;
+
+		self.el.btnshowcurrent.style.display = 'block';
+
 		TweenLite.to(self.el.btnshowsimulation, 0.3, {
 			opacity: 0,
 			onComplete: function(){
@@ -151,6 +154,7 @@ var objRegionInfo = {
 				self.state.tweening = false;
 				self.state.visible = true;
 				self.state.panel = 'simulation';
+				self.el.btnshowsimulation.style.display = 'none';
 			}
 		});		
 		TweenLite.to(self.el.btnshowcurrent, 0.3, {
@@ -181,6 +185,9 @@ var objRegionInfo = {
 	},
 	showcurrent: function(self){
 		var self = this;
+
+		self.el.btnshowsimulation.style.display = 'block';
+
 		TweenLite.to(self.el.btnshowcurrent, 0.3, {
 			opacity: 0,
 			onComplete: function(){
@@ -188,6 +195,7 @@ var objRegionInfo = {
 				self.state.tweening = false;
 				self.state.visible = true;
 				self.state.panel = 'current';
+				self.el.btnshowcurrent.style.display = 'none';
 			}
 		});			
 		TweenLite.to(self.el.bottompanel, 0.3, {

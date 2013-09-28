@@ -1,0 +1,273 @@
+<div id="app_panel" class="panel full">
+	<div id="title_bar">
+		<div id="btn_back" onclick="objHeader.btnbackclick();"></div>
+		<div id="info">
+			<div class="info_wrapper">
+				<div id="region_name" onclick="location.reload();"></div>
+				<div id="filter_breadcrumb_wrapper">
+					<div id="">
+						<span id="filter_breadcrumb"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="toggle_favourite" onclick="objHeader.togglefavourite(this);"></div>
+	</div>
+	<div id="app_wrapper">
+		<div id="map">
+			<div id="main_wrapper" style="opacity: 1; display: block">
+				<div id="holder_1000" style="opactiy: 1">
+				</div>
+			</div>
+		</div>
+
+			<div id="top_panel">
+				<div id="region_info" onclicks="objHeader.btnbackclick();">
+					<div id="region_info_wrapper">
+
+						<div class="svg_wrapper">
+							<div id="holder">
+								<svg id="svg_circle" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" viewBox="0 0 640 300"  preserveAspectRatio="xMidYMid meet">
+									<g id="g" fill="none" transform="translate(0,10)" style="text-anchor: middle;">
+										<circle id="background" width="100" cx="150" cy="125" r="100" />
+										<path id="arc_path" />
+										<g id="arc_path_left_wrapper" transform="rotate(0,200,200)">
+											<path id="arc_path_left" />
+										</g>
+										<g transform="translate(0,10)">
+											<text id="lives_improved_percentage" x="150" y="125" fill="#000">100%</text>
+											<text id="lives_improved_percentage_sub" x="150" y="140" fill="#000" width="200">
+												<tspan dy="0.8em">of total population</tspan>
+											</text>
+										</g>
+									</g>
+									<g transform="translate(0, 10)" style="text-anchor: end;">
+										<text id="nr_lives_improved" x="600" y="75" fill="#fff">70.3</text>
+										<text id="nr_lives_improved_label" x="600" y="100">million lives improved</text>
+
+										<text id="nr_gdp" x="600" y="160" fill="#fff">$305 billion</text>
+										<text class="nr_label" x="600" y="180">GDP</text>
+
+										<text id="nr_population" x="600" y="240" fill="#fff">70 million</text>
+										<text class="nr_label" x="600" y="260">Population</text>
+									</g>
+
+								</svg>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div id="region_history">
+					<!-- base svg construction for the line graph -->
+					<svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 640 300" preserveAspectRatio="xMidYMid meet">
+						<g id="wrapper" transform="translate(0, 0)">
+							<text id="graph_title" y="40" x="0" xml:space="preserve">Trend</text>
+
+							<g id="grid_wrapper"> </g>
+
+							<!-- axis lines -->
+							<g class="axis_line">
+								<line id="x_axisline" x1="20" y1="10" x2="20" y2="280"/>
+							</g>
+							<g class="axis_line">
+								<line id="y_axisline" x1="20" y1="280" x2="370" y2="280"/>
+							</g>
+
+							<!-- axis labels -->
+							<g id="x_axislabel_wrapper" class="labels x-labels"> </g>
+							<g id="y_axislabel_wrapper" class="labels y-labels"> </g>
+
+							<!-- wrapper for the graph line -->
+							<g id="line_wrapper"> </g>
+
+							<!-- wrapper for the data points -->
+							<g id="data_point_wrapper" class="first_set points" data-setname="Our first data set"> </g>
+
+							<g id="popup_trend" transform="">
+								<!--
+								<path id="popup_trend_base" d="m 0.826235,89.47513 171.590555,0.3268 -0.3268,-60.78434 -13.0719,0 -17.97385,-28.10457 -17.32026,28.10457 c 0,0 -117.342689,-0.65359 -123.22398,-0.65359 z" />
+							-->
+								<path
+								   d="m 107,7.5187448 h -6.979 L 92.5,-0.00225557 84.979,7.5187448 H 3 c -1.6570001,0 -3,1.343 -3,3.0000002 v 31 c 0,1.657 1.3429999,3 3,3 h 104 c 1.657,0 3,-1.343 3,-3 v -31 c 0,-1.6570002 -1.343,-3.0000002 -3,-3.0000002 z"
+								   id="popup_trend_base" />
+								<g id="popup_trend_text_wrapper">
+									<text id="popup_trend_number" y="26" x="60" xml:space="preserve">2,23</text>
+									<text id="popup_trend_text" y="40" x="103" xml:space="preserve">Million Lives Improved</text>
+								</g>
+							</g>
+
+							<g id="popup_value" onclick="objTrendGraph.showvaluepopup({show: false});" visibility="hidden">
+								<path
+								   d="M 50,25.279 C 50,11.470998 38.808,0.2789983 25,0.2789983 11.193,0.2789983 0,11.470998 0,25.279 c 0,9.007 4.7660001,16.899 11.911,21.3 L 25.332,60 40.246,45.086 C 46.176,40.514 50,33.344 50,25.279 z"
+								   id="popup_value_base"  transform="scale(1.2)"/>
+								<text id="popup_value_number" y="26" x="29" xml:space="preserve">2,233</text>
+								<text id="popup_value_text" y="44" x="29" xml:space="preserve">Million</text>
+							</g>
+						</g>
+					</svg>
+				</div>
+			</div>
+			<div id="bottom_panel">
+				<div id="simulation">
+
+					<div id="simulation_wrapper">
+						<div id="section1">
+							<h4>Sales</h4>
+							<input id="slidersales" type="range" min="-20" max="30" value="0" step="0.1" class="philips"><div class="slider_value" id="value_sales">0%</div>
+							<div class="range_indicator">
+								<div class="min" id="salesmin">-20</div>
+								<div class="zero" id="saleszero">0</div>
+								<div class="max" id="salesmax">30</div>
+							</div>
+						</div>
+						<div id="section2">
+							<h4>Green sales</h4>
+							<input id="slidergreensales" type="range" min="-20" max="30" value="0" step="0.1" class="philips"><div class="slider_value" id="value_green_sales">0%</div>
+							<div class="range_indicator">
+								<div class="min" id="greensalesmin">-20</div>
+								<div class="zero" id="greensaleszero">0</div>
+								<div class="max" id="greensalesmax">30</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="simulation_error_wrapper">
+
+				</div>
+
+		</div>
+		<div id="slider_indicator"></div>
+		<div id="show_simulation" onclick="objRegionInfo.showsimulation();">
+			<svg id="svg_show_simulation" style="text-anchor: middle;" width="100%" height="100%" viewBox="0 0 640 120">
+				<text id="show_simulation_text" x="320" y="50">Simulation</text>
+				<g transform="translate(0, -750)">
+					<polygon id="arrow_down" fill="#00454A" points="320.5,837.935 303.529,820.965 299.994,824.5 316.964,841.471 320.5,845.006 324.035,841.471
+							341.006,824.5 337.471,820.965 		"/>
+				</g>
+			</svg>
+		</div>
+		<div id="show_current" onclick="objRegionInfo.showcurrent();">
+			<svg id="svg_show_current" style="text-anchor: middle;" width="100%" height="100%" viewBox="0 0 640 90">
+				<text id="show_current_text" x="320" y="85">Current</text>
+				<g transform="translate(0, -135)">
+					<polygon points="337.471,180.036 341.006,176.5 324.035,159.53 320.5,155.995 316.964,159.53 299.994,176.5 303.529,180.036 320.5,163.066 "
+							   id="arrow_up"/>
+				</g>
+			</svg>
+		</div>
+	</div>
+	<div id="menu_bar">
+		<div id="btn_wrapper">
+			<div id="btn_bookmarks" class="btn" onclick="app.btnbookmarksclick(this);">Bookmarks</div>
+			<div id="btn_filter" class="btn" onclick="app.btnfilterclick(this);">Filters</div>
+			<div id="btn_explain" class="btn" onclick="app.btnexplainclick(this);">FAQ</div>
+			<div id="btn_logout" class="btn" onclick="app.btnlogoutclick(this);">Log out</div>
+		</div>
+	</div>
+</div>
+<div id="login_panel" class="panel full">
+	<div class="form_outer_wrapper">
+		<form id="login">
+			<div id="form_wrapper">
+				<span>Please log in using CODE1\*** and password.</span>
+				<input type="text" id="username" placeholder="Account" value=""/>
+				<input type="password" id="password" placeholder="Password" value=""/>
+				<input type="submit" id="btn_submit" class="btn btn_login" onclick="objLogin.btnsubmitclick(event);" value="Log in"/>
+			</div>
+		</form>
+	</div>
+</div>
+<div id="filter_panel" class="panel modal">
+	<div id="filter_loader"></div>
+	<div class="panel_header">
+		<h2>Filters</h2>
+		<div id="btn_close_filter" class="btn btn_close" onclick="objFilter.hide();">X</div>
+		<div id="btn_apply_filter" class="btn btn_apply" onclick="objFilter.applyfilter();">Apply</div>
+	</div>
+	<div class="modal_content">
+		<h4>Select geography filter:</h4>
+		<div id="oru_filter_container">
+			<div id="btn_world" onclick="objOruFilter.selectoru(this, 1);">World</div>
+			<div id="btn_region" onclick="objOruFilter.selectoru(this, 2);">Region</div>
+			<div id="btn_bmc" onclick="objOruFilter.selectoru(this, 3);" class="selected">Market</div>
+			<div id="btn_country" onclick="objOruFilter.selectoru(this, 4);">Country</div>
+		</div>
+		<h4>Select business filter:</h4>
+		<div id="filter_container"></div>
+		<h4>Select activity filter:</h4>
+		<div id="activity_filter_container">
+			<div id="btn_show_all" onclick="showAllCountries(this);">Show all countries</div>
+			<div id="btn_hide" onclick="hideInactiveCountries(this);" class="selected">Hide countries</div>
+		</div>
+	</div>
+</div>
+<div id="explain_panel" class="panel modal">
+	<div class="panel_header">
+		<h2>FAQ</h2>
+		<div id="btn_close_explain" class="btn btn_close" onclick="objExplain.hide();">X</div>
+	</div>
+	<div class="modal_content">
+		<div id="explain_content">
+
+		</div>
+	</div>
+</div>
+<div id="first_login_panel" class="panel modal">
+	<div class="panel_header">
+		<h2>Welcome</h2>
+		<div id="btn_close_explain" class="btn btn_close" onclick="objFirstLogin.hide();">X</div>
+	</div>
+	<div class="modal_content">
+		<div id="first_login_content">
+			<h2>Welcome to the Philips Lives Improved app</h2>
+
+			<p>In this app you can view the most recent status of the Lives Improved KPI, see how it has developed in the recent past and how it will develop based sales growth estimations. You can even see how multiple sales growth scenarios affect the status of Lives Improved and Year-End.
+			</p>
+			<h3>
+			What is Lives Improved?
+			</h3>
+			<p>
+			“Lives improved” by Philips is the number of people that have been in touch with either a Philips care-, green-, or well-being- product in a given year.
+			<br/>
+			At Philips, we strive to make the world healthier and more sustainable through innovation. Our goal is to improve the lives of 3 billion people a year by 2025. To guide our efforts and measure our progress, we take a two-dimensional approach – social and ecological – to improving people’s lives. Products and solutions from our portfolio that directly support the curative (care) or preventive (well-being) side of people’s health, determine the contribution to the social dimension. As healthy ecosystems are also needed for people to live a healthy life, the contribution to the ecological dimension is determined by means of our Green Product portfolio, such as our energy-efficient lighting.
+			<br/>
+			More information can be found later in the FAQ section of this app.
+			<p>
+			To view the current status of Lives Improved, simply tap on the world map to select the geographical region you’re interested in. This will open a bar in the top of the screen. On the left hand side you will find information on the current status of Lives Improved, including context data like GDP and population. The middle of the bar shows a trend graph, here you see the trend during the past year and the expected status at year end based on current sales growth estimations. The right hand side of the screen shows two sliders, one for sales and one for green sales percentage (except for when Healthcare is selected then only the sales slider shows). By moving the sliders left or right you can see the impact of sales and green sales percentage on the Lives Improved status at year end. (NB. Increasing the sales slider by 1% means for example a sales increase from EUR 100 tot EUR 101, increasing the green sales percentage slider by 1% means for example a green sales percentage increase from 35% to 36%)
+			</p>
+			<p>
+			The bottom of the screen shows a bar with four icons:<br/>
+			-	The bookmarks icon (heart) lets you save your favorite views (geography and Philips reporting unit)<br/>
+			-	The filter icon lets you select the level of geographical breakdown, i.e. Lives Improved for the whole world or per country, and the Philips reporting unit, i.e. the whole Philips group or a specific BU.<br/>
+			-	In the FAQ sections contains answers to the most frequently asked questions. For more information you can always email <h href="mailto:sustainability@philips.com">sustainability@philips.com</a><br/>
+			-	The logout icon which will log your account out of the app
+			</p>
+		</div>
+	</div>
+</div>
+<div id="bookmarks_panel" class="panel modal">
+	<div class="panel_header">
+		<h2>Bookmarks</h2>
+		<div id="btn_close_bookmarks" class="btn btn_close" onclick="objBookmarks.hide(true);">X</div>
+	</div>
+	<div class="modal_content" id="bookmarkslist">
+
+	</div>
+</div>
+<div id="messages_panel" class="panel modal">
+	<div class="panel_header">
+		<h2>Messages</h2>
+		<div id="btn_close_messages" class="btn btn_close" onclick="objLogin.hidemessages(true);">X</div>
+	</div>
+	<div class="modal_content">
+		<ul  id="messagelist">
+		</ul>
+	</div>
+</div>
+<div id="overlay">
+	<div id="loader"></div>
+</div>
+<div id="loading"></div>
+<div id="producttree_temp"></div>
+<div id="error"></div>
