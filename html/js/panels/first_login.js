@@ -21,7 +21,7 @@ var objFirstLogin = {
 				self.state.tweening = false;
 				self.state.visible = true;
 
-				if(!self.state.contentloaded){
+				/*if(!self.state.contentloaded){
 					serverSideRequest({
 						url: 'data/firstlogin.html', 
 						method: 'get', 
@@ -33,7 +33,7 @@ var objFirstLogin = {
 							self.state.contentloaded=true;
 						}
 					});
-				}
+				}*/
 			}
 		});		
 	},
