@@ -1,3 +1,6 @@
+var objInfographic = {
+		
+}
 //global properties of the arc to build
 var objArcProps={
 	targetnode: null,
