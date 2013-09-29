@@ -226,11 +226,13 @@ function iterate(obj, type, value) {
 /*
 AJAX UTILITIES
 */
-
 function psv(type, url, objParams, cb) {
 	var xmlhttp,
 	strParams = '',
 	bolPerformCatch = false;
+
+	//enable the try-catch only on production website
+	if(objConfig.sitetype=='prod')bolPerformCatch = false;
 	
 	objLoading.show();
 	

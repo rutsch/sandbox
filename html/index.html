@@ -8,7 +8,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 
 		<!-- the fixed resources -->
-		<!-- Config (contains the definitions and the sources to load) -->
+		<!-- Config (contains the definitions and the css and js sources to load dynamically) -->
 		<script type="text/javascript" src="js/config.js">//</script>
 
 		<!-- Libs -->
@@ -24,24 +24,30 @@
 	</head>
 	<body>
 		<script type="text/javascript">
-			for(var i=0; i<arrCssResources.length; i++){
-				loadRemoteFile(arrCssResources[i])
+			//load the css files
+			for(var i=0; i<objConfig.resources.css.length; i++){
+				objConfig.loadremotefile(objConfig.resources.css[i])
 			}
-			for(var i=0; i<arrJsResources.length; i++){
-				loadRemoteFile(arrJsResources[i])
+
+			//load the js files
+			for(var i=0; i<objConfig.resources.js.length; i++){
+				objConfig.loadremotefile(objConfig.resources.js[i])
 			}
 		</script>
 		<div id="content_outer_wrapper">.</div>
 		<script type="text/javascript">
 
+			//starts the application logic if the app object is available (loaded dynamically)
 			function startApplication(){
-				console.log('testing')
+				//console.log('testing')
 				if(typeof app != 'undefined'){
 					app.init();
 				}else{
 					window.setTimeout(function(){startApplication();},500);
 				}
 			}
+
+			//attempt to start the application logic
 			startApplication();
 			
 		</script>
