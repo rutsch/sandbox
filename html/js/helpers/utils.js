@@ -1,6 +1,9 @@
 /*
 Utilities
  */
+var objUtils = {
+		
+}
 function getEl(id) {
 	return document.getElementById(id);
 }
