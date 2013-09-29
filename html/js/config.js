@@ -41,7 +41,6 @@ var objConfig = {
 			'/js/helpers/utils.js',
 			'/js/helpers/store.js',
 			'/js/helpers/infographic.js',
-			'/js/helpers/psv.js',
 			'/js/panels/footer.js',
 			'/js/panels/header.js',
 			'/js/panels/map.js',
