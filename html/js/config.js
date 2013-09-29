@@ -140,6 +140,37 @@ var objConfig = {
 			}
 		}
 	},
+	startapplication: function(){
+		var self=this;
+		//console.log('testing')
+		if(typeof app != 'undefined' &&
+			typeof objUtils != 'undefined' &&
+			typeof objStore != 'undefined' &&
+			typeof objInfographic != 'undefined' &&
+			typeof objFooter != 'undefined' &&
+			typeof objHeader != 'undefined' &&
+			typeof objMap != 'undefined' &&
+			typeof objOverlay != 'undefined' &&
+			typeof objRegionInfo != 'undefined' &&
+			typeof objSliders != 'undefined' &&
+			typeof objLogin != 'undefined' &&
+			typeof objError != 'undefined' &&
+			typeof objFilter != 'undefined' &&
+			typeof objBookmarks != 'undefined' &&
+			typeof objTrendGraph != 'undefined' &&
+			typeof objExplain != 'undefined' &&
+			typeof objLoading != 'undefined' &&
+			typeof objFirstLogin != 'undefined' &&
+			typeof objMruFilter != 'undefined' &&
+			typeof objOruFilter != 'undefined'
+		){
+			app.init();
+		}else{
+			window.setTimeout(function(){
+				self.startapplication();
+			},500);
+		}
+	},
 	init: function(){
 		var self=this;
 

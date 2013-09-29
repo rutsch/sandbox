@@ -75,5 +75,7 @@ var objFilter = {
 		self.el.filtercontent = Sizzle('#filter_panel div.modal_content')[0];
 		self.el.btnapply = getEl('btn_apply_filter');
 		self.el.btnapply.style.display = 'none';
+
+		self.state.currentfilterhtml = self.el.wrapper.innerHTML;
 	}
 }

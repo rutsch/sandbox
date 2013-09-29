@@ -36,20 +36,8 @@
 		</script>
 		<div id="content_outer_wrapper">.</div>
 		<script type="text/javascript">
-
-			//starts the application logic if the app object is available (loaded dynamically)
-			function startApplication(){
-				//console.log('testing')
-				if(typeof app != 'undefined'){
-					app.init();
-				}else{
-					window.setTimeout(function(){startApplication();},500);
-				}
-			}
-
 			//attempt to start the application logic
-			startApplication();
-			
+			objConfig.startapplication();
 		</script>
 	</body>
 </html>

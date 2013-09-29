@@ -99,6 +99,7 @@ var objMruFilter = {
 			arrLi[i].innerHTML+= '<div class="mru_sector_color"></div>';
 			ul.appendChild(arrLi[i]);
 		}
+		self.el.mrufilter = getEl('filter_container');
 		self.el.mrufilter.innerHTML = '';
 		self.el.mrufilter.appendChild(ul);
 		
@@ -166,10 +167,10 @@ var objMruFilter = {
 		self.state.tweening = false;
 		self.state.selectedmru = self.getdefaultmru();
 		self.state.selectedsector = 'philips';
-		
+
 		self.el.mrufilter = getEl('filter_container');
 		self.el.tempmru = getEl('producttree_temp');
-		
+
 		self.getmruhtml(function(err, data){
 			if(err != null){
 				cb(err);
