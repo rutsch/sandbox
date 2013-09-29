@@ -29,6 +29,9 @@ body{
 	font-family: gill;
 	font-size: 100%;
 }
+#content_outer_wrapper{
+	height: 100%;
+}
 #error{
 	position: absolute;
 	bottom: 0px;
