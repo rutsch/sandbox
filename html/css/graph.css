@@ -12,24 +12,30 @@ svg.graph g#wrapper{
 svg.graph #graph_title{
 	font-size: 2em;
 	fill: #ffffff;
-		fill-opacity: 1;
-		stroke: none;
+	fill-opacity: 1;
+	stroke: none;
 }
 
 /* line in the graph */
 svg.graph g#line_wrapper *{
-	fill:none;
-	stroke:black;
-	stroke-width:3;
+	fill: none;
+	stroke: white;
+	stroke-width: 3;
 }
 svg.graph g#line_wrapper *.last{
+	stroke: black;
 	stroke-dasharray: 2 4;
 }
 
 /* value indicators */
 svg.graph .points .point{
+	fill: white;
 	stroke: white;
-	stroke-width: 3;
+	stroke-width: 0;
+}
+svg.graph .points #last_point{
+	fill: black;
+	fill-opacity: 0.5;
 }
 svg.graph .points .hitarea{
 	fill: transparent;
@@ -61,14 +67,18 @@ svg.graph g#y_axislabel_wrapper line{
 /* x and y axis labels */
 svg.graph .labels {
 	kerning: 1;
+	fill: #ffffff;
+	fill-opacity: 1;	
 }
 
 svg.graph .labels.x-labels {
 	text-anchor: middle;
+	fill-opacity: 0.6;
 }
 
 svg.graph .labels.y-labels {
 	text-anchor: end;
+	font-size: .6em;
 }
 svg.graph g.inset .labels.y-labels {
 	text-anchor: start;
@@ -80,6 +90,7 @@ svg.graph g#grid_wrapper line{
 	stroke: #fff;
 	stroke-width: 1;
 	stroke-dasharray: 8 4;
+	stroke-opacity: 0.4;
 }
 
 /* trend popup */
@@ -105,6 +116,9 @@ svg.graph text#popup_trend_text{
 	fill-opacity: 1;
 	stroke: none;
 	text-anchor: end;
+}
+svg.graph text#popup_trend_text{
+	font-size: .68em;
 }
 svg.graph text#popup_trend_number{
 	text-anchor: middle;
@@ -140,8 +154,8 @@ svg.graph text#popup_value_number{
 	font-size: 1em;
 }
 svg.graph text#popup_value_number{
-	font-size: 18px;
+	font-size: 1.3em;
 }
 svg.graph text#popup_value_text{
-font-size: 12px;
+	font-size: 1em;
 }

@@ -178,7 +178,7 @@ var objSliders = {
 		//objTrendGraph.props.height=self.el.history.offsetHeight;
 
 		//fix the number of grid lines
-		objTrendGraph.props.axis.ygridlines=4;
+		objTrendGraph.props.axis.ygridlines=3;
 
 
 		//console.log(objGraphData);

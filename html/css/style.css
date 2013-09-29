@@ -1120,6 +1120,7 @@ and (min-width : 768px) {
 		height: 100%;
 		top: 0%;
 		border-bottom: 1px solid #ececec;
+		z-index: 10;
 	}
 	#bottom_panel{
 		top: -30%;
