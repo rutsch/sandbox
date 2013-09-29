@@ -73,13 +73,13 @@ var objConfig = {
 		if (filename.indexOf('js')>-1){ //if filename is a external JavaScript file
 			var fileref=document.createElement('script')
 			fileref.setAttribute("type","text/javascript")
-			fileref.setAttribute("src", self.urls.base+filename)
+			fileref.setAttribute("src", self.urls.base+filename+'?rnd='+Math.round(Math.random()*100000000))
 		}
 		else if (filename.indexOf('css')>-1){ //if filename is an external CSS file
 			var fileref=document.createElement("link")
 			fileref.setAttribute("rel", "stylesheet")
 			fileref.setAttribute("type", "text/css")
-			fileref.setAttribute("href", self.urls.base+filename)
+			fileref.setAttribute("href", self.urls.base+filename+'?rnd='+Math.round(Math.random()*100000000))
 		}
 		
 		if (typeof fileref!="undefined")document.getElementsByTagName("head")[0].appendChild(fileref)
