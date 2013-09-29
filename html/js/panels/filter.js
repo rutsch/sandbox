@@ -33,7 +33,6 @@ var objFilter = {
 				self.state.visible = false;
 			}
 		});	
-		objHeader.btnbackclick();
 	},
 	blink: function(){
 		var self = this;
