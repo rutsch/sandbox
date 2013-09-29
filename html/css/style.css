@@ -487,14 +487,14 @@ span{
 	color: #fff;
 }
 .lives_improved_sub{
-	font-family: Tahoma, Verdana, arial;
+	font-family: Tahoma, Verdana, Segoe, sans-serif;
 	font-size: 1em;
 }
 #nr_gdp{
 	font-size: 2em;
 }
 #nr_gdp span, #nr_population span{
-	font-family: Tahoma, Verdana,arial;
+	font-family: Tahoma, Verdana, Segoe, sans-serif;
 	font-size: 14px;
 }
 #nr_population{
@@ -506,7 +506,7 @@ span{
 	fill: #fff;
 }
 #lives_improved_percentage_sub{
-	font-family: Tahoma, Verdana, arial;
+	font-family: Tahoma, Verdana, Segoe, sans-serif;
 	font-size: 1em;
 }
 
@@ -616,6 +616,7 @@ span{
 #filter_panel h4{
 	padding-left: 10px;	
 }
+
 #filter_container ul{
 	list-style-type: none;
 	padding-left: 10px;
@@ -650,29 +651,24 @@ span{
 }
 li#PD0100.selected, li#PD0100 .selected{
 	color: #7dba00!important;
-	font-family: gill_header;
 }
 li#PD0100 .mru_sector_color{
 	background: #7dba00;
 }
 li#PD0200.selected, li#PD0200 .selected{
 	color: #68049c!important;
-	font-family: gill_header;
 }
 li#PD0200 .mru_sector_color{
 	background: #68049c;
 }
 li#PD0900.selected, li#PD0900 .selected{
 	color: #2badb5!important;
-	font-family: gill_header;
 }
 li#PD0900 .mru_sector_color{
 	background: #2badb5;
 }
 li#philips.selected{
 	color: #0b5ed7;
-	font-family: gill_header;
-	font-weight: bold;
 }
 #activity_filter_container div{
 	width: 50%;
@@ -983,14 +979,14 @@ h3{
 	font-weight: normal;
 	margin-top: 0.5em;
 	margin-bottom: 0.2em;
-	font-family: Verdana, arial;
+	font-family: Tahoma, Verdana, Segoe, sans-serif;
 }
 h4{
 	color: #4a4a4a;
-	font-size: 12px;
+	font-size: 15px;
 	margin-bottom: 2%;
 	margin-top: 2%;
-	font-family: Verdana, arial;
+	font-family: gill;
 }
 #first_login_content{
 	padding: 10px;
@@ -1005,15 +1001,24 @@ h4{
 	
 }
 /* FAQ */
+.number{
+	position: absolute;
+	width: 8%;
+	display: inline-block;
+}
+.text{
+	margin-left: 8%;
+	width: 92%;
+	display: inline-block;
+}
 div#explain_content {
     padding: 10px;
 }
 div#explain_panel div.faq_wrapper{
-	color: #000;
-
+	color: #666666;
+	position: relative;
 }
 div#explain_panel div.faq_wrapper div.faq_header{
-	font-weight: bold;
 	padding-top: 5px;
 	padding-bottom: 1px;
 	font-size: 18px;
@@ -1025,6 +1030,8 @@ div#explain_panel div.faq_wrapper div.faq_content{
 	overflow: hidden;
 	transition: max-height 0.5s;
 	-webkit-transition: max-height 0.5s;	
+	margin-left: 8%;
+	width: 92%;
 }
 div#explain_panel div.faq_wrapper div.faq_content.selected{
 	max-height: 600px;
@@ -1034,7 +1041,7 @@ div#explain_panel div.faq_wrapper div.faq_content p{
 	margin-bottom: 7px;
 	font-family: Verdana, arial;
 	font-size: 12px;
-	color: #252F47;
+	color: #adabab;
 }
 
 /* attempt to hardware accelarate the worldmap */
