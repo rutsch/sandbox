@@ -1,7 +1,8 @@
 var objFilter = {
 	state: {
 		visible: null,
-		tweening: null
+		tweening: null,
+		currentfilterhtml: ''
 	},
 	el: {
 		wrapper: null,
@@ -9,6 +10,7 @@ var objFilter = {
 	},
 	show: function(){
 		var self = this;
+		self.state.currentfilterhtml = self.el.wrapper.innerHTML;
 		objOverlay.show();
 		self.state.tweening = true;
 		self.el.wrapper.style.display = 'block';
@@ -28,6 +30,7 @@ var objFilter = {
 			opacity : 0,
 			onComplete: function(){
 				objOverlay.hide();
+				self.el.wrapper.innerHTML = self.state.currentfilterhtml;
 				self.el.wrapper.style.display = 'none';
 				self.state.tweening = false;
 				self.state.visible = false;
@@ -55,6 +58,8 @@ var objFilter = {
 	},
 	applyfilter: function(){
 		var self = this;
+		self.state.currentfilterhtml = self.el.wrapper.innerHTML;
+		
 		self.el.btnapply.style.display = 'none';
 		objMap.updatemap();
 		self.hide();

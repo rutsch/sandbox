@@ -98,29 +98,32 @@ var objHeader = {
 	 */
 	setregionname: function(name){
 		var self = this;
-		TweenLite.to(self.el.regionname, 0.3, {
-			opacity : 0,
-			onComplete: function(){
-				
-				if(self.el.regionnamemarquee){
-					self.el.regionnamemarquee.el.innerHTML = '';
-					self.el.breadcrumb.scrollWidth = 0;
-				}
-				self.el.regionname = getEl('region_name');
-				self.el.regionname.innerHTML = name;
-				//debugger;
-				if(self.el.regionname.scrollWidth > self.el.regionname.clientWidth){
-					self.el.regionnamemarquee = new Marquee({el:self.el.regionname, mouseStops: false}).init();
-				}else{
+		if(typeof name != 'undefined'){
+			TweenLite.to(self.el.regionname, 0.3, {
+				opacity : 0,
+				onComplete: function(){
+					
 					if(self.el.regionnamemarquee){
-						self.el.regionnamemarquee.stop();
+						self.el.regionnamemarquee.el.innerHTML = '';
+						self.el.breadcrumb.scrollWidth = 0;
 					}
-				}				
-				TweenLite.to(self.el.regionname, 0.3, {
-					opacity : 1
-				});	
-			}
-		});			
+					self.el.regionname = getEl('region_name');
+					self.el.regionname.innerHTML = name;
+					//debugger;
+					if(self.el.regionname.scrollWidth > self.el.regionname.clientWidth){
+						self.el.regionnamemarquee = new Marquee({el:self.el.regionname, mouseStops: false}).init();
+					}else{
+						if(self.el.regionnamemarquee){
+							self.el.regionnamemarquee.stop();
+						}
+					}				
+					TweenLite.to(self.el.regionname, 0.3, {
+						opacity : 1
+					});	
+				}
+			});					
+		}
+	
 	},
 	setbreadcrumb: function(value){
 		var self = this;
