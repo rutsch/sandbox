@@ -34,6 +34,7 @@ var objFilter = {
 				self.el.wrapper.style.display = 'none';
 				self.state.tweening = false;
 				self.state.visible = false;
+				self.el.btnapply.style.display == 'none';		
 			}
 		});	
 	},
