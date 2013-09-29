@@ -36,19 +36,26 @@ var objTrendGraph={
 			ymin: 4,
 			ymax: 15,
 			ystep: 2.5,
-			ygridlines: null,
+			ygridlines: null, /* fixed number of gridlines */
+			ygridlinesfullwidth: true,
 			showxlines: false,
 			xlinelength: 8,
 			showylines: false,
 			ylinelength: 8,
 			ylabelinset: true,
-			xpaddingleft: 55,
+			xpaddingleft: 35,
 			xpaddingright: 10,
 		},
 		labels: {
 			x: {
 				padding: {
 					bottom: 20
+				}
+			},
+			y: {
+				translate: {
+					x: 0,
+					y: 8
 				}
 			}
 		},
@@ -95,10 +102,19 @@ var objTrendGraph={
 			elWrapper.appendChild(elCircle);
 		}
 	},
-	createlabel: function(elWrapper, objCoords, objPoint){
+	createlabel: function(elWrapper, objCoords, objPoint, strType){
+		var self=this;
 		var elText = document.createElementNS('http://www.w3.org/2000/svg','text');
 		elText.setAttributeNS(null,'x',(objCoords.x+''));
 		elText.setAttributeNS(null,'y',(objCoords.y+''));
+
+		//find the translate settings
+		if(strType=='y'){
+			if(self.props.labels.y.translate){
+				elText.setAttributeNS(null,'transform','translate('+self.props.labels.y.translate.x+', '+self.props.labels.y.translate.y+')');
+			}
+		}
+
 
 		var textNode = document.createTextNode(objPoint.label);
 		elText.appendChild(textNode);
@@ -341,7 +357,7 @@ var objTrendGraph={
 			var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
 			//console.log(objCoords);
 			objCoords.y=self.props.height-self.props.labels.x.padding.bottom;
-			self.createlabel(elWrapperLabelsX, objCoords, objPoint);
+			self.createlabel(elWrapperLabelsX, objCoords, objPoint, 'x');
 
 			//lines on the x axis
 			if(self.props.axis.showxlines){
@@ -384,7 +400,7 @@ var objTrendGraph={
 				}
 			}			
 		}else{
-			//calculate the grid lines and labels based on the number og grid lines given
+			//calculate the grid lines and labels based on the number of grid lines defined
 
 			
 			//make sure we ramain in the same number formatting by capturing the decimal pages that were received
@@ -445,7 +461,7 @@ var objTrendGraph={
 			objCoords.y=objCoords.y+yCorrection;
 
 			//label on y-axis
-			self.createlabel(elWrapperLabelsY, objCoords, objPoint)
+			self.createlabel(elWrapperLabelsY, objCoords, objPoint, 'y')
 
 			//lines on y-axis
 			objCoords.y=objCoords.y-yCorrection;
@@ -464,8 +480,12 @@ var objTrendGraph={
 
 			//grid lines
 			var elGridLine=document.createElementNS('http://www.w3.org/2000/svg','line');
+			var intLineStart=((self.props.axis.ylabelinset)?(self.props.padding.left+self.props.axis.xpaddingleft-5):self.props.padding.left);
+			if(self.props.axis.ygridlinesfullwidth){
+				intLineStart=self.props.padding.left;
+			}
 			self.setsvglinecoordinates(elGridLine,{
-				x1: ((self.props.axis.ylabelinset)?(self.props.padding.left+self.props.axis.xpaddingleft-5):self.props.padding.left),
+				x1: intLineStart,
 				y1: objCoords.y,
 				x2: (self.props.width-self.props.padding.right),
 				y2: objCoords.y

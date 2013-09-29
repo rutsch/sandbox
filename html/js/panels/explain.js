@@ -22,10 +22,11 @@ var objExplain = {
 
 				if(!self.state.contentloaded){
 					serverSideRequest({
-						url: 'data/faq.html', 
+						url: (objConfig.urls.base+'/data/faq.html'), 
 						method: 'get', 
 						debug: false,
 						callback: function(err, strFaqContent){
+							//alert(strFaqContent);
 							//insert the SVG data into the holder div
 							self.el.content.innerHTML=strFaqContent;
 
