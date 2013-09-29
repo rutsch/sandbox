@@ -80,7 +80,8 @@ var objZoomPanSettings={
 	mobile: false,
 	clickcallback: null,
 	usesamplingformobile: false,
-	samplingrate: 75
+	samplingrate: 75,
+	boundarycheck: false
 }
 
 //settings for the touch system
@@ -91,7 +92,8 @@ var objTouchSettings={
 	zoommax: 8,
 	zoommin: 0.4,
 	testzoom: true,
-	testpan: true
+	testpan: true,
+	dragsampling: 1
 }
 
 /// <====
@@ -129,7 +131,9 @@ var objTouchVars={
 	},
 	realzoom: 1,
 	zoomlimit: false,
-	eventcount: 1
+	eventcount: 1,
+	svgsize: null,
+	dragdirection: ''
 }
 
 function initSgvZoomPan(elSvgRoot, elSvgNodeToAnimate){
@@ -146,6 +150,8 @@ function initSgvZoomPan(elSvgRoot, elSvgNodeToAnimate){
 	var arrPos=retrievePosition(elSvgRoot);
 	objTouchVars.svgx=arrPos[0];
 	objTouchVars.svgy=arrPos[1];
+
+	objTouchSettings.dragsampling=((app.state.mobile)?20:1);
 
 	//setup the handlers
 	setupHandlers(elSvgRoot);
@@ -676,6 +682,55 @@ function handleDrag(evt) {
 	}
 	evt.returnValue = false;
 
+	//check if we still need to pan
+	//console.log(evt);
+	var bolXmax=false;
+	var bolYmax=false;
+	if(objZoomPanSettings.boundarycheck){
+		if(evt.gesture || evt.webkitMovementX){
+
+			//this is a hammer event	
+			objTouchVars.eventcount++;
+			if(objTouchVars.eventcount%objTouchSettings.dragsampling==0){
+
+				var deltaX=(evt.gesture)?evt.gesture.deltaX:evt.webkitMovementX; //negative = left - positive = right
+				var deltaY=(evt.gesture)?evt.gesture.deltaY:evt.webkitMovementY; //negative = up - positive = down
+
+				//console.log(deltaX+' - '+deltaY);
+
+				objTouchVars.svgsize=objMap.el.rootsvg.getBBox();
+				//test drag left/right
+				//left
+				//console.log(evt.gesture.direction)
+				//console.log((objTouchVars.svgsize.width-objTouchVars.svgsize.x))
+				if((objTouchVars.svgsize.width-objTouchVars.svgsize.x)>((objTouchVars.svgsize.width*2)-100)){
+				//if((objTouchVars.svgsize.x/2)>(objTouchVars.svgsize.width)){
+					console.log('left max')
+					bolXmax=true;
+				}else if(objTouchVars.svgsize.x>app.state.width){
+					console.log('right max')
+					bolXmax=true;
+				}
+
+				if((objTouchVars.svgsize.height-objTouchVars.svgsize.y)>(objTouchVars.svgsize.height*2)){
+					console.log('top max')
+					bolYmax=true;
+				}else if(objTouchVars.svgsize.y>app.state.height){
+					console.log('bottom max')
+					bolYmax=true;
+				}
+
+				console.log(objTouchVars.svgsize);
+
+				
+
+			}
+		}		
+	}
+
+
+	
+
 	//console.log('+++++++')
 	//console.log(evt);
 	//var g = getRoot(evt.target.ownerDocument);
@@ -687,15 +742,16 @@ function handleDrag(evt) {
 	if(objTouchVars.state == 'pan' && objZoomPanSettings.pan) {
 		// Pan mode
 		var p = getEventPoint(evt).matrixTransform(objTouchVars.svgmatrix);
-		//console.log('.....')
-		//console.log(p);
-		//console.log(objTouchVars.svgmatrix.inverse());
-		//console.log(objTouchVars.svgpointorigin);
-		//console.log('.....')
+		//console.log(p)
+		//console.log('pan');
+		if(bolXmax)p.x=objTouchVars.svgpointorigin.x;
+		if(bolYmax)p.y=objTouchVars.svgpointorigin.y;
+		
 		setCTM(g, objTouchVars.svgmatrix.inverse().translate(p.x - objTouchVars.svgpointorigin.x, p.y - objTouchVars.svgpointorigin.y));
 	} else if(objTouchVars.state == 'drag' && objZoomPanSettings.drag) {
 		// Drag mode
 		var p = getEventPoint(evt).matrixTransform(g.getCTM().inverse());
+		//console.log('drag');
 
 		setCTM(objTouchVars.eldragtarget, objTouchVars.elsvg.createSVGMatrix().translate(p.x - objTouchVars.svgpointorigin.x, p.y - objTouchVars.svgpointorigin.y).multiply(g.getCTM().inverse()).multiply(objTouchVars.eldragtarget.getCTM()));
 
