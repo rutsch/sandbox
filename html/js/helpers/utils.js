@@ -434,6 +434,10 @@ function countryClicked(idCountry) {
 	var elRegion = getEl(idCountry);
 	if (idCountry !== "" && elRegion.style.fill !== '#999999' && elRegion.style.fill !== '#999') {
 		objMap.regionclick(idCountry);
+	}else{
+		//debugger;
+		getEl('messagelist').innerHTML = 'No Lives Improved based on current VIPP data.';
+		objLogin.showmessages();
 	}
 }
 

@@ -137,4 +137,6 @@ window.onresize = function() {
 
 	//rework the dimensions of the map based on the new dimensions of the window
 	objMap.resizeworldmap();
+	
+	objRegionInfo.hide();
 };

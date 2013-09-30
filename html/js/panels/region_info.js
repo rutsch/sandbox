@@ -21,7 +21,7 @@ var objRegionInfo = {
 		// slide down top_panel
 		
 		// slide up bottom_panel
-		if(app.state.width > 700){
+		if(app.state.width > 768){
 			TweenLite.to(self.el.toppanel, 0.3, {
 				top : '0%',
 				onComplete: function(){
@@ -82,7 +82,8 @@ var objRegionInfo = {
 		var self = this;
 		self.state.tweening = true;
 		objSliders.vars.simulatorsampling=false;
-		if(app.state.width > 700){
+		self.el.bottompanel.removeAttribute('style');
+		if(app.state.width > 768){
 			TweenLite.to(self.el.toppanel, 0.3, {
 				top : '-30%',
 				onComplete: function(){

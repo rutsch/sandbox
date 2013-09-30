@@ -462,7 +462,7 @@ var objMap = {
 				//debugger;
 
 				//JT: I introduced a very crappy way to check for a tablet - can this be improved and become app.state.tablet ?
-				if(app.state.width>700){
+				if(app.state.width>768){
 					self.updateui(regionData, idCountry, elRegion);
 				}else{
 					TweenLite.to(self.el.elsvgholder, 0.2, {
