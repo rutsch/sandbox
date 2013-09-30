@@ -47,7 +47,7 @@ var objBookmarks = {
 	},
 	renderfavouritepanel: function(){
 		var self = this;
-		var defaultText = 'Use the heart icon to add your favourite combinations to this bookmark list.';
+		var defaultText = '<div style="padding: 10px">Use the heart icon to add your favourite combinations to this bookmark list.</div>';
 		var arrFavs = self.findfavourites();
 		var ul = document.createElement('ul');
 		for ( var i = 0; i < arrFavs.length; i++) {
