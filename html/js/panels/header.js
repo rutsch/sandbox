@@ -102,6 +102,9 @@ var objHeader = {
 			TweenLite.to(self.el.regionname, 0.3, {
 				opacity : 0,
 				onComplete: function(){
+					if(name !== objMap.state.mapname){
+						name =  objMap.state.mapname + ' &bull; ' + name;
+					}
 					self.el.regionname.innerHTML = name;
 					self.el.regionnamemarquee =  new Marquee("region_name",{
 					    behavior: 'scroll',

@@ -20,7 +20,7 @@ var objMap = {
 		pct /= 100;
 
 		var percentColors = [
-				{ pct: 0.01, color: rgbFromHex(low_color) },
+				{ pct: 0.0000001, color: rgbFromHex(low_color) },
 				{ pct: 0.5, color: rgbFromHex(middle_color) },
 				{ pct: 1.0, color: rgbFromHex(high_color) } 
 			];
