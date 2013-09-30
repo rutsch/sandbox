@@ -5,7 +5,8 @@ var app = {
 		mobile: null,
 		ios: ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false ),
 		ios7: ( navigator.userAgent.match(/OS 7_/g) ? true : false ),
-		ipad: ( navigator.userAgent.match(/(iPad)/g) ? true : false )
+		ipad: ( navigator.userAgent.match(/(iPad)/g) ? true : false ),
+		orientation: ''
 	},
 	el: {
 		
@@ -66,15 +67,28 @@ var app = {
 			}
 		});			
 	},
+	getdimensions: function(){
+		var self=this;
+		self.state.width = document.body.clientWidth;
+		self.state.height = document.documentElement["clientHeight"];
+		if(self.state.width>self.state.height){
+			self.state.orientation='landscape';
+		}else{
+			self.state.orientation='portrait';
+		}			
+	},
 	init: function(){
 		var self = this;
 
 		//load the main content in the wrapper
 		getEl('content_outer_wrapper').innerHTML=serverSideRequest({url: objConfig.urls.base+'/data/body_content.html', method: 'get', debug: false});
 
-		self.state.width = document.body.clientWidth;
-		self.state.height = document.documentElement["clientHeight"];
+		//retrieve the dimensions
+		self.getdimensions();
+
+		//detect mobile/desktop
 		self.state.mobile = self.isMobile.any();
+
 		
 		//init storage
 		objStore.init();
@@ -117,3 +131,11 @@ var app = {
 		});
 	}
 }
+
+window.onresize = function() {
+	//update the width and height variables
+	app.getdimensions();
+
+	//rework the dimensions of the map based on the new dimensions of the window
+	objMap.resizeworldmap();
+};
