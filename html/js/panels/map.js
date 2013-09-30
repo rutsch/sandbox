@@ -20,7 +20,7 @@ var objMap = {
 		pct /= 100;
 
 		var percentColors = [
-				{ pct: 0.01, color: rgbFromHex(low_color) },
+				{ pct: 0.0000001, color: rgbFromHex(low_color) },
 				{ pct: 0.5, color: rgbFromHex(middle_color) },
 				{ pct: 1.0, color: rgbFromHex(high_color) } 
 			];
@@ -198,7 +198,7 @@ var objMap = {
 
 
 							//settings for the coloring
-							var minimumPercentage=1; //anything below this percentage will get the 'low' color
+							var minimumPercentage=15; //anything below this percentage will get the 'low' color
 							var factor=(intLivesImprovedPercentageMax-intLivesImprovedPercentageMin)/(100-minimumPercentage);
 
 							for ( var i = 0; i < arrRegions.length; i++) {
