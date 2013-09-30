@@ -1,7 +1,7 @@
 var objConfig = {
 	urls: {
 		base: 'https://www.livesimproved.philips.com/webapp/html',
-		dev: 'https://nlnehvgdc1vw991.code1.philips.com/webapp/html',
+		dev: 'https://nlnehvgdc1vw991.ssn.philips.com/webapp/html',
 		johan: 'http://10.0.1.5',
 		rutger: 'http://95.97.163.236/sandbox/html',
 		dynamicresourceurl: 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',

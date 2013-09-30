@@ -249,22 +249,25 @@ var objRegionInfo = {
 		objArcProps.targetleftnode=getEl('arc_path_left');	
 		renderInfographic({angle: 0});
 
-		//setup swipe effect on the top panel
-		Hammer(self.el.toppanel).on('drag', function(ev){
-			//console.log('drag top panel');
-			//console.log(ev.gesture.direction +' - ' +ev.gesture.distance)
+		if(app.state.mobile){
+			//setup swipe effect on the top panel
+			Hammer(self.el.toppanel).on('drag', function(ev){
+				//console.log('drag top panel');
+				//console.log(ev.gesture.direction +' - ' +ev.gesture.distance)
 
-			if(ev.gesture.direction=='up' && ev.gesture.distance>10)self.showsimulation(self);
-			if(self.state.panel == 'simulation' && ev.gesture.direction=='down' && ev.gesture.distance>10)self.showcurrent(self);
-		});	
+				if(ev.gesture.direction=='up' && ev.gesture.distance>10)self.showsimulation(self);
+				if(self.state.panel == 'simulation' && ev.gesture.direction=='down' && ev.gesture.distance>10)self.showcurrent(self);
+			});	
 
-		//setup swipe effect on bottom panel
-		Hammer(self.el.bottompanel).on('drag', function(ev){
-			//console.log('drag bottom panel');
-			//console.log(ev.gesture.direction +' - ' +ev.gesture.distance)
+			//setup swipe effect on bottom panel
+			Hammer(self.el.bottompanel).on('drag', function(ev){
+				//console.log('drag bottom panel');
+				//console.log(ev.gesture.direction +' - ' +ev.gesture.distance)
 
-			if(ev.gesture.direction=='down' && ev.gesture.distance>10)self.showcurrent(self);
-		});	
+				if(ev.gesture.direction=='down' && ev.gesture.distance>10)self.showcurrent(self);
+			});				
+		}
+
 
 	}
 }

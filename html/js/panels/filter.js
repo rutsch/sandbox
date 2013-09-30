@@ -62,6 +62,7 @@ var objFilter = {
 	applyfilter: function(){
 		var self = this
 		self.hide();
+
 		self.state.currentfilterhtml = self.el.filtercontent.innerHTML;
 		
 		self.el.btnapply.style.display = 'none';
