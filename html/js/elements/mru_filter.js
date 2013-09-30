@@ -61,7 +61,7 @@ var objMruFilter = {
 			    
 			}
 		}else{
-			name = 'Philips';
+			name = 'Philips Group';
 			arrParents.push(name);
 		}
 		
@@ -87,7 +87,7 @@ var objMruFilter = {
 		ul.id='filter_list';
 		//create Philips li
 		var liPhilips = document.createElement('li');
-		liPhilips.innerHTML = 'Philips';
+		liPhilips.innerHTML = 'Philips Group';
 		liPhilips.id = 'philips';
 		liPhilips.className = 'selected';
 		liPhilips.setAttribute('data-id', 'philips');
