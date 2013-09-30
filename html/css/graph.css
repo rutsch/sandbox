@@ -78,7 +78,7 @@ svg.graph .labels.x-labels {
 
 svg.graph .labels.y-labels {
 	text-anchor: end;
-	font-size: .6em;
+	font-size: .8em;
 }
 svg.graph g.inset .labels.y-labels {
 	text-anchor: start;
