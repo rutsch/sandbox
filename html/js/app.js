@@ -94,7 +94,6 @@ var app = {
 		objLoading.init();
 		objFirstLogin.init();
 
-
 		//change the settings for the zoom/pan based on the device
 		if(self.state.ios){
 			objZoomPanSettings.dragtimerdelay=800;
