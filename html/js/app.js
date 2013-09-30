@@ -108,7 +108,6 @@ var app = {
 		objLoading.init();
 		objFirstLogin.init();
 
-
 		//change the settings for the zoom/pan based on the device
 		if(self.state.ios){
 			objZoomPanSettings.dragtimerdelay=800;
@@ -138,4 +137,6 @@ window.onresize = function() {
 
 	//rework the dimensions of the map based on the new dimensions of the window
 	objMap.resizeworldmap();
+	
+	objRegionInfo.hide();
 };

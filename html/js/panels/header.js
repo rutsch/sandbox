@@ -193,6 +193,6 @@ var objHeader = {
 		self.el.regionname = getEl('region_name');
 		self.el.breadcrumb = getEl('filter_breadcrumb');
 		
-		self.state.showbackbutton = (app.state.width < 700);
+		self.state.showbackbutton = (app.state.width < 768);
 	}
 }
