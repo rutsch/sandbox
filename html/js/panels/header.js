@@ -102,8 +102,24 @@ var objHeader = {
 			TweenLite.to(self.el.regionname, 0.3, {
 				opacity : 0,
 				onComplete: function(){
+					self.el.regionname.innerHTML = name;
+					self.el.regionnamemarquee =  new Marquee("region_name",{
+					    behavior: 'scroll',
+					    direction: 'rtl',
+					    interrupt: 'no',
+					    step: 0.1
+					});					
+					if(self.el.regionname.scrollWidth > self.el.regionname.clientWidth){
+						
+					}else{
+						if(self.el.regionnamemarquee){
+							self.el.regionnamemarquee.pause();
+						}
+					}	
+
 					
-					if(self.el.regionnamemarquee){
+					
+					/*if(self.el.regionnamemarquee){
 						self.el.regionnamemarquee.el.innerHTML = '';
 						self.el.breadcrumb.scrollWidth = 0;
 					}
@@ -116,7 +132,7 @@ var objHeader = {
 						if(self.el.regionnamemarquee){
 							self.el.regionnamemarquee.stop();
 						}
-					}				
+					}		*/		
 					TweenLite.to(self.el.regionname, 0.3, {
 						opacity : 1
 					});	
@@ -130,7 +146,21 @@ var objHeader = {
 		TweenLite.to(self.el.breadcrumb, 0.3, {
 			opacity : 0,
 			onComplete: function(){
-				if(self.el.breadcrumbmarquee){
+				self.el.breadcrumb.innerHTML = value;
+				self.el.breadcrumbmarquee =  new Marquee("filter_breadcrumb",{
+				    behavior: 'scroll',
+				    direction: 'rtl',
+				    interrupt: 'no',
+				    step: 0.1
+				});
+				if(self.el.breadcrumb.scrollWidth > self.el.breadcrumb.clientWidth){
+					
+				}else{
+					if(self.el.breadcrumbmarquee){
+						self.el.breadcrumbmarquee.pause();
+					}
+				}	
+				/*if(self.el.breadcrumbmarquee){
 					//debugger;
 					self.el.breadcrumbmarquee.el.innerHTML = '';
 					self.el.breadcrumb.scrollWidth = 0;
@@ -146,7 +176,7 @@ var objHeader = {
 						self.el.breadcrumbmarquee.stop();
 					}
 					//debugger;
-				}
+				} */
 				TweenLite.to(self.el.breadcrumb, 0.3, {
 					opacity : 1
 				});	

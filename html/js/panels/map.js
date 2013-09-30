@@ -490,7 +490,6 @@ var objMap = {
 
 		//set the percentage in the infographic
 		objRegionInfo.el.percentagelivesimproved.textContent = regionData.percentageLI+'%';
-
 		objHeader.setregionname(objOruFilter.getregionnamebyid((idCountry.length < 4 ? idCountry : idCountry.toLowerCase())));
 		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
 		

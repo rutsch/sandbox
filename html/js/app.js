@@ -20,7 +20,9 @@ var app = {
 		objExplain.show();
 	},
 	btnlogoutclick: function(el){
-		objLogin.logout();
+		objStore.removelocalstorageitem('token');
+		location.reload();
+		//objLogin.logout();
 	},
 	isMobile: {
 		any : function() {

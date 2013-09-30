@@ -10,7 +10,7 @@ var objFilter = {
 	},
 	show: function(){
 		var self = this;
-		self.state.currentfilterhtml = self.el.wrapper.innerHTML;
+		self.state.currentfilterhtml = self.el.filtercontent.innerHTML;
 		objOverlay.show();
 		self.state.tweening = true;
 		self.el.wrapper.style.display = 'block';
@@ -30,11 +30,11 @@ var objFilter = {
 			opacity : 0,
 			onComplete: function(){
 				objOverlay.hide();
-				self.el.wrapper.innerHTML = self.state.currentfilterhtml;
+				self.el.filtercontent.innerHTML = self.state.currentfilterhtml;
 				self.el.wrapper.style.display = 'none';
 				self.state.tweening = false;
 				self.state.visible = false;
-				self.el.btnapply.style.display == 'none';		
+				self.el.btnapply.style.display = 'none';		
 			}
 		});	
 	},
@@ -44,26 +44,29 @@ var objFilter = {
 		TweenLite.to(self.el.filtercontent, 0.2, {
 			opacity : 0.5,
 			onComplete: function(){
+				//debugger;
 				self.el.loader.style.display = 'block';
 				TweenLite.to(self.el.filtercontent, 0.4, {
 					opacity : 1,
 					onComplete: function(){
+						//debugger;
 						self.el.loader.style.display = 'none';
-						if(self.el.btnapply.style.display == 'none'){
+						//if(self.el.btnapply.style.display == 'none'){
 							self.el.btnapply.style.display = 'block';
-						}
+						//}
 					}
 				});	
 			}
 		});				
 	},
 	applyfilter: function(){
-		var self = this;
-		self.state.currentfilterhtml = self.el.wrapper.innerHTML;
+		var self = this
+		self.hide();
+		self.state.currentfilterhtml = self.el.filtercontent.innerHTML;
 		
 		self.el.btnapply.style.display = 'none';
 		objMap.updatemap();
-		self.hide();
+		objRegionInfo.hide();
 	},
 	init: function(){
 		var self = this;
@@ -76,6 +79,6 @@ var objFilter = {
 		self.el.btnapply = getEl('btn_apply_filter');
 		self.el.btnapply.style.display = 'none';
 
-		self.state.currentfilterhtml = self.el.wrapper.innerHTML;
+		self.state.currentfilterhtml = self.el.filtercontent.innerHTML;
 	}
 }

@@ -214,7 +214,6 @@ body{
 	white-space: nowrap;
 }
 #region_name div{
-	padding-right: 40px;
 }
 #filter_breadcrumb_wrapper{
 	display: block;
@@ -399,7 +398,10 @@ span{
 	display: none;
 }
 
-
+#region_name_orig{
+	visibility: hidden!important;
+	height: 0px;
+}
 
 #top_panel{
 	position: absolute;
@@ -1142,7 +1144,7 @@ and (min-width : 768px) {
 		top: -30%;
 	}
 	#show_current, #show_simulation{
-		display: none;
+		display: none!important;
 	}
 	#region_history span{
 	 	color: #000!important;
