@@ -198,7 +198,7 @@ var objMap = {
 
 
 							//settings for the coloring
-							var minimumPercentage=1; //anything below this percentage will get the 'low' color
+							var minimumPercentage=15; //anything below this percentage will get the 'low' color
 							var factor=(intLivesImprovedPercentageMax-intLivesImprovedPercentageMin)/(100-minimumPercentage);
 
 							for ( var i = 0; i < arrRegions.length; i++) {
