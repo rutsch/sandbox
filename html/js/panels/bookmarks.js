@@ -47,6 +47,7 @@ var objBookmarks = {
 	},
 	renderfavouritepanel: function(){
 		var self = this;
+		var defaultText = 'Use the heart icon to add your favourite combinations to this bookmark list.';
 		var arrFavs = self.findfavourites();
 		var ul = document.createElement('ul');
 		for ( var i = 0; i < arrFavs.length; i++) {
@@ -67,7 +68,12 @@ var objBookmarks = {
 			ul.appendChild(liItem);
 		}
 		self.el.list.innerHTML = '';
-		self.el.list.appendChild(ul);		
+		if(arrFavs.length == 0){
+			self.el.list.innerHTML = defaultText;
+		}else{
+			self.el.list.appendChild(ul);	
+		}
+			
 	},
 	openfavourite: function(oru, mru, region, sector){
 		var self = this;
