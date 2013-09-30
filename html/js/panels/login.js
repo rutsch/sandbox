@@ -304,12 +304,7 @@ var objLogin = {
 	logout: function(){
 		var self = this;
 		objStore.removelocalstorageitem('token');
-		objFilter.hide();
-		objExplain.hide();
-		objBookmarks.hide();
-		objOverlay.hide();
-		objLogin.show();
-		objLoading.hide();
+		location.reload();
 	},
 	changeauthenticatebutton: function(){
 		var self = this;
