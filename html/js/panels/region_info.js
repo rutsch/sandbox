@@ -227,6 +227,28 @@ var objRegionInfo = {
 		});		
 
 	},
+	showhistory: function(){
+		var self = this;
+		self.el.history = getEl('graph');
+		TweenLite.to(self.el.history, 0.3, {
+			opacity : 1,
+			onComplete: function(){
+				self.state.tweening = false;
+				self.state.visible = false;				
+			}
+		});
+	},
+	hidehistory: function(){
+		var self = this;
+		self.el.history = getEl('graph');
+		TweenLite.to(self.el.history, 0.3, {
+			opacity : 0,
+			onComplete: function(){
+				self.state.tweening = false;
+				self.state.visible = false;				
+			}
+		});		
+	},
 	init: function(){
 		var self = this;
 		self.state.visible = false;
@@ -235,6 +257,7 @@ var objRegionInfo = {
 		self.el.wrapper = getEl('region_info_wrapper');
 		self.el.toppanel = getEl('top_panel');
 		self.el.bottompanel = getEl('bottom_panel');
+		
 				
 
 		self.el.nrlivesimproved = getEl('nr_lives_improved');

@@ -309,12 +309,17 @@ var objLogin = {
 	logout: function(){
 		var self = this;
 		objStore.removelocalstorageitem('token');
-		objFilter.hide();
+		if((new Date().getTime() /1000) - objStore.getlocalstorageitem('reloadtime') > 10){
+			location.reload();
+			objStore.removelocalstorageitem('reloadtime');
+		}
+		objLogin.show();
+		/*objFilter.hide();
 		objExplain.hide();
 		objBookmarks.hide();
 		objOverlay.hide();
 		objLogin.show();
-		objLoading.hide();
+		objLoading.hide();*/
 	},
 	changeauthenticatebutton: function(){
 		var self = this;

@@ -444,7 +444,7 @@ var objMap = {
 		//initiates the simulator
 		objSliders.start();
 
-
+		objRegionInfo.hidehistory();
 		
 		document.getElementsByTagName("body")[0].className = objMruFilter.state.selectedsector;
 		//var color=colors[objPageVars.current_sector].middle;
@@ -489,7 +489,12 @@ var objMap = {
 		self.setroundeddatainui(regionData);
 
 		//set the percentage in the infographic
-		objRegionInfo.el.percentagelivesimproved.textContent = regionData.percentageLI+'%';
+		if(regionData.percentageLI > 0){
+			objRegionInfo.el.percentagelivesimproved.textContent = regionData.percentageLI+'%';
+		}else{
+			objRegionInfo.el.percentagelivesimproved.textContent = '< 1%';
+		}
+		
 		objHeader.setregionname(objOruFilter.getregionnamebyid((idCountry.length < 4 ? idCountry : idCountry.toLowerCase())));
 		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
 		

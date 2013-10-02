@@ -261,6 +261,7 @@ function psv(type, url, objParams, cb) {
 						}
 						if(!bolAuthenticated){
 							//run the logout routine which will reset the app to it's original state and the show the login screen
+							objStore.setlocalstorageitem('reloadtime', new Date().getTime() / 1000);
 							objLogin.logout();
 						}else{	
 							cb(null, objResponse);
@@ -279,6 +280,7 @@ function psv(type, url, objParams, cb) {
 					}
 					if(!bolAuthenticated){
 						//run the logout routine which will reset the app to it's original state and the show the login screen
+						objStore.setlocalstorageitem('reloadtime', new Date().getTime() / 1000);
 						objLogin.logout();
 					}else{	
 						cb(null, objResponse);

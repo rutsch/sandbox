@@ -497,6 +497,8 @@ var objTrendGraph={
 		//store commonly used elements in global variables for efficient use later
 		self.el.lastsegment=document.getElementById('last_segment');
 		self.el.lastpoint=document.getElementById('last_point');
+		
+		objRegionInfo.showhistory();
 
 	},
 	init: function(){

@@ -21,9 +21,11 @@ var app = {
 		objExplain.show();
 	},
 	btnlogoutclick: function(el){
-		objStore.removelocalstorageitem('token');
-		location.reload();
-		//objLogin.logout();
+		objStore.setlocalstorageitem('reloadtime', new Date().getTime() / 1000);
+		objLogin.logout();
+	},
+	hidetransparentlayer: function(){
+		getEl('transparentlayer').style.display = 'none';
 	},
 	isMobile: {
 		any : function() {
