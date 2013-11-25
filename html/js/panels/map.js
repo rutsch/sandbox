@@ -213,9 +213,8 @@ var objMap = {
 								if (regionData) {
 									//calculate percentage lives improved and store that in the worldmapdata object
 									var percentageLI = (regionData.l * 100) / regionData.p || 0;
-									if(percentageLI> 99)percentageLI=100;
-									if(percentageLI< 1)percentageLI=0;
-									self.data[key].percentageLI = Math.round(percentageLI);
+
+									self.data[key].percentageLI = percentageLI;
 									
 
 									//add colors to the map
@@ -489,11 +488,13 @@ var objMap = {
 		self.setroundeddatainui(regionData);
 
 		//set the percentage in the infographic
-		if(regionData.percentageLI > 0){
-			objRegionInfo.el.percentagelivesimproved.textContent = regionData.percentageLI+'%';
-		}else{
-			objRegionInfo.el.percentagelivesimproved.textContent = '< 1%';
-		}
+		if(regionData.percentageLI> 100)regionData.percentageLI=100;
+		if(regionData.percentageLI>=10 && regionData.percentageLI<100)regionData.percentageLI=Math.round(regionData.percentageLI);
+		if(regionData.percentageLI<10 && regionData.percentageLI> 0.1)regionData.percentageLI=Math.round(regionData.percentageLI * 10) /10;
+		if(regionData.percentageLI<0.1)regionData.percentageLI='< 0.1';
+		
+		objRegionInfo.el.percentagelivesimproved.textContent = regionData.percentageLI+'%';
+		
 		
 		objHeader.setregionname(objOruFilter.getregionnamebyid((idCountry.length < 4 ? idCountry : idCountry.toLowerCase())));
 		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
