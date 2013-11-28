@@ -21,7 +21,15 @@ var objFilter = {
 				self.state.tweening = false;
 				self.state.visible = true;
 			}
-		});		
+		});	
+		
+		var seenPanelBefore = objStore.getlocalstorageitem('seenFilterIntro');
+		if(seenPanelBefore){
+			
+		}else{
+			objPanelInfo.show('filter');
+			objStore.setlocalstorageitem('seenFilterIntro', 'true');	
+		}		
 	},
 	hide: function(){
 		var self = this;

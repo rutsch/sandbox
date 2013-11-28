@@ -271,6 +271,7 @@ function psv(type, url, objParams, cb) {
 					}
 				}else{
 					//reccommended for develop & debug
+					console.log(xmlhttp.responseText);
 					var objResponse=JSON.parse(xmlhttp.responseText);
 					
 					//test if we have lost the session and need to login again

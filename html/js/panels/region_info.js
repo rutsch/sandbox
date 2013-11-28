@@ -77,6 +77,14 @@ var objRegionInfo = {
 				}
 			});				
 		}
+		
+		var seenPanelBefore = objStore.getlocalstorageitem('seenRegionInfoIntro');
+		if(seenPanelBefore){
+			
+		}else{
+			objPanelInfo.show('region_info');
+			objStore.setlocalstorageitem('seenRegionInfoIntro', 'true');	
+		}		
 	},	
 	hide: function(){
 		var self = this;

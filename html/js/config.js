@@ -54,7 +54,7 @@ var objConfig = {
 			'/js/panels/explain.js',
 			'/js/panels/graph.js',
 			'/js/panels/loading.js',
-			'/js/panels/first_login.js',
+			'/js/panels/panel_info.js',
 			'/js/elements/mru_filter.js',
 			'/js/elements/oru_filter.js',
 			'/js/app.js'
@@ -160,7 +160,7 @@ var objConfig = {
 			typeof objTrendGraph != 'undefined' &&
 			typeof objExplain != 'undefined' &&
 			typeof objLoading != 'undefined' &&
-			typeof objFirstLogin != 'undefined' &&
+			typeof objPanelInfo != 'undefined' &&
 			typeof objMruFilter != 'undefined' &&
 			typeof objOruFilter != 'undefined'
 		){

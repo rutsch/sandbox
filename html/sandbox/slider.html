@@ -2,8 +2,7 @@
 <!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 20001102//EN'
   'http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd'>
 <svg xmlns='http://www.w3.org/2000/svg'
-   width="600"
-   height="50"
+ width="100%" height="100%" viewbox="0 0 640 300" preserveAspectRatio="xMidYMid meet"
    id="slider"
    version="1.1"
    onload="init(evt)"
@@ -27,6 +26,7 @@
       var grabX   // mousedown coordinate
       var monitor // text reading 0-100
       var x       // the slider's dynamic coordinate
+      var scalingPercentage
    
       var T_PI=2*Math.PI;
      
@@ -40,12 +40,14 @@
 
      // set dimensions according to the sliderFrame node below
 
-         var sliderFrame= SVGDocument.getElementById('sliderFrame')
+         var sliderFrame= SVGDocument.getElementById('sliderFrame');
+         scalingPercentage = ((sliderFrame.getBoundingClientRect().width * 100) / sliderFrame.getAttribute('width'));
+         console.log(scalingPercentage); 
 
      //  y0 is the center of the slider, s is the range about the center
 
-         s=0.5*parseFloat(sliderFrame.getAttribute('width'));
-         x0=parseFloat(sliderFrame.getAttribute('x'))+s-0.5*parseFloat(handle.getAttribute('width'));
+         s=0.5*parseFloat(sliderFrame.getBBox().width);
+         x0=parseFloat(sliderFrame.getBBox().x)+s-0.5*parseFloat(handle.getBBox().width);
          x=x0
        
          handle.setAttribute("x",x0);
@@ -55,19 +57,18 @@
 
       function grip(evt) {  
 	        isGripped=true;
-            grabX=evt.clientX-x;
+            grabX=(evt.clientX)-x;
       }
 
 
       function drag(evt){
-       
+       	
             if (!isGripped) return;
-            X=(evt.clientX);
+            X=evt.clientX;
+            
    
-       // observe bounding box constraint
-   			debugger;
            x=Math.min(Math.max(X-grabX,x0-s),x0+s);       
-    
+    		console.log(evt.clientX + ' = ' + x + ' = ' + (x*100)/scalingPercentage);	
            handle.setAttribute("x",x);
            monitor.textContent=Math.round(50*(1-(x-x0)/s));
       }

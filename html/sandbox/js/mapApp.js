@@ -446,7 +446,7 @@ ViewBox.prototype.init = function(svgNode) {
 *
 *****/
 ViewBox.prototype.getTM = function() {
-    var svgRoot      = document.documentElement;
+    var svgRoot      = document.getElementById('slider').documentElement;
     var matrix       = document.documentElement.createSVGMatrix();
 		//case width/height contains percent
     this.windowWidth = svgRoot.getAttributeNS(null,"width");

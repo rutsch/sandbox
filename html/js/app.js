@@ -59,12 +59,12 @@ var app = {
 				objMap.updatemap();		
 				//TODO: add logic to show bookmarks, filter or messages
 				//objFilter.show();
-				var usedAppBefore = objStore.getlocalstorageitem('usedAppBefore');
+				var usedAppBefore = objStore.getlocalstorageitem('seenAppIntro');
 				if(usedAppBefore){
 					objLogin.showupdatemessages();	
 				}else{
-					objFirstLogin.show();
-							
+					objPanelInfo.show('app');
+					objStore.setlocalstorageitem('seenAppIntro', 'true');	
 				}
 			}
 		});			
@@ -108,7 +108,7 @@ var app = {
 		objExplain.init();
 		objTrendGraph.init();
 		objLoading.init();
-		objFirstLogin.init();
+		objPanelInfo.init();
 
 		//change the settings for the zoom/pan based on the device
 		if(self.state.ios){

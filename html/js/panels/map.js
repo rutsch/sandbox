@@ -173,6 +173,7 @@ var objMap = {
 							2) retrieve the elements from the svg that we need to color
 							*/
 							var elSvgWrapper=getEl('svgcontentwrapper');
+							console.log(elSvgWrapper);
 							var arrRegions = getFirstLevelChildElements(elSvgWrapper, 'path') ;
 							if(arrRegions.length == 0) arrRegions = getFirstLevelChildElements(elSvgWrapper, 'g')
 							//console.log(arrRegions);
