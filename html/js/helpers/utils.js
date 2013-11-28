@@ -121,7 +121,7 @@ function getParamStringFromObject(objParams){
 	var params = []; 
 
 	for (var param in objParams) {
-		params.push(param + '=' + objParams[param]);
+		params.push(param + '=' + encodeURIComponent(objParams[param]));
 	}        
 	return params.join('&');
 
