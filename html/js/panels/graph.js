@@ -73,7 +73,7 @@ var objTrendGraph={
 		var intXRangePixels=self.props.width-self.props.padding.left-self.props.padding.right-self.props.axis.xpaddingleft-self.props.axis.xpaddingright;
 		var intXRangeValues=self.vars.data.points.length-1;
 
-		console.log(intArrayPosition);
+		//console.log(intArrayPosition);
 
 		//corrent the value if a string with "comma" notation is passed
 		if(isNaN(intPointValue))intPointValue=parseFloat((intPointValue+'').replace(/,/,''));

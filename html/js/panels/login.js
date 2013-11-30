@@ -175,7 +175,7 @@ var objLogin = {
 
 			var pw = self.el.tbxpassword.value,
 				un = self.el.tbxusername.value;
-			console.log(pw);
+			//console.log(pw);
 			//d1mPL3&*221089 - d1mPL3
 
 			self.changeauthenticatebutton();
@@ -397,7 +397,9 @@ var objLogin = {
 		self.el.submit = getEl('btn_submit');
 		self.el.messagespanel = getEl('messages_panel');
 
-		self.el.tbxusername.value = objStore.getlocalstorageitem('username');
+		var username = objStore.getlocalstorageitem('username');
+
+		self.el.tbxusername.value = username == null ? "" : username;
 
 		self.token = objStore.getlocalstorageitem('token');
 	}

@@ -54,7 +54,7 @@ var objExplain = {
 		var self = this;
 		//close open faq
 		var arrAllLi = Sizzle('#explain_content div.selected');// self.el.content.getElementsByTagName('div');
-		console.log(arrAllLi.length);
+		//console.log(arrAllLi.length);
 		for ( var a = 0; a < arrAllLi.length; a++) {
 			arrAllLi[a].className = arrAllLi[a].className.replace(' selected', '');
 		}		

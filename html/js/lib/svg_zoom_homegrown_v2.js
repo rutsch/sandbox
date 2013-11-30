@@ -174,7 +174,7 @@ function setupHandlers(){
 	//setup event handlers
 	if(objZoomPanSettings.mobile){
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
-			if(window.console) { console.log('setting up for mobile'); }
+			//if(window.console) { console.log('setting up for mobile'); }
 		}
 
 		//finetune hammer object
@@ -199,7 +199,7 @@ function setupHandlers(){
 		setupHandlersMobile();
 	}else{
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
-			if(window.console) { console.log('setting up for desktop'); }
+			//if(window.console) { console.log('setting up for desktop'); }
 		}
 		setupHandlersDesktop();
 	}
@@ -218,7 +218,7 @@ function setupHandlersDesktop(){
 		//"onmouseout" : "handleClickTouchEnd(evt)", // Decomment this to stop the pan functionality when dragging out of the SVG element
 	});
 	//be aware that the events below are attached to the window - not to the svg or holder div
-	if(navigator.userAgent.toLowerCase().indexOf('webkit') >= 0){
+	if(navigator.userAgent.toLowerCase().indexOf('firefox') == -1){
 		window.addEventListener('mousewheel', handleZoomDesktop, false); // Chrome/Safari
 	}else{
 		window.addEventListener('DOMMouseScroll', handleZoomDesktop, false); // Others
@@ -266,7 +266,7 @@ function setupHandlersMobile(){
 			//start the sampling
 			if(!objTouchVars.sampling){
 				if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
-					console.log('!!! start the drag sampling process !!!');
+					//console.log('!!! start the drag sampling process !!!');
 				}
 				objTouchVars.sampling=true;
 				objTouchVars.timer4=setTimeout(function(){
@@ -304,7 +304,7 @@ function setupHandlersMobile(){
 	app.el.hammersvg.on("pinch", function(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			if(window.console) { console.log(ev); }
-			console.log('pinch');
+			//console.log('pinch');
 		}
 
 		objTouchVars.eventcount++;
@@ -322,7 +322,7 @@ function setupHandlersMobile(){
 			//start the sampling
 			if(!objTouchVars.sampling){
 				if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
-					console.log('!!! start the pinch sampling process !!!');
+					//console.log('!!! start the pinch sampling process !!!');
 				}
 				objTouchVars.sampling=true;
 				objTouchVars.timer4=setTimeout(function(){
@@ -379,7 +379,7 @@ function setupHandlersMobile(){
 	app.el.hammersvg.on("release", function(ev) {
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
-			console.log('release');
+			//console.log('release');
 		}
 
 		objTouchVars.eventcount++;
@@ -398,7 +398,7 @@ function removeHandlers(cb){
 		app.el.hammersvg.off("pinch")
 		app.el.hammersvg.off("release")
 	}else{
-		if(navigator.userAgent.toLowerCase().indexOf('webkit') >= 0){
+		if (navigator.userAgent.toLowerCase().indexOf('firefox') == -1) {
 			window.removeEventListener('mousewheel', handleZoomDesktop, false); // Chrome/Safari
 		}else{
 			window.removeEventListener('DOMMouseScroll', handleZoomDesktop, false); // Others
@@ -440,7 +440,7 @@ function getEventPoint(evt) {
 function handleClick(ev){
 	if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 		if(window.console){
-			console.log('in handleClick');
+			//console.log('in handleClick');
 		}
 
 	}
@@ -512,7 +512,7 @@ function shouldStillZoom(){
 	if(objTouchSettings.testzoom){
 		if(objTouchVars.eventcount%10==0){
 			//test for the zoom settings
-			console.log('in test')
+			//console.log('in test')
 
 			objTouchVars.realzoom=parseFloat(objTouchVars.elanimate.getAttributeNS(null, 'transform').replace(/^matrix\((.*?)(,|\s).*$/, '$1'));
 			//console.log(intZoomLevel)
@@ -576,7 +576,7 @@ function handleZoomMobile(ev){
 		var intZoomDelta=1-(objTouchVars.pinchscale-ev.gesture.scale);
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			if(window.console) {
-				console.log(intZoomDelta);
+				//console.log(intZoomDelta);
 			}
 		}
 
@@ -612,7 +612,7 @@ function handleZoomMobile(ev){
 }
 
 
-function handleZoomDesktop(evt){
+function handleZoomDesktop(evt) {
 	if(!objZoomPanSettings.zoom)return;
 
 	objTouchVars.eventcount++;
@@ -705,22 +705,22 @@ function handleDrag(evt) {
 				//console.log((objTouchVars.svgsize.width-objTouchVars.svgsize.x))
 				if((objTouchVars.svgsize.width-objTouchVars.svgsize.x)>((objTouchVars.svgsize.width*2)-100)){
 				//if((objTouchVars.svgsize.x/2)>(objTouchVars.svgsize.width)){
-					console.log('left max')
+					//console.log('left max')
 					bolXmax=true;
 				}else if(objTouchVars.svgsize.x>app.state.width){
-					console.log('right max')
+					//console.log('right max')
 					bolXmax=true;
 				}
 
 				if((objTouchVars.svgsize.height-objTouchVars.svgsize.y)>(objTouchVars.svgsize.height*2)){
-					console.log('top max')
+					//console.log('top max')
 					bolYmax=true;
 				}else if(objTouchVars.svgsize.y>app.state.height){
-					console.log('bottom max')
+					//console.log('bottom max')
 					bolYmax=true;
 				}
 
-				console.log(objTouchVars.svgsize);
+				//console.log(objTouchVars.svgsize);
 
 				
 
@@ -869,7 +869,7 @@ function startDragSampling(){
 
 function startPinchSampling(){
 	if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
-		if(window.console) { console.log('in startPinchSampling()'); }
+		//if(window.console) { console.log('in startPinchSampling()'); }
 	}
 
 	handleZoomMobile({

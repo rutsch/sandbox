@@ -19,8 +19,8 @@ function findPos(obj) {
 }
 
 function logAction(event, elThis, strType) {
-	console.log(strType);
-	console.log(event);
+	//console.log(strType);
+	//console.log(event);
 }
 function lon2x(lon) {
 	var xfactor = 2.752;
@@ -271,7 +271,7 @@ function psv(type, url, objParams, cb) {
 					}
 				}else{
 					//reccommended for develop & debug
-					console.log(xmlhttp.responseText);
+					//console.log(xmlhttp.responseText);
 					var objResponse=JSON.parse(xmlhttp.responseText);
 					
 					//test if we have lost the session and need to login again

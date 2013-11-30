@@ -630,6 +630,25 @@ span{
   	-ms-user-select: none;      
   	user-select: none;	
 }
+#simulation_wrapper h1
+{
+	margin: 12px 0 0 0;
+	lin-height: 30px;
+	font-size: 28px;
+
+}
+body.PD0100 .slider_value, body.PD0100 #simulation_wrapper h1{
+	color: #7dba00;
+}
+body.PD0200 .slider_value, body.PD0200 #simulation_wrapper h1 {
+	color: #68049c;
+}
+body.PD0900 .slider_value, body.PD0900 #simulation_wrapper h1 {
+	color: #2badb5;
+}
+body.philips .slider_value, body.philips #simulation_wrapper h1 {
+	color: #0b5ed7;
+}
 #simulation_wrapper h3{
 	height: 20%;
 }
@@ -1303,11 +1322,17 @@ and (min-width : 768px) {
 	 	color: #000!important;
 	}
 	.modal{
-		margin: auto auto;
+		margin-left: -200px;
+		left: 50%!important;
 		height: 95%;
 		padding-bottom: 10px;
 		margin-top: 10px;
 		max-width: 400px!important;	
+	}
+	.modal.fullscreen
+	{
+		left: 0%!important;
+		margin-left: 0px;
 	}
 	#btn_wrapper{
 		max-width: 400px;
@@ -1866,6 +1891,13 @@ span{
 	-webkit-user-select: none; 
  	-webkit-touch-callout: none; 
 }
+#simulation_wrapper h1
+{
+	margin: 12px 0 0 0;
+	lin-height: 30px;
+	font-size: 28px;
+
+}
 #simulation_wrapper h3{
 	height: 20%;
 }
@@ -2256,16 +2288,16 @@ input[type='range'] {
     z-index: 10000;
 }
 
-body.PD0100 .slider_value{
+body.PD0100 .slider_value, body.PD0100 #simulation_wrapper h1{
 	color: #7dba00;
 }
-body.PD0200 .slider_value {
+body.PD0200 .slider_value, body.PD0200 #simulation_wrapper h1 {
 	color: #68049c;
 }
-body.PD0900 .slider_value {
+body.PD0900 .slider_value, body.PD0900 #simulation_wrapper h1 {
 	color: #2badb5;
 }
-body.philips .slider_value {
+body.philips .slider_value, body.philips #simulation_wrapper h1 {
 	color: #0b5ed7;
 }
 
@@ -2479,7 +2511,13 @@ and (min-width : 768px) {
 		top: 0%;
 		margin-top: 0%;
 	}
-
+	#simulation_wrapper h1
+	{
+		margin: 12px 0 0 0;
+		lin-height: 30px;
+		font-size: 28px;
+		color: #2badb5;
+	}
 	.data_wrapper{
 		width: 25%;
 		left: 25%;
@@ -2528,7 +2566,18 @@ and (min-width : 768px) {
 	#login_panel{
 		background-position: bottom;
 	}	
-
+body.PD0100 .slider_value, body.PD0100 #simulation_wrapper h1{
+	color: #7dba00;
+}
+body.PD0200 .slider_value, body.PD0200 #simulation_wrapper h1 {
+	color: #68049c;
+}
+body.PD0900 .slider_value, body.PD0900 #simulation_wrapper h1 {
+	color: #2badb5;
+}
+body.philips .slider_value, body.philips #simulation_wrapper h1 {
+	color: #0b5ed7;
+}
 }
 
 /* Large screens ----------- */
