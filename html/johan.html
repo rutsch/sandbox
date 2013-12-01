@@ -1,43 +1,48 @@
 <!DOCTYPE html>
 <!--[if IEMobile 7 ]>    <html class="no-js iem7"> <![endif]-->
 <!--[if (gt IEMobile 7)|!(IEMobile)]><!--> <html class="no-js"> <!--<![endif]-->
-	<head>
-		<meta charset="utf-8">
-		<title></title>
-		<meta name="description" content="">
-		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 
-		<!-- the fixed resources -->
-		<!-- Config (contains the definitions and the css and js sources to load dynamically) -->
-		<script type="text/javascript" src="js/config.js">//</script>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;URL=https://www.livesimproved.philips.com/pages/info/browser_not_supported.aspx">
+    <![endif]-->
 
-		<!-- Libs -->
-		<script type="text/javascript" src="js/lib/async.js">//</script>
-		<script type="text/javascript" src="js/lib/svg_zoom_homegrown_v2.js">//</script>
-		<script type="text/javascript" src="js/lib/CSSPlugin.min.js">//</script>
-		<script type="text/javascript" src="js/lib/EasePack.min.js">//</script>
-		<script type="text/javascript" src="js/lib/TweenLite.js">//</script>
-		<script type="text/javascript" src="js/lib/hammer.js">//</script>
-		<script type="text/javascript" src="js/lib/sizzle.min.js">//</script>
-		<script type="text/javascript" src="js/lib/marquee.js">//</script>
+    <!-- the fixed resources -->
+    <!-- Config (contains the definitions and the css and js sources to load dynamically) -->
+    <script type="text/javascript" src="js/config.js">//</script>
 
-	</head>
-	<body>
-		<script type="text/javascript">
-			//load the css files
-			for(var i=0; i<objConfig.resources.css.length; i++){
-				objConfig.loadremotefile(objConfig.resources.css[i])
-			}
+    <!-- Libs -->
+    <script type="text/javascript" src="js/lib/async.js">//</script>
+    <script type="text/javascript" src="js/lib/svg_zoom_homegrown_v2.js">//</script>
+    <script type="text/javascript" src="js/lib/CSSPlugin.min.js">//</script>
+    <script type="text/javascript" src="js/lib/EasePack.min.js">//</script>
+    <script type="text/javascript" src="js/lib/TweenLite.js">//</script>
+    <script type="text/javascript" src="js/lib/hammer.js">//</script>
+    <script type="text/javascript" src="js/lib/sizzle.min.js">//</script>
+    <script type="text/javascript" src="js/lib/marquee.js">//</script>
 
-			//load the js files
-			for(var i=0; i<objConfig.resources.js.length; i++){
-				objConfig.loadremotefile(objConfig.resources.js[i])
-			}
-		</script>
-		<div id="content_outer_wrapper">.</div>
-		<script type="text/javascript">
-			//attempt to start the application logic
-			objConfig.startapplication();
-		</script>
-	</body>
+</head>
+<body>
+<script type="text/javascript">
+    //load the css files
+    for(var i=0; i<objConfig.resources.css.length; i++){
+        objConfig.loadremotefile(objConfig.resources.css[i])
+    }
+
+    //load the js files
+    for(var i=0; i<objConfig.resources.js.length; i++){
+        objConfig.loadremotefile(objConfig.resources.js[i])
+    }
+</script>
+<div id="content_outer_wrapper">.</div>
+<script type="text/javascript">
+    //attempt to start the application logic
+    objConfig.startapplication();
+</script>
+</body>
 </html>
