@@ -454,6 +454,8 @@ var objMap = {
 		back = {},
 		key = objMruFilter.state.selectedmru + '_' + (idCountry.length < 4 ? idCountry : idCountry.toLowerCase()),
 		regionData = self.data[key];
+
+
 		var elRegion = getEl(idCountry);
 		var opacity = elRegion.style.opacity;
 		TweenLite.to(elRegion, 0.5, {

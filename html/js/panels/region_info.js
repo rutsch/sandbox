@@ -35,7 +35,7 @@ var objRegionInfo = {
 				top: '0%',
 				onComplete: function () {
 					self.state.tweening = false;
-					self.state.visible = false;
+					self.state.visible = true;
 				}
 			});
 		} else {
@@ -72,7 +72,7 @@ var objRegionInfo = {
 				bottom: '-35%',
 				onComplete: function () {
 					self.state.tweening = false;
-					self.state.visible = false;
+					self.state.visible = true;
 
 				}
 			});
@@ -98,7 +98,7 @@ var objRegionInfo = {
 					onComplete: function () {
 						//debugger;
 						self.state.tweening = false;
-						self.state.visible = true;
+						self.state.visible = false;
 
 					}
 				});
@@ -136,7 +136,7 @@ var objRegionInfo = {
 					onComplete: function () {
 						//debugger;
 						self.state.tweening = false;
-						self.state.visible = true;
+						self.state.visible = false;
 						self.el.btnshowsimulation.style.display = 'none';
 					}
 				});
@@ -145,7 +145,7 @@ var objRegionInfo = {
 					onComplete: function () {
 						//debugger;
 						self.state.tweening = false;
-						self.state.visible = true;
+						self.state.visible = false;
 						self.el.btnshowcurrent.style.display = 'none';
 					}
 				});
@@ -191,7 +191,7 @@ var objRegionInfo = {
 			bottom: '0%',
 			onComplete: function () {
 				self.state.tweening = false;
-				self.state.visible = false;
+				self.state.visible = true;
 			}
 		});
 	},
@@ -214,7 +214,7 @@ var objRegionInfo = {
 			bottom: '-35%',
 			onComplete: function () {
 				self.state.tweening = false;
-				self.state.visible = false;
+				self.state.visible = true;
 			}
 		});
 		TweenLite.to(self.el.btnshowsimulation, 0.3, {
@@ -245,7 +245,7 @@ var objRegionInfo = {
 			opacity: 1,
 			onComplete: function () {
 				self.state.tweening = false;
-				self.state.visible = false;
+				self.state.visible = true;
 			}
 		});
 	},
@@ -256,7 +256,7 @@ var objRegionInfo = {
 			opacity: 0,
 			onComplete: function () {
 				self.state.tweening = false;
-				self.state.visible = false;
+				self.state.visible = true;
 			}
 		});
 	},

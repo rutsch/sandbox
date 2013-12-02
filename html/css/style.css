@@ -102,7 +102,7 @@ body{
 .panel.modal.fullscreen .modal_content{
 	max-width: 400px;
 	left: 50%;
-	margin-left: -200px;
+	margin-left: -50%;
 	top: 0px!important;
 }
 .btn{
@@ -213,7 +213,7 @@ body{
 #current_filter{
 	top: 50px;
 	left: 50%;
-	margin-left: -50px;
+	margin-left: -10%;
 }
 #drag_drop{
 	top: 35%;
@@ -237,7 +237,7 @@ body{
 }
 #leave_app{
 	bottom: 60px;
-	right: 0%;		
+	left: 75%;		
 }
 
 
@@ -623,8 +623,8 @@ span{
 #simulation_wrapper{
 	position: relative;
 	margin: auto 7%;
-	top: 50%;
-	margin-top: -25%;
+	bottom: 0%;
+	
 	-webkit-user-select: none; 
 	-moz-user-select: none;    
   	-ms-user-select: none;      
@@ -634,7 +634,7 @@ span{
 {
 	margin: 12px 0 0 0;
 	lin-height: 30px;
-	font-size: 28px;
+	font-size: 20px;
 
 }
 body.PD0100 .slider_value, body.PD0100 #simulation_wrapper h1{
@@ -1105,7 +1105,10 @@ input#slidersales, input#slidergreensales{
 }
 .range_indicator .zero{
 	position: absolute;
-	left: 41%;	
+	left: 41%;
+	z-index: 200;
+	background-color: #F4F4F4;
+	padding: 0px 5px 3px 5px;
 }
 .range_indicator .max{
 	position: absolute;
@@ -1244,15 +1247,15 @@ and (min-width : 768px) {
 /* Styles */
 	#current_status {
 		left: 10px;
-		top: 250px;
+		top: 30%;
 	}
 	#trend_line{
 		left:33%;
-		top: 250px;	
+		top: 30%;	
 	}
 	#year_end{
 		left:66%;
-		top: 250px;	
+		top: 30%;	
 		bottom: auto;
 	}
 	#save_favourite{
@@ -1273,6 +1276,10 @@ and (min-width : 768px) {
 		bottom: 0px;
 		height: 100%!important;
 	}
+	.app .modal_content, .filter .modal_content
+	{
+		margin-left: -200px!important;
+	}
 	#region_info{
 		height: 100%;
 		width: 33%;
@@ -1287,9 +1294,11 @@ and (min-width : 768px) {
 		height: 100%;
 		border-bottom: 1px solid #ececec;
 	}
-	#simulation_wrapper{
-		position: relative;
-		top: 0%;
+	#simulation_wrapper
+	{
+		width: 90%;
+		position: absolute;
+		bottom: 0%;
 		margin-top: 0%;
 	}
 
