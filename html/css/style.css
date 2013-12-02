@@ -1896,15 +1896,15 @@ span{
 	position: relative;
 	margin: auto 7%;
 	top: 50%;
-	margin-top: -25%;
+	margin-top: -35%;
 	-webkit-user-select: none; 
  	-webkit-touch-callout: none; 
 }
 #simulation_wrapper h1
 {
 	margin: 12px 0 0 0;
-	lin-height: 30px;
-	font-size: 28px;
+	line-height: 30px;
+	font-size: 20px;
 
 }
 #simulation_wrapper h3{
