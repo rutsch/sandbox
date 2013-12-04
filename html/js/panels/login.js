@@ -235,6 +235,7 @@ var objLogin = {
 	},
 	authenticate: function (token) {
 		var self = this;
+		if (self.el.tbxusername.value.toLowerCase().indexOf('code1/') > -1) self.el.tbxusername.value = self.el.tbxusername.value.replace('code1/', 'code1\\');
 		if (self.el.tbxusername.value.toLowerCase().indexOf('code1\\') == -1) self.el.tbxusername.value = 'code1\\' + self.el.tbxusername.value;
 		var objDataAuthenticate = {
 			username: self.el.tbxusername.value,
