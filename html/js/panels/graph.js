@@ -132,19 +132,23 @@ var objTrendGraph={
 	},
 	updatelastpointingraph: function(intNewValue){
 	 	var self=this;
-		var objCoords=self.getsvgcoordinatesforpoint(intNewValue, self.vars.data.points.length);
+		//console.trace();
+		//debugger;
+		if(self.vars.data!=null){
+			var objCoords=self.getsvgcoordinatesforpoint(intNewValue, self.vars.data.points.length);
 
-		//update the line
-		self.el.lastsegment.setAttributeNS(null,'x2',objCoords.x);
-		self.el.lastsegment.setAttributeNS(null,'y2',objCoords.y);
+			//update the line
+			self.el.lastsegment.setAttributeNS(null,'x2',objCoords.x);
+			self.el.lastsegment.setAttributeNS(null,'y2',objCoords.y);
 
-		//update the point
-		self.el.lastpoint.setAttributeNS(null,'cx',objCoords.x);
-		self.el.lastpoint.setAttributeNS(null,'cy',objCoords.y);
-		self.el.lastpoint.setAttributeNS(null,'data-value',intNewValue);
+			//update the point
+			self.el.lastpoint.setAttributeNS(null,'cx',objCoords.x);
+			self.el.lastpoint.setAttributeNS(null,'cy',objCoords.y);
+			self.el.lastpoint.setAttributeNS(null,'data-value',intNewValue);
 
-		//position the trend popup
-		self.positiontrendpopupandsetvalue(objCoords, intNewValue)
+			//position the trend popup
+			self.positiontrendpopupandsetvalue(objCoords, intNewValue)
+		}
 	},
 	positiontrendpopupandsetvalue: function(objCoords, intValue){
 	 	var self=this;
@@ -164,8 +168,11 @@ var objTrendGraph={
 		//align the popup
 		//var intCorrection=((self.state.trendpopupflipped)?-10:10);
 		var strTranslateValue=self.el.popuptrend.getAttributeNS(null, 'transform').replace(/^.*\)\s+(.*)$/, '$1');
-		self.el.popuptrend.setAttributeNS(null,'transform','translate('+(objCoords.x-self.vars.popuptrendwidth+18)+', '+(objCoords.y+((self.state.trendpopupflipped)?-10:10))+') '+strTranslateValue);
-
+		if(app.state.ie){
+			self.el.popuptrend.setAttributeNS(null,'transform','translate('+(objCoords.x-self.vars.popuptrendwidth+18)+', '+(objCoords.y+((self.state.trendpopupflipped)?-10:10))+') ');
+		}else{
+			self.el.popuptrend.setAttributeNS(null,'transform','translate('+(objCoords.x-self.vars.popuptrendwidth+18)+', '+(objCoords.y+((self.state.trendpopupflipped)?-10:10))+') '+strTranslateValue);
+		}
 		//set the content in the popup
 		self.el.popuptrendnumber.textContent=self.correctlabeldecimals((intValue+''), (self.props.axis.ymax+''));
 	},
@@ -243,7 +250,7 @@ var objTrendGraph={
 	},
 	drawgraph: function(objData){
 		var self=this;
-
+		//debugger;
 		//store the data object for later reference
 		self.vars.data=objData;
 

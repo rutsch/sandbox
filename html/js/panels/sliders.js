@@ -198,7 +198,7 @@ var objSliders = {
 		if (objRegionInfo.el.wrapper != null) objRegionInfo.el.wrapper.className = '';
 
 		self.vars.slidersalesvalue = 0;
-		self.vars.slidergreensalesvalue = 0;
+
 
 
 		//store the current lives improved number
@@ -207,6 +207,7 @@ var objSliders = {
 		self.vars.livesimprovedcurrent = intPopulation;
 
 		//store the gsp and determine max and min for gsp slider
+
 		self.vars.gsp = Math.round(objMap.data[strKey].gsp * 100);
 		self.vars.gspslidermin = (self.vars.gsp - (-self.vars.data.scenario.greensalesmin) < 0) ? 0 : self.vars.gsp - (-self.vars.data.scenario.greensalesmin);
 		self.vars.gspslidermax = (self.vars.gsp + self.vars.data.scenario.greensalesmax > 100) ? 100 : self.vars.gsp + self.vars.data.scenario.greensalesmax;
@@ -214,9 +215,9 @@ var objSliders = {
 		self.vars.data.scenario.greensalesmax = self.vars.gsp + self.vars.data.scenario.greensalesmax > 100 ? 100 - self.vars.gsp : self.vars.data.scenario.greensalesmax;
 
 		self.el.slidergreensaleslabel.innerHTML = self.vars.gsp + '%';
-
+		self.vars.slidergreensalesvalue = self.vars.gsp;
 		//set gsp value
-		//self.el.slidergreensales.value = self.vars.gsp;
+		self.el.slidergreensales.value = 0;
 		//set the values min/max for the slider labels
 		//console.log(self.el.salesmin);
 		self.el.salesmin.innerHTML = self.vars.data.scenario.salesmin;
@@ -227,13 +228,15 @@ var objSliders = {
 		//set the min and max values on the input nodes
 		self.el.slidersales.setAttribute('min', self.vars.data.scenario.salesmin);
 		self.el.slidersales.setAttribute('max', self.vars.data.scenario.salesmax);
-		self.el.slidergreensales.setAttribute('min', self.vars.data.scenario.greensalesmin);
-		self.el.slidergreensales.setAttribute('max', self.vars.data.scenario.greensalesmax);
+		//debugger;
+		self.el.slidergreensales.setAttribute('min', self.vars.gspslidermin - self.vars.gsp);
+		self.el.slidergreensales.setAttribute('max', self.vars.gspslidermax - self.vars.gsp);
 
 		//position the "0" label
 		//self.vars.data.scenario.salesmin=-30;
-		var intLeftSales = (-self.vars.data.scenario.salesmin) / (-self.vars.data.scenario.salesmin + self.vars.data.scenario.salesmax) * 100 - 2;
-		var intLeftGreensales = (-self.vars.data.scenario.greensalesmin) / (-self.vars.data.scenario.greensalesmin + self.vars.data.scenario.greensalesmax) * 100 - 3;
+		var intLeftSales = (Math.abs(self.vars.data.scenario.salesmin)) / (Math.abs(self.vars.data.scenario.salesmin) + self.vars.data.scenario.salesmax) * 100 - 2;
+		var intLeftGreensales = (Math.abs(self.vars.data.scenario.greensalesmin)) / (Math.abs(self.vars.data.scenario.greensalesmin) + self.vars.data.scenario.greensalesmax) * 100 - 3;
+		//debugger;
 		getEl('saleszero').style.left = intLeftSales + '%';
 		getEl('greensaleszero').style.left = intLeftGreensales + '%';
 		self.el.greensaleszero.innerHTML = self.vars.gsp;
@@ -273,15 +276,16 @@ var objSliders = {
 	},
 	calculatevalue: function (intCurrentSalesPercentage, intCurrentGreenSalesPercentage) {
 		var self = this;
-
-		//update the lables of the sliders
-		self.el.slidersaleslabel.innerHTML = (intCurrentSalesPercentage > 0 ? '+' : '') + Math.round(intCurrentSalesPercentage * 10) / 10 + '%';
-		self.el.slidergreensaleslabel.innerHTML = self.vars.gsp + Math.round(intCurrentGreenSalesPercentage * 10) / 10 + '%';
-
-		//encode the retieved values so that we can find them in the simululator data
 		var intSalesMin, intGreenSalesMin, intSalesMax, intGreenSalesMax;
 		intCurrentSalesPercentage = parseFloat(intCurrentSalesPercentage, 10);
 		intCurrentGreenSalesPercentage = parseFloat(intCurrentGreenSalesPercentage, 10);
+
+		//update the lables of the sliders
+		self.el.slidersaleslabel.innerHTML = (intCurrentSalesPercentage > 0 ? '+' : '') + Math.round(intCurrentSalesPercentage * 10) / 10 + '%';
+		//console.log(intCurrentGreenSalesPercentage+' - '+self.vars.gsp+' - '+(Math.round((intCurrentGreenSalesPercentage + self.vars.gsp) * 10) / 10));
+		self.el.slidergreensaleslabel.innerHTML = Math.round((intCurrentGreenSalesPercentage + self.vars.gsp) * 10) / 10 + '%';
+
+		//encode the retieved values so that we can find them in the simululator data
 		var intLivesImprovedSimulated = 0;
 
 

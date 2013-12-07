@@ -1,0 +1,33 @@
+input[type='range']
+{
+	height: 20px!important;	
+	border: 0px solid transparent!important;
+	background-color: transparent!important;
+}
+
+input[type='range']::-ms-thumb {  
+    -webkit-appearance: none;
+    width: 24px;
+    height: 60px;
+    border: 0px solid transparent;
+    background-color: transparent;
+	cursor: pointer;
+    background-image: url('../img/slider_thumb.svg');
+    background-repeat: no-repeat;
+	/*background-size: auto 100%!important;*/
+	background-position: 50% 50%;
+  	z-index: 10000;
+}
+
+input[type="range"]::-ms-fill-upper {
+    background-color: #999;
+    height: 2px;
+}
+input[type="range"]::-ms-fill-lower {
+	background-color: #999;
+	height: 2px;
+}
+input[type="range"]::-ms-track {
+    color: transparent;
+    border: none;
+}

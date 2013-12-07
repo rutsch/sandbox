@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 
-    <!--[if lt IE 9]>
+    <!--[if lt IE 10]>
     <meta http-equiv="refresh" content="0;URL=https://www.livesimproved.philips.com/pages/info/browser_not_supported.aspx">
     <![endif]-->
 
@@ -29,7 +29,11 @@
 </head>
 <body>
 <script type="text/javascript">
-    //load the css files
+	//load the css files
+
+	//ie only stylesheet...
+	if (!!window.MSStream) objConfig.resources.css.push('/css/ie-all-versions.css')
+
     for(var i=0; i<objConfig.resources.css.length; i++){
         objConfig.loadremotefile(objConfig.resources.css[i])
     }
