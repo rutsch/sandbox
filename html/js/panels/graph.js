@@ -66,12 +66,13 @@ var objTrendGraph={
 			text: 'Trend'
 		}
 	},
+    //old routine (based on equal distribution of points in graph)
 	getsvgcoordinatesforpoint: function(intPointValue, intArrayPosition){
 		var self=this;
 		var intYRangePixels=self.props.height-self.props.padding.top-self.props.padding.bottom;
 		var intYRangeValues=self.props.axis.ymax-self.props.axis.ymin;
 		var intXRangePixels=self.props.width-self.props.padding.left-self.props.padding.right-self.props.axis.xpaddingleft-self.props.axis.xpaddingright;
-		var intXRangeValues=self.vars.data.points.length-1;
+        var intXRangeValues=self.vars.data.points.length-1;
 
 		//console.log(intArrayPosition);
 
@@ -84,6 +85,28 @@ var objTrendGraph={
 			y: (self.props.padding.top+(intYRangePixels - (intYRangePixels/intYRangeValues)*(intPointValue-self.props.axis.ymin)))
 		}
 	},
+    //new routine where time is used to calculate x-axis values
+    getsvgcoordinatesforpointflex: function(intPointValue, intUtc){
+        var self=this;
+        var intYRangePixels=self.props.height-self.props.padding.top-self.props.padding.bottom;
+        var intYRangeValues=self.props.axis.ymax-self.props.axis.ymin;
+        var intXRangePixels=self.props.width-self.props.padding.left-self.props.padding.right-self.props.axis.xpaddingleft-self.props.axis.xpaddingright;
+        //console.log(self.vars.data.points[self.vars.data.points.length-1]);
+        var intXRangeValues=self.vars.data.points[self.vars.data.points.length-1].utcend - self.vars.data.points[0].utcend;
+        console.log('intXRangePixels='+intXRangePixels+' intXRangeValues='+intXRangeValues+" intUtc="+intUtc+' --'+(intUtc-self.vars.data.points[0].utcend))
+        console.log( ((intXRangePixels/intXRangeValues) * (intUtc-self.vars.data.points[0].utcend)));
+
+        //console.log(intArrayPosition);
+
+        //corrent the value if a string with "comma" notation is passed
+        if(isNaN(intPointValue))intPointValue=parseFloat((intPointValue+'').replace(/,/,''));
+
+        //(self.props.padding.right + (( intXRangePixels/intXRangeValues ) * intArrayPosition) - (( intXRangePixels/intXRangeValues )/2))
+        return {
+            x: (self.props.padding.left + self.props.axis.xpaddingleft + ((intXRangePixels/intXRangeValues) * (intUtc-self.vars.data.points[0].utcend))),
+            y: (self.props.padding.top+(intYRangePixels - (intYRangePixels/intYRangeValues)*(intPointValue-self.props.axis.ymin)))
+        }
+    },
 	createcoordinatepoint: function(elWrapper, objCoords, objPoint, strId){
 		var self=this;
 		//draw two circles: one as a visual indicator and another as hitarea
@@ -132,7 +155,7 @@ var objTrendGraph={
 	},
 	updatelastpointingraph: function(intNewValue){
 	 	var self=this;
-		var objCoords=self.getsvgcoordinatesforpoint(intNewValue, self.vars.data.points.length);
+		var objCoords=self.getsvgcoordinatesforpointflex(intNewValue, self.vars.data.points[self.vars.data.points.length-1].utcend);
 
 		//update the line
 		self.el.lastsegment.setAttributeNS(null,'x2',objCoords.x);
@@ -243,6 +266,8 @@ var objTrendGraph={
 	},
 	drawgraph: function(objData){
 		var self=this;
+        var objPoint={}, objCoords={};
+
 
 		//store the data object for later reference
 		self.vars.data=objData;
@@ -300,8 +325,8 @@ var objTrendGraph={
 		var elWrapperDataPoints=document.getElementById('data_point_wrapper');
 		for (var i=0; i<self.vars.data.points.length; i++)
 		{
-			var objPoint=self.vars.data.points[i];
-			var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
+			objPoint=self.vars.data.points[i];
+			objCoords=self.getsvgcoordinatesforpointflex(objPoint.value, objPoint.utcend);
 			var strId='';
 			if(i==(self.vars.data.points.length-1)){
 				strId='last_point';
@@ -318,8 +343,6 @@ var objTrendGraph={
 
 		//4) create the graph line (use seperate lines to differentiate the last line)
 		var elWrapperLine=document.getElementById('line_wrapper');
-		var strCoordinatesAttrValue="";
-		var objCoords={};
 		for (var i=0; i<self.vars.data.points.length; i++)
 		{
 			var objCoordsPrev={};
@@ -329,8 +352,8 @@ var objTrendGraph={
 			}
 
 
-			var objPoint=self.vars.data.points[i];
-			var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
+			objPoint=self.vars.data.points[i];
+			objCoords=self.getsvgcoordinatesforpointflex(objPoint.value, objPoint.utcend);
 
 			if(i>0){
 				var elLine = document.createElementNS('http://www.w3.org/2000/svg','line');
@@ -355,8 +378,8 @@ var objTrendGraph={
 		for (var i=0; i<self.vars.data.points.length; i++)
 		{
 			//label on x axis
-			var objPoint=self.vars.data.points[i];
-			var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
+			objPoint=self.vars.data.points[i];
+			objCoords=self.getsvgcoordinatesforpointflex(objPoint.value, objPoint.utcend);
 			//console.log(objCoords);
 			objCoords.y=self.props.height-self.props.labels.x.padding.bottom;
 			self.createlabel(elWrapperLabelsX, objCoords, objPoint, 'x');
@@ -398,7 +421,7 @@ var objTrendGraph={
 					//console.log('in i='+i)
 
 					//fill the array with points
-					arrPoints.push({value: i, label: ((bolFractional && (i%1===0))?(i+'.0'):(i+''))})
+					arrPoints.push({value: i, label: ((bolFractional && (i%1===0))?(i+'.0'):(i+'')), utcend: self.vars.data.points[0].utcend})
 				}
 			}			
 		}else{
@@ -445,7 +468,8 @@ var objTrendGraph={
 				var intValue=Math.round((intValueBottomLine+(intFactorRemainder*(i-1)))*intFactor)/intFactor;
 				arrPoints.push({
 					value: intValue, 
-					label: self.correctlabeldecimals(intValue+'', (self.props.axis.ymax+''))
+					label: self.correctlabeldecimals(intValue+'', (self.props.axis.ymax+'')),
+                    utcend: self.vars.data.points[0].utcend
 				});
 
 			}
@@ -455,8 +479,8 @@ var objTrendGraph={
 		//draw the labels and grid lines
 		for (var i=0; i<arrPoints.length; i++){
 
-			var objPoint=arrPoints[i];
-			var objCoords=self.getsvgcoordinatesforpoint(objPoint.value, (i+1));
+			objPoint=arrPoints[i];
+			objCoords=self.getsvgcoordinatesforpointflex(objPoint.value, objPoint.utcend);
 			//console.log(objCoords);
 			objCoords.x=self.props.padding.left+((self.props.axis.ylabelinset)?3:-5);
 			//correct the y-position so that it aligns better with the little line

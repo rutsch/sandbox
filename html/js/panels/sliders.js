@@ -123,23 +123,45 @@ var objSliders = {
 		};
 
 		/* construct an object that we can sent to the graph utility */
-		var strLastLabel = '';
+		var strPredicionLabel = '', strPredictionDate='', intPredictionUtc=0;
 		var intMaxValue = -1000000000000, intMinValue = 1000000000000;
+        var reggie = /(\d{4})-(\d{2})-(\d{2})/;
+        var dateArray;
+
 		for (var i = 0; i < data.length; i++) {
 			var intLivesImproved = data[i].l;
 			if (intLivesImproved == -1) intLivesImproved = 0;
+
+
+
+            dateArray = reggie.exec(data[i].dateend);
+
 			//add an element to the array
 			objGraphData.points.push({
 				value: objMap.roundlivesimproveddataobject({ l: intLivesImproved, g: -1, p: -1 }).displayl,
-				label: data[i].name
+				label: data[i].name,
+                dateend: data[i].dateend,
+                utcend: Date.UTC(
+                    (+dateArray[1]),
+                    (+dateArray[2]) - 1, // Careful, month starts at 0!
+                    (+dateArray[3])
+                )
 			});
 
-			//find out the label for the last element in the graph
+			//find out the data for the last element (year end prediction) in the graph
 			if (i == (data.length - 1)) {
 				//determine what the last date should be
 				var myDate = new Date(data[i].dateend);
 				//if the last snapshot ends on xxxx-12-31, then we need to show the next year
-				strLastLabel = 'Q4 ' + (((myDate.getMonth() + 1) == 12) ? (myDate.getFullYear() + 1) : myDate.getFullYear());
+                strPredicionLabel = 'Q4 ' + (((myDate.getMonth() + 1) == 12) ? (myDate.getFullYear() + 1) : myDate.getFullYear());
+                strPredictionDate = (((myDate.getMonth() + 1) == 12) ? (myDate.getFullYear() + 1) : myDate.getFullYear())+"-12-31";
+                dateArray = reggie.exec(strPredictionDate);
+                intPredictionUtc=Date.UTC(
+                    (+dateArray[1]),
+                    (+dateArray[2]) - 1, // Careful, month starts at 0!
+                    (+dateArray[3])
+                )
+
 			}
 
 			//keep track of min and max values so that we can scale the graph properly
@@ -152,7 +174,9 @@ var objSliders = {
 		if (self.vars.data.livesimproved.s0g0) {
 			objGraphData.points.push({
 				value: objMap.roundlivesimproveddataobject({ l: self.vars.data.livesimproved.s0g0, g: -1, p: -1 }).displayl,
-				label: strLastLabel
+				label: strPredicionLabel,
+                dateend: strPredictionDate,
+                utcend:intPredictionUtc
 			});
 
 			//grab the min and max values from the simulator data set
