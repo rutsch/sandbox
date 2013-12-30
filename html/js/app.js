@@ -6,7 +6,8 @@ var app = {
 		ios: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false),
 		ios7: (navigator.userAgent.match(/OS 7_/g) ? true : false),
 		ipad: (navigator.userAgent.match(/(iPad)/g) ? true : false),
-		orientation: ''
+		orientation: '',
+		ie: !!window.MSStream
 	},
 	el: {
 

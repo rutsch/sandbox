@@ -88,6 +88,7 @@ var objRegionInfo = {
 	},
 	hide: function () {
 		var self = this;
+
 		if (self.state.visible) {
 			self.state.tweening = true;
 			objSliders.vars.simulatorsampling = false;
@@ -151,7 +152,7 @@ var objRegionInfo = {
 				});
 			}
 		}
-		
+		objHeader.hidefavouritebutton();
 
 	},
 	showsimulation: function (self) {

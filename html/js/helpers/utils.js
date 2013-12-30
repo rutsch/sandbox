@@ -435,7 +435,8 @@ function serverSideRequest(objArguments){
 
 function countryClicked(idCountry) {
 	var elRegion = getEl(idCountry);
-	if (idCountry !== "" && elRegion.style.fill !== '#999999' && elRegion.style.fill !== '#999') {
+
+	if (idCountry !== "" && elRegion.style.fill !== '#999999' && elRegion.style.fill !== '#999' && elRegion.style.fill !== 'rgb(153, 153, 153)' && elRegion.style.fill !== 'rgb(153,153,153)') {
 		objMap.regionclick(idCountry);
 	}else{
 		//debugger;
@@ -461,9 +462,6 @@ function formatMoney(n, decPlaces, thouSeparator, decSeparator, currencySymbol) 
     j = (j = i.length) > 3 ? j % 3 : 0;
     return sign + currencySymbol + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
 };
-
-
-
 
 
 
