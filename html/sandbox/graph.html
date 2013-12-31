@@ -136,11 +136,6 @@
 				ymax: null
 			}
 
-			//sort the array of points
-			objData.points.sort(function(a,b){
-				return a.utcend-b.utcend;
-			})
-
 			//console.log(JSON.stringify(objData.points));
 			objTrendGraph.drawgraph(objData);
 

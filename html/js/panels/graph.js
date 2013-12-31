@@ -274,6 +274,11 @@ var objTrendGraph={
         var objPoint={}, objCoords={};
 		//debugger;
 
+		//sort the array of points on the utc date stamp
+		objData.points.sort(function(a,b){
+			return a.utcend-b.utcend;
+		})
+
 		//store the data object for later reference
 		self.vars.data=objData;
 

@@ -218,11 +218,6 @@ var objSliders = {
 		//fix the number of grid lines
 		objTrendGraph.props.axis.ygridlines = 3;
 
-		//sort the array to assure that all the data points are in the correct order
-		objGraphData.points.sort(function(a,b){
-			return a.utcend-b.utcend;
-		})
-
 		//remove elements from the graph data object if there are more points than specified in app.js
 		if(app.trendgraph.pointsvisible!=null){
 			if(objGraphData.points.length > app.trendgraph.pointsvisible){
