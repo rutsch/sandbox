@@ -1,15 +1,23 @@
 var app = {
-	state: {
-		width: null,
-		height: null,
-		mobile: null,
-		ios: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false),
-		ios7: (navigator.userAgent.match(/OS 7_/g) ? true : false),
-		ipad: (navigator.userAgent.match(/(iPad)/g) ? true : false),
-		orientation: '',
-		ie: !!window.MSStream
-	},
-	el: {
+state: {
+    width: null,
+    height: null,
+    mobile: null,
+    ios: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false),
+    ios7: (navigator.userAgent.match(/OS 7_/g) ? true : false),
+    ipad: (navigator.userAgent.match(/(iPad)/g) ? true : false),
+    orientation: '',
+    ie: !!window.MSStream
+},
+labels: {
+    simulatortitle: 'Year-end simulation',
+    trendgraph: {
+        //TODO: these labels need to be set in the backend or associated with the cache data upload in the backend!
+        predictionlabel: 'Q2 2014',
+        predictiondate: '2014-06-30'
+    }
+},
+el: {
 
 },
 btnfilterclick: function (el) {
@@ -131,7 +139,8 @@ init: function () {
 
 
 
-}}
+}
+}
 
 window.onresize = function() {
 	//update the width and height variables

@@ -152,9 +152,22 @@ var objSliders = {
 			if (i == (data.length - 1)) {
 				//determine what the last date should be
 				var myDate = new Date(data[i].dateend);
+
+
+                //TODO: make this dynamic based on input in backend!!!!
+
 				//if the last snapshot ends on xxxx-12-31, then we need to show the next year
-                strPredicionLabel = 'Q4 ' + (((myDate.getMonth() + 1) == 12) ? (myDate.getFullYear() + 1) : myDate.getFullYear());
-                strPredictionDate = (((myDate.getMonth() + 1) == 12) ? (myDate.getFullYear() + 1) : myDate.getFullYear())+"-12-31";
+                if(app.labels.trendgraph.predictionlabel!=''){
+                    strPredicionLabel = app.labels.trendgraph.predictionlabel;
+                }else{
+                    strPredicionLabel = 'Q4 ' + (((myDate.getMonth() + 1) == 12) ? (myDate.getFullYear() + 1) : myDate.getFullYear());
+                }
+                if(app.labels.trendgraph.predictiondate!=''){
+                    strPredictionDate = app.labels.trendgraph.predictiondate
+                }else{
+                    strPredictionDate = (((myDate.getMonth() + 1) == 12) ? (myDate.getFullYear() + 1) : myDate.getFullYear())+"-12-31";
+                }
+
                 dateArray = reggie.exec(strPredictionDate);
                 intPredictionUtc=Date.UTC(
                     (+dateArray[1]),
@@ -437,6 +450,8 @@ var objSliders = {
 		self.el.saleszero = getEl('saleszero');
 		self.el.greensaleszero = getEl('greensaleszero');
 
+        //set the title
+        getEl('simulation_header').innerHTML=app.labels.simulatortitle;
 		//store the content of the slider interface in a variable so that we can inject it
 		self.vars.content = self.el.wrapper.innerHTML;
 	}
