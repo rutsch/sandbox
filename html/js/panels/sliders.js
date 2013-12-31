@@ -113,6 +113,7 @@ var objSliders = {
 			}
 		});
 	},
+	//prepares the object with data that will be send to the graph engine
 	setuphistorygraph: function () {
 		var self = this;
 		var data = self.vars.data.historicaldata;
@@ -157,13 +158,13 @@ var objSliders = {
                 //TODO: make this dynamic based on input in backend!!!!
 
 				//if the last snapshot ends on xxxx-12-31, then we need to show the next year
-                if(app.labels.trendgraph.predictionlabel!=''){
-                    strPredicionLabel = app.labels.trendgraph.predictionlabel;
+                if(app.trendgraph.predictionlabel!=''){
+                    strPredicionLabel = app.trendgraph.predictionlabel;
                 }else{
                     strPredicionLabel = 'Q4 ' + (((myDate.getMonth() + 1) == 12) ? (myDate.getFullYear() + 1) : myDate.getFullYear());
                 }
-                if(app.labels.trendgraph.predictiondate!=''){
-                    strPredictionDate = app.labels.trendgraph.predictiondate
+                if(app.trendgraph.predictiondate!=''){
+                    strPredictionDate = app.trendgraph.predictiondate;
                 }else{
                     strPredictionDate = (((myDate.getMonth() + 1) == 12) ? (myDate.getFullYear() + 1) : myDate.getFullYear())+"-12-31";
                 }
@@ -216,6 +217,21 @@ var objSliders = {
 
 		//fix the number of grid lines
 		objTrendGraph.props.axis.ygridlines = 3;
+
+		//sort the array to assure that all the data points are in the correct order
+		objGraphData.points.sort(function(a,b){
+			return a.utcend-b.utcend;
+		})
+
+		//remove elements from the graph data object if there are more points than specified in app.js
+		if(app.trendgraph.pointsvisible!=null){
+			if(objGraphData.points.length > app.trendgraph.pointsvisible){
+				for (var i=0; i<(objGraphData.points.length - app.trendgraph.pointsvisible +1); i++){
+					objGraphData.points.shift();
+				}
+
+			}
+		}
 
 
 		//console.log(objGraphData);

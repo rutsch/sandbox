@@ -88,7 +88,26 @@
 		<script type="text/javascript" src="../js/helpers/utils.js">//</script>
 		<script>
 
-
+			var app = {
+				state: {
+				    width: null,
+				    height: null,
+				    mobile: null,
+				    ios: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false),
+				    ios7: (navigator.userAgent.match(/OS 7_/g) ? true : false),
+				    ipad: (navigator.userAgent.match(/(iPad)/g) ? true : false),
+				    orientation: '',
+				    ie: !!window.MSStream
+				},
+				labels: {
+				    simulatortitle: 'Year-end simulation',
+				    trendgraph: {
+				        //TODO: these labels need to be set in the backend or associated with the cache data upload in the backend!
+				        predictionlabel: 'Q2 2014',
+				        predictiondate: '2014-06-30'
+				    }
+				}
+			}
 
 
 
@@ -106,16 +125,23 @@
 					,
 					{value: 11, label: 'Q2-13', dateend: '2013-06-30', utcend: 1372550400000}
 					,
+					{value: 4, label: 'Q4-14', dateend: '2014-12-31', utcend: 1419984000000},
+
 					{value: 14, label: 'Q3-13', dateend: '2013-09-30', utcend: 1380499200000}
 					,
 					{value: 13, label: 'Q4-13', dateend: '2013-12-31', utcend: 1388448000000}
-					,
-					{value: 4, label: 'Q4-14', dateend: '2014-12-31', utcend: 1419984000000}
 					/**/
 				],
 				ymin: null,
 				ymax: null
 			}
+
+			//sort the array of points
+			objData.points.sort(function(a,b){
+				return a.utcend-b.utcend;
+			})
+
+			//console.log(JSON.stringify(objData.points));
 			objTrendGraph.drawgraph(objData);
 
 		</script>
