@@ -377,6 +377,10 @@ var objTrendGraph={
 					elLine.setAttributeNS(null,'class','last');
 					elLine.setAttributeNS(null,'id','last_segment');
 				}
+				if(i==(self.vars.data.points.length-2)){
+					elLine.setAttributeNS(null,'class','current');
+					if(typeof objData.styles != 'undefined')elLine.setAttributeNS(null,'style',objData.styles.stylecurrentline);
+				}				
 				elWrapperLine.appendChild(elLine);
 			}
 

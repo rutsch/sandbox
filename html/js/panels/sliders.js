@@ -228,6 +228,9 @@ var objSliders = {
 			}
 		}
 
+		//add style information from app.js into the data object
+		objGraphData.styles={};
+		objGraphData.styles.stylecurrentline=app.trendgraph.stylecurrentline;
 
 		//console.log(objGraphData);
 
