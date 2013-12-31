@@ -16,8 +16,8 @@ labels: {
 trendgraph: {
     //TODO: these labels need to be set in the backend or associated with the cache data upload in the backend!
     //if left empty ('') then the system will assume that the simulator point is year end data
-    predictionlabel: 'Q2 2014',		//set the label of the last point (simulator) in the graph to a manual value
-    predictiondate: '2014-06-30',	//set to a date to ovewrite the year end date that will normally be calculated
+    predictionlabel: '',			//set the label of the last point (simulator) in the graph to a manual value
+    predictiondate: '',				//(yyyy-mm-dd) set to a date to ovewrite the year end date that will normally be calculated
     pointsvisible: null				//set to a value to limit the number of points shown in the graph
 },
 el: {
