@@ -128,6 +128,15 @@ var objSliders = {
 		var intMaxValue = -1000000000000, intMinValue = 1000000000000;
         var reggie = /(\d{4})-(\d{2})-(\d{2})/;
         var dateArray;
+		
+		//sort the array before processing it
+		data.sort(function(a,b){
+			//var c = new Date(a.dateend);
+			//var d = new Date(b.dateend);
+			return (new Date(a.dateend))-(new Date(b.dateend));
+		})
+		
+		//console.log(JSON.stringify(data));
 
 		for (var i = 0; i < data.length; i++) {
 			var intLivesImproved = data[i].l;
