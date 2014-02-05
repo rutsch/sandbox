@@ -19,7 +19,7 @@ trendgraph: {
     predictionlabel: 'Q1 2014', //set the label of the last point (simulator) in the graph to a manual value
     predictiondate: '2014-03-31', //(yyyy-mm-dd) set to a date to ovewrite the year end date that will normally be calculated
     pointsvisible: null, //set to a value to limit the number of points shown in the graph
-    stylecurrentline: '' //overwrite the style of the line to the current data point
+    stylecurrentline: 'stroke: black' //overwrite the style of the line to the current data point
 },
 el: {
 
