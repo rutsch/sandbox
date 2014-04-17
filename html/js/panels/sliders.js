@@ -100,6 +100,12 @@ var objSliders = {
 					//store the data we have received
 					self.vars.data = response;
 
+					//fill the information we have received for the trend graph in the global object
+					app.trendgraph.predictionlabel = self.vars.data.layout.simulatorlabel;
+					app.trendgraph.predictiondate = self.vars.data.layout.simulatordate;
+					app.trendgraph.stylecurrentline = self.vars.data.layout.simulatorstyle;
+
+
 					//self.el.innerwrapper.style.display='block';
 					self.el.errorwrapper.style.display = 'none';
 
@@ -124,18 +130,18 @@ var objSliders = {
 		};
 
 		/* construct an object that we can sent to the graph utility */
-		var strPredicionLabel = '', strPredictionDate='', intPredictionUtc=0;
+		var strPredicionLabel = '', strPredictionDate = '', intPredictionUtc = 0;
 		var intMaxValue = -1000000000000, intMinValue = 1000000000000;
-        var reggie = /(\d{4})-(\d{2})-(\d{2})/;
-        var dateArray;
-		
+		var reggie = /(\d{4})-(\d{2})-(\d{2})/;
+		var dateArray;
+
 		//sort the array before processing it
-		data.sort(function(a,b){
+		data.sort(function (a, b) {
 			//var c = new Date(a.dateend);
 			//var d = new Date(b.dateend);
-			return (new Date(a.dateend))-(new Date(b.dateend));
+			return (new Date(a.dateend)) - (new Date(b.dateend));
 		})
-		
+
 		//console.log(JSON.stringify(data));
 
 		for (var i = 0; i < data.length; i++) {
@@ -144,14 +150,14 @@ var objSliders = {
 
 
 
-            dateArray = reggie.exec(data[i].dateend);
+			dateArray = reggie.exec(data[i].dateend);
 
 			//add an element to the array
 			objGraphData.points.push({
 				value: objMap.roundlivesimproveddataobject({ l: intLivesImproved, g: -1, p: -1 }).displayl,
 				label: data[i].name,
-                dateend: data[i].dateend,
-                utcend: Date.UTC(
+				dateend: data[i].dateend,
+				utcend: Date.UTC(
                     (+dateArray[1]),
                     (+dateArray[2]) - 1, // Careful, month starts at 0!
                     (+dateArray[3])
@@ -164,22 +170,22 @@ var objSliders = {
 				var myDate = new Date(data[i].dateend);
 
 
-                //TODO: make this dynamic based on input in backend!!!!
+				//TODO: make this dynamic based on input in backend!!!!
 
 				//if the last snapshot ends on xxxx-12-31, then we need to show the next year
-                if(app.trendgraph.predictionlabel!=''){
-                    strPredicionLabel = app.trendgraph.predictionlabel;
-                }else{
-                    strPredicionLabel = 'Q4 ' + (((myDate.getMonth() + 1) == 12) ? (myDate.getFullYear() + 1) : myDate.getFullYear());
-                }
-                if(app.trendgraph.predictiondate!=''){
-                    strPredictionDate = app.trendgraph.predictiondate;
-                }else{
-                    strPredictionDate = (((myDate.getMonth() + 1) == 12) ? (myDate.getFullYear() + 1) : myDate.getFullYear())+"-12-31";
-                }
+				if (app.trendgraph.predictionlabel != '') {
+					strPredicionLabel = app.trendgraph.predictionlabel;
+				} else {
+					strPredicionLabel = 'Q4 ' + (((myDate.getMonth() + 1) == 12) ? (myDate.getFullYear() + 1) : myDate.getFullYear());
+				}
+				if (app.trendgraph.predictiondate != '') {
+					strPredictionDate = app.trendgraph.predictiondate;
+				} else {
+					strPredictionDate = (((myDate.getMonth() + 1) == 12) ? (myDate.getFullYear() + 1) : myDate.getFullYear()) + "-12-31";
+				}
 
-                dateArray = reggie.exec(strPredictionDate);
-                intPredictionUtc=Date.UTC(
+				dateArray = reggie.exec(strPredictionDate);
+				intPredictionUtc = Date.UTC(
                     (+dateArray[1]),
                     (+dateArray[2]) - 1, // Careful, month starts at 0!
                     (+dateArray[3])
@@ -198,8 +204,8 @@ var objSliders = {
 			objGraphData.points.push({
 				value: objMap.roundlivesimproveddataobject({ l: self.vars.data.livesimproved.s0g0, g: -1, p: -1 }).displayl,
 				label: strPredicionLabel,
-                dateend: strPredictionDate,
-                utcend:intPredictionUtc
+				dateend: strPredictionDate,
+				utcend: intPredictionUtc
 			});
 
 			//grab the min and max values from the simulator data set
@@ -228,9 +234,9 @@ var objSliders = {
 		objTrendGraph.props.axis.ygridlines = 3;
 
 		//remove elements from the graph data object if there are more points than specified in app.js
-		if(app.trendgraph.pointsvisible!=null){
-			if(objGraphData.points.length > app.trendgraph.pointsvisible){
-				for (var i=0; i<(objGraphData.points.length - app.trendgraph.pointsvisible +1); i++){
+		if (app.trendgraph.pointsvisible != null) {
+			if (objGraphData.points.length > app.trendgraph.pointsvisible) {
+				for (var i = 0; i < (objGraphData.points.length - app.trendgraph.pointsvisible + 1); i++) {
 					objGraphData.points.shift();
 				}
 
@@ -238,8 +244,8 @@ var objSliders = {
 		}
 
 		//add style information from app.js into the data object
-		objGraphData.styles={};
-		objGraphData.styles.stylecurrentline=app.trendgraph.stylecurrentline;
+		objGraphData.styles = {};
+		objGraphData.styles.stylecurrentline = app.trendgraph.stylecurrentline;
 
 		//console.log(objGraphData);
 
@@ -473,8 +479,8 @@ var objSliders = {
 		self.el.saleszero = getEl('saleszero');
 		self.el.greensaleszero = getEl('greensaleszero');
 
-        //set the title
-        getEl('simulation_header').innerHTML=app.labels.simulatortitle;
+		//set the title
+		getEl('simulation_header').innerHTML = app.labels.simulatortitle;
 		//store the content of the slider interface in a variable so that we can inject it
 		self.vars.content = self.el.wrapper.innerHTML;
 	}
