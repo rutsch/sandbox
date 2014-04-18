@@ -105,6 +105,9 @@ var objSliders = {
 					app.trendgraph.predictiondate = self.vars.data.layout.simulatordate;
 					app.trendgraph.stylecurrentline = self.vars.data.layout.simulatorstyle;
 
+					//set the title
+					getEl('simulation_header').innerHTML = self.vars.data.layout.simulatorlabel+app.labels.simulatortitle;
+
 
 					//self.el.innerwrapper.style.display='block';
 					self.el.errorwrapper.style.display = 'none';

@@ -10,7 +10,7 @@ state: {
     ie: !!window.MSStream
 },
 labels: {
-    simulatortitle: 'Q1 2014 simulation'
+    simulatortitle: ' simulation'
 },
 trendgraph: {
     //TODO: these labels need to be set in the backend or associated with the cache data upload in the backend!
