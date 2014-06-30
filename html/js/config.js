@@ -7,7 +7,7 @@ var objConfig = {
 		dynamicresourceurl: 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
 		authurl1: "https://www.livesimproved.philips.com/pages/login/login.aspx",
 		authurl2: "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
-		authurl3: "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx",
+		authurl3: "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx"
 	},
 	colors:{
 		philips: {
@@ -142,12 +142,12 @@ var objConfig = {
 		
 		//if we are on the dev site, then we need to use a local url for data retrieval etc.
 		if(self.sitetype=='dev'){
-			var strUrlDev=self.urls.dev.replace(/^(https:\/\/.*?)\/.*$/,"$1");
-			
-			self.urls.dynamicresourceurl=self.urls.dynamicresourceurl.replace(/^(https:\/\/.*?)(\/.*)$/,strUrlDev+"$2"); //'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
-			self.urls.authurl1=self.urls.authurl1.replace(/^(https:\/\/.*?)(\/.*)$/,strUrlDev+"$2"); // "https://www.livesimproved.philips.com/pages/login/login.aspx",
-			self.urls.authurl2=self.urls.authurl2.replace(/^(https:\/\/.*?)(\/.*)$/,strUrlDev+"$2"); // "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
-			self.urls.authurl3=self.urls.authurl3.replace(/^(https:\/\/.*?)(\/.*)$/,strUrlDev+"$2"); //
+			var strUrlDev=self.urls.dev.replace(/^((http|https):\/\/.*?)\/.*$/, "$1");
+
+			self.urls.dynamicresourceurl = self.urls.dynamicresourceurl.replace(/^((http|https):\/\/.*?)(\/.*)$/, strUrlDev + "$3"); //'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
+			self.urls.authurl1 = self.urls.authurl1.replace(/^((http|https):\/\/.*?)(\/.*)$/, strUrlDev + "$3"); // "https://www.livesimproved.philips.com/pages/login/login.aspx",
+			self.urls.authurl2 = self.urls.authurl2.replace(/^((http|https):\/\/.*?)(\/.*)$/, strUrlDev + "$3"); // "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
+			self.urls.authurl3 = self.urls.authurl3.replace(/^((http|https):\/\/.*?)(\/.*)$/, strUrlDev + "$3"); //
 			//console.log(JSON.stringify(self.urls));
 		}
 	},
