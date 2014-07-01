@@ -87,7 +87,8 @@
 		bottom: 0px;
 		height: 100% !important;
 	}
-	.app .modal_content, .filter .modal_content
+	.app .modal_content, 
+	.filter .modal_content
 	{
 		margin-left: -200px !important;
 	}
@@ -141,7 +142,8 @@
 		height: 30%;
 		top: -30%;
 	}
-	#show_current, #show_simulation
+	#show_current, 
+	#show_simulation
 	{
 		display: none !important;
 	}
@@ -205,8 +207,8 @@
 	#simulation_wrapper h1
 	{
 		margin: 12px 0 0 0;
-		lin-height: 30px;
-		font-size: 28px;
+		line-height: 30px;
+		font-size: 20px;
 		color: #2badb5;
 	}
 	.data_wrapper
@@ -235,7 +237,8 @@
 		height: 30%;
 		top: -30%;
 	}
-	#show_current, #show_simulation
+	#show_current, 
+	#show_simulation
 	{
 		display: none !important;
 	}
@@ -266,19 +269,23 @@
 	{
 		background-position: bottom;
 	}
-	body.PD0100 .slider_value, body.PD0100 #simulation_wrapper h1
+	body.PD0100 .slider_value, 
+	body.PD0100 #simulation_wrapper h1
 	{
 		color: #7dba00;
 	}
-	body.PD0200 .slider_value, body.PD0200 #simulation_wrapper h1
+	body.PD0200 .slider_value, 
+	body.PD0200 #simulation_wrapper h1
 	{
 		color: #68049c;
 	}
-	body.PD0900 .slider_value, body.PD0900 #simulation_wrapper h1
+	body.PD0900 .slider_value, 
+	body.PD0900 #simulation_wrapper h1
 	{
 		color: #2badb5;
 	}
-	body.philips .slider_value, body.philips #simulation_wrapper h1
+	body.philips .slider_value, 
+	body.philips #simulation_wrapper h1
 	{
 		color: #0b5ed7;
 	}
