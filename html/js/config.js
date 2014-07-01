@@ -36,7 +36,6 @@ var objConfig = {
 	resources: {
 		css: [
 			'/css/style.css',
-			'/css/style_media.css',
 			'/css/graph.css'
 		],
 		js: [
