@@ -66,9 +66,9 @@ var objSliders = {
 		//hide the green sales slider element for Healthcare
 		//debugger;
 		if (objMruFilter.state.selectedsector == 'PD0900') {
-			objSliders.el.slidergreensales.parentNode.style.display = 'none';
+			objSliders.el.slidergreensales.parentNode.style.visibility = 'hidden';
 		} else {
-			objSliders.el.slidergreensales.parentNode.style.display = 'block';
+			objSliders.el.slidergreensales.parentNode.style.visibility = 'visible';
 		}
 
 		//start Ajax Call to get simulation data
@@ -106,7 +106,7 @@ var objSliders = {
 					app.trendgraph.stylecurrentline = self.vars.data.layout.simulatorstyle;
 
 					//set the title
-					getEl('simulation_header').innerHTML = self.vars.data.layout.simulatorlabel+app.labels.simulatortitle;
+					getEl('simulation_header').innerHTML = self.vars.data.layout.simulatorlabel + app.labels.simulatortitle;
 
 
 					//self.el.innerwrapper.style.display='block';
@@ -277,7 +277,7 @@ var objSliders = {
 
 		//store the gsp and determine max and min for gsp slider
 
-		self.vars.gsp = Math.round(objMap.data[strKey].gsp * 100);
+		self.vars.gsp = (objMap.data[strKey].gsp == -1) ? 0 : Math.round(objMap.data[strKey].gsp * 100);
 		self.vars.gspslidermin = (self.vars.gsp - (-self.vars.data.scenario.greensalesmin) < 0) ? 0 : self.vars.gsp - (-self.vars.data.scenario.greensalesmin);
 		self.vars.gspslidermax = (self.vars.gsp + self.vars.data.scenario.greensalesmax > 100) ? 100 : self.vars.gsp + self.vars.data.scenario.greensalesmax;
 		self.vars.data.scenario.greensalesmin = self.vars.gsp - (-self.vars.data.scenario.greensalesmin) < 0 ? self.vars.gsp : self.vars.data.scenario.greensalesmin;
@@ -324,6 +324,7 @@ var objSliders = {
 
 		//only call the simulator update if the values of the sliders have changed...
 		if (intCurrentSalesPercentage != self.vars.slidersalesvalue || intCurrentGreenSalesPercentage != self.vars.slidergreensalesvalue) {
+			//console.log('recalculate simulated data: intCurrentSalesPercentage=' + intCurrentSalesPercentage + ' - intCurrentGreenSalesPercentage=' + intCurrentGreenSalesPercentage);
 			self.calculatevalue(intCurrentSalesPercentage, intCurrentGreenSalesPercentage);
 		}
 
@@ -404,8 +405,14 @@ var objSliders = {
 			//interpolation phase2
 			intLivesImprovedSimulated = ((gsceil - intCurrentGreenSalesPercentage) / (gsceil - gsfloor) * r1) + ((intCurrentGreenSalesPercentage - gsfloor) / (gsceil - gsfloor) * r2);
 
-			if (self.vars.debug) getEl('debug').innerHTML = self.vars.debugstring;
-			if (self.vars.debug) self.vars.debugstring = '';
+			if (self.vars.debug) {
+				if (getEl('debug') == null) {
+					console.log(self.vars.debugstring);
+				} else {
+					getEl('debug').innerHTML = self.vars.debugstring;
+				}
+				self.vars.debugstring = '';
+			}
 		}
 
 
