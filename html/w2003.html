@@ -13,13 +13,17 @@
 		<![endif]-->
 
 		<!-- the fixed resources -->
-		<!-- Config (contains the definitions and the css and js sources to load dynamically) -->
-		<script type="text/javascript" src="js/config.js">//</script>
-		<!--
 		<script type="text/javascript">
-			document.write('\x3Cscript type="text/javascript" src="js/config.js?rnd=' + Math.random() + '">\x3C/script>');
+			if(location.href.indexOf('http') > -1){
+				//assume that we are running in a web browser
+				document.write('\x3Cscript type="text/javascript" src="js/config.js?rnd=' + Math.random() + '">\x3C/script>');
+			}else{
+				//assume we are running in the app (cordova)
+				document.write('\x3Cscript type="text/javascript" charset="utf-8" src="../cordova.js">\x3C/script>');
+				document.write('\x3Cscript type="text/javascript" src="js/config.js">\x3C/script>');			
+			}
 		</script>
-		-->
+
 
 		<!-- Libs -->
 		<script type="text/javascript" src="js/lib/async.js">//</script>
@@ -33,25 +37,37 @@
 
 	</head>
 	<body>
-		<script type="text/javascript">
-			//load the css files
-
-			//ie only stylesheet...
-			if (!!window.MSStream) objConfig.resources.css.push('/css/ie-all-versions.css')
-
-			for(var i=0; i<objConfig.resources.css.length; i++){
-				objConfig.loadremotefile(objConfig.resources.css[i])
-			}
-
-			//load the js files
-			for(var i=0; i<objConfig.resources.js.length; i++){
-				objConfig.loadremotefile(objConfig.resources.js[i])
-			}
-		</script>
 		<div id="content_outer_wrapper">.</div>
+
 		<script type="text/javascript">
-			//start the application logic
-			objConfig.startapplication();
+			/*
+			Load external resources and start the application logic
+			*/
+			var intTimerId=0;
+			function loadExternalResources() {
+				if (typeof objConfig != 'undefined') {
+					//ie only stylesheet...
+					if (!!window.MSStream) objConfig.resources.css.push('/css/ie-all-versions.css')
+					
+					//load the css files
+					for(var i=0; i<objConfig.resources.css.length; i++){
+						objConfig.loadremotefile(objConfig.resources.css[i])
+					}
+
+					//load the js files
+					for(var i=0; i<objConfig.resources.js.length; i++){
+						objConfig.loadremotefile(objConfig.resources.js[i])
+					}
+
+					//start the application logic
+					objConfig.startapplication();
+				} else {
+					intTimerId=window.setTimeout(function () {
+						loadExternalResources();
+					}, 50);
+				}
+			}
+			loadExternalResources();
 		</script>
 	</body>
 </html>

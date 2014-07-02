@@ -7,7 +7,8 @@ var app = {
 		ios7: (navigator.userAgent.match(/OS 7_/g) ? true : false),
 		ipad: (navigator.userAgent.match(/(iPad)/g) ? true : false),
 		orientation: '',
-		ie: !!window.MSStream
+		ie: !!window.MSStream,
+		webbrowser: ((location.href.indexOf('http') > -1))
 	},
 	labels: {
 		simulatortitle: ' simulation'

@@ -31,6 +31,15 @@ body {
 }
 */
 
+.mimiclink{
+	display: inline;
+	color: rgb(0, 0, 238);
+	cursor: pointer;
+}
+.mimiclink:hover{
+	text-decoration: underline;
+}
+
 textarea:focus, input:focus{
     outline: 0;
 }

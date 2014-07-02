@@ -464,11 +464,13 @@ function formatMoney(n, decPlaces, thouSeparator, decSeparator, currencySymbol) 
 };
 
 //utility function to load a url
-function loadUrlInExternalBrowser(strUrl){
-	alert('ya');
-	var ref = window.open(strUrl, '_blank', 'location=yes');
-	ref.addEventListener('loadstart', function() { alert(event.url); });
-
+function loadUrlInBrowser(strUrl){
+	if(app.state.webbrowser){
+		location.href=strUrl;
+	}else{
+		var ref = window.open(strUrl, '_blank', 'location=no');
+		//ref.addEventListener('loadstart', function() { alert(event.url); });
+	}
 }
 
 

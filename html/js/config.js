@@ -94,6 +94,7 @@ var objConfig = {
 				self.urls.base = location.href.replace(/^(.*)\/.*?\.html.*$/, "$1");
 			} else {
 				self.urls.base = location.href.replace(/^(.*)\/(\?.*).$/, "$1");
+				self.urls.base = self.urls.base.replace(/^(.*)(\/)$/, "$1");
 			}
 
 			//determine site

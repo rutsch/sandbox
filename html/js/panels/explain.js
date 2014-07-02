@@ -22,7 +22,7 @@ var objExplain = {
 
 				if(!self.state.contentloaded){
 					serverSideRequest({
-						url: (objConfig.urls.base+'/data/faq.html'), 
+						url: (objConfig.urls.base+'/data/faq.html'+((location.href.indexOf('http') > -1)?'?rnd='+Math.random():'')), 
 						method: 'get', 
 						debug: false,
 						callback: function(err, strFaqContent){
