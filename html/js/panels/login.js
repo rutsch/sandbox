@@ -146,7 +146,7 @@ var objLogin = {
 		var storedConfig = objStore.getlocalstorageitem('appconfig');
 		var newConfig = response.appinfo;
 		var strBaseMessage = '<b>New release available</b><p>A new version (' + ((app.state.ios) ? newConfig.iosid : newConfig.androidid) + ') of the Lives Improved app is available.</p>';
-		strBaseMessage += '<p>Please visit the Lives Improved website <span class="mimiclink" onclick="loadUrlInBrowser(\'https://www.livesimproved.philips.com/download\', true)">www.livesimproved.philips.com/download</span> to download and install this new version.</p>';
+		strBaseMessage += '<p>Please visit the <span class="mimiclink" onclick="loadUrlInBrowser(\'https://www.livesimproved.philips.com/download\', true)">Lives Improved website</span> to download and install this new version.</p>';
 		strBaseMessage += '<p>Details:</p>';
 		if (storedConfig) {
 			storedConfig = JSON.parse(storedConfig);
