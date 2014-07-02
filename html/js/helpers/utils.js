@@ -465,10 +465,17 @@ function formatMoney(n, decPlaces, thouSeparator, decSeparator, currencySymbol) 
 
 //utility function to load a url
 function loadUrlInBrowser(strUrl){
+	var bolLoadInNewWindow=false;
+	if(arguments.length>1)bolLoadInNewWindow=arguments[1];
 	if(app.state.webbrowser){
 		location.href=strUrl;
 	}else{
-		var ref = window.open(strUrl, '_blank', 'location=no');
+		if(bolLoadInNewWindow){
+			window.open(strUrl, '_system', 'location=no');
+		}else{
+			window.open(strUrl, '_blank', 'location=no');
+		}
+		//var ref = window.open(strUrl, '_blank', 'location=no');
 		//ref.addEventListener('loadstart', function() { alert(event.url); });
 	}
 }
