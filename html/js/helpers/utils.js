@@ -463,7 +463,13 @@ function formatMoney(n, decPlaces, thouSeparator, decSeparator, currencySymbol) 
     return sign + currencySymbol + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
 };
 
+//utility function to load a url
+function loadUrlInExternalBrowser(strUrl){
+	alert('ya');
+	var ref = window.open(strUrl, '_blank', 'location=yes');
+	ref.addEventListener('loadstart', function() { alert(event.url); });
 
+}
 
 
 
