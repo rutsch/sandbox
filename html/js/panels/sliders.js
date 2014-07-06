@@ -150,7 +150,7 @@ var objSliders = {
 		for (var i = 0; i < data.length; i++) {
 			var intLivesImproved = data[i].l;
 			if (intLivesImproved == -1) intLivesImproved = 0;
-
+			//console.log(intLivesImproved);
 
 
 			dateArray = reggie.exec(data[i].dateend);
@@ -200,6 +200,9 @@ var objSliders = {
 			if (intLivesImproved > intMaxValue) intMaxValue = intLivesImproved;
 			if (intLivesImproved < intMinValue) intMinValue = intLivesImproved;
 		}
+
+
+
 		//console.log(intMaxValue)
 
 		//add the last element (year end prediction)
@@ -211,9 +214,14 @@ var objSliders = {
 				utcend: intPredictionUtc
 			});
 
+			//test if we need to correct the min-max values based on the simulator data we have just received 
+			if (self.vars.data.livesimproved.s0g0 > intMaxValue) intMaxValue = self.vars.data.livesimproved.s0g0;
+			if (self.vars.data.livesimproved.s0g0 < intMinValue) intMinValue = self.vars.data.livesimproved.s0g0;
+
 			//grab the min and max values from the simulator data set
 			var strKeyMin = 's' + (self.vars.data.scenario.salesmin + '').replace(/\-/, 'minus') + 'g' + (self.vars.data.scenario.greensalesmin + '').replace(/\-/, 'minus');
 			var strKeyMax = 's' + (self.vars.data.scenario.salesmax + '').replace(/\-/, 'minus') + 'g' + (self.vars.data.scenario.greensalesmax + '').replace(/\-/, 'minus');
+			//console.log('From historical data: intMaxValue=' + intMaxValue + ', intMinValue=' + intMinValue + 'strKeyMin=' + strKeyMin + ', strKeyMax=' + strKeyMax)
 
 			var intSimulatorMax = self.vars.data.livesimproved[strKeyMax];
 			var intSimulatorMin = self.vars.data.livesimproved[strKeyMin];
@@ -221,12 +229,16 @@ var objSliders = {
 			if (intSimulatorMax > intMaxValue) intMaxValue = intSimulatorMax;
 			if (intSimulatorMin >= 0 && intSimulatorMin < intMinValue) intMinValue = intSimulatorMin;
 
-			//console.log(intMaxValue+' '+intMinValue);
+			//console.log('From simulator data: intSimulatorMax=' + intSimulatorMax + ', intSimulatorMin=' + intSimulatorMin);
+
+			//console.log(intMaxValue + ' ' + intMinValue);
 		}
+
+
 
 		//determine min and max values to show on the y-axis
 		objGraphData.ymin = parseFloat(objMap.roundlivesimproveddataobject({ l: intMinValue, g: -1, p: -1 }).displayl.replace(/,/, ''));
-		objGraphData.ymin = objGraphData.ymin - Math.round(((objGraphData.ymin / 100) * 5));
+		//objGraphData.ymin = objGraphData.ymin - Math.round(((objGraphData.ymin / 100) * 5));
 		objGraphData.ymax = parseFloat(objMap.roundlivesimproveddataobject({ l: intMaxValue, g: -1, p: -1 }).displayl.replace(/,/, ''));
 
 		//set the dimensions of the graph
@@ -268,20 +280,20 @@ var objSliders = {
 
 		self.vars.slidersalesvalue = 0;
 
-
-
 		//store the current lives improved number
 		var strKey = objMruFilter.state.selectedmru + "_" + objOruFilter.state.selectedoruguid;
 		var intPopulation = objMap.data[strKey].l;
 		self.vars.livesimprovedcurrent = intPopulation;
 
-		//store the gsp and determine max and min for gsp slider
-
+		//store the green sales percentage and determine max and min for gsp slider
 		self.vars.gsp = (objMap.data[strKey].gsp == -1) ? 0 : Math.round(objMap.data[strKey].gsp * 100);
 		self.vars.gspslidermin = (self.vars.gsp - (-self.vars.data.scenario.greensalesmin) < 0) ? 0 : self.vars.gsp - (-self.vars.data.scenario.greensalesmin);
 		self.vars.gspslidermax = (self.vars.gsp + self.vars.data.scenario.greensalesmax > 100) ? 100 : self.vars.gsp + self.vars.data.scenario.greensalesmax;
-		self.vars.data.scenario.greensalesmin = self.vars.gsp - (-self.vars.data.scenario.greensalesmin) < 0 ? self.vars.gsp : self.vars.data.scenario.greensalesmin;
-		self.vars.data.scenario.greensalesmax = self.vars.gsp + self.vars.data.scenario.greensalesmax > 100 ? 100 - self.vars.gsp : self.vars.data.scenario.greensalesmax;
+		//recalculate values
+		self.vars.greensalesmin = (self.vars.gsp - (-self.vars.data.scenario.greensalesmin)) < 0 ? self.vars.gsp : self.vars.data.scenario.greensalesmin;
+		self.vars.greensalesmax = (self.vars.gsp + self.vars.data.scenario.greensalesmax > 100) ? 100 - self.vars.gsp : self.vars.data.scenario.greensalesmax;
+		self.vars.salesmax = self.vars.data.scenario.salesmax;
+		self.vars.salesmin = self.vars.data.scenario.salesmin;
 
 		self.el.slidergreensaleslabel.innerHTML = self.vars.gsp + '%';
 		self.vars.slidergreensalesvalue = self.vars.gsp;
@@ -303,8 +315,8 @@ var objSliders = {
 
 		//position the "0" label
 		//self.vars.data.scenario.salesmin=-30;
-		var intLeftSales = (Math.abs(self.vars.data.scenario.salesmin)) / (Math.abs(self.vars.data.scenario.salesmin) + self.vars.data.scenario.salesmax) * 100 - 2;
-		var intLeftGreensales = (Math.abs(self.vars.data.scenario.greensalesmin)) / (Math.abs(self.vars.data.scenario.greensalesmin) + self.vars.data.scenario.greensalesmax) * 100 - 3;
+		var intLeftSales = (Math.abs(self.vars.data.scenario.salesmin)) / (Math.abs(self.vars.data.scenario.salesmin) + self.vars.salesmax) * 100 - 2;
+		var intLeftGreensales = (Math.abs(self.vars.data.scenario.greensalesmin)) / (Math.abs(self.vars.data.scenario.greensalesmin) + self.vars.greensalesmax) * 100 - 3;
 		//debugger;
 		getEl('saleszero').style.left = intLeftSales + '%';
 		getEl('greensaleszero').style.left = intLeftGreensales + '%';
@@ -364,9 +376,9 @@ var objSliders = {
 			var q11 = 0, q21 = 0, q21 = 0, q22 = 0, key = '';
 			var r1 = 0, r2 = 0;
 
-			if (intCurrentSalesPercentage == self.vars.data.scenario.salesmax) intCurrentSalesPercentage -= 0.0001;
-			if (intCurrentGreenSalesPercentage == self.vars.gspslidermax) intCurrentGreenSalesPercentage -= 0.0001;
-			//console.log('- intCurrentSalesPercentage='+intCurrentSalesPercentage+' - intCurrentGreenSalesPercentage='+intCurrentGreenSalesPercentage);
+			if (intCurrentSalesPercentage == self.vars.salesmax) intCurrentSalesPercentage -= 0.0001;
+			if (intCurrentGreenSalesPercentage == self.vars.greensalesmax) intCurrentGreenSalesPercentage -= 0.0001;
+			console.log('- intCurrentSalesPercentage=' + intCurrentSalesPercentage + ' - intCurrentGreenSalesPercentage=' + intCurrentGreenSalesPercentage);
 
 			//clear debug string
 			if (self.vars.debug) self.vars.debugstring = '';
@@ -380,6 +392,7 @@ var objSliders = {
 			gsfloor = objCeilFloor.floor;
 			gsceil = objCeilFloor.ceil;
 			if (self.vars.debug) self.vars.debugstring += "- sfloor=" + sfloor + "<br/>" + "- sceil=" + sceil + "<br/>" + "- gsfloor=" + gsfloor + "<br/>" + "- gsceil=" + gsceil + "<br/>"
+			//console.log("- sfloor=" + sfloor + "<br/>" + "- sceil=" + sceil + "<br/>" + "- gsfloor=" + gsfloor + "<br/>" + "- gsceil=" + gsceil + "<br/>");
 
 			//get all combinations
 			key = 's' + (sfloor + '').replace(/-/, 'minus') + 'g' + (gsfloor + '').replace(/-/, 'minus');

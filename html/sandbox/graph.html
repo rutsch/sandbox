@@ -1,28 +1,21 @@
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]>    <html class="no-js iem7"> <![endif]-->
-<!--[if (gt IEMobile 7)|!(IEMobile)]><!--> <html class="no-js"> <!--<![endif]-->
-	<head>
-		<meta charset="utf-8">
-		<title></title>
-		<meta name="description" content="">
-		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-
-		<link rel="stylesheet" type="text/css" href="../css/graph.css"/>
-
-		<style>
-
-			body {
-				background-color: #b2e9e4;
-			}
-
-		</style>
-
-
-	</head>
-	<body>
-		<div style="width: 100%; height: 100%; border: 1px solid red">
-			<!-- base svg construction for the line graph -->
-			<svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 400 300" preserveAspectRatio="xMidYMid meet">
+<!DOCTYPE html><!--[if IEMobile 7 ]>    <html class="no-js iem7"> <![endif]--><!--[if (gt IEMobile 7)|!(IEMobile)]><!-->
+<html class="no-js">
+<!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<title>Test page for graph</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="../css/graph.css" />
+	<style>
+		body {
+			background-color: #b2e9e4;
+		}
+	</style>
+</head>
+<body>
+	<div style="width: 100%; height: 100%; border: 1px solid red"><!-- base svg construction for the line graph -->
+		<svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 400 300" preserveaspectratio="xMidYMid meet">
 				<g id="wrapper" transform="translate(0, 0)">
 					<text id="graph_title" y="15" x="0" xml:space="preserve">Trend</text>
 
@@ -61,87 +54,106 @@
 						</g>
 					</g>
 
-									<g id="popup_value" onclick="objTrendGraph.showvaluepopup({show: false});" visibility="hidden">
-										<path
-										   d="M 50,25.279 C 50,11.470998 38.808,0.2789983 25,0.2789983 11.193,0.2789983 0,11.470998 0,25.279 c 0,9.007 4.7660001,16.899 11.911,21.3 L 25.332,60 40.246,45.086 C 46.176,40.514 50,33.344 50,25.279 z"
-										   id="popup_value_base"  transform="scale(1.2)"/>
-										<text id="popup_value_number" y="23" x="29" xml:space="preserve">2,233</text>
-										<text id="popup_value_text" y="41" x="29" xml:space="preserve">Million</text>
-									</g>
+					<g id="popup_value" onclick="objTrendGraph.showvaluepopup({show: false});" visibility="hidden">
+						<path
+							d="M 50,25.279 C 50,11.470998 38.808,0.2789983 25,0.2789983 11.193,0.2789983 0,11.470998 0,25.279 c 0,9.007 4.7660001,16.899 11.911,21.3 L 25.332,60 40.246,45.086 C 46.176,40.514 50,33.344 50,25.279 z"
+							id="popup_value_base"  transform="scale(1.2)"/>
+						<text id="popup_value_number" y="23" x="29" xml:space="preserve">2,233</text>
+						<text id="popup_value_text" y="41" x="29" xml:space="preserve">Million</text>
+					</g>
 
 
 				</g>
-<circle cx="200" cy="200" r="20" data-value="28.88" data-label="Q1 2013" onclick="objTrendGraph.showvaluepopup({show: true, x: 261.66666666666663, y: 238.7109634551495, value: '28.88', label: 'Q1 2013'})" style="fill: transparent">
-
-</circle>
-<circle cx="200" cy="200" r="5" data-value="28.88" data-label="Q1 2013" onclick="objTrendGraph.showvaluepopup({show: true, x: 261.66666666666663, y: 238.7109634551495, value: '28.88', label: 'Q1 2013'})" style="stroke: white; stroke-width: 3;">
-
-</circle>
+				<circle cx="0" cy="0" r="20" data-value="28.88" data-label="Q1 2013" onclick="objTrendGraph.showvaluepopup({show: true, x: 261.66666666666663, y: 238.7109634551495, value: '28.88', label: 'Q1 2013'})" style="fill: transparent">
+				</circle>
+				<circle cx="0" cy="0" r="5" data-value="28.88" data-label="Q1 2013" onclick="objTrendGraph.showvaluepopup({show: true, x: 261.66666666666663, y: 238.7109634551495, value: '28.88', label: 'Q1 2013'})" style="stroke: white; stroke-width: 3;">
+				</circle>
 			</svg>
-		</div>
-		<div style="display: none">
-			Last element value: <input type="text" id="future_info" /> <input type="button" onclick="objTrendGraph.updatelastpointingraph(parseFloat(document.getElementById('future_info').value))" value="Update" />
-		</div>
+	</div>
+	<div style="display: none">
+		Last element value: <input type="text" id="future_info" /> 
+		<input type="button" onclick="objTrendGraph.updatelastpointingraph(parseFloat(document.getElementById('future_info').value))" value="Update" /> 
+	</div>
+	
+	<script type="text/javascript" src="../js/panels/graph.js">//</script>
+	<script type="text/javascript" src="../js/panels/map.js">//</script>
+	<script type="text/javascript" src="../js/helpers/utils.js">//</script>
+	<script type="text/javascript">
 
-		<script type="text/javascript" src="../js/panels/graph.js">//</script>
-		<script type="text/javascript" src="../js/panels/map.js">//</script>
-		<script type="text/javascript" src="../js/helpers/utils.js">//</script>
-		<script>
-
-			var app = {
-				state: {
-				    width: null,
-				    height: null,
-				    mobile: null,
-				    ios: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false),
-				    ios7: (navigator.userAgent.match(/OS 7_/g) ? true : false),
-				    ipad: (navigator.userAgent.match(/(iPad)/g) ? true : false),
-				    orientation: '',
-				    ie: !!window.MSStream
-				},
-				labels: {
-				    simulatortitle: 'Year-end simulation',
-				    trendgraph: {
-				        //TODO: these labels need to be set in the backend or associated with the cache data upload in the backend!
-				        predictionlabel: 'Q2 2014',
-				        predictiondate: '2014-06-30'
-				    }
+		var app = {
+			state: {
+				width: null,
+				height: null,
+				mobile: null,
+				ios: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false),
+				ios7: (navigator.userAgent.match(/OS 7_/g) ? true : false),
+				ipad: (navigator.userAgent.match(/(iPad)/g) ? true : false),
+				orientation: '',
+				ie: !!window.MSStream
+			},
+			labels: {
+				simulatortitle: 'Year-end simulation',
+				trendgraph: {
+					//TODO: these labels need to be set in the backend or associated with the cache data upload in the backend!
+					predictionlabel: 'Q2 2014',
+					predictiondate: '2014-06-30'
 				}
 			}
+		}
+
+		var objConfig = {
+			sitetype: 'dev'
+		}
+
+		var objLoading = {
+			show: function () {
+
+			},
+			hide: function () {
+
+			}
+		}
 
 
+		//initiate the object
+		objTrendGraph.init();
 
+		objTrendGraph.props.axis.ygridlines = 3;
 
-
-			//initiate the object
-			objTrendGraph.init();
-
-			//draw a graph with data
-			var objData={
-				points: [
-					{value: 5, label: 'Q4-12', dateend: '2012-12-31', utcend: 1356912000000}
+		//draw a graph with data
+		var objData = {
+			points: [
+					{ value: 5, label: 'Q4-12', dateend: '2012-12-31', utcend: 1356912000000 }
 					,
-					{value: 7, label: 'Q1-13', dateend: '2013-03-31', utcend: 1364688000000}
+					{ value: 7, label: 'Q1-13', dateend: '2013-03-31', utcend: 1364688000000 }
 					,
-					{value: 11, label: 'Q2-13', dateend: '2013-06-30', utcend: 1372550400000}
+					{ value: 11, label: 'Q2-13', dateend: '2013-06-30', utcend: 1372550400000 }
 					,
-					{value: 4, label: 'Q4-14', dateend: '2014-12-31', utcend: 1419984000000},
+					{ value: 4, label: 'Q4-14', dateend: '2014-12-31', utcend: 1419984000000 },
 
-					{value: 14, label: 'Q3-13', dateend: '2013-09-30', utcend: 1380499200000}
+					{ value: 14, label: 'Q3-13', dateend: '2013-09-30', utcend: 1380499200000 }
 					,
-					{value: 13, label: 'Q4-13', dateend: '2013-12-31', utcend: 1388448000000}
-					/**/
+					{ value: 13, label: 'Q4-13', dateend: '2013-12-31', utcend: 1388448000000 }
+			/**/
 				],
-				ymin: null,
-				ymax: null,
-				styles: {
-					stylecurrentline: 'stroke: red'
-				}
+			ymin: null,
+			ymax: null,
+			styles: {
+				stylecurrentline: 'stroke: red'
 			}
+		}
 
-			//console.log(JSON.stringify(objData.points));
-			objTrendGraph.drawgraph(objData);
+		psv('GET', '/webapp/html/sandbox/data_dump/nordics_3_BS9002.json', {}, function (err, data) {
+			if (err) {
+				console.log(err);
+			} else {
+				//console.log(JSON.stringify(objData.points));
+				objTrendGraph.drawgraph(data);
+			}
+		});
+
+		
 
 		</script>
-	</body>
+</body>
 </html>

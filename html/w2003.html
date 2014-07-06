@@ -38,7 +38,34 @@
 	</head>
 	<body>
 		<div id="content_outer_wrapper">.</div>
+		<div id="debug_layer">
+			<button onclick="dumpGraphData()">Dump</button>
+			<div id="graph_data_dump">...</div>
+		</div>
+		<script type="text/javascript">
+			function dumpGraphData() {
+				strJson = JSON.stringify(objTrendGraph.vars.data);
+				getEl('graph_data_dump').innerHTML = strJson;
 
+				var strFileName = objOruFilter.state.selectedoruguid + '_' + objOruFilter.state.selectedoru + '_' + objMruFilter.state.selectedmru + '.json';
+
+				var objData = {
+					type: 'json',
+					json: strJson,
+					filename: strFileName
+				}
+
+				psv('POST', '/webapp/html/sandbox/data_dump/write_json.aspx', objData, function (err, data) {
+					if (err) {
+						console.log(err);
+					} else {
+						console.log(data);
+					}
+				});
+
+			}
+
+		</script>
 		<script type="text/javascript">
 			/*
 			Load external resources and start the application logic

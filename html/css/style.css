@@ -860,6 +860,7 @@ li#PD0900 .selected {
 	height: 50px;
 	position: relative;
 	border-bottom: 1px solid #999;
+	cursor: pointer;
 }
 
 .bookmark_color {
@@ -1056,7 +1057,7 @@ input#slidergreensales {
 
 .range_indicator .zero {
 	position: absolute;
-	left: 41%;
+	left: 48%;
 	z-index: 200;
 	background-color: #F4F4F4;
 	padding: 0 5px 3px;
@@ -1266,6 +1267,10 @@ body.philips #nr_lives_improved_label {
 
 #first_login_content, div#explain_content {
 	padding: 10px;
+}
+
+div#debug_layer{
+	display: none;	
 }
 
 
@@ -1561,6 +1566,19 @@ body.philips #nr_lives_improved_label {
 	body.philips #simulation_wrapper h1
 	{
 		color: #0b5ed7;
+	}
+	
+	div#debug_layer{
+		display: block;
+		width: 200px;
+		height: 200px;
+		position: absolute;
+		top: 200px;
+		left: 20px;
+		z-index: 900;
+		border: 1px solid red;
+		background-color: #cecece;
+		overflow: auto;
 	}
 }
 

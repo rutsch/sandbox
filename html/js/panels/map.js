@@ -52,20 +52,16 @@ var objMap = {
 		if (!self.state.currentmap || self.state.currentmap != objOruFilter.state.selectedoru) {
 			objTouchVars.elanimate = null;
 			var strOru = 'World';
-			switch (objOruFilter.state.selectedoru) {
-				case '1':
+			switch (parseInt(objOruFilter.state.selectedoru)) {
 				case 1:
 					strOru = 'World';
 					break;
-				case '2':
 				case 2:
 					strOru = 'Region';
 					break;
-				case '3':
 				case 3:
 					strOru = 'Market';
 					break;
-				case '4':
 				case 4:
 					strOru = 'Country';
 					break;
