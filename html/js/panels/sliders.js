@@ -378,7 +378,7 @@ var objSliders = {
 
 			if (intCurrentSalesPercentage == self.vars.salesmax) intCurrentSalesPercentage -= 0.0001;
 			if (intCurrentGreenSalesPercentage == self.vars.greensalesmax) intCurrentGreenSalesPercentage -= 0.0001;
-			console.log('- intCurrentSalesPercentage=' + intCurrentSalesPercentage + ' - intCurrentGreenSalesPercentage=' + intCurrentGreenSalesPercentage);
+			//console.log('- intCurrentSalesPercentage=' + intCurrentSalesPercentage + ' - intCurrentGreenSalesPercentage=' + intCurrentGreenSalesPercentage);
 
 			//clear debug string
 			if (self.vars.debug) self.vars.debugstring = '';
