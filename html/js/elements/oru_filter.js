@@ -7,25 +7,6 @@ var objOruFilter = {
 	el: {
 		mrufilter: null
 	},
-	/*
-	* Data functions
-	*/
-	getorujson: function (cb) {
-		var objData = {
-			fulldomain: location.protocol + "//" + location.hostname,
-			method: 'getorudata',
-			type: 'json',
-			token: objLogin.token,
-			snapshotid: objConfig.currentsnapshotid
-		}
-		psv('GET', objConfig.urls.dynamicresourceurl, objData, function (err, data) {
-			if (err) {
-				cb(err);
-			} else {
-				cb(null, data);
-			}
-		});
-	},
 	getdefaultoru: function () {
 		return objStore.getlocalstorageitem('last_oru') || objConfig.defaultoru;
 	},
@@ -75,20 +56,5 @@ var objOruFilter = {
 		var self = this;
 		self.state.selectedoru = this.getdefaultoru();
 		self.el.wrapper = getEl('oru_filter_container');
-
-		//JT: this is a strange construction... too complex as this is alreasy being called from another callback function
-		self.getorujson(function (err, data) {
-			if (err != null) {
-				cb(err);
-			} else {
-				if (data.error) {
-					cb(data.error)
-				} else {
-					self.json = data;
-					cb();
-				}
-
-			}
-		});
 	}
 }

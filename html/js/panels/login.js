@@ -30,12 +30,6 @@ var objLogin = {
 		});
 		objError.show(msg, true);
 	},
-	//JT: this check is not valid anymore - all ajax utilities now return a message when authentication is required
-	loggedin: function () {
-		var self = this;
-		self.token = objStore.getlocalstorageitem('token');
-		return self.token != null && self.token != '';
-	},
 	/*
 	* Click functions
 	*/
@@ -100,14 +94,17 @@ var objLogin = {
 		psv('GET', objConfig.urls.authurl2, objData, function (err, response) {
 			//debugger;
 			if (err != null) {
-				cb(err);
+				objError.show('There was an error retrieving snapshot information. ' + ((typeof err == 'object') ? JSON.parse(err) : err), true);
 			} else {
 				//finds the latest snapshot id and stores it in objConfig
-				var latestSnapshotId = self.findlatestsnapshotid(response);
-				self.checkappconfigforupdates(response);
-				cb(null, latestSnapshotId);
-			}
+				self.findlatestsnapshotid(response);
 
+				//test if we need to show an update message and store this in the local storage
+				self.checkappconfigforupdates(response);
+
+				//continue processing
+				cb();
+			}
 		});
 	},
 	checksnapshotconfigforupdates: function (response) {
@@ -264,7 +261,9 @@ var objLogin = {
 					objOverlay.hide();
 					self.hide();
 					self.el.tbxpassword.value = '';
-					app.start();
+					//app.start();
+
+					objPageState.updatepagestate({ view: 'worldmap' });
 				}
 			}
 		});
@@ -311,12 +310,19 @@ var objLogin = {
 	//JT: this needs to be extended so that basically the app is resetted to it's original state
 	logout: function () {
 		var self = this;
+
 		objStore.removelocalstorageitem('token');
+		//debugger;
 		if ((new Date().getTime() / 1000) - objStore.getlocalstorageitem('reloadtime') > 10) {
-			location.reload();
+			//
 			objStore.removelocalstorageitem('reloadtime');
+
+			//reload the complete page to force everything to reset to default state
+			location.reload();
+		} else {
+			//show the login screen
+			objPageState.updatepagestate({view: 'login'});
 		}
-		objLogin.show();
 		/*objFilter.hide();
 		objExplain.hide();
 		objBookmarks.hide();

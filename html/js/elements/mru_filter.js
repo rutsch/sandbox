@@ -8,25 +8,6 @@ var objMruFilter = {
 		mrufilter: null,
 		tempmru: null
 	},
-	/*
-	* Data functions
-	*/
-	getmruhtml: function (cb) {
-		var objData = {
-			fulldomain: location.protocol + "//" + location.hostname,
-			method: 'getproductdata',
-			type: 'json',
-			token: objLogin.token,
-			snapshotid: objConfig.currentsnapshotid
-		}
-		psv('GET', objConfig.urls.dynamicresourceurl, objData, function (err, data) {
-			if (err != null) {
-				cb(err);
-			} else {
-				cb(null, data);
-			}
-		});
-	},
 	getdefaultmru: function () {
 		return objStore.getlocalstorageitem('last_mru') || objConfig.defaultmru;
 	},
@@ -112,6 +93,8 @@ var objMruFilter = {
 			}
 		}
 		//getEl('philips').onclick();
+
+		self.state.selectedsector = self.getsectorfrombreadcrumb(self.getmrufilterbreadcrumb());
 	},
 	selectmru: function (e, useless, strMru) {
 		var self = this;
@@ -170,20 +153,5 @@ var objMruFilter = {
 
 		self.el.mrufilter = getEl('filter_container');
 		self.el.tempmru = getEl('producttree_temp');
-
-		self.getmruhtml(function (err, data) {
-			if (err != null) {
-				cb(err);
-			} else {
-				if (data.error) {
-					cb(data.error)
-				} else {
-					self.preparehtml(data.html);
-					self.state.selectedsector = self.getsectorfrombreadcrumb(self.getmrufilterbreadcrumb());
-					cb();
-				}
-			}
-		});
-
 	}
 }
