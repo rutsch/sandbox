@@ -1,7 +1,7 @@
 var objMruFilter = {
 	state: {
-		selectedmru: null,
-		selectedsector: null,
+		selectedmru: null, //id of the product devision
+		selectedsector: null, //id of the main sector
 		tweening: null
 	},
 	el: {
@@ -24,7 +24,7 @@ var objMruFilter = {
 	},
 	getmrufilterbreadcrumb: function () {
 		var self = this;
-		var mru = self.state.selectedmru;
+		var mru = objPageState.state.filter.mru;
 		var selector = '#filter_container #' + mru;
 		var el = Sizzle(selector)[0];
 		var name;
@@ -63,52 +63,25 @@ var objMruFilter = {
 		var self = this;
 		self.el.tempmru.innerHTML = html;
 
-		//create ul
-		var ul = document.createElement('ul');
-		ul.id = 'filter_list';
-		//create Philips li
-		var liPhilips = document.createElement('li');
-		liPhilips.innerHTML = 'Philips Group';
-		liPhilips.id = 'philips';
-		liPhilips.className = 'selected';
-		liPhilips.setAttribute('data-id', 'philips');
-		liPhilips.setAttribute('onclick', 'objMruFilter.selectmru(event, "mru", "philips")');
-		ul.appendChild(liPhilips);
-		//get all first children of philips from temp html
-		var arrLi = getFirstLevelChildElementsById('philips', 'li');
-		for (var i = 0; i < arrLi.length; i++) {
-			arrLi[i].innerHTML += '<div class="mru_sector_color"></div>';
-			ul.appendChild(arrLi[i]);
-		}
 		self.el.mrufilter = getEl('filter_container');
-		self.el.mrufilter.innerHTML = '';
-		self.el.mrufilter.appendChild(ul);
+		self.el.mrufilter.innerHTML = html;
 
-		//add event to function call for all calls to stop propagation 
-		var arrAllLi = getEl('filter_container').getElementsByTagName('li');
-		for (var a = 0; a < arrAllLi.length; a++) {
-			if (arrAllLi[a].onclick) {
-				var strClick = arrAllLi[a].getAttribute('onclick').replace('applyFilter(\'', 'objMruFilter.selectmru(event, \'');
-				arrAllLi[a].setAttribute('onclick', strClick);
-			}
-		}
-		//getEl('philips').onclick();
-
-		self.state.selectedsector = self.getsectorfrombreadcrumb(self.getmrufilterbreadcrumb());
+		self.state.selectedsector = app.defaultpagestate.filter.sector;
 	},
-	selectmru: function (e, useless, strMru) {
+	selectmru: function (e, strSector, strMru) {
 		var self = this;
 		if (e) e.stopPropagation();
 
-		self.showlevel(strMru);
+		self.showlevel(strSector, strMru);
 	},
-	showlevel: function (id) {
+	showlevel: function (strSector, strMru) {
 		var self = this;
+		//debugger;
+		self.state.selectedmru = strMru;
+		self.state.selectedsector = strSector;
+		console.log('strSector=' + strSector + ' - strMru=' + strMru);
 
-		self.state.selectedmru = id;
-		self.state.selectedsector = self.getsectorfrombreadcrumb(self.getmrufilterbreadcrumb());
-
-		var elClicked = getEl(id),
+		var elClicked = getEl(strMru),
 		parentNode = elClicked.parentNode,
 		arrSiblingsOrSelf = getFirstLevelChildElements(parentNode, 'li');
 

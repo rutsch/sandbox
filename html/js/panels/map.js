@@ -1,12 +1,13 @@
 var objMap = {
 	state: {
-		visible: null,
-		currentmap: null,
-		lastsvgdata: null,
-		selectedregion: null
+		visible: null
 	},
 	el: {
 		mapwrapper: null
+	},
+	vars: {
+		showdetailview: false,
+		regionidtoshow: null //contains the region id of the details panel to show
 	},
 	data: null,
 	maps: {
@@ -45,35 +46,37 @@ var objMap = {
 	/*
 	* Data functions
 	*/
-	//loads the svg data for the map
-	loadmap: function (cb) {
+	//retrieves the svg data for the map
+	retrieveworldmapsvg: function () {
 		var self = this;
-		//update svg if needed
-		if (!self.state.currentmap || self.state.currentmap != objOruFilter.state.selectedoru) {
-			objTouchVars.elanimate = null;
-			var strOru = 'World';
-			switch (parseInt(objOruFilter.state.selectedoru)) {
-				case 1:
-					strOru = 'World';
-					break;
-				case 2:
-					strOru = 'Region';
-					break;
-				case 3:
-					strOru = 'Market';
-					break;
-				case 4:
-					strOru = 'Country';
-					break;
-				default:
-					break;
-			}
-			self.state.mapname = strOru;
 
-			//set labels in the interface
-			objHeader.setregionname(strOru);
-			objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
+		objTouchVars.elanimate = null;
+		self.state.mapname = 'World';
+		switch (parseInt(objPageState.state.filter.orulevel)) {
+			case 1:
+				self.state.mapname = 'World';
+				break;
+			case 2:
+				self.state.mapname = 'Region';
+				break;
+			case 3:
+				self.state.mapname = 'Market';
+				break;
+			case 4:
+				self.state.mapname = 'Country';
+				break;
+			default:
+				break;
+		}
 
+
+		//attempt to retrieve the svg data from localstorage
+		var svgdata = objStore.getlocalstorageitem('map_' + self.state.mapname);
+
+		if (svgdata) {
+			return svgdata;
+		} else {
+			//load svg data via http
 			var arrFormData = [];
 			arrFormData['type'] = 'xml';
 			arrFormData['file'] = self.maps[strOru.toLowerCase()].url;
@@ -81,245 +84,252 @@ var objMap = {
 			arrFormData['fulldomain'] = location.protocol + "//" + location.hostname;
 			arrFormData['token'] = objLogin.token;
 
-			var svgdata = objStore.getlocalstorageitem('map_' + self.state.mapname);
-
-			if (svgdata) {
-				cb(svgdata);
-			} else {
-				serverSideRequest({
-					url: objConfig.urls.authurl2,
-					formdata: arrFormData,
-					method: 'get',
-					debug: false,
-					callback: function (err, strSvgData) {
-						if (err != null) cb(err)
-						else {
-							objStore.setlocalstorageitem('map_' + self.state.mapname, strSvgData);
-							cb(strSvgData);
-						}
+			serverSideRequest({
+				url: objConfig.urls.authurl2,
+				formdata: arrFormData,
+				method: 'get',
+				debug: false,
+				callback: function (err, strSvg) {
+					if (err != null) {
+						objError.show('There was an error loading the svg worldmap data. ' + ((typeof err == 'object') ? JSON.parse(err) : err), true);
+					} else {
+						objStore.setlocalstorageitem('map_' + self.state.mapname, strSvg);
+						return strSvg;
 					}
-				});
-			}
-		}
-		else {
-			cb(null);
+				}
+			});
 		}
 	},
 	//retrieves the lives improved data
-	getworldmapdata: function (cb) {
+	getworldmapdata: function () {
+		var self = this;
+
 		var objData = {
 			fulldomain: location.protocol + "//" + location.hostname,
 			method: 'getworldmapdata',
 			type: 'json',
 			token: objLogin.token,
-			oru: objOruFilter.state.selectedoru,
-			mru: objMruFilter.state.selectedmru,
+			oru: objPageState.state.filter.orulevel,
+			mru: objPageState.state.filter.mru,
 			snapshotid: objConfig.currentsnapshotid
 		}
 		//showLoadingPanel();
 		psv('GET', objConfig.urls.dynamicresourceurl, objData, function (err, data) {
 			//hideLoadingPanel();
 			if (err != null) {
-				//console.trace(err)
-				//debugger;
-				cb(err);
+				objError.show('There was an error retrieving the worldmap data. ' + ((typeof err == 'object') ? JSON.parse(err) : err), true);
 			} else {
 				if (data.error) {
-					cb(data.error.message);
+					objError.show('There was an error retrieving the worldmap data. ' + data.error.message, true);
 				} else {
-					cb(null, data);
+					self.postprocessworldmapdata(data);
 				}
 			}
 		});
 	},
+
+	postprocessworldmapdata: function (data) {
+		var self = this;
+
+		objLoading.show();
+
+		/*
+		1) store the data in this object as a property
+		*/
+		self.data = data.snapshotdata;
+
+		/*
+		2) retrieve the elements from the svg that we need to color
+		*/
+		var elSvgWrapper = getEl('svgcontentwrapper');
+		//console.log(elSvgWrapper);
+		var arrRegions = getFirstLevelChildElements(elSvgWrapper, 'path');
+		if (arrRegions.length == 0) arrRegions = getFirstLevelChildElements(elSvgWrapper, 'g')
+		//console.log(arrRegions);
+
+		/*
+		3) set the proper coloring
+		*/
+		//analyze the data we have received
+		var intLivesImprovedTotal = 0;
+		var intLivesImprovedPercentageMax = 0;
+		var intLivesImprovedPercentageMin = 100;
+		for (var key in self.data) {
+			if (self.data[key].l >= 0) {
+				intLivesImprovedTotal += self.data[key].l;
+
+				var livesImprovedPercentage = (self.data[key].l * 100 / self.data[key].p);
+				if (livesImprovedPercentage > intLivesImprovedPercentageMax) intLivesImprovedPercentageMax = livesImprovedPercentage;
+				if (livesImprovedPercentage < intLivesImprovedPercentageMin) intLivesImprovedPercentageMin = livesImprovedPercentage;
+			}
+		}
+		//console.log('- intLivesImprovedTotal: '+intLivesImprovedTotal+' - intLivesImprovedPercentageMax: '+intLivesImprovedPercentageMax+' - intLivesImprovedPercentageMin: '+intLivesImprovedPercentageMin);
+
+
+		//settings for the coloring
+		var minimumPercentage = 15; //anything below this percentage will get the 'low' color
+		var factor = (intLivesImprovedPercentageMax - intLivesImprovedPercentageMin) / (100 - minimumPercentage);
+
+		for (var i = 0; i < arrRegions.length; i++) {
+			var region = arrRegions[i],
+				regionId = region.id == 'UK' ? 'GB' : region.id,
+				key = objPageState.state.filter.mru + '_' + (objPageState.state.filter.orulevel != 4 ? regionId.toLowerCase() : regionId),
+				regionData = (self.data[key]) ? self.data[key] : false;
+
+			//console.log(key+' - '+regionData);
+			//debugger;
+			if (regionData) {
+				//calculate percentage lives improved and store that in the worldmapdata object
+				var percentageLI = (regionData.l * 100) / regionData.p || 0;
+
+				self.data[key].percentageLI = percentageLI;
+
+
+				//add colors to the map
+				var color = objConfig.colors[objPageState.state.filter.sector].middle;
+				self.data[key].color = objConfig.colors[objPageState.state.filter.sector].middle;
+
+				//calculate the color to place on the map
+				var percentageForColor = 80;
+				if (intLivesImprovedPercentageMax > intLivesImprovedPercentageMin) {
+					percentageForColor = (percentageLI - intLivesImprovedPercentageMin) / factor + minimumPercentage;
+				}
+
+				if (percentageForColor >= 100) percentageForColor = 99;
+				//console.log(regionId+' colorprc: '+percentageForColor);
+				var colorToSet = self.getcolorforpercentage(percentageForColor, objConfig.colors[objPageState.state.filter.sector].low, objConfig.colors[objPageState.state.filter.sector].middle, objConfig.colors[objPageState.state.filter.sector].high);
+
+				//JT: shouldn't objConfig.hideinactivecountries be part of the MruFilter object??
+				if (regionData.l <= 100 && objConfig.hideinactivecountries) {
+					colorToSet = '#999';
+				}
+
+				region.style.fill = colorToSet;
+
+				var paths = region.getElementsByTagName('*');
+				for (var ii = 0; ii < paths.length; ii++) {
+					var path = paths[ii];
+					if (path.nodeName == 'path' || path.nodeName == 'polygon' || path.nodeName == 'rect' || path.nodeName == 'g' || path.nodeName == 'polyline') {
+						paths[ii].style.fill = colorToSet;
+						//paths[ii].style.opacity=1;
+					}
+				}
+				//JT: end change							
+			} else {
+				region.style.fill = '#999';
+			}
+		}
+
+		/*
+		4) perform post processing (set events and center map)
+		*/
+		//retrieve the base svg elements
+		self.el.rootanimate = getEl('viewport');
+		self.el.rootsvg = getEl('holder_1000').getElementsByTagName('svg')[0];
+		//console.log(objPageElements.rootsvg);
+
+		//resize the map to fit into the window
+		self.resizeworldmap();
+
+		//prepare an object containing vital information about the svg element to animate
+		self.state.rootanimateattributevalues = self.retrievesvgelementobject(self.el.rootanimate);
+
+		//apply zoom and pan functionality to the svg drawing
+		var bolUseHomeGrown = true;
+		if (bolUseHomeGrown) {
+			//initiate the new version of the zoom pan library
+			objTouchSettings.debug = false;
+			objTouchSettings.debugtointerface = false;
+			objTouchSettings.debugtoconsole = true;
+			objZoomPanSettings.mobile = app.state.mobile;
+
+			objZoomPanSettings.clickcallback = function (event) {
+				//console.log('in callback');
+				//console.log(event);
+
+				var elClicked = event.srcElement;
+				if (typeof (elClicked) == "undefined") {
+					elClicked = event.originalTarget;
+				}
+				var strElementName = elClicked.nodeName;
+				var strElementId = (elClicked.id) ? elClicked.id : '';
+				var elParent = elClicked.parentNode;
+				var strParentElementName = elParent.nodeName;
+				var strParentElementId = (elParent.id) ? elParent.id : '';
+				if (strElementId == '') strElementId = strParentElementId;
+				//console.log('strElementName: '+strElementName+' strElementId: '+strElementId+' strParentElementName:'+strParentElementName+' strParentElementId: '+strParentElementId);
+
+				if (strElementName == 'path' || strElementName == 'g' || strElementName == 'polygon') countryClicked(strElementId);
+			}
+
+			initSgvZoomPan(self.el.rootsvg, self.el.rootanimate);
+
+			//console.log(objPageElements.rootanimateattributevalues);
+		} else {
+
+			initZoomPan(self.el.rootsvg);
+		}
+
+		self.centerworldmap(self.el.rootanimate);
+
+
+		objLoading.hide();
+		//hideLoadingPanel();
+
+		/*
+		5) set the labels in the interface
+		*/
+		objHeader.setregionname(self.state.mapname);
+		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
+
+		//if we need to show country region details after the loading sequence has completed
+		if (self.vars.showdetailview) {
+			self.detailspanel();
+		}
+		self.vars.showdetailview = false;
+
+		//post processing
+		self.el.elsvgholder.style.visibility = 'visible';
+
+
+	},
+
 	/*
 	* UI functions
 	*/
-	updatemap: function (regionIdToSelect, cb) {
+	updatemap: function (bolShowDetailView, strCallbackReference) {
 		var self = this;
 
-		//JT: ????
+		//store the variable in this object so that we can use it later
+		if (typeof bolShowDetailView == "boolean") {
+			self.vars.showdetailview = bolShowDetailView;
+		} else {
+			self.vars.showdetailview = false;
+		}
+
+
 		self.el.elsvgholder.style.visibility = 'hidden';
-		//load correct svg map
-		self.loadmap(function (data) {
 
-			if (data != null) {
-				if (cb) cb();
-				// remove the handlers of the previous map and update svg html
-				removeHandlers(function () {
+		//1) retrieve the svg map
+		var strSvg = self.retrieveworldmapsvg();
 
-					self.el.elsvgholder.innerHTML = '';
-					self.el.elsvgholder.innerHTML = data;
-
-
-					//get worldmap livesimproved data
-					self.getworldmapdata(function (err, data) {
-						if (err != null) {
-							//console.log('....')
-							//console.log(err)
-							objError.handleError('map.updatemap', err);
-						} else {
-							objLoading.show();
-
-							/*
-							1) store the data in this object as a property
-							*/
-							self.data = data.snapshotdata;
-
-							/*
-							2) retrieve the elements from the svg that we need to color
-							*/
-							var elSvgWrapper = getEl('svgcontentwrapper');
-							//console.log(elSvgWrapper);
-							var arrRegions = getFirstLevelChildElements(elSvgWrapper, 'path');
-							if (arrRegions.length == 0) arrRegions = getFirstLevelChildElements(elSvgWrapper, 'g')
-							//console.log(arrRegions);
-
-							/*
-							2) set the proper coloring
-							*/
-
-							//analyze the data we have received
-							var intLivesImprovedTotal = 0;
-							var intLivesImprovedPercentageMax = 0;
-							var intLivesImprovedPercentageMin = 100;
-							for (var key in self.data) {
-								if (self.data[key].l >= 0) {
-									intLivesImprovedTotal += self.data[key].l;
-
-									var livesImprovedPercentage = (self.data[key].l * 100 / self.data[key].p);
-									if (livesImprovedPercentage > intLivesImprovedPercentageMax) intLivesImprovedPercentageMax = livesImprovedPercentage;
-									if (livesImprovedPercentage < intLivesImprovedPercentageMin) intLivesImprovedPercentageMin = livesImprovedPercentage;
-								}
-							}
-							//console.log('- intLivesImprovedTotal: '+intLivesImprovedTotal+' - intLivesImprovedPercentageMax: '+intLivesImprovedPercentageMax+' - intLivesImprovedPercentageMin: '+intLivesImprovedPercentageMin);
-
-
-							//settings for the coloring
-							var minimumPercentage = 15; //anything below this percentage will get the 'low' color
-							var factor = (intLivesImprovedPercentageMax - intLivesImprovedPercentageMin) / (100 - minimumPercentage);
-
-							for (var i = 0; i < arrRegions.length; i++) {
-								var region = arrRegions[i],
-									regionId = region.id == 'UK' ? 'GB' : region.id,
-									key = objMruFilter.state.selectedmru + '_' + (objOruFilter.state.selectedoru != 4 ? regionId.toLowerCase() : regionId),
-								//JT: need a test here to check if the key really exists
-									regionData = (self.data[key]) ? self.data[key] : false;
-
-								//console.log(key+' - '+regionData);
-								//debugger;
-								if (regionData) {
-									//calculate percentage lives improved and store that in the worldmapdata object
-									var percentageLI = (regionData.l * 100) / regionData.p || 0;
-
-									self.data[key].percentageLI = percentageLI;
-
-
-									//add colors to the map
-									var color = objConfig.colors[objMruFilter.state.selectedsector].middle;
-									self.data[key].color = objConfig.colors[objMruFilter.state.selectedsector].middle;
-
-									//calculate the color to place on the map
-									var percentageForColor = 80;
-									if (intLivesImprovedPercentageMax > intLivesImprovedPercentageMin) {
-										percentageForColor = (percentageLI - intLivesImprovedPercentageMin) / factor + minimumPercentage;
-									}
-
-									if (percentageForColor >= 100) percentageForColor = 99;
-									//console.log(regionId+' colorprc: '+percentageForColor);
-									var colorToSet = self.getcolorforpercentage(percentageForColor, objConfig.colors[objMruFilter.state.selectedsector].low, objConfig.colors[objMruFilter.state.selectedsector].middle, objConfig.colors[objMruFilter.state.selectedsector].high);
-
-									//JT: shouldn't objConfig.hideinactivecountries be part of the MruFilter object??
-									if (regionData.l <= 100 && objConfig.hideinactivecountries) {
-										colorToSet = '#999';
-									}
-
-									region.style.fill = colorToSet;
-
-									var paths = region.getElementsByTagName('*');
-									for (var ii = 0; ii < paths.length; ii++) {
-										var path = paths[ii];
-										if (path.nodeName == 'path' || path.nodeName == 'polygon' || path.nodeName == 'rect' || path.nodeName == 'g' || path.nodeName == 'polyline') {
-											paths[ii].style.fill = colorToSet;
-											//paths[ii].style.opacity=1;
-										}
-									}
-									//JT: end change							
-								} else {
-									region.style.fill = '#999';
-								}
-							}
-
-							/*
-							3) perform post processing (set events and center map)
-							*/
-							//retrieve the base svg elements
-							self.el.rootanimate = getEl('viewport');
-							self.el.rootsvg = getEl('holder_1000').getElementsByTagName('svg')[0];
-							//console.log(objPageElements.rootsvg);
-
-							//resize the map to fit into the window
-							self.resizeworldmap();
-
-							//prepare an object containing vital information about the svg element to animate
-							self.state.rootanimateattributevalues = self.retrievesvgelementobject(self.el.rootanimate);
-
-							//apply zoom and pan functionality to the svg drawing
-							var bolUseHomeGrown = true;
-							if (bolUseHomeGrown) {
-								//initiate the new version of the zoom pan library
-								objTouchSettings.debug = false;
-								objTouchSettings.debugtointerface = false;
-								objTouchSettings.debugtoconsole = true;
-								objZoomPanSettings.mobile = app.state.mobile;
-
-								objZoomPanSettings.clickcallback = function (event) {
-									//console.log('in callback');
-									//console.log(event);
-
-									var elClicked = event.srcElement;
-									if (typeof (elClicked) == "undefined") {
-										elClicked = event.originalTarget;
-									}
-									var strElementName = elClicked.nodeName;
-									var strElementId = (elClicked.id) ? elClicked.id : '';
-									var elParent = elClicked.parentNode;
-									var strParentElementName = elParent.nodeName;
-									var strParentElementId = (elParent.id) ? elParent.id : '';
-									if (strElementId == '') strElementId = strParentElementId;
-									//console.log('strElementName: '+strElementName+' strElementId: '+strElementId+' strParentElementName:'+strParentElementName+' strParentElementId: '+strParentElementId);
-
-									if (strElementName == 'path' || strElementName == 'g' || strElementName == 'polygon') countryClicked(strElementId);
-								}
-
-								initSgvZoomPan(self.el.rootsvg, self.el.rootanimate);
-
-								//console.log(objPageElements.rootanimateattributevalues);
-							} else {
-
-								initZoomPan(self.el.rootsvg);
-							}
-
-							self.centerworldmap(self.el.rootanimate);
-
-							self.currentmap = objOruFilter.state.selectedoru;
-							objLoading.hide();
-							//hideLoadingPanel();	
-							if (regionIdToSelect) {
-								self.regionclick(regionIdToSelect);
-							}
-							//post processing
-							self.el.elsvgholder.style.visibility = 'visible';
-						}
-					});
-
-
-
-
-				});
+		if (strSvg != null) {
+			// execute possible callback function
+			if (typeof strCallbackReference == 'function') {
+				strCallbackReference();
 			}
 
-		});
+			// remove the handlers of the previous map and update svg html
+			removeHandlers(function () {
+
+				self.el.elsvgholder.innerHTML = '';
+				self.el.elsvgholder.innerHTML = strSvg;
+
+				//get worldmap livesimproved data
+				self.getworldmapdata();
+			});
+		}
+
 	},
 	retrievesvgelementobject: function (elSvg) {
 		var self = this;
@@ -422,11 +432,12 @@ var objMap = {
 		//move to new position
 		self.moveworldmap((app.state.width / 2) - (self.state.rootanimateattributevalues.size.width / 2) - self.state.rootanimateattributevalues.x, (app.state.height / 2) - (self.state.rootanimateattributevalues.size.height / 2) - self.state.rootanimateattributevalues.y);
 	},
-	regionclick: function (idCountry) {
+	detailspanel: function () {
 		var self = this;
-		self.state.selectedregion = idCountry;
+
+		//debugger;
 		//JT: unsure, but I feel that this is a property that we should store in the oru filter object
-		objOruFilter.state.selectedoruguid = idCountry;
+		objOruFilter.state.selectedoruguid = objPageState.state.filter.oru;
 
 
 		if (objBookmarks.isfavourite()) {
@@ -443,16 +454,16 @@ var objMap = {
 
 		objRegionInfo.hidehistory();
 
-		document.getElementsByTagName("body")[0].className = objMruFilter.state.selectedsector;
+		document.getElementsByTagName("body")[0].className = objPageState.state.filter.sector;
 		//var color=colors[objPageVars.current_sector].middle;
 		//appPanels.region_info.style.background = color;
 		var sec = {},
 		back = {},
-		key = objMruFilter.state.selectedmru + '_' + (idCountry.length < 4 ? idCountry : idCountry.toLowerCase()),
+		key = objPageState.state.filter.mru + '_' + (objPageState.state.filter.oru.length < 4 ? objPageState.state.filter.oru : objPageState.state.filter.oru.toLowerCase()),
 		regionData = self.data[key];
 
 
-		var elRegion = getEl(idCountry);
+		var elRegion = getEl(objPageState.state.filter.oru);
 		var opacity = elRegion.style.opacity;
 		TweenLite.to(elRegion, 0.5, {
 			opacity: 0.7,
@@ -462,12 +473,12 @@ var objMap = {
 
 				//JT: I introduced a very crappy way to check for a tablet - can this be improved and become app.state.tablet ?
 				if (app.state.width > 768) {
-					self.updateui(regionData, idCountry, elRegion);
+					self.updateui(regionData, objPageState.state.filter.oru, elRegion);
 				} else {
 					TweenLite.to(self.el.elsvgholder, 0.2, {
 						opacity: 0,
 						onComplete: function () {
-							self.updateui(regionData, idCountry, elRegion);
+							self.updateui(regionData, objPageState.state.filter.oru, elRegion);
 						}
 					});
 				}
@@ -495,7 +506,7 @@ var objMap = {
 
 		objRegionInfo.el.percentagelivesimproved.textContent = regionData.percentageLI + '%';
 
-
+		//set the labels in the header
 		objHeader.setregionname(objOruFilter.getregionnamebyid((idCountry.length < 4 ? idCountry : idCountry.toLowerCase())));
 		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
 

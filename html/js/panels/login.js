@@ -263,7 +263,13 @@ var objLogin = {
 					self.el.tbxpassword.value = '';
 					//app.start();
 
-					objPageState.updatepagestate({ view: 'worldmap' });
+					//attempt to use the old page state (which we stored in app.js) to restore to the view to the state before we were logged out
+					if (objPageState.stateremembered.hasOwnProperty("view")) {
+						objPageState.updatepagestate(objPageState.stateremembered);
+						objPageState.stateremembered = {};
+					} else {
+						objPageState.updatepagestate({ view: 'worldmap' });
+					}
 				}
 			}
 		});
@@ -321,7 +327,7 @@ var objLogin = {
 			location.reload();
 		} else {
 			//show the login screen
-			objPageState.updatepagestate({view: 'login'});
+			objPageState.updatepagestate({ view: 'login' });
 		}
 		/*objFilter.hide();
 		objExplain.hide();

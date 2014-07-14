@@ -1,12 +1,13 @@
 var objOruFilter = {
 	json: null,
 	state: {
-		selectedoru: null,
-		selectedoruguid: null
+		selectedoru: null, // detail of the map (1, 2, 3, 4) - replaced with objPageState.state.filter.orulevel
+		selectedoruguid: null // the selected country/region - replaced with objPageState.state.filter.oru
 	},
 	el: {
 		mrufilter: null
 	},
+	//TODO - where is the below used??
 	getdefaultoru: function () {
 		return objStore.getlocalstorageitem('last_oru') || objConfig.defaultoru;
 	},

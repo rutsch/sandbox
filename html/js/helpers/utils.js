@@ -44,27 +44,6 @@ function collectionHas(a, b) { //helper function (see below)
 	}
 	return false;
 }
-function getFirstLevelChildElementsById(parentId, childNodeType) {
-	//debugger;
-	var selector = parentId === 'producttree_temp' ? '#producttree_temp' : '#producttree_temp #' + parentId;
-	var parent = Sizzle(selector);
-	var result = [];
-
-	if (parent.length > 0) {
-		parent = parent[0].getElementsByTagName('ul')[0];
-		if (parent) {
-			var childElements = parent.getElementsByTagName('li');
-
-			for (i = 0; i < childElements.length; i++) {
-				if (childElements[i].parentNode === parent) {
-					result.push(childElements[i]);
-				}
-			};
-		}
-	}
-
-	return result;
-}
 
 function ColorLuminance(hex, lum) {
 
@@ -256,12 +235,12 @@ function psv(type, url, objParams, cb) {
 
 						//test if we have lost the session and need to login again
 						if (objResponse.error) {
-							if (objResponse.error.message == "Not authenticated") {
+							if (objResponse.error.message == "Not authenticated" || objResponse.error.message == "Token mismatch") {
 								//run the logout routine which will reset the app to it's original state and the show the login screen
 								objStore.setlocalstorageitem('reloadtime', new Date().getTime() / 1000);
 								objLogin.logout();
 							} else {
-							cb(null, objResponse);
+								cb(null, objResponse);
 							}
 						} else {
 							cb(null, objResponse);
@@ -276,7 +255,7 @@ function psv(type, url, objParams, cb) {
 
 					//test if we have lost the session and need to login again
 					if (objResponse.error) {
-						if (objResponse.error.message == "Not authenticated") {
+						if (objResponse.error.message == "Not authenticated" || objResponse.error.message == "Token mismatch") {
 							//run the logout routine which will reset the app to it's original state and the show the login screen
 							objStore.setlocalstorageitem('reloadtime', new Date().getTime() / 1000);
 							objLogin.logout();
@@ -439,7 +418,15 @@ function countryClicked(idCountry) {
 	var elRegion = getEl(idCountry);
 
 	if (idCountry !== "" && elRegion.style.fill !== '#999999' && elRegion.style.fill !== '#999' && elRegion.style.fill !== 'rgb(153, 153, 153)' && elRegion.style.fill !== 'rgb(153,153,153)') {
-		objMap.regionclick(idCountry);
+		//update the hash and initiate the new view based on that
+		//console.log('click in map ' + idCountry);
+		objPageState.updatepagestate({
+			view: 'detail',
+			filter: {
+				oru: idCountry
+			}
+		});
+		//objMap.detailspanel(idCountry);
 	} else {
 		//debugger;
 		getEl('messagelist').innerHTML = 'No Lives Improved based on current VIPP data.';
@@ -469,8 +456,20 @@ function formatMoney(n, decPlaces, thouSeparator, decSeparator, currencySymbol) 
 function loadUrlInBrowser(strUrl) {
 	var bolLoadInNewWindow = false;
 	if (arguments.length > 1) bolLoadInNewWindow = arguments[1];
+
+	//add an action to the stats object
+	objAnalytics.data.events.push({
+		category: ((strUrl.match(/^https?:\/\/.+\.(zip|dmg|txt|cfg|gz|pl|pdf)$/i)) ? 'download' : 'link') /*required - object that was interacted with*/,
+		action: 'click' /*required - type of interaction*/,
+		label: strUrl /*optional - used for categorization of events*/
+	});
+
 	if (app.state.webbrowser) {
-		location.href = strUrl;
+		if (bolLoadInNewWindow) {
+			window.open(strUrl);
+		} else {
+			location.href = strUrl;
+		}
 	} else {
 		if (bolLoadInNewWindow) {
 			window.open(strUrl, '_system', 'location=no');
@@ -480,6 +479,7 @@ function loadUrlInBrowser(strUrl) {
 		//var ref = window.open(strUrl, '_blank', 'location=no');
 		//ref.addEventListener('loadstart', function() { alert(event.url); });
 	}
+
 }
 
 

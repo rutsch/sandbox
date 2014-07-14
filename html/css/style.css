@@ -216,6 +216,7 @@ textarea:focus, input:focus{
 	background: url(../img/back_btn.png) no-repeat 20px 12px;
 	background-size: auto 55%;
 	display: none;
+	cursor: pointer;
 }
 
 .intro {
@@ -1579,6 +1580,11 @@ div#debug_layer{
 		border: 1px solid red;
 		background-color: #cecece;
 		overflow: auto;
+	}
+	
+	/* the layer that needs to ease drag and zoom on mobile devices */
+	div#transparentlayer{
+		display: none;	
 	}
 }
 

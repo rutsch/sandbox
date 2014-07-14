@@ -11,22 +11,22 @@ var objConfig = {
 		authurl3: "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx"
 	},
 	colors: {
-		philips: {
+		philips: { //philips group
 			low: '#7DABF1',
 			middle: '#3D7FDF',
 			high: '#0b5ed7'
 		},
-		PD0900: {
+		PD0900: { //healthcare
 			low: '#99EAF0',
 			middle: '#30B6BF',
 			high: '#2badb5'
 		},
-		PD0100: {
+		PD0100: { //lighting
 			low: '#CBF277',
 			middle: '#98C833',
 			high: '#7dba00'
 		},
-		PD0200: {
+		PD0200: { //consumer lifestyle
 			low: '#BE67E9',
 			middle: '#8737B0',
 			high: '#68049c'
@@ -63,8 +63,8 @@ var objConfig = {
 	},
 	sitetype: 'prod',
 	hideinactivecountries: true,
-	defaultmru: 'philips',
-	defaultoru: '3',
+	defaultmru: 'philips', //use app.defaultpagestate instead
+	defaultoru: '3', //use app.defaultpagestate instead
 	snapshots: null,
 	currentsnapshotid: 'nothing',
 	loadremotefile: function (filename) {

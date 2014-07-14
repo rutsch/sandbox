@@ -65,7 +65,7 @@ var objSliders = {
 		var self = this;
 		//hide the green sales slider element for Healthcare
 		//debugger;
-		if (objMruFilter.state.selectedsector == 'PD0900') {
+		if (objPageState.state.filter.sector == 'PD0900') {
 			objSliders.el.slidergreensales.parentNode.style.visibility = 'hidden';
 		} else {
 			objSliders.el.slidergreensales.parentNode.style.visibility = 'visible';
@@ -76,8 +76,8 @@ var objSliders = {
 			fulldomain: location.protocol + "//" + location.hostname,
 			method: 'getlivesimprovedcachedata',
 			type: 'json',
-			oru: objOruFilter.state.selectedoruguid,
-			mru: objMruFilter.state.selectedmru,
+			oru: objPageState.state.filter.oru,
+			mru: objPageState.state.filter.mru,
 			snapshotid: objConfig.currentsnapshotid,
 			token: objLogin.token
 		}
@@ -281,7 +281,7 @@ var objSliders = {
 		self.vars.slidersalesvalue = 0;
 
 		//store the current lives improved number
-		var strKey = objMruFilter.state.selectedmru + "_" + objOruFilter.state.selectedoruguid;
+		var strKey = objPageState.state.filter.mru + "_" + objPageState.state.filter.oru;
 		var intPopulation = objMap.data[strKey].l;
 		self.vars.livesimprovedcurrent = intPopulation;
 
@@ -433,7 +433,7 @@ var objSliders = {
 		if (isNaN(intLivesImprovedSimulated) == false) {
 			//get the poplation
 			//var strKey=objMruFilter.state.selectedmru+"_"+objOruFilter.state.selectedoruguid;
-			var intPopulation = objMap.data[objMruFilter.state.selectedmru + "_" + objOruFilter.state.selectedoruguid].p;
+			var intPopulation = objMap.data[objPageState.state.filter.mru + "_" + objPageState.state.filter.oru].p;
 
 			//calculate the lives improved percentage
 			var intLivesImprovedSimulatedPercentage = Math.round((intLivesImprovedSimulated / (intPopulation)) * 100);
