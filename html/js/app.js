@@ -343,7 +343,7 @@ var objPageState = {
 
 		//4) handle view change
 		if (self.state.view != objPageStateNew.view) {
-			console.log('viewchange detected: self.state.view=' + self.state.view + ' - objPageStateNew.view=' + objPageStateNew.view);
+			//console.log('viewchange detected: self.state.view=' + self.state.view + ' - objPageStateNew.view=' + objPageStateNew.view);
 			switch (objPageStateNew.view) {
 				case 'worldmap':
 					self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, false);
@@ -360,7 +360,7 @@ var objPageState = {
 		} else {
 			//5) handle filter change
 			if (bolFilterChangeDetected) {
-				console.log('filter change detected');
+				//console.log('filter change detected');
 				//if the detail view is open then we need to reload the data in it
 				if (objPageStateNew.view == 'detail') {
 					self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, true);
