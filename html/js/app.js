@@ -184,11 +184,11 @@ var app = {
 		//detect mobile/desktop
 		self.state.mobile = self.isMobile.any();
 
+		//init storage
+		objStore.init();		
+
 		//init the stats
 		objAnalytics.init();
-
-		//init storage
-		objStore.init();
 
 		//init panels
 		objLogin.init();
