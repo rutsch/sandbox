@@ -23,6 +23,10 @@ var objFilter = {
 			}
 		});
 
+		//set the mru and oru filter objects to the current state
+		objMruFilter.setmrufilterstate();
+		objOruFilter.setorufilterstate();
+
 		var seenPanelBefore = objStore.getlocalstorageitem('seenFilterIntro');
 		if (seenPanelBefore) {
 

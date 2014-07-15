@@ -7,9 +7,30 @@ var objOruFilter = {
 	el: {
 		mrufilter: null
 	},
-	//TODO - where is the below used??
-	getdefaultoru: function () {
-		return objStore.getlocalstorageitem('last_oru') || objConfig.defaultoru;
+	//fired when the filter panel is opened - sets the state of the filter to match the filter state of the application
+	setorufilterstate: function () {
+		var self = this;
+
+		self.state.selectedoru = objPageState.state.filter.orulevel;
+		var strButtonId = 'btn_country';
+		switch (objPageState.state.filter.orulevel) {
+			case "1":
+				strButtonId = 'btn_world'
+				break;
+			case "2":
+				strButtonId = 'btn_region'
+				break;
+			case "3":
+				strButtonId = 'btn_bmc'
+				break;
+			default:
+				break;
+		}
+
+		self.selectoru(getEl(strButtonId), objPageState.state.filter.orulevel, false);
+
+		//console.log(self.getmrufilteraxisarray(objPageState.state.filter.mru))
+
 	},
 	getregionnamebyid: function (regionId) {
 		var self = this;
@@ -46,16 +67,37 @@ var objOruFilter = {
 		el.className = 'selected';
 		self.state.selectedoru = strOru;
 		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
-		objFilter.blink();
+		if (arguments.length == 2) objFilter.blink();
 		//objMap.updatemap();
 	},
 	settocurrentoru: function () {
 		var self = this;
 		//debugger;
 	},
+	convertoruleveltomarket: function (oruLevel) {
+
+		switch (parseInt(oruLevel)) {
+			case 1:
+				return 'World';
+				break;
+			case 2:
+				return 'Region';
+				break;
+			case 3:
+				return 'Market';
+				break;
+			case 4:
+				return 'Country';
+				break;
+			default:
+				return '';
+				break;
+		}
+
+	},
 	init: function (cb) {
 		var self = this;
-		self.state.selectedoru = this.getdefaultoru();
+		self.state.selectedoru = app.defaultpagestate.filter.orulevel;
 		self.el.wrapper = getEl('oru_filter_container');
 	}
 }

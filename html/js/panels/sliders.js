@@ -20,7 +20,8 @@ var objSliders = {
 		updatetrendgraph: true,
 		updatecurrent: false,
 		usebiliniarinterpolation: true,
-		debugstring: ''
+		debugstring: '',
+		recalculatecounter: 0
 	},
 	/*
 	* UI functions
@@ -82,6 +83,8 @@ var objSliders = {
 			token: objLogin.token
 		}
 
+		//reset the counter
+		self.recalculatecounter = 0;
 
 		psv('GET', objConfig.urls.dynamicresourceurl, objData, function (err, response) {
 			if (err) {
@@ -338,6 +341,16 @@ var objSliders = {
 		if (intCurrentSalesPercentage != self.vars.slidersalesvalue || intCurrentGreenSalesPercentage != self.vars.slidergreensalesvalue) {
 			//console.log('recalculate simulated data: intCurrentSalesPercentage=' + intCurrentSalesPercentage + ' - intCurrentGreenSalesPercentage=' + intCurrentGreenSalesPercentage);
 			self.calculatevalue(intCurrentSalesPercentage, intCurrentGreenSalesPercentage);
+			//console.log(self.recalculatecounter);
+			if (self.recalculatecounter == 1) {
+				//sent a stats action to record that somebody has manipulated the sliders
+				objAnalytics.data.events.push({
+					category: 'simulator' /*required - object that was interacted with*/,
+					action: 'slide' /*required - type of interaction*/,
+					label: 'simulator change' /*optional - used for categorization of events*/
+				});
+			}
+			self.recalculatecounter++;
 		}
 
 
@@ -364,7 +377,7 @@ var objSliders = {
 
 		//update the lables of the sliders
 		self.el.slidersaleslabel.innerHTML = (intCurrentSalesPercentage > 0 ? '+' : '') + Math.round(intCurrentSalesPercentage * 10) / 10 + '%';
-		//console.log(intCurrentGreenSalesPercentage+' - '+self.vars.gsp+' - '+(Math.round((intCurrentGreenSalesPercentage + self.vars.gsp) * 10) / 10));
+		//console.log(intCurrentGreenSalesPercentage + ' - ' + self.vars.gsp + ' - ' + (Math.round((intCurrentGreenSalesPercentage + self.vars.gsp) * 10) / 10));
 		self.el.slidergreensaleslabel.innerHTML = Math.round((intCurrentGreenSalesPercentage + self.vars.gsp) * 10) / 10 + '%';
 
 		//encode the retieved values so that we can find them in the simululator data

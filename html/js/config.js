@@ -63,8 +63,6 @@ var objConfig = {
 	},
 	sitetype: 'prod',
 	hideinactivecountries: true,
-	defaultmru: 'philips', //use app.defaultpagestate instead
-	defaultoru: '3', //use app.defaultpagestate instead
 	snapshots: null,
 	currentsnapshotid: 'nothing',
 	loadremotefile: function (filename) {

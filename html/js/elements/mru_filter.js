@@ -8,8 +8,53 @@ var objMruFilter = {
 		mrufilter: null,
 		tempmru: null
 	},
-	getdefaultmru: function () {
-		return objStore.getlocalstorageitem('last_mru') || objConfig.defaultmru;
+	//fired when the filter panel is opened - sets the state of the filter to match the filter state of the application
+	setmrufilterstate: function () {
+		var self = this;
+
+		self.state.selectedmru = objPageState.state.filter.mru;
+		self.state.selectedsector = self.getmrufilteraxisarray(objPageState.state.filter.mru)[0].id;
+
+		self.showlevel(self.state.selectedsector, self.state.selectedmru, false);
+
+		//console.log(self.getmrufilteraxisarray(objPageState.state.filter.mru))
+
+	},
+	getsectoridfromfilterhtml: function () {
+		var self = this;
+
+	},
+	getmrufilteraxisarray: function (mru) {
+		var self = this;
+
+		var selector = '#filter_container #' + mru;
+		var el = Sizzle(selector)[0];
+		var arrParents = [];
+
+		if (el && el.firstElementChild) {
+			arrParents.push({
+				id: el.id,
+				name: el.firstElementChild.innerHTML
+			});
+
+			while (el.parentNode != null && el.parentNode.className !== 'filter_list') {
+				el = el.parentNode;
+				if (el.localName == 'li') {
+					arrParents.push({
+						id: el.id,
+						name: el.firstElementChild.innerHTML
+					});
+				}
+
+			}
+		} else {
+			arrParents.push({
+				id: 'philips',
+				name: 'Philips Group'
+			});
+		}
+
+		return (arrParents.reverse());
 	},
 	getsectorfrombreadcrumb: function (str) {
 		if (str.indexOf('ealthcare') > -1) {
@@ -24,37 +69,14 @@ var objMruFilter = {
 	},
 	getmrufilterbreadcrumb: function () {
 		var self = this;
-		var mru = objPageState.state.filter.mru;
-		var selector = '#filter_container #' + mru;
-		var el = Sizzle(selector)[0];
-		var name;
-		var arrParents = [];
 
-		if (el && el.firstElementChild) {
-			name = el.firstElementChild.innerHTML
-			arrParents.push(name);
-
-			while (el.parentNode != null && el.parentNode.className !== 'filter_list') {
-				el = el.parentNode;
-				if (el.localName == 'li') {
-					arrParents.push(el.firstElementChild.innerHTML);
-				}
-
-			}
-		} else {
-			name = 'Philips Group';
-			arrParents.push(name);
+		var arrAxis = self.getmrufilteraxisarray(objPageState.state.filter.mru);
+		var arrBreadcrumb = [];
+		for (var a = 0; a < arrAxis.length; a++) {
+			arrBreadcrumb.push(arrAxis[a].name);
 		}
 
-		//if(arrParents.length > 2){
-		//	arrParents = arrParents.reverse();
-		//	var el1 = arrParents[0],
-		//		el2 = arrParents[arrParents.length -1];
-		//	return el1 + ' ... ' + el2;
-		//}else{
-		return (arrParents.reverse().join(' &bull; '));
-		//}
-
+		return arrBreadcrumb.join(' &bull; ');
 	},
 	/*
 	* UI functions
@@ -79,7 +101,7 @@ var objMruFilter = {
 		//debugger;
 		self.state.selectedmru = strMru;
 		self.state.selectedsector = strSector;
-		console.log('strSector=' + strSector + ' - strMru=' + strMru);
+		//console.log('strSector=' + strSector + ' - strMru=' + strMru);
 
 		var elClicked = getEl(strMru),
 		parentNode = elClicked.parentNode,
@@ -90,6 +112,7 @@ var objMruFilter = {
 		for (var a = 0; a < arrAllLi.length; a++) {
 			arrAllLi[a].className = '';
 		}
+
 		//hide child ul for all siblings of clicked element
 		for (var i = 0; i < arrSiblingsOrSelf.length; i++) {
 			var el = arrSiblingsOrSelf[i];
@@ -97,31 +120,48 @@ var objMruFilter = {
 			if (el != elClicked) {
 				var arrUl = el.getElementsByTagName('ul');
 				for (var ii = 0; ii < arrUl.length; ii++) {
-					TweenLite.to(arrUl[ii], 0.2, {
-						height: 0
-					});
+					if (arguments.length == 2) {
+						TweenLite.to(arrUl[ii], 0.2, {
+							height: 0
+						});
+					} else {
+						arrUl[ii].style.height = "0px";
+					}
 				}
 			}
 		}
 
 		//set selected class on clicked element
 		elClicked.className = 'selected';
-		//test if element has children
-		var childUl = getFirstLevelChildElements(elClicked, 'ul');
-		if (childUl.length > 0) {
-			//open the child ul
-			TweenLite.to(childUl[0], 0.4, {
-				height: 'auto'
-			});
+
+		//expand the list to show the child elements
+		if (arguments.length == 2) {
+			//only need to show the child elements of the element that was clicked
+			var childUl = getFirstLevelChildElements(elClicked, 'ul');
+			if (childUl.length > 0) {
+				TweenLite.to(childUl[0], 0.4, {
+					height: 'auto'
+				});
+			}
+		} else {
+			//we need to expand the whole tree
+			var arrAxis = self.getmrufilteraxisarray(objPageState.state.filter.mru);
+			for (var a = 0; a < arrAxis.length; a++) {
+				var childUl = getFirstLevelChildElements(getEl(arrAxis[a].id), 'ul');
+				if (childUl.length > 0) {
+					childUl[0].style.height = "auto";
+				}
+			}
 		}
+
 		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
-		objFilter.blink();
+		if (arguments.length == 2) objFilter.blink();
 		//objMap.updatemap();		
 	},
 	init: function (cb) {
 		var self = this;
 		self.state.tweening = false;
-		self.state.selectedmru = self.getdefaultmru();
+		self.state.selectedmru = app.defaultpagestate.filter.mru;
 		self.state.selectedsector = 'philips';
 
 		self.el.mrufilter = getEl('filter_container');

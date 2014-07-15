@@ -29,7 +29,6 @@ var app = {
 		simulatortitle: ' simulation'
 	},
 	trendgraph: {
-		//TODO: these labels need to be set in the backend or associated with the cache data upload in the backend!
 		//if left empty ('') then the system will assume that the simulator point is year end data
 		predictionlabel: 'Q1 2014', //set the label of the last point (simulator) in the graph to a manual value
 		predictiondate: '2014-03-31', //(yyyy-mm-dd) set to a date to ovewrite the year end date that will normally be calculated
@@ -87,10 +86,8 @@ var app = {
 			return 'ontouchstart' in document.documentElement;
 		}
 	},
-	start: function (bolShowDetailView) {
-		//init elements with async because elements require external data
-
-		// - getoruandproductdata
+	//retrieves oru and mru metadata structures
+	retrievemetadata: function (callback) {
 		var objData = {
 			fulldomain: location.protocol + "//" + location.hostname,
 			method: 'getoruandproductdata',
@@ -110,13 +107,19 @@ var app = {
 				//load the retrieved data into the MRU (product) object
 				objMruFilter.preparehtml(data.result.productdata);
 
-				//hide the login
-				objLogin.hide();
-
-				//setup the worldmap and load the data
-				objMap.updatemap(bolShowDetailView, app.showappintromessage);
+				//execute the callback routine if needed
+				if (callback) callback();
 			}
 		});
+	},
+	start: function (bolShowDetailView) {
+		//init elements with async because elements require external data
+
+		//hide the login
+		objLogin.hide();
+
+		//setup the worldmap and load the data
+		objMap.updatemap(bolShowDetailView, app.showappintromessage);
 
 	},
 	showappintromessage: function () {
@@ -139,6 +142,35 @@ var app = {
 		} else {
 			self.state.orientation = 'portrait';
 		}
+	},
+	processinitialview: function (bolAuthenticated) {
+		var self = this;
+
+		//set or process the information supplied in the hash
+		if (location.hash.length > 0) {
+			var objPageStateNew = objPageState.hash2object(location.hash);
+			//console.log(objPageStateNew);
+			if (objPageStateNew.hasOwnProperty("error")) {
+				//could not properly parse the hash into a state object - default to standard object
+				location.hash = objPageState.object2hash(self.defaultpagestate);
+			} else {
+				if (!bolAuthenticated) {
+					//remember the state so we can return to it after we have passed the authentication step
+					objStore.setlocalstorageitem('stateremembered', JSON.stringify(objPageStateNew));
+
+					//assure that we will show the login screen
+					objPageStateNew.view = 'login';
+					location.hash = objPageState.object2hash(objPageStateNew);
+				} else {
+					//go to the view originally requested
+					objPageState.handlechange(objPageStateNew);
+				}
+			}
+		} else {
+			//set the page state to default
+			location.hash = objPageState.object2hash(self.defaultpagestate);
+		}
+
 	},
 	init: function () {
 		var self = this;
@@ -199,27 +231,38 @@ var app = {
 		//1) retrieve snapshot id (public info - no login needed)
 		objLogin.getsnapshotconfig(function () {
 
-			//2) set or process the information supplied in the hash
-			if (location.hash.length > 0) {
-				var objPageStateNew = objPageState.hash2object(location.hash);
-				//console.log(objPageStateNew);
-				if (objPageStateNew.hasOwnProperty("error")) {
-					//could not properly parse the hash into a state object - default to standard object
-					location.hash = objPageState.object2hash(self.defaultpagestate);
-				} else {
-					//go to the view originally requested
-					objPageState.handlechange(objPageStateNew);
-				}
-			} else {
-				//set the page state to default
-				location.hash = objPageState.object2hash(self.defaultpagestate);
+			//2) test if we are logged in
+			var objData = {
+				fulldomain: location.protocol + "//" + location.hostname,
+				method: 'checksession',
+				type: 'json'
 			}
+			psv('GET', objConfig.urls.authurl2, objData, function (err, data) {
+				if (err) {
+					objError.show('There was an error checking the session. ' + ((typeof err == 'object') ? JSON.parse(err) : err), true);
+				} else {
+
+					//change the view if we need to login
+					if (!data.authenticated) {
+						self.defaultpagestate.view = 'login';
+						self.processinitialview(false);
+					} else {
+						self.defaultpagestate.view = 'worldmap';
+						//load the metadata
+						self.retrievemetadata(function () {
+							self.processinitialview(true);
+						});
+					}
+				}
+			});
 
 		});
 
 	}
 }
 
+//regular expression to match a valid hash
+var regValid = /^#\!\/(login|worldmap|detail?)\/((\w|\d|-)+)\/((\w|\d|-)+)\/((\w|\d|-)+)\/((\w|\d|-)+)\/(filter|faq|help|bookmark|none?)$/g;
 
 var objPageState = {
 	state: {
@@ -282,20 +325,20 @@ var objPageState = {
 	},
 	hash2object: function (strHash) {
 		// converts a hash string into a state javascript object
-		// #!/view(1)/sector(2)/mru(4)/orulevel(6)/oru(8)/popup(10)
-		// #!/worldmap/PD0100/BS9001/2/emea/none
+		// #!/view(1)/orulevel(2)/oru(4)/sector(6)/mru(8)/popup(10)
+		// #!/worldmap/2/emea/PD0100/BS9001/none
 		var bolFilterOnly = false;
 		if (arguments.length > 1) bolFilterOnly = bolReturnFilterOnly;
-		var regValid = /^#\!\/(login|worldmap|detail?)\/((\w|\d|-)+)\/((\w|\d|-)+)\/((\w|\d|-)+)\/((\w|\d|-)+)\/(filter|faq|help|bookmark|none?)$/g;
+
 		if (regValid.test(strHash)) {
 			return {
 				view: strHash.replace(regValid, "$1"),
 				popup: strHash.replace(regValid, "$10"),
 				filter: {
-					orulevel: strHash.replace(regValid, "$6"),
-					oru: strHash.replace(regValid, "$8"),
-					sector: strHash.replace(regValid, "$2"),
-					mru: strHash.replace(regValid, "$4")
+					orulevel: strHash.replace(regValid, "$2"),
+					oru: strHash.replace(regValid, "$4"),
+					sector: strHash.replace(regValid, "$6"),
+					mru: strHash.replace(regValid, "$8")
 				}
 			}
 		} else {
@@ -304,8 +347,8 @@ var objPageState = {
 	},
 	object2hash: function (obj) {
 		//console.log(obj);
-		// #!/view(1)/sector(2)/mru(3)/orulevel(4)/oru(5)/popup(6)
-		return '#!/' + obj.view + '/' + obj.filter.sector + '/' + obj.filter.mru + '/' + obj.filter.orulevel + '/' + obj.filter.oru + '/' + obj.popup;
+		// #!/view(1)/orulevel(2)/oru(4)/sector(6)/mru(8)/popup(10)
+		return '#!/' + obj.view + '/' + obj.filter.orulevel + '/' + obj.filter.oru + '/' + obj.filter.sector + '/' + obj.filter.mru + '/' + obj.popup;
 	},
 	handlechange: function (objPageStateNew) {
 		//check which properties have changed and act accordingly
@@ -313,7 +356,34 @@ var objPageState = {
 
 		//0) add the view to the analytics object so that it will be tracked by google analytics
 		objAnalytics.data.views.push({
-			page: location.hash.substr(2)
+			page: location.href,
+			title: location.hash.replace(regValid, function () {
+				if (objPageStateNew.view == 'login') {
+					return '/login';
+				} else {
+					if (objOruFilter.json == null) {
+						return '/nothing';
+					} else {
+						//construct a readable page title (breadcrumb format)
+						//debugger;
+						//console.log(objMruFilter.getmrufilteraxisarray(arguments[8]));
+						var pageName = '/' + arguments[1] + '/' + objOruFilter.convertoruleveltomarket(arguments[2]).toLowerCase() + '/' + arguments[4] + '/';
+						
+						var arrAxis = objMruFilter.getmrufilteraxisarray(arguments[8]);
+						var arrBreadcrumb = [];
+						for (var a = 0; a < arrAxis.length; a++) {
+							arrBreadcrumb.push(arrAxis[a].name.toLowerCase().replace(/[\s]/gi, '_').replace(/&amp;/, 'and'));
+						}
+						pageName += arrBreadcrumb.join('/') + '/' + arguments[10];
+						
+						
+						//var strGoogleAnalyticsPath = '/' + arguments[1] + '/' + objOruFilter.convertoruleveltomarket(arguments[2]).toLowerCase() + '/' + arguments[4] + '/' + arguments[6] + '/' + arguments[8] + '/' + arguments[10];
+						//console.log(pageName);
+
+						return pageName;
+					}
+				}
+			})
 		});
 
 		//1) check if a filter has changed

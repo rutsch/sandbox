@@ -39,9 +39,9 @@ var objLogin = {
 		if (self.el.tbxpassword.value == '' || self.el.tbxusername.value == '') {
 			alert('Please enter a Philips CODE1 account and a password');
 			if (self.el.tbxpassword.value == '') {
-				self.el.tbxpassword.focus();
+				if (!app.state.mobile) self.el.tbxpassword.focus();
 			} else {
-				self.el.tbxusername.focus();
+				if (!app.state.mobile) self.el.tbxusername.focus();
 			}
 		} else {
 			self.startauthentication();
@@ -255,21 +255,33 @@ var objLogin = {
 					objStore.setlocalstorageitem('token', self.token);
 					objStore.setlocalstorageitem('username', self.el.tbxusername.value);
 
-					self.state.authenticating = false;
-					self.changeauthenticatebutton();
+					//reset the default page state object
+					app.defaultpagestate.view = 'worldmap';
 
-					objOverlay.hide();
-					self.hide();
-					self.el.tbxpassword.value = '';
-					//app.start();
+					//retrieve the metadata
+					app.retrievemetadata(function () {
 
-					//attempt to use the old page state (which we stored in app.js) to restore to the view to the state before we were logged out
-					if (objPageState.stateremembered.hasOwnProperty("view")) {
-						objPageState.updatepagestate(objPageState.stateremembered);
-						objPageState.stateremembered = {};
-					} else {
-						objPageState.updatepagestate({ view: 'worldmap' });
-					}
+						self.state.authenticating = false;
+						self.changeauthenticatebutton();
+
+						objOverlay.hide();
+						self.hide();
+						self.el.tbxpassword.value = '';
+						//app.start();
+
+						//attempt to use the old page state (which we stored in app.js) to restore to the view to the state before we were logged out
+						if (objStore.getlocalstorageitem('stateremembered') != null) {
+							objPageState.updatepagestate(JSON.parse(objStore.getlocalstorageitem('stateremembered')));
+							objStore.removelocalstorageitem('stateremembered');
+						} else {
+							if (objPageState.stateremembered.hasOwnProperty("view")) {
+								objPageState.updatepagestate(objPageState.stateremembered);
+								objPageState.stateremembered = {};
+							} else {
+								objPageState.updatepagestate({ view: 'worldmap' });
+							}
+						}
+					});
 				}
 			}
 		});

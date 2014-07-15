@@ -51,24 +51,7 @@ var objMap = {
 		var self = this;
 
 		objTouchVars.elanimate = null;
-		self.state.mapname = 'World';
-		switch (parseInt(objPageState.state.filter.orulevel)) {
-			case 1:
-				self.state.mapname = 'World';
-				break;
-			case 2:
-				self.state.mapname = 'Region';
-				break;
-			case 3:
-				self.state.mapname = 'Market';
-				break;
-			case 4:
-				self.state.mapname = 'Country';
-				break;
-			default:
-				break;
-		}
-
+		self.state.mapname = objOruFilter.convertoruleveltomarket(objPageState.state.filter.orulevel);
 
 		//attempt to retrieve the svg data from localstorage
 		var svgdata = objStore.getlocalstorageitem('map_' + self.state.mapname);
@@ -79,7 +62,7 @@ var objMap = {
 			//load svg data via http
 			var arrFormData = [];
 			arrFormData['type'] = 'xml';
-			arrFormData['file'] = self.maps[strOru.toLowerCase()].url;
+			arrFormData['file'] = self.maps[self.state.mapname.toLowerCase()].url;
 			arrFormData['method'] = 'getsvgworldmap';
 			arrFormData['fulldomain'] = location.protocol + "//" + location.hostname;
 			arrFormData['token'] = objLogin.token;
