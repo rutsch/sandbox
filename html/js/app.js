@@ -356,7 +356,7 @@ var objPageState = {
 
 		//0) add the view to the analytics object so that it will be tracked by google analytics
 		objAnalytics.data.views.push({
-			page: location.href,
+			page: location.hash.substr(2),
 			title: location.hash.replace(regValid, function () {
 				if (objPageStateNew.view == 'login') {
 					return '/login';
@@ -576,7 +576,7 @@ var objAnalytics = {
 		ga('set', 'forceSSL', true);
 
 		//send an initial hit to the server
-		ga('send', 'pageview', { page: '/start' });
+		ga('send', 'pageview', { page: '/start' + ((location.href.indexOf('http') > -1) ? '/website' : '/app') });
 
 		//start the async checker
 		self.asyncanalytics();
