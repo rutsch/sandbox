@@ -62,7 +62,7 @@ var objPanelInfo = {
 		var strIntro = panel + '_intro.html';
 
 		serverSideRequest({
-			url: objConfig.urls.base + '/data/' + strIntro,
+			url: objConfig.urls.base + '/data/' + strIntro +((location.href.indexOf('http') > -1) ? '?rnd=' + Math.random() : ''),
 			method: 'get',
 			debug: false,
 			callback: function (err, strContent) {
