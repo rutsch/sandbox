@@ -142,23 +142,49 @@ var objLogin = {
 		//check if there are updates in the appinfo
 		var storedConfig = objStore.getlocalstorageitem('appconfig');
 		var newConfig = response.appinfo;
-		var strBaseMessage = '<b>New release available</b><p>A new version (' + ((app.state.ios) ? newConfig.iosid : newConfig.androidid) + ') of the Lives Improved app is available.</p>';
-		strBaseMessage += '<p>Please visit the <span class="mimiclink" onclick="loadUrlInBrowser(\'https://www.livesimproved.philips.com/download\', true)">Lives Improved website</span> to download and install this new version.</p>';
-		strBaseMessage += '<p>Details:</p>';
-		if (storedConfig) {
-			storedConfig = JSON.parse(storedConfig);
-			if (app.state.ios) {
-				if (storedConfig.iosid != newConfig.iosid) {
-					self.state.messages.push(strBaseMessage);
-					self.state.messages.push(newConfig.iosdescription)
-				}
-			} else {
-				if (storedConfig.androidid != newConfig.androidid) {
-					self.state.messages.push(strBaseMessage);
-					self.state.messages.push(newConfig.andrioddescription)
+
+		var strBaseMessage = '';
+
+		//on the app we show a new release
+		if (app.state.mobile) {
+			strBaseMessage = '<b>New release available</b><p>A new version (' + ((app.state.ios) ? newConfig.iosid : newConfig.androidid) + ') of the Lives Improved app is available.</p>';
+			strBaseMessage += '<p>Please visit the <span class="mimiclink" onclick="loadUrlInBrowser(\'https://www.livesimproved.philips.com/download\', true)">Lives Improved website</span> to download and install this new version.</p>';
+			strBaseMessage += '<p>Details:</p>';
+			if (storedConfig) {
+				storedConfig = JSON.parse(storedConfig);
+				if (app.state.ios) {
+					if (storedConfig.iosid != newConfig.iosid) {
+						self.state.messages.push(strBaseMessage);
+						self.state.messages.push(newConfig.iosdescription)
+					}
+				} else {
+					if (storedConfig.androidid != newConfig.androidid) {
+						self.state.messages.push(strBaseMessage);
+						self.state.messages.push(newConfig.andrioddescription)
+					}
 				}
 			}
+		} else {
+			//on the website version we show updates for every new user
+			strBaseMessage = '<b>The Lives Improved website has updated</b>';
+			strBaseMessage += '<p>Details:</p>';
+
+			//TODO: currently using the IOS app release notes. This should be changed so that we show website updates independantly from app updates
+
+			storedConfig = JSON.parse(storedConfig);
+			if (storedConfig) {
+				if (storedConfig.iosid != newConfig.iosid) {
+					self.state.messages.push(strBaseMessage);
+					self.state.messages.push(newConfig.iosdescription);
+				}
+			} else {
+				//new user: show the release notes
+				self.state.messages.push(strBaseMessage);
+				self.state.messages.push(newConfig.iosdescription);
+			}
+
 		}
+		
 		objStore.setlocalstorageitem('appconfig', JSON.stringify(response.appinfo));
 	},
 	/*
@@ -374,6 +400,7 @@ var objLogin = {
 		var self = this;
 		//debugger;
 		getEl('messagelist').innerHTML = '';
+		//debugger;
 		if (self.state.messages.length > 0) {
 			for (var i = 0; i < self.state.messages.length; i++) {
 				getEl('messagelist').innerHTML += '<li>' + self.state.messages[i] + '</li>';

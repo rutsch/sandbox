@@ -126,7 +126,10 @@ var app = {
 		//TODO: add logic to show bookmarks, filter or messages
 		//objFilter.show();
 		var usedAppBefore = objStore.getlocalstorageitem('seenAppIntro');
-		if (usedAppBefore) {
+
+		//TODO: this needs to change so that we can show website updates and app updates independently
+		//debugger;
+		if ((usedAppBefore && app.state.mobile) || (!app.state.mobile)) {
 			objLogin.showupdatemessages();
 		} else {
 			objPanelInfo.show('app');
@@ -185,7 +188,7 @@ var app = {
 		self.state.mobile = self.isMobile.any();
 
 		//init storage
-		objStore.init();		
+		objStore.init();
 
 		//init the stats
 		objAnalytics.init();
