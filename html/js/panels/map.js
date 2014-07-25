@@ -67,20 +67,17 @@ var objMap = {
 			arrFormData['fulldomain'] = location.protocol + "//" + location.hostname;
 			arrFormData['token'] = objLogin.token;
 
-			serverSideRequest({
+			svgdata = serverSideRequest({
 				url: objConfig.urls.authurl2,
 				formdata: arrFormData,
 				method: 'get',
-				debug: false,
-				callback: function (err, strSvg) {
-					if (err != null) {
-						objError.show('There was an error loading the svg worldmap data. ' + ((typeof err == 'object') ? JSON.parse(err) : err), true);
-					} else {
-						objStore.setlocalstorageitem('map_' + self.state.mapname, strSvg);
-						return strSvg;
-					}
-				}
+				debug: false
 			});
+
+			objStore.setlocalstorageitem('map_' + self.state.mapname, svgdata);
+			return svgdata;
+
+
 		}
 	},
 	//retrieves the lives improved data
