@@ -96,8 +96,12 @@ var app = {
 			snapshotid: objConfig.currentsnapshotid
 		}
 		psv('GET', objConfig.urls.dynamicresourceurl, objData, function (err, data) {
-			if (err) {
-				objError.show('There was an error retrieving metadata information. ' + ((typeof err == 'object') ? JSON.parse(err) : err), true);
+			if (err || data.error) {
+				if(data.error){
+					objError.show('There was an error retrieving metadata information. ' + ((typeof data == 'object') ? JSON.stringify(data) : data), true);
+				}else{
+					objError.show('There was an error retrieving metadata information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
+				}
 			} else {
 				//console.log(data);
 
@@ -158,12 +162,16 @@ var app = {
 				location.hash = objPageState.object2hash(self.defaultpagestate);
 			} else {
 				if (!bolAuthenticated) {
-					//remember the state so we can return to it after we have passed the authentication step
-					objStore.setlocalstorageitem('stateremembered', JSON.stringify(objPageStateNew));
+					if(location.hash.indexOf('!/login/') >-1){
+						location.hash = objPageState.object2hash(self.defaultpagestate);
+					} else {
+						//remember the state so we can return to it after we have passed the authentication step
+						objStore.setlocalstorageitem('stateremembered', JSON.stringify(objPageStateNew));
 
-					//assure that we will show the login screen
-					objPageStateNew.view = 'login';
-					location.hash = objPageState.object2hash(objPageStateNew);
+						//assure that we will show the login screen
+						objPageStateNew.view = 'login';
+						location.hash = objPageState.object2hash(objPageStateNew);
+					}
 				} else {
 					//go to the view originally requested
 					objPageState.handlechange(objPageStateNew);
@@ -241,10 +249,14 @@ var app = {
 				type: 'json'
 			}
 			psv('GET', objConfig.urls.authurl2, objData, function (err, data) {
-				if (err) {
-					objError.show('There was an error checking the session. ' + ((typeof err == 'object') ? JSON.parse(err) : err), true);
-				} else {
-
+				if (err || data.error) {
+					if(data.error){
+						objError.show('There was an error retrieving session information. ' + ((typeof data == 'object') ? JSON.stringify(data) : data), true);
+					}else{
+						objError.show('There was an error retrieving session information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
+					}
+				}  else {
+					//console.log(data)
 					//change the view if we need to login
 					if (!data.authenticated) {
 						self.defaultpagestate.view = 'login';

@@ -1,5 +1,6 @@
 var objLogin = {
 	token: null,
+	role: '',
 	state: {
 		visible: null,
 		tweening: null,
@@ -93,8 +94,12 @@ var objLogin = {
 
 		psv('GET', objConfig.urls.authurl2, objData, function (err, response) {
 			//debugger;
-			if (err != null) {
-				objError.show('There was an error retrieving snapshot information. ' + ((typeof err == 'object') ? JSON.parse(err) : err), true);
+			if (err || response.error) {
+				if(response.error){
+					objError.show('There was an error retrieving snapshot information. ' + ((typeof response == 'object') ? JSON.stringify(response) : response), true);
+				}else{
+					objError.show('There was an error retrieving snapshot information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
+				}
 			} else {
 				//finds the latest snapshot id and stores it in objConfig
 				self.findlatestsnapshotid(response);
@@ -184,7 +189,7 @@ var objLogin = {
 			}
 
 		}
-		
+
 		objStore.setlocalstorageitem('appconfig', JSON.stringify(response.appinfo));
 	},
 	/*
@@ -278,6 +283,7 @@ var objLogin = {
 					self.handleloginerror(response.error.message);
 				} else {
 					self.token = response.token;
+					self.role = response.role;
 					objStore.setlocalstorageitem('token', self.token);
 					objStore.setlocalstorageitem('username', self.el.tbxusername.value);
 
