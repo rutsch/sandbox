@@ -557,7 +557,7 @@ var objAnalytics = {
 			}
 		}
 
-		intTimerId = window.setTimeout(function () {
+		var intTimerId = window.setTimeout(function () {
 			objAnalytics.asyncanalytics();
 		}, 500);
 
