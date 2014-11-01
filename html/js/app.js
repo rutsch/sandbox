@@ -163,7 +163,7 @@ var app = {
 			} else {
 				if (!bolAuthenticated) {
 					if(location.hash.indexOf('!/login/') >-1){
-						location.hash = objPageState.object2hash(self.defaultpagestate);
+						location.hash = objPageState.object2hash(self.defaultpagestate)+"/";
 					} else {
 						//remember the state so we can return to it after we have passed the authentication step
 						objStore.setlocalstorageitem('stateremembered', JSON.stringify(objPageStateNew));
@@ -424,9 +424,11 @@ var objPageState = {
 		if (self.state.view == 'login' && objPageStateNew.view != 'login') bolFromLogin = true;
 
 		//3) show the transparent layer one time only
-		if (self.state.mobile && self.state.initialmapview && bolFromLogin && objPageStateNew.view != 'login') self.showtransparentlayer();
+		if (self.state.mobile && self.state.initialmapview && bolFromLogin && objPageStateNew.view != 'login') app.showtransparentlayer();
 
 		//4) handle view change
+		//console.log(self.state.view);
+		//console.log(objPageStateNew.view);
 		if (self.state.view != objPageStateNew.view) {
 			//console.log('viewchange detected: self.state.view=' + self.state.view + ' - objPageStateNew.view=' + objPageStateNew.view);
 			switch (objPageStateNew.view) {

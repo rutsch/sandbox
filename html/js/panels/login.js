@@ -199,7 +199,7 @@ var objLogin = {
 		var self = this;
 		if (!self.state.authenticating) {
 			self.state.authenticating = true;
-			objOverlay.show();
+			objOverlay.show(false,false);
 
 			var pw = self.el.tbxpassword.value,
 				un = self.el.tbxusername.value;
@@ -296,7 +296,7 @@ var objLogin = {
 						self.state.authenticating = false;
 						self.changeauthenticatebutton();
 
-						objOverlay.hide();
+						objOverlay.hide(false,false);
 						self.hide();
 						self.el.tbxpassword.value = '';
 						//app.start();
@@ -324,14 +324,21 @@ var objLogin = {
 	hide: function () {
 		var self = this;
 		self.state.tweening = true;
-		TweenLite.to(self.el.wrapper, 0.3, {
-			opacity: 0,
-			onComplete: function () {
-				self.el.wrapper.style.display = "none";
-				self.state.tweening = false;
-				self.state.visible = false;
-			}
-		});
+		
+		if(app.state.ios){
+			self.el.wrapper.style.display = "none";
+			self.state.tweening = false;
+			self.state.visible = false;	
+		}else{
+			TweenLite.to(self.el.wrapper, 0.3, {
+				opacity: 0,
+				onComplete: function () {
+					self.el.wrapper.style.display = "none";
+					self.state.tweening = false;
+					self.state.visible = false;
+				}
+			});
+		}
 	},
 	show: function () {
 		var self = this;
@@ -340,22 +347,38 @@ var objLogin = {
 		objSliders.vars.simulatorsampling = false;
 		self.el.wrapper.style.display = "block";
 		self.state.tweening = true;
-		TweenLite.to(self.el.wrapper, 0.3, {
-			opacity: 1,
-			onComplete: function () {
-				//debugger;
-				self.state.tweening = false;
-				self.state.visible = true;
+		
+		if(app.state.ios){
+			self.el.wrapper.style.opacity = 1;
+			self.state.tweening = false;
+			self.state.visible = true;
 
-				//set the focus
-				if (self.el.tbxusername.value == '') {
-					setTimeout(function () { self.el.tbxusername.focus() }, 500);
-				} else {
-					setTimeout(function () { self.el.tbxpassword.focus() }, 500);
+			self.focusinputfield();			
+			
+		}else{
+			TweenLite.to(self.el.wrapper, 0.3, {
+				opacity: 1,
+				onComplete: function () {
+					//debugger;
+					self.state.tweening = false;
+					self.state.visible = true;
+
+					self.focusinputfield();
 				}
-
+			});
+		}
+	},
+	focusinputfield: function(){
+		var self = this;
+		
+		//set the focus
+		if(!app.state.ios){
+			if (self.el.tbxusername.value == '') {
+				setTimeout(function () { self.el.tbxusername.focus() }, 300);
+			} else {
+				setTimeout(function () { self.el.tbxpassword.focus() }, 300);
 			}
-		});
+		}
 	},
 	//JT: this needs to be extended so that basically the app is resetted to it's original state
 	logout: function () {
@@ -383,23 +406,38 @@ var objLogin = {
 	changeauthenticatebutton: function () {
 		var self = this;
 		if (self.state.authenticating) {
-			TweenLite.to(self.el.submit, 0.3, {
-				opacity: 0.5,
-				onComplete: function () {
-					self.el.submit.value = "Authenticating...";
-					self.state.passworddisabled = true;
-					self.state.usernamedisabled = true;
-				}
-			});
+			
+			if(app.state.ios){
+				self.el.submit.style.opacity=1;
+				self.el.submit.value = "Authenticating...";
+				self.state.passworddisabled = true;
+				self.state.usernamedisabled = true;
+			}else{
+				TweenLite.to(self.el.submit, 0.3, {
+					opacity: 0.5,
+					onComplete: function () {
+						self.el.submit.value = "Authenticating...";
+						self.state.passworddisabled = true;
+						self.state.usernamedisabled = true;
+					}
+				});
+			}
 		} else {
-			TweenLite.to(self.el.submit, 0.3, {
-				opacity: 1,
-				onComplete: function () {
-					self.el.submit.value = "Log in";
-					self.state.passworddisabled = false;
-					self.state.usernamedisabled = false;
-				}
-			});
+			if(app.state.ios){
+				self.el.submit.style.opacity=1;
+				self.el.submit.value = "Log in";
+				self.state.passworddisabled = false;
+				self.state.usernamedisabled = false;
+			}else{
+				TweenLite.to(self.el.submit, 0.3, {
+					opacity: 1,
+					onComplete: function () {
+						self.el.submit.value = "Log in";
+						self.state.passworddisabled = false;
+						self.state.usernamedisabled = false;
+					}
+				});
+			}
 		}
 	},
 	showupdatemessages: function () {
