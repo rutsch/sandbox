@@ -1,7 +1,7 @@
 var objConfig = {
 	urls: {
 		base: 'https://www.livesimproved.philips.com/webapp/html',
-		dev: 'https://nlnehvgdc1vw991.ssn.philips.com/webapp/html',
+		dev: 'https://dev.livesimproved.philips.com/webapp/html',
 		johan: 'http://livesimproved.site.10.0.1.25.xip.io',
 		rutger: 'http://95.97.163.236/sandbox/html',
 		w2003: 'http://www.myvirtualbox.com/webapp/html',
