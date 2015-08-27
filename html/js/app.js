@@ -258,7 +258,8 @@ var app = {
 				}  else {
 					//console.log(data)
 					//change the view if we need to login
-					if (!data.authenticated) {
+				  if (!data.authenticated) {
+            // TODO: Remove login view state and replace form with static message state.
 						self.defaultpagestate.view = 'login';
 						self.processinitialview(false);
 					} else {
