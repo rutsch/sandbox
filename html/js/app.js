@@ -248,7 +248,7 @@ var app = {
 				method: 'checksession',
 				type: 'json'
 			}
-			psv('GET', objConfig.urls.authurl2, objData, function (err, data) {
+			psv('GET', objConfig.urls.authurl2, objData, function checkSessionHandler(err, data) {
 				if (err || data.error) {
 					if(data.error){
 						objError.show('There was an error retrieving session information. ' + ((typeof data == 'object') ? JSON.stringify(data) : data), true);
@@ -262,6 +262,9 @@ var app = {
 						self.defaultpagestate.view = 'login';
 						self.processinitialview(false);
 					} else {
+					  // store the token
+					  objLogin.token = data.token;
+
 						self.defaultpagestate.view = 'worldmap';
 						//load the metadata
 						self.retrievemetadata(function () {
