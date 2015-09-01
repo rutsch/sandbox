@@ -1,502 +1,297 @@
 var objLogin = {
-	token: null,
-	role: '',
-	state: {
-		visible: null,
-		tweening: null,
-		usernamedisabled: null,
-		passworddisabled: null,
-		authenticating: null,
-		messages: []
-	},
-	el: {
-		wrapper: null,
-		tbxusername: null,
-		tbxpassword: null,
-		submit: null
-	},
-	handleloginerror: function (msg) {
-		var self = this;
-		objOverlay.hide();
-		self.el.tbxpassword.value = '';
-		self.state.authenticating = false;
-		TweenLite.to(self.el.submit, 0.3, {
-			opacity: 1,
-			onComplete: function () {
-				self.state.tweening = false;
-				self.el.submit.value = "Log in";
-				self.state.passworddisabled = false;
-				self.state.usernamedisabled = false;
-			}
-		});
-		objError.show(msg, true);
-	},
-	/*
+  token: null,
+  role: '',
+  state: {
+    visible: null,
+    tweening: null,
+    usernamedisabled: null,
+    passworddisabled: null,
+    authenticating: null,
+    messages: []
+  },
+  el: {
+    wrapper: null,
+    submit: null
+  },
+  /*
 	* Click functions
 	*/
-	btnsubmitclick: function (e) {
-		e.preventDefault();
-		var self = this;
-		if (self.el.tbxpassword.value == '' || self.el.tbxusername.value == '') {
-			alert('Please enter a Philips CODE1 account and a password');
-			if (self.el.tbxpassword.value == '') {
-				if (!app.state.mobile) self.el.tbxpassword.focus();
-			} else {
-				if (!app.state.mobile) self.el.tbxusername.focus();
-			}
-		} else {
-			self.startauthentication();
-		}
-	},
-	findlatestsnapshotid: function (response) {
-		var self = this;
+  btnsubmitclick: function (e) {
+    e.preventDefault();
+    var self = this;
 
-		//capture the snapshot configuration and store the config into the config object
-		objConfig.snapshots = response.snapshotconfig;
+    //reload the complete page to force shibboleth authentication and reset to default or remembered state
+    location.href = '/tools/shibboleth-authenticate.aspx?rnd=' + Math.random();
+  },
+  findlatestsnapshotid: function (response) {
+    var self = this;
 
-		//find the latest snapshot id
-		var dateCurrent = new Date('1970-01-01');
-		//note - for IE old use new Date('2011', '04' - 1, '11', '11', '51', '00')
-		var strLatestSnapshotId = '';
-		if (objConfig.snapshots != null) {
-			for (var i = 0; i < objConfig.snapshots.length; i++) {
-				var objConfigSingle = objConfig.snapshots[i];
-				//console.log(objConfigSingle);
+    //capture the snapshot configuration and store the config into the config object
+    objConfig.snapshots = response.snapshotconfig;
 
-				var dateNew = new Date(objConfigSingle.dateend);
-				//console.log(dateNew)
-				//console.log(dateNew-dateCurrent);
+    //find the latest snapshot id
+    var dateCurrent = new Date('1970-01-01');
+    //note - for IE old use new Date('2011', '04' - 1, '11', '11', '51', '00')
+    var strLatestSnapshotId = '';
+    if (objConfig.snapshots != null) {
+      for (var i = 0; i < objConfig.snapshots.length; i++) {
+        var objConfigSingle = objConfig.snapshots[i];
+        //console.log(objConfigSingle);
 
-				if ((dateNew - dateCurrent) > 0) {
-					//this snapshot is newer than the previous one
-					strLatestSnapshotId = objConfigSingle.snapshotid;
+        var dateNew = new Date(objConfigSingle.dateend);
+        //console.log(dateNew)
+        //console.log(dateNew-dateCurrent);
 
-					dateCurrent = new Date(objConfigSingle.dateend);
-				}
-			}
-		}
+        if ((dateNew - dateCurrent) > 0) {
+          //this snapshot is newer than the previous one
+          strLatestSnapshotId = objConfigSingle.snapshotid;
 
-		//update the id in the config file
-		objConfig.currentsnapshotid = strLatestSnapshotId;
-		//console.log('latest snapshot id '+objConfig.currentsnapshotid);
+          dateCurrent = new Date(objConfigSingle.dateend);
+        }
+      }
+    }
 
-	},
-	getsnapshotconfig: function (cb) {
-		var self = this;
+    //update the id in the config file
+    objConfig.currentsnapshotid = strLatestSnapshotId;
+    //console.log('latest snapshot id '+objConfig.currentsnapshotid);
 
-		var objData = {
-			type: 'json',
-			fulldomain: location.protocol + "//" + location.hostname,
-			method: 'getsnapshotdetailssimple',
-			type: 'json',
-			token: objLogin.token
-		};
+  },
+  getsnapshotconfig: function (cb) {
+    var self = this;
 
-		psv('GET', objConfig.urls.authurl2, objData, function (err, response) {
-			//debugger;
-			if (err || response.error) {
-				if(response.error){
-					objError.show('There was an error retrieving snapshot information. ' + ((typeof response == 'object') ? JSON.stringify(response) : response), true);
-				}else{
-					objError.show('There was an error retrieving snapshot information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
-				}
-			} else {
-				//finds the latest snapshot id and stores it in objConfig
-				self.findlatestsnapshotid(response);
+    var objData = {
+      type: 'json',
+      fulldomain: location.protocol + "//" + location.hostname,
+      method: 'getsnapshotdetailssimple',
+      type: 'json',
+      token: objLogin.token
+    };
 
-				//test if we need to show an update message and store this in the local storage
-				self.checkappconfigforupdates(response);
+    psv('GET', objConfig.urls.authurl2, objData, function getSnapshotConfigHandler(err, response) {
+      //debugger;
+      if (err || response.error) {
+        if (response.error) {
+          objError.show('There was an error retrieving snapshot information. ' + ((typeof response == 'object') ? JSON.stringify(response) : response), true);
+        } else {
+          objError.show('There was an error retrieving snapshot information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
+        }
+      } else {
+        //console.log(response);
 
-				//continue processing
-				cb();
-			}
-		});
-	},
-	checksnapshotconfigforupdates: function (response) {
-		var self = this;
-		//check if there are updates in the snapshotconfig
-		var storedConfig = objStore.getlocalstorageitem('snapshotconfig');
-		var newConfig = response.snapshotconfig;
-		if (storedConfig) {
-			storedConfig = JSON.parse(storedConfig).snapshotconfig;
-			//loop through snapshots in newConfig
-			for (var i = 0; i < newConfig.length; i++) {
-				//debugger;
-				var found = false;
-				for (var ii = 0; ii < storedConfig.length; ii++) {
-					if (newConfig[i].snapshotid == storedConfig[ii].snapshotid) {
-						found = true;
-						if (newConfig[i].lastmodified != storedConfig[ii].lastmodified) {
-							//data updated
-							self.state.messages.push('There is updated data for "' + newConfig[i].name + '".');
-							break;
-						}
-					}
-				}
-				if (!found) {
-					// new dataset added
-					self.state.messages.push('A new data set "' + newConfig[i].name + '" has been added.');
-				}
-			}
+        //check if authentication is required
+        if (response.hasOwnProperty('authenticated') && !response.authenticated) {
+          app.defaultpagestate.view = 'login';
+          app.processinitialview(false);
+        } else {
+          //finds the latest snapshot id and stores it in objConfig
+          self.findlatestsnapshotid(response);
 
-		}
-		objStore.setlocalstorageitem('snapshotconfig', JSON.stringify(response));
-	},
-	checkappconfigforupdates: function (response) {
-		var self = this;
-		//check if there are updates in the appinfo
-		var storedConfig = objStore.getlocalstorageitem('appconfig');
-		var newConfig = response.appinfo;
+          //test if we need to show an update message and store this in the local storage
+          self.checkappconfigforupdates(response);
 
-		var strBaseMessage = '';
-
-		//on the app we show a new release
-		if (app.state.mobile) {
-			strBaseMessage = '<b>New release available</b><p>A new version (' + ((app.state.ios) ? newConfig.iosid : newConfig.androidid) + ') of the Lives Improved app is available.</p>';
-			strBaseMessage += '<p>Please visit the <span class="mimiclink" onclick="loadUrlInBrowser(\'https://www.livesimproved.philips.com/download\', true)">Lives Improved website</span> to download and install this new version.</p>';
-			strBaseMessage += '<p>Details:</p>';
-			if (storedConfig) {
-				storedConfig = JSON.parse(storedConfig);
-				if (app.state.ios) {
-					if (storedConfig.iosid != newConfig.iosid) {
-						self.state.messages.push(strBaseMessage);
-						self.state.messages.push(newConfig.iosdescription)
-					}
-				} else {
-					if (storedConfig.androidid != newConfig.androidid) {
-						self.state.messages.push(strBaseMessage);
-						self.state.messages.push(newConfig.andrioddescription)
-					}
-				}
-			}
-		} else {
-			//on the website version we show updates for every new user
-			strBaseMessage = '<b>The Lives Improved website has updated</b>';
-			strBaseMessage += '<p>Details:</p>';
-
-			//TODO: currently using the IOS app release notes. This should be changed so that we show website updates independantly from app updates
-
-			storedConfig = JSON.parse(storedConfig);
-			if (storedConfig) {
-				if (storedConfig.iosid != newConfig.iosid) {
-					self.state.messages.push(strBaseMessage);
-					self.state.messages.push(newConfig.iosdescription);
-				}
-			} else {
-				//new user: show the release notes
-				self.state.messages.push(strBaseMessage);
-				self.state.messages.push(newConfig.iosdescription);
-			}
-
-		}
-
-		objStore.setlocalstorageitem('appconfig', JSON.stringify(response.appinfo));
-	},
-	/*
-	* Authentication functions
-	*/
-	startauthentication: function () {
-		var self = this;
-		if (!self.state.authenticating) {
-			self.state.authenticating = true;
-			objOverlay.show(false,false);
-
-			var pw = self.el.tbxpassword.value,
-				un = self.el.tbxusername.value;
-			//console.log(pw);
-			//d1mPL3&*221089 - d1mPL3
-
-			self.changeauthenticatebutton();
-
-			var objData = {
-				type: 'json',
-				fulldomain: location.protocol + "//" + location.hostname
-			};
-			psv('GET', objConfig.urls.authurl1, objData, function (err, response) {
-				if (err != null) {
-					self.handleloginerror(err);
-				} else {
-					if (response.error) {
-						self.handleloginerror(response.error.message);
-					} else {
-						objData.stay = true;
-						psv('GET', objConfig.urls.authurl1, objData, function (err, response) {
-							//debugger;
-							if (err != null) {
-								self.handleloginerror(err);
-							} else {
-								//finds the latest snapshot id and stores it in objConfig
-								self.findlatestsnapshotid(response);
-								//checks if there are updates in the snapshot config and display's a message
-								self.checksnapshotconfigforupdates(response);
+          //continue processing
+          cb();
+        }
 
 
-								if (response.error) {
-									self.handleloginerror(response.error.message);
-								} else {
-									self.getjsonvars(objData);
-								}
-							}
 
-						});
-					}
-				}
+      }
+    });
+  },
+  checksnapshotconfigforupdates: function (response) {
+    var self = this;
+    //check if there are updates in the snapshotconfig
+    var storedConfig = objStore.getlocalstorageitem('snapshotconfig');
+    var newConfig = response.snapshotconfig;
+    if (storedConfig) {
+      storedConfig = JSON.parse(storedConfig).snapshotconfig;
+      //loop through snapshots in newConfig
+      for (var i = 0; i < newConfig.length; i++) {
+        //debugger;
+        var found = false;
+        for (var ii = 0; ii < storedConfig.length; ii++) {
+          if (newConfig[i].snapshotid == storedConfig[ii].snapshotid) {
+            found = true;
+            if (newConfig[i].lastmodified != storedConfig[ii].lastmodified) {
+              //data updated
+              self.state.messages.push('There is updated data for "' + newConfig[i].name + '".');
+              break;
+            }
+          }
+        }
+        if (!found) {
+          // new dataset added
+          self.state.messages.push('A new data set "' + newConfig[i].name + '" has been added.');
+        }
+      }
 
-			});
-		}
-	},
-	getjsonvars: function (objData) {
-		var self = this;
-		objData.method = 'generatejsvarsjson';
-		psv('GET', objConfig.urls.authurl2, objData, function (err, response) {
-			//console.log(response);
-			if (err != null) {
-				self.handleloginerror(err);
-			} else {
-				if (response.error) {
-					self.handleloginerror(response.error.message);
-				} else {
-					self.authenticate(response.token);
-				}
-			}
-		});
-	},
-	authenticate: function (token) {
-		var self = this;
-		if (self.el.tbxusername.value.toLowerCase().indexOf('code1/') > -1) self.el.tbxusername.value = self.el.tbxusername.value.replace('code1/', 'code1\\');
-		if (self.el.tbxusername.value.toLowerCase().indexOf('code1\\') == -1) self.el.tbxusername.value = 'code1\\' + self.el.tbxusername.value;
-		var objDataAuthenticate = {
-			username: self.el.tbxusername.value,
-			password: self.el.tbxpassword.value,
-			url: '/index.aspx',
-			token: token,
-			type: 'json',
-			fulldomain: location.protocol + "//" + location.hostname
-		};
+    }
+    objStore.setlocalstorageitem('snapshotconfig', JSON.stringify(response));
+  },
+  checkappconfigforupdates: function (response) {
+    var self = this;
+    //check if there are updates in the appinfo
+    var storedConfig = objStore.getlocalstorageitem('appconfig');
+    var newConfig = response.appinfo;
 
-		psv('POST', objConfig.urls.authurl3, objDataAuthenticate, function (err, response) {
-			if (err != null) {
-				self.handleloginerror(err);
-			} else {
-				//response = JSON.parse(response);
-				if (response.error) {
-					self.handleloginerror(response.error.message);
-				} else {
-					self.token = response.token;
-					self.role = response.role;
-					objStore.setlocalstorageitem('token', self.token);
-					objStore.setlocalstorageitem('username', self.el.tbxusername.value);
+    var strBaseMessage = '';
 
-					//reset the default page state object
-					app.defaultpagestate.view = 'worldmap';
+    //on the app we show a new release
+    if (app.state.mobile) {
+      strBaseMessage = '<b>New release available</b><p>A new version (' + ((app.state.ios) ? newConfig.iosid : newConfig.androidid) + ') of the Lives Improved app is available.</p>';
+      strBaseMessage += '<p>Please visit the <span class="mimiclink" onclick="loadUrlInBrowser(\'https://www.livesimproved.philips.com/download\', true)">Lives Improved website</span> to download and install this new version.</p>';
+      strBaseMessage += '<p>Details:</p>';
+      if (storedConfig) {
+        storedConfig = JSON.parse(storedConfig);
+        if (app.state.ios) {
+          if (storedConfig.iosid != newConfig.iosid) {
+            self.state.messages.push(strBaseMessage);
+            self.state.messages.push(newConfig.iosdescription)
+          }
+        } else {
+          if (storedConfig.androidid != newConfig.androidid) {
+            self.state.messages.push(strBaseMessage);
+            self.state.messages.push(newConfig.andrioddescription)
+          }
+        }
+      }
+    } else {
+      //on the website version we show updates for every new user
+      strBaseMessage = '<b>The Lives Improved website has updated</b>';
+      strBaseMessage += '<p>Details:</p>';
 
-					//retrieve the metadata
-					app.retrievemetadata(function () {
+      //TODO: currently using the IOS app release notes. This should be changed so that we show website updates independantly from app updates
 
-						self.state.authenticating = false;
-						self.changeauthenticatebutton();
+      storedConfig = JSON.parse(storedConfig);
+      if (storedConfig) {
+        if (storedConfig.iosid != newConfig.iosid) {
+          self.state.messages.push(strBaseMessage);
+          self.state.messages.push(newConfig.iosdescription);
+        }
+      } else {
+        //new user: show the release notes
+        self.state.messages.push(strBaseMessage);
+        self.state.messages.push(newConfig.iosdescription);
+      }
 
-						objOverlay.hide(false,false);
-						self.hide();
-						self.el.tbxpassword.value = '';
-						//app.start();
+    }
 
-						//attempt to use the old page state (which we stored in app.js) to restore to the view to the state before we were logged out
-						if (objStore.getlocalstorageitem('stateremembered') != null) {
-							objPageState.updatepagestate(JSON.parse(objStore.getlocalstorageitem('stateremembered')));
-							objStore.removelocalstorageitem('stateremembered');
-						} else {
-							if (objPageState.stateremembered.hasOwnProperty("view")) {
-								objPageState.updatepagestate(objPageState.stateremembered);
-								objPageState.stateremembered = {};
-							} else {
-								objPageState.updatepagestate({ view: 'worldmap' });
-							}
-						}
-					});
-				}
-			}
-		});
-	},
-	/*
+    objStore.setlocalstorageitem('appconfig', JSON.stringify(response.appinfo));
+  },
+
+  /*
 	* UI functions
 	*/
-	hide: function () {
-		var self = this;
-		self.state.tweening = true;
-		
-		if(app.state.ios){
-			self.el.wrapper.style.display = "none";
-			self.state.tweening = false;
-			self.state.visible = false;	
-		}else{
-			TweenLite.to(self.el.wrapper, 0.3, {
-				opacity: 0,
-				onComplete: function () {
-					self.el.wrapper.style.display = "none";
-					self.state.tweening = false;
-					self.state.visible = false;
-				}
-			});
-		}
-	},
-	show: function () {
-		var self = this;
+  hide: function () {
+    var self = this;
+    self.state.tweening = true;
 
-		//reset some variables
-		objSliders.vars.simulatorsampling = false;
-		self.el.wrapper.style.display = "block";
-		self.state.tweening = true;
-		
-		if(app.state.ios){
-			self.el.wrapper.style.opacity = 1;
-			self.state.tweening = false;
-			self.state.visible = true;
+    if (app.state.ios) {
+      self.el.wrapper.style.display = "none";
+      self.state.tweening = false;
+      self.state.visible = false;
+    } else {
+      TweenLite.to(self.el.wrapper, 0.3, {
+        opacity: 0,
+        onComplete: function () {
+          self.el.wrapper.style.display = "none";
+          self.state.tweening = false;
+          self.state.visible = false;
+        }
+      });
+    }
+  },
+  show: function () {
+    var self = this;
 
-			self.focusinputfield();			
-			
-		}else{
-			TweenLite.to(self.el.wrapper, 0.3, {
-				opacity: 1,
-				onComplete: function () {
-					//debugger;
-					self.state.tweening = false;
-					self.state.visible = true;
+    //reset some variables
+    objSliders.vars.simulatorsampling = false;
+    self.el.wrapper.style.display = "block";
+    self.state.tweening = true;
 
-					self.focusinputfield();
-				}
-			});
-		}
-	},
-	focusinputfield: function(){
-		var self = this;
-		
-		//set the focus
-		if(!app.state.ios){
-			if (self.el.tbxusername.value == '') {
-				setTimeout(function () { self.el.tbxusername.focus() }, 300);
-			} else {
-				setTimeout(function () { self.el.tbxpassword.focus() }, 300);
-			}
-		}
-	},
-	//JT: this needs to be extended so that basically the app is resetted to it's original state
-	logout: function () {
-		var self = this;
+    if (app.state.ios) {
+      self.el.wrapper.style.opacity = 1;
+      self.state.tweening = false;
+      self.state.visible = true;
+    } else {
+      TweenLite.to(self.el.wrapper, 0.3, {
+        opacity: 1,
+        onComplete: function () {
+          //debugger;
+          self.state.tweening = false;
+          self.state.visible = true;
+        }
+      });
+    }
+  },
+  logout: function () {
+    var self = this;
 
-		objStore.removelocalstorageitem('token');
-		//debugger;
-		if ((new Date().getTime() / 1000) - objStore.getlocalstorageitem('reloadtime') > 10) {
-			//
-			objStore.removelocalstorageitem('reloadtime');
+    objStore.removelocalstorageitem('token');
+    //debugger;
 
-			//reload the complete page to force everything to reset to default state
-			location.reload();
-		} else {
-			//show the login screen
-			objPageState.updatepagestate({ view: 'login' });
-		}
-		/*objFilter.hide();
+    //show the login screen
+    objPageState.updatepagestate({ view: 'login' });
+
+    /*objFilter.hide();
 		objExplain.hide();
 		objBookmarks.hide();
 		objOverlay.hide();
 		objLogin.show();
 		objLoading.hide();*/
-	},
-	changeauthenticatebutton: function () {
-		var self = this;
-		if (self.state.authenticating) {
-			
-			if(app.state.ios){
-				self.el.submit.style.opacity=1;
-				self.el.submit.value = "Authenticating...";
-				self.state.passworddisabled = true;
-				self.state.usernamedisabled = true;
-			}else{
-				TweenLite.to(self.el.submit, 0.3, {
-					opacity: 0.5,
-					onComplete: function () {
-						self.el.submit.value = "Authenticating...";
-						self.state.passworddisabled = true;
-						self.state.usernamedisabled = true;
-					}
-				});
-			}
-		} else {
-			if(app.state.ios){
-				self.el.submit.style.opacity=1;
-				self.el.submit.value = "Log in";
-				self.state.passworddisabled = false;
-				self.state.usernamedisabled = false;
-			}else{
-				TweenLite.to(self.el.submit, 0.3, {
-					opacity: 1,
-					onComplete: function () {
-						self.el.submit.value = "Log in";
-						self.state.passworddisabled = false;
-						self.state.usernamedisabled = false;
-					}
-				});
-			}
-		}
-	},
-	showupdatemessages: function () {
-		var self = this;
-		//debugger;
-		getEl('messagelist').innerHTML = '';
-		//debugger;
-		if (self.state.messages.length > 0) {
-			for (var i = 0; i < self.state.messages.length; i++) {
-				getEl('messagelist').innerHTML += '<li>' + self.state.messages[i] + '</li>';
-			}
-			self.state.messages = [];
-			self.showmessages();
-		}
+  },
 
-	},
-	hidemessages: function () {
-		var self = this;
-		self.state.tweening = true;
-		TweenLite.to(self.el.messagespanel, 0.3, {
-			opacity: 0,
-			onComplete: function () {
-				objOverlay.hide();
-				self.el.messagespanel.style.display = 'none';
-				self.state.tweening = false;
-				self.state.visible = false;
-			}
-		});
-	},
-	showmessages: function () {
-		var self = this;
-		objOverlay.show();
-		self.state.tweening = true;
-		self.el.messagespanel.style.display = 'block';
-		TweenLite.to(self.el.messagespanel, 0.3, {
-			opacity: 1,
-			onComplete: function () {
-				//debugger;
-				self.state.tweening = false;
-				self.state.visible = true;
-			}
-		});
-	},
-	init: function () {
-		var self = this;
-		self.state.passworddisabled = false;
-		self.state.usernamedisabled = false;
-		self.state.authenticating = false;
-		//fill elements object
-		self.el.wrapper = getEl('login_panel');
-		self.el.tbxusername = getEl('username');
-		self.el.tbxpassword = getEl('password');
-		self.el.submit = getEl('btn_submit');
-		self.el.messagespanel = getEl('messages_panel');
+  showupdatemessages: function () {
+    var self = this;
+    //debugger;
+    getEl('messagelist').innerHTML = '';
+    //debugger;
+    if (self.state.messages.length > 0) {
+      for (var i = 0; i < self.state.messages.length; i++) {
+        getEl('messagelist').innerHTML += '<li>' + self.state.messages[i] + '</li>';
+      }
+      self.state.messages = [];
+      self.showmessages();
+    }
 
-		var username = objStore.getlocalstorageitem('username');
+  },
+  hidemessages: function () {
+    var self = this;
+    self.state.tweening = true;
+    TweenLite.to(self.el.messagespanel, 0.3, {
+      opacity: 0,
+      onComplete: function () {
+        objOverlay.hide();
+        self.el.messagespanel.style.display = 'none';
+        self.state.tweening = false;
+        self.state.visible = false;
+      }
+    });
+  },
+  showmessages: function () {
+    var self = this;
+    objOverlay.show();
+    self.state.tweening = true;
+    self.el.messagespanel.style.display = 'block';
+    TweenLite.to(self.el.messagespanel, 0.3, {
+      opacity: 1,
+      onComplete: function () {
+        //debugger;
+        self.state.tweening = false;
+        self.state.visible = true;
+      }
+    });
+  },
+  init: function () {
+    var self = this;
+    self.state.passworddisabled = false;
+    self.state.usernamedisabled = false;
+    self.state.authenticating = false;
+    //fill elements object
+    self.el.wrapper = getEl('login_panel');
+    self.el.submit = getEl('btn_submit');
+    self.el.messagespanel = getEl('messages_panel');
 
-		self.el.tbxusername.value = username == null ? "" : username;
-
-		self.token = objStore.getlocalstorageitem('token');
-	}
+    self.token = objStore.getlocalstorageitem('token');
+  }
 }

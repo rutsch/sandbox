@@ -86,42 +86,48 @@ var objSliders = {
 		//reset the counter
 		self.recalculatecounter = 0;
 
-		psv('GET', objConfig.urls.dynamicresourceurl, objData, function (err, response) {
+		psv('GET', objConfig.urls.dynamicresourceurl, objData, function getSimulatorDataHandler(err, response) {
 			if (err) {
 				objError.handleError('objSliders.start', err);
 			} else {
-				if (response.error) {
-					//self.el.innerwrapper.style.display='none';
-					self.el.errorwrapper.style.display = 'block';
-					self.el.errorwrapper.innerHTML = "<div class='simulator_data_error'>" + response.error.message + "</div>";
+			  //check if authentication is required
+			  if (response.hasOwnProperty('authenticated') && !response.authenticated) {
+			    app.defaultpagestate.view = 'login';
+			    app.processinitialview(false);
+			  } else {
+				  if (response.error) {
+					  //self.el.innerwrapper.style.display='none';
+					  self.el.errorwrapper.style.display = 'block';
+					  self.el.errorwrapper.innerHTML = "<div class='simulator_data_error'>" + response.error.message + "</div>";
 
-					//show the interface
-					//self.show();	
+					  //show the interface
+					  //self.show();	
 
-					//objError.show(response.error.message, true);
-				} else {
-					//store the data we have received
-					self.vars.data = response;
+					  //objError.show(response.error.message, true);
+				  } else {
+					  //store the data we have received
+					  self.vars.data = response;
 
-					//fill the information we have received for the trend graph in the global object
-					app.trendgraph.predictionlabel = self.vars.data.layout.simulatorlabel;
-					app.trendgraph.predictiondate = self.vars.data.layout.simulatordate;
-					app.trendgraph.stylecurrentline = self.vars.data.layout.simulatorstyle;
+					  //fill the information we have received for the trend graph in the global object
+					  app.trendgraph.predictionlabel = self.vars.data.layout.simulatorlabel;
+					  app.trendgraph.predictiondate = self.vars.data.layout.simulatordate;
+					  app.trendgraph.stylecurrentline = self.vars.data.layout.simulatorstyle;
 
-					//set the title
-					getEl('simulation_header').innerHTML = self.vars.data.layout.simulatorlabel + app.labels.simulatortitle;
+					  //set the title
+					  getEl('simulation_header').innerHTML = self.vars.data.layout.simulatorlabel + app.labels.simulatortitle;
 
 
-					//self.el.innerwrapper.style.display='block';
-					self.el.errorwrapper.style.display = 'none';
+					  //self.el.innerwrapper.style.display='block';
+					  self.el.errorwrapper.style.display = 'none';
 
-					//show the interface
-					//self.show();
+					  //show the interface
+					  //self.show();
 
-					//initiate the base logic and start sampling the slider positions
-					self.setupsimulator();
-					self.setuphistorygraph();
-				}
+					  //initiate the base logic and start sampling the slider positions
+					  self.setupsimulator();
+					  self.setuphistorygraph();
+				  }
+			  }
 			}
 		});
 	},

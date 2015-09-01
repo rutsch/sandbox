@@ -94,16 +94,22 @@ var objMap = {
 			snapshotid: objConfig.currentsnapshotid
 		}
 		//showLoadingPanel();
-		psv('GET', objConfig.urls.dynamicresourceurl, objData, function (err, data) {
+		psv('GET', objConfig.urls.dynamicresourceurl, objData, function getWorldmapDataHandler(err, data) {
 			//hideLoadingPanel();
 			if (err != null) {
 				objError.show('There was an error retrieving the worldmap data. ' + ((typeof err == 'object') ? JSON.parse(err) : err), true);
 			} else {
-				if (data.error) {
-					objError.show('There was an error retrieving the worldmap data. ' + data.error.message, true);
-				} else {
-					self.postprocessworldmapdata(data);
-				}
+			  //check if authentication is required
+			  if (data.hasOwnProperty('authenticated') && !data.authenticated) {
+			    app.defaultpagestate.view = 'login';
+			    app.processinitialview(false);
+			  } else {
+          if (data.error) {
+					  objError.show('There was an error retrieving the worldmap data. ' + data.error.message, true);
+				  } else {
+					  self.postprocessworldmapdata(data);
+				  }
+			  }
 			}
 		});
 	},
