@@ -203,7 +203,28 @@ function iterate(obj, type, value) {
   return returnObj;
 }
 
+// Function that handles the situation where shibboleth login required
+function handleShibbolethLoginRequired(cb) {
+  console.log('!!Shibboleth login is required!!');
+  //remember the state so we can return to it after we have passed the authentication step
+  if (objStore.getlocalstorageitem('stateremembered') == null) {
+    if (location.hash.indexOf('login/')>-1) {
+      objStore.setlocalstorageitem('stateremembered', JSON.stringify(app.defaultpagestate));
+    } else {
+      objStore.setlocalstorageitem('stateremembered', JSON.stringify(objPageState.hash2object(location.hash)));
+    }
+  }
 
+  //show the login page that forces the complete app html to reload
+  if (cb) {
+    console.log(cb);
+    cb(null, { authenticated: false });
+  } else {
+    objLogin.logout();
+  }
+
+
+}
 
 /*
 AJAX UTILITIES
@@ -231,18 +252,8 @@ function psv(type, url, objParams, cb) {
 
         //if shibboleth returns information that login is required
         if (xmlhttp.responseText.toLowerCase().indexOf('name="samlrequest"') > 0) {
-          console.log('!!Shibboleth login is required!!');
 
-          //remember the state so we can return to it after we have passed the authentication step
-          if (objStore.getlocalstorageitem('stateremembered') == null) objStore.setlocalstorageitem('stateremembered', JSON.stringify(objPageState.hash2object(location.hash)));
-
-          //show the login page that forces the complete app html to reload
-          if (cb) {
-            console.log(cb);
-            cb(null, { authenticated: false });
-          } else {
-            objLogin.logout();
-          }
+          handleShibbolethLoginRequired(cb)
           
         } else {
           if (bolPerformCatch) {
@@ -251,7 +262,7 @@ function psv(type, url, objParams, cb) {
               var objResponse = JSON.parse(xmlhttp.responseText);
 
               //test if we have lost the session and need to login again
-              if (objResponse.error) {
+              if (objResponse.hasOwnProperty('error')) {
                 if (objResponse.error.message == "Not authenticated" || objResponse.error.message == "Token mismatch") {
                   //run the logout routine which will reset the app to it's original state and the show the login screen
                   objStore.setlocalstorageitem('reloadtime', new Date().getTime() / 1000);
@@ -271,7 +282,7 @@ function psv(type, url, objParams, cb) {
             var objResponse = JSON.parse(xmlhttp.responseText);
 
             //test if we have lost the session and need to login again
-            if (objResponse.error) {
+            if (objResponse.hasOwnProperty('error')) {
               if (objResponse.error.message == "Not authenticated" || objResponse.error.message == "Token mismatch") {
                 //run the logout routine which will reset the app to it's original state and the show the login screen
                 objLogin.logout();
@@ -503,6 +514,10 @@ function loadUrlInBrowser(strUrl) {
 
 }
 
+function hasProperty(obj, propName) {
+  if (typeof obj !== 'object' || obj === null) return false;
+  return obj.hasOwnProperty(propName);
+}
 
 
 

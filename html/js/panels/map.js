@@ -104,7 +104,7 @@ var objMap = {
 			    app.defaultpagestate.view = 'login';
 			    app.processinitialview(false);
 			  } else {
-          if (data.error) {
+          if (data.hasOwnProperty('error')) {
 					  objError.show('There was an error retrieving the worldmap data. ' + data.error.message, true);
 				  } else {
 					  self.postprocessworldmapdata(data);

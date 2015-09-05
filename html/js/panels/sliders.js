@@ -95,7 +95,7 @@ var objSliders = {
 			    app.defaultpagestate.view = 'login';
 			    app.processinitialview(false);
 			  } else {
-				  if (response.error) {
+				  if (hasProperty(response, 'error')) {
 					  //self.el.innerwrapper.style.display='none';
 					  self.el.errorwrapper.style.display = 'block';
 					  self.el.errorwrapper.innerHTML = "<div class='simulator_data_error'>" + response.error.message + "</div>";

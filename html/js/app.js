@@ -95,8 +95,8 @@ var app = {
       snapshotid: objConfig.currentsnapshotid
     }
     psv('GET', objConfig.urls.dynamicresourceurl, objData, function retrieveMetadataHandler(err, data) {
-      if (err || data.error) {
-        if (data.error) {
+      if (err || hasProperty(data, 'error')) {
+        if (hasProperty(data, 'error')) {
           objError.show('There was an error retrieving metadata information. ' + ((typeof data == 'object') ? JSON.stringify(data) : data), true);
         } else {
           objError.show('There was an error retrieving metadata information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
@@ -201,7 +201,7 @@ var app = {
     } else {
       //attempt to use the old page state (which we stored in app.js) to restore to the view to the state before we were logged out
       if (objStore.getlocalstorageitem('stateremembered') != null) {
-        try{
+        try {
           var objPageStateRemembered = JSON.parse(objStore.getlocalstorageitem('stateremembered'));
           objStore.removelocalstorageitem('stateremembered');
           location.hash = objPageState.object2hash(objPageStateRemembered);
@@ -211,7 +211,7 @@ var app = {
           location.hash = objPageState.object2hash(self.defaultpagestate);
         }
 
-        
+
       } else {
         //set the page state to default
         location.hash = objPageState.object2hash(self.defaultpagestate);
@@ -286,19 +286,18 @@ var app = {
         type: 'json'
       }
       psv('GET', objConfig.urls.authurl2, objData, function checkSessionHandler(err, data) {
-        if (err || data.error) {
-          if (data.error) {
+        if (err || hasProperty(data, 'error')) {
+          if (hasProperty(data, 'error')) {
             objError.show('There was an error retrieving session information. ' + ((typeof data == 'object') ? JSON.stringify(data) : data), true);
           } else {
             objError.show('There was an error retrieving session information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
           }
         } else {
-          //console.log(data)
           //change the view if we need to login
           if (!data.authenticated) {
-            // TODO: Remove login view state and replace form with static message state.
-            self.defaultpagestate.view = 'login';
-            self.processinitialview(false);
+            handleShibbolethLoginRequired();
+            //self.defaultpagestate.view = 'login';
+            //self.processinitialview(false);
           } else {
             // store the token
             objLogin.token = data.token;

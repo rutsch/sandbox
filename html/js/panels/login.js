@@ -69,8 +69,8 @@ var objLogin = {
 
     psv('GET', objConfig.urls.authurl2, objData, function getSnapshotConfigHandler(err, response) {
       //debugger;
-      if (err || response.error) {
-        if (response.error) {
+      if (err || hasProperty(response, 'error')) {
+        if (hasProperty(response, 'error')) {
           objError.show('There was an error retrieving snapshot information. ' + ((typeof response == 'object') ? JSON.stringify(response) : response), true);
         } else {
           objError.show('There was an error retrieving snapshot information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
