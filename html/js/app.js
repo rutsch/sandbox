@@ -106,8 +106,7 @@ var app = {
 
         //check if authentication is required
         if (data.hasOwnProperty('authenticated') && !data.authenticated) {
-          app.defaultpagestate.view = 'login';
-          app.processinitialview(false);
+          handleShibbolethLoginRequired();
         } else {
           //load the retrieved data into the ORU object
           objOruFilter.json = data.result.orudata;
@@ -296,8 +295,6 @@ var app = {
           //change the view if we need to login
           if (!data.authenticated) {
             handleShibbolethLoginRequired();
-            //self.defaultpagestate.view = 'login';
-            //self.processinitialview(false);
           } else {
             // store the token
             objLogin.token = data.token;

@@ -101,8 +101,7 @@ var objMap = {
 			} else {
 			  //check if authentication is required
 			  if (data.hasOwnProperty('authenticated') && !data.authenticated) {
-			    app.defaultpagestate.view = 'login';
-			    app.processinitialview(false);
+			    handleShibbolethLoginRequired();
 			  } else {
           if (data.hasOwnProperty('error')) {
 					  objError.show('There was an error retrieving the worldmap data. ' + data.error.message, true);

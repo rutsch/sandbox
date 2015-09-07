@@ -92,8 +92,7 @@ var objSliders = {
 			} else {
 			  //check if authentication is required
 			  if (response.hasOwnProperty('authenticated') && !response.authenticated) {
-			    app.defaultpagestate.view = 'login';
-			    app.processinitialview(false);
+			    handleShibbolethLoginRequired();
 			  } else {
 				  if (hasProperty(response, 'error')) {
 					  //self.el.innerwrapper.style.display='none';

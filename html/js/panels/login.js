@@ -9,6 +9,9 @@ var objLogin = {
     authenticating: null,
     messages: []
   },
+  vars: {
+    urlshiblogin: '/tools/shibboleth-authenticate.aspx'
+  },
   el: {
     wrapper: null,
     submit: null
@@ -21,7 +24,7 @@ var objLogin = {
     var self = this;
 
     //reload the complete page to force shibboleth authentication and reset to default or remembered state
-    location.href = '/tools/shibboleth-authenticate.aspx?rnd=' + Math.random();
+    location.href = self.vars.urlshiblogin+'?rnd=' + Math.random();
   },
   findlatestsnapshotid: function (response) {
     var self = this;
@@ -80,8 +83,7 @@ var objLogin = {
 
         //check if authentication is required
         if (response.hasOwnProperty('authenticated') && !response.authenticated) {
-          app.defaultpagestate.view = 'login';
-          app.processinitialview(false);
+          handleShibbolethLoginRequired();
         } else {
           //finds the latest snapshot id and stores it in objConfig
           self.findlatestsnapshotid(response);
@@ -213,6 +215,7 @@ var objLogin = {
       self.el.wrapper.style.opacity = 1;
       self.state.tweening = false;
       self.state.visible = true;
+      location.href = self.vars.urlshiblogin + '?rnd=' + Math.random();
     } else {
       TweenLite.to(self.el.wrapper, 0.3, {
         opacity: 1,
@@ -220,6 +223,7 @@ var objLogin = {
           //debugger;
           self.state.tweening = false;
           self.state.visible = true;
+          location.href = self.vars.urlshiblogin + '?rnd=' + Math.random();
         }
       });
     }
