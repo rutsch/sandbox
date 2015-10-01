@@ -7,7 +7,6 @@ var objConfig = {
     rutger: 'http://95.97.163.236/sandbox/html',
     w2003: 'http://www.myvirtualbox.com/webapp/html',
     dynamicresourceurl: 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
-    authurl1: "https://www.livesimproved.philips.com/pages/login/login.aspx",
     authurl2: "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
     authurl3: "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx"
   },
@@ -163,10 +162,11 @@ var objConfig = {
 
     //if we are on the dev site, then we need to use a local url for data retrieval etc.
     if (self.sitetype == 'dev' || self.sitetype == 'troper') {
-      var strUrlDev = self.urls.dev.replace(/^((http|https):\/\/.*?)\/.*$/, "$1");
+      var strUrlDev = (self.sitetype == 'dev') ? self.urls.dev.replace(/^((http|https):\/\/.*?)\/.*$/, "$1") : self.urls.troper.replace(/^((http|https):\/\/.*?)\/.*$/, "$1");
+
+      //console.log(strUrlDev);
 
       self.urls.dynamicresourceurl = self.urls.dynamicresourceurl.replace(/^((http|https):\/\/.*?)(\/.*)$/, strUrlDev + "$3"); //'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
-      self.urls.authurl1 = self.urls.authurl1.replace(/^((http|https):\/\/.*?)(\/.*)$/, strUrlDev + "$3"); // "https://www.livesimproved.philips.com/pages/login/login.aspx",
       self.urls.authurl2 = self.urls.authurl2.replace(/^((http|https):\/\/.*?)(\/.*)$/, strUrlDev + "$3"); // "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
       self.urls.authurl3 = self.urls.authurl3.replace(/^((http|https):\/\/.*?)(\/.*)$/, strUrlDev + "$3"); //
       //console.log(JSON.stringify(self.urls));
