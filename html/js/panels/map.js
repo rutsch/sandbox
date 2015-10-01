@@ -56,7 +56,13 @@ var objMap = {
 		//attempt to retrieve the svg data from localstorage
 		var svgdata = objStore.getlocalstorageitem('map_' + self.state.mapname);
 
+	  //test if real SVG data was returned from the local storage
+		var performAjax=true;
 		if (svgdata) {
+		  if (svgdata.indexOf('<svg') > -1) performAjax = false;
+		}
+
+		if (!performAjax) {
 			return svgdata;
 		} else {
 			//load svg data via http
@@ -297,6 +303,7 @@ var objMap = {
 
 		//1) retrieve the svg map
 		var strSvg = self.retrieveworldmapsvg();
+		//console.log(strSvg);
 
 		if (strSvg != null) {
 			// execute possible callback function
