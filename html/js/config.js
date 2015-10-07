@@ -3,6 +3,10 @@ var objConfig = {
     base: 'https://www.livesimproved.philips.com/webapp/html',
     dev: 'https://dev.livesimproved.philips.com/webapp/html',
     troper: 'https://www.troperlaunna2010.philips.com/webapp/html',
+    devhealthtech: 'https://healthtech.dev.livesimproved.philips.com/webapp/html',
+    prodhealthtech: 'https://healthtech.livesimproved.philips.com/webapp/html',
+    devlighting: 'https://lighting.dev.livesimproved.philips.com/webapp/html',
+    prodlighting: 'https://lighting.livesimproved.philips.com/webapp/html',
     johan: 'http://livesimproved.site.10.0.1.25.xip.io',
     rutger: 'http://95.97.163.236/sandbox/html',
     w2003: 'http://www.myvirtualbox.com/webapp/html',
@@ -98,6 +102,14 @@ var objConfig = {
       //determine site
       if (self.urls.dev.indexOf(location.hostname) > -1) {
         self.sitetype = 'dev';
+      } else if (self.urls.prodhealthtech.indexOf(location.hostname) > -1) {
+        self.sitetype = 'prodhealthtech';
+      } else if (self.urls.prodlighting.indexOf(location.hostname) > -1) {
+        self.sitetype = 'prodlighting';
+      } else if (self.urls.devhealthtech.indexOf(location.hostname) > -1) {
+        self.sitetype = 'devhealthtech';
+      } else if (self.urls.devlighting.indexOf(location.hostname) > -1) {
+        self.sitetype = 'devlighting';
       } else if (self.urls.troper.indexOf(location.hostname) > -1) {
         self.sitetype = 'troper';
       } else if (self.urls.johan.indexOf(location.hostname) > -1) {
@@ -107,7 +119,7 @@ var objConfig = {
       } else if (self.urls.w2003.indexOf(location.hostname) > -1) {
         self.sitetype = 'w2003';
       }
-      //alert(self.sitetype);
+      console.log('sitetype: %s', self.sitetype);
 
     } else {
       //running inside the app or running from the filesystem
@@ -161,14 +173,17 @@ var objConfig = {
     }
 
     //if we are on the dev site, then we need to use a local url for data retrieval etc.
-    if (self.sitetype == 'dev' || self.sitetype == 'troper') {
-      var strUrlDev = (self.sitetype == 'dev') ? self.urls.dev.replace(/^((http|https):\/\/.*?)\/.*$/, "$1") : self.urls.troper.replace(/^((http|https):\/\/.*?)\/.*$/, "$1");
+    if (self.sitetype == 'dev' || self.sitetype == 'troper' || self.sitetype == 'prodhealthtech' || self.sitetype == 'prodlighting' || self.sitetype == 'devhealthtech' || self.sitetype == 'devlighting') {
+      var pattrn = /^((http|https):\/\/.*?)(\/.*)$/;
+      //var strUrlDev = (self.sitetype == 'dev') ? self.urls.dev.replace(pattrn, "$1") : self.urls.troper.replace(pattrn, "$1");
 
-      //console.log(strUrlDev);
+      var strUrlCurrent = self.urls[self.sitetype].replace(pattrn, "$1");
 
-      self.urls.dynamicresourceurl = self.urls.dynamicresourceurl.replace(/^((http|https):\/\/.*?)(\/.*)$/, strUrlDev + "$3"); //'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
-      self.urls.authurl2 = self.urls.authurl2.replace(/^((http|https):\/\/.*?)(\/.*)$/, strUrlDev + "$3"); // "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
-      self.urls.authurl3 = self.urls.authurl3.replace(/^((http|https):\/\/.*?)(\/.*)$/, strUrlDev + "$3"); //
+      console.log(strUrlCurrent);
+
+      self.urls.dynamicresourceurl = self.urls.dynamicresourceurl.replace(pattrn, strUrlCurrent + "$3"); //'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
+      self.urls.authurl2 = self.urls.authurl2.replace(pattrn, strUrlCurrent + "$3"); // "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
+      self.urls.authurl3 = self.urls.authurl3.replace(pattrn, strUrlCurrent + "$3"); //
       //console.log(JSON.stringify(self.urls));
     }
   },
