@@ -24,7 +24,7 @@ var objLogin = {
     var self = this;
 
     //reload the complete page to force shibboleth authentication and reset to default or remembered state
-    location.href = self.vars.urlshiblogin+'?rnd=' + Math.random();
+    location.href = self.vars.urlshiblogin + '?rnd=' + Math.random();
   },
   findlatestsnapshotid: function (response) {
     var self = this;
@@ -79,23 +79,24 @@ var objLogin = {
           objError.show('There was an error retrieving snapshot information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
         }
       } else {
-        console.log(response);
-
-        //check if authentication is required
-        if (response.hasOwnProperty('authenticated') && !response.authenticated) {
-          handleShibbolethLoginRequired();
+        //console.log(response);
+        if (typeof response == "undefined") {
+          objError.show('There was an error retrieving snapshot information. No data was received...', true);
         } else {
-          //finds the latest snapshot id and stores it in objConfig
-          self.findlatestsnapshotid(response);
+          //check if authentication is required
+          if (response.hasOwnProperty('authenticated') && !response.authenticated) {
+            handleShibbolethLoginRequired();
+          } else {
+            //finds the latest snapshot id and stores it in objConfig
+            self.findlatestsnapshotid(response);
 
-          //test if we need to show an update message and store this in the local storage
-          self.checkappconfigforupdates(response);
+            //test if we need to show an update message and store this in the local storage
+            self.checkappconfigforupdates(response);
 
-          //continue processing
-          cb();
+            //continue processing
+            cb();
+          }
         }
-
-
 
       }
     });
