@@ -79,7 +79,7 @@ var objLogin = {
           objError.show('There was an error retrieving snapshot information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
         }
       } else {
-        //console.log(response);
+        console.log(response);
 
         //check if authentication is required
         if (response.hasOwnProperty('authenticated') && !response.authenticated) {
