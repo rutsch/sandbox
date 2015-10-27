@@ -9,7 +9,6 @@ var objConfig = {
     prodlighting: 'https://www.lighting.livesimproved.philips.com/webapp/html',
     johan: 'http://livesimproved.site.10.0.1.25.xip.io',
     rutger: 'http://95.97.163.236/sandbox/html',
-    w2003: 'http://www.myvirtualbox.com/webapp/html',
     dynamicresourceurl: 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
     authurl2: "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
     authurl3: "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx"
@@ -116,8 +115,6 @@ var objConfig = {
         self.sitetype = 'johan';
       } else if (self.urls.rutger.indexOf(location.hostname) > -1) {
         self.sitetype = 'rutger';
-      } else if (self.urls.w2003.indexOf(location.hostname) > -1) {
-        self.sitetype = 'w2003';
       }
       console.log('sitetype: %s', self.sitetype);
 
@@ -142,10 +139,6 @@ var objConfig = {
           //troperlaunna
           self.urls.base = self.urls.troper;
           self.sitetype = 'troper';
-        } else if (location.search.indexOf('sitetype=w2003') > -1) {
-          //w2003
-          self.urls.base = self.urls.dev;
-          self.sitetype = 'w2003';
         }
       } else {
         if (location.href.indexOf('johan') > -1) {
@@ -164,10 +157,6 @@ var objConfig = {
           //troperlaunna
           self.urls.base = self.urls.troper;
           self.sitetype = 'troper';
-        } else if (location.href.indexOf('w2003') > -1) {
-          //local development
-          self.urls.base = self.urls.w2003;
-          self.sitetype = 'w2003';
         }
       }
     }
