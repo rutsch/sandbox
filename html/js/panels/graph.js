@@ -76,6 +76,12 @@ var objTrendGraph = {
 		var intXRangePixels = self.props.width - self.props.padding.left - self.props.padding.right - self.props.axis.xpaddingleft - self.props.axis.xpaddingright;
 		//console.log(self.vars.data.points[self.vars.data.points.length-1]);
 		var intXRangeValues = self.vars.data.points[self.vars.data.points.length - 1].utcend - self.vars.data.points[0].utcend;
+		
+	  //correct for 0 values on the y axis
+		if (intYRangeValues == 0) {
+		  intYRangeValues = 0.001;
+		}
+
 
 		//corrent the value if a string with "comma" notation is passed
 		if (isNaN(intPointValue)) intPointValue = parseFloat((intPointValue + '').replace(/,/, ''));
@@ -127,7 +133,10 @@ var objTrendGraph = {
 	},
 	setsvglinecoordinates: function (elLine, objCoords) {
 		elLine.setAttributeNS(null, 'x1', objCoords.x1);
-		if (isNaN(objCoords.y1)) console.trace(objCoords.y1)
+		if (isNaN(objCoords.y1)) {
+		  console.log(objCoords);
+		  console.trace(objCoords.y1)
+		}
 		elLine.setAttributeNS(null, 'y1', objCoords.y1);
 		elLine.setAttributeNS(null, 'x2', objCoords.x2);
 		elLine.setAttributeNS(null, 'y2', objCoords.y2);
@@ -343,6 +352,7 @@ var objTrendGraph = {
 
 		//4) create the graph line (use seperate lines to differentiate the last line)
 		var elWrapperLine = document.getElementById('line_wrapper');
+		//console.log(self.vars.data.points);
 		for (var i = 0; i < self.vars.data.points.length; i++) {
 			var objCoordsPrev = {};
 			if (i > 0) {
@@ -451,6 +461,8 @@ var objTrendGraph = {
 					intPercentage = 25;
 					break;
 			}
+			console.log('intDecimalPlacesIn: %s, intFactor: %s, intPercentage: %s, intLength: %s', intDecimalPlacesIn, intFactor, intPercentage, intLength);
+			console.log(self.props.axis);
 
 			var intMargin = ((self.props.axis.ymax - self.props.axis.ymin) / 100) * intPercentage;
 			//% from top
