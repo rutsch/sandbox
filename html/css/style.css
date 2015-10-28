@@ -1047,17 +1047,19 @@ input#slidergreensales {
 }
 
 .range_indicator {
-	width: 83%;
+	width: 73%;
 	height: 20px;
 	position: relative;
 	padding-top: 3px;
+  margin-left: 5%;
+  margin-right: 5%;
 	color: #4a4a4a;
 	font-size: 9px;
 }
 
 .range_indicator .min {
 	position: absolute;
-	left: 0;
+	left: -7%;
 }
 
 .range_indicator .zero {
@@ -1070,7 +1072,7 @@ input#slidergreensales {
 
 .range_indicator .max {
 	position: absolute;
-	left: 98%;
+	left: 103%;
 }
 
 h2 {

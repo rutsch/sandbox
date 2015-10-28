@@ -338,12 +338,19 @@ var objSliders = {
 
     //position the "0" label
     //self.vars.data.scenario.salesmin=-30;
+    //console.log('greensalesmin: %s, greensalesmax: %s', self.vars.data.scenario.greensalesmin, self.vars.greensalesmax);
+    //console.log('gspslidermin: %s, gspslidermax: %s', self.vars.gspslidermin, self.vars.gspslidermax);
+    //console.log(self.vars.data.scenario);
     var intLeftSales = (Math.abs(self.vars.data.scenario.salesmin)) / (Math.abs(self.vars.data.scenario.salesmin) + self.vars.salesmax) * 100 - 2;
-    var intLeftGreensales = (Math.abs(self.vars.data.scenario.greensalesmin)) / (Math.abs(self.vars.data.scenario.greensalesmin) + self.vars.greensalesmax) * 100 - 3;
+    var intLeftGreensales = (self.vars.gsp - self.vars.gspslidermin) / (self.vars.gspslidermax - self.vars.gspslidermin) * 100 -3;
+    //console.log('intLeftGreensales: %s', intLeftGreensales);
     //debugger;
     getEl('saleszero').style.left = intLeftSales + '%';
     getEl('greensaleszero').style.left = intLeftGreensales + '%';
     self.el.greensaleszero.innerHTML = self.vars.gsp;
+
+    //hide the green sales laber when it's above 85% (otherwise it will clash with the max value in the UI)
+    self.el.greensaleszero.style.display = (intLeftGreensales > 85) ? 'none' : 'inline';
     //self.el.slidersaleslabel
 
     //start the sampling process
