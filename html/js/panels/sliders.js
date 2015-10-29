@@ -350,7 +350,7 @@ var objSliders = {
     self.el.greensaleszero.innerHTML = self.vars.gsp;
 
     //hide the green sales laber when it's above 85% (otherwise it will clash with the max value in the UI)
-    self.el.greensaleszero.style.display = (intLeftGreensales > 85) ? 'none' : 'inline';
+    self.el.greensaleszero.style.display = (intLeftGreensales > 85 || self.vars.gsp == 0) ? 'none' : 'inline';
     //self.el.slidersaleslabel
 
     //start the sampling process
