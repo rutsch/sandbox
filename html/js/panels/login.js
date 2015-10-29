@@ -17,14 +17,14 @@ var objLogin = {
     submit: null
   },
   /*
-	* Click functions
-	*/
+   * Click functions
+   */
   btnsubmitclick: function (e) {
     e.preventDefault();
     var self = this;
 
     //reload the complete page to force shibboleth authentication and reset to default or remembered state
-    location.href = self.vars.urlshiblogin + '?rnd=' + Math.random();
+    location.href = objConfig.urls.urlshiblogin + '?rnd=' + Math.random();
   },
   findlatestsnapshotid: function (response) {
     var self = this;
@@ -183,8 +183,8 @@ var objLogin = {
   },
 
   /*
-	* UI functions
-	*/
+   * UI functions
+   */
   hide: function () {
     var self = this;
     self.state.tweening = true;
@@ -216,7 +216,7 @@ var objLogin = {
       self.el.wrapper.style.opacity = 1;
       self.state.tweening = false;
       self.state.visible = true;
-      location.href = self.vars.urlshiblogin + '?rnd=' + Math.random();
+      location.href = objConfig.urls.urlshiblogin + '?rnd=' + Math.random();
     } else {
       TweenLite.to(self.el.wrapper, 0.3, {
         opacity: 1,
@@ -224,7 +224,7 @@ var objLogin = {
           //debugger;
           self.state.tweening = false;
           self.state.visible = true;
-          location.href = self.vars.urlshiblogin + '?rnd=' + Math.random();
+          location.href = objConfig.urls.urlshiblogin + '?rnd=' + Math.random();
         }
       });
     }
@@ -236,7 +236,9 @@ var objLogin = {
     //debugger;
 
     //show the login screen
-    objPageState.updatepagestate({ view: 'login' });
+    objPageState.updatepagestate({
+      view: 'login'
+    });
 
     /*objFilter.hide();
 		objExplain.hide();

@@ -7,11 +7,12 @@ var objConfig = {
     prodhealthtech: 'https://www.healthtech.livesimproved.philips.com/webapp/html',
     devlighting: 'https://dev.lighting.livesimproved.philips.com/webapp/html',
     prodlighting: 'https://www.lighting.livesimproved.philips.com/webapp/html',
-    johan: 'http://livesimproved.site.10.0.1.25.xip.io',
+    johan: 'http://livesimproved.site',
     rutger: 'http://95.97.163.236/sandbox/html',
     dynamicresourceurl: 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
     authurl2: "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
-    authurl3: "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx"
+    authurl3: "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx",
+    urlshiblogin: "https://www.livesimproved.philips.com/tools/shibboleth-authenticate.aspx"
   },
   colors: {
     philips: { //philips group
@@ -75,8 +76,7 @@ var objConfig = {
       var fileref = document.createElement('script')
       fileref.setAttribute("type", "text/javascript")
       fileref.setAttribute("src", self.urls.base + filename + '?rnd=' + Math.round(Math.random() * 100000000))
-    }
-    else if (filename.indexOf('css') > -1) { //if filename is an external CSS file
+    } else if (filename.indexOf('css') > -1) { //if filename is an external CSS file
       var fileref = document.createElement("link")
       fileref.setAttribute("rel", "stylesheet")
       fileref.setAttribute("type", "text/css")
@@ -161,10 +161,14 @@ var objConfig = {
       }
     }
 
+    console.log('self.sitetype: %s', self.sitetype);
+
+    /*
+    Calculate the absolute URL's to use in the application
+    */
+    var pattrn = /^((http|https):\/\/.*?)(\/.*)$/;
     //if we are on the dev site, then we need to use a local url for data retrieval etc.
     if (self.sitetype == 'dev' || self.sitetype == 'troper' || self.sitetype == 'prodhealthtech' || self.sitetype == 'prodlighting' || self.sitetype == 'devhealthtech' || self.sitetype == 'devlighting') {
-      var pattrn = /^((http|https):\/\/.*?)(\/.*)$/;
-      //var strUrlDev = (self.sitetype == 'dev') ? self.urls.dev.replace(pattrn, "$1") : self.urls.troper.replace(pattrn, "$1");
 
       var strUrlCurrent = self.urls[self.sitetype].replace(pattrn, "$1");
 
@@ -173,6 +177,17 @@ var objConfig = {
       self.urls.dynamicresourceurl = self.urls.dynamicresourceurl.replace(pattrn, strUrlCurrent + "$3"); //'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
       self.urls.authurl2 = self.urls.authurl2.replace(pattrn, strUrlCurrent + "$3"); // "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
       self.urls.authurl3 = self.urls.authurl3.replace(pattrn, strUrlCurrent + "$3"); //
+      self.urls.urlshiblogin = self.urls.urlshiblogin(pattrn, strUrlCurrent + "$3");
+      //console.log(JSON.stringify(self.urls));
+    }
+
+    //special case to test the app
+    if (self.sitetype == 'johan') {
+      var remoteUrl = self.urls.prodhealthtech.replace(pattrn, "$1");
+      self.urls.dynamicresourceurl = self.urls.dynamicresourceurl.replace(pattrn, remoteUrl + "$3");
+      self.urls.authurl2 = self.urls.authurl2.replace(pattrn, remoteUrl + "$3");
+      self.urls.authurl3 = self.urls.authurl3.replace(pattrn, remoteUrl + "$3");
+      self.urls.urlshiblogin = self.urls.urlshiblogin.replace(pattrn, remoteUrl + "$3");
       //console.log(JSON.stringify(self.urls));
     }
   },
@@ -180,26 +195,26 @@ var objConfig = {
     var self = this;
     //console.log('testing')
     if (typeof app != 'undefined' &&
-			typeof objUtils != 'undefined' &&
-			typeof objStore != 'undefined' &&
-			typeof objInfographic != 'undefined' &&
-			typeof objFooter != 'undefined' &&
-			typeof objHeader != 'undefined' &&
-			typeof objMap != 'undefined' &&
-			typeof objOverlay != 'undefined' &&
-			typeof objRegionInfo != 'undefined' &&
-			typeof objSliders != 'undefined' &&
-			typeof objLogin != 'undefined' &&
-			typeof objError != 'undefined' &&
-			typeof objFilter != 'undefined' &&
-			typeof objBookmarks != 'undefined' &&
-			typeof objTrendGraph != 'undefined' &&
-			typeof objExplain != 'undefined' &&
-			typeof objLoading != 'undefined' &&
-			typeof objPanelInfo != 'undefined' &&
-			typeof objMruFilter != 'undefined' &&
-			typeof objOruFilter != 'undefined'
-		) {
+      typeof objUtils != 'undefined' &&
+      typeof objStore != 'undefined' &&
+      typeof objInfographic != 'undefined' &&
+      typeof objFooter != 'undefined' &&
+      typeof objHeader != 'undefined' &&
+      typeof objMap != 'undefined' &&
+      typeof objOverlay != 'undefined' &&
+      typeof objRegionInfo != 'undefined' &&
+      typeof objSliders != 'undefined' &&
+      typeof objLogin != 'undefined' &&
+      typeof objError != 'undefined' &&
+      typeof objFilter != 'undefined' &&
+      typeof objBookmarks != 'undefined' &&
+      typeof objTrendGraph != 'undefined' &&
+      typeof objExplain != 'undefined' &&
+      typeof objLoading != 'undefined' &&
+      typeof objPanelInfo != 'undefined' &&
+      typeof objMruFilter != 'undefined' &&
+      typeof objOruFilter != 'undefined'
+    ) {
       app.init();
     } else {
       window.setTimeout(function () {
