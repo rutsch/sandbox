@@ -1,6 +1,9 @@
 /*
 Utilities
 */
+function reloadApp(){
+  location.reload();
+}
 var objUtils = {
 
 }
