@@ -20,9 +20,10 @@ var objLogin = {
    * Click functions
    */
   btnsubmitclick: function () {
-    alert(objConfig.urls.urlshiblogin + '?rnd=' + Math.random());
+    var loginUrl = (objConfig.urls.hasOwnProperty('urlshiblogin')) ? objConfig.urls.urlshiblogin : 'https://www.livesimproved.philips.com/tools/shibboleth-authenticate.aspx';
+    //alert(loginUrl);
     //reload the complete page to force shibboleth authentication and reset to default or remembered state
-    location.href = objConfig.urls.urlshiblogin + '?rnd=' + Math.random();
+    location.href = loginUrl + '?rnd=' + Math.random();
   },
   findlatestsnapshotid: function (response) {
     var self = this;
