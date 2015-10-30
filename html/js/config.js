@@ -177,7 +177,7 @@ var objConfig = {
       self.urls.dynamicresourceurl = self.urls.dynamicresourceurl.replace(pattrn, strUrlCurrent + "$3"); //'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
       self.urls.authurl2 = self.urls.authurl2.replace(pattrn, strUrlCurrent + "$3"); // "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
       self.urls.authurl3 = self.urls.authurl3.replace(pattrn, strUrlCurrent + "$3"); //
-      self.urls.urlshiblogin = self.urls.urlshiblogin(pattrn, strUrlCurrent + "$3");
+      self.urls.urlshiblogin = self.urls.urlshiblogin.replace(pattrn, strUrlCurrent + "$3");
       //console.log(JSON.stringify(self.urls));
     }
 
