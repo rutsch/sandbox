@@ -19,10 +19,8 @@ var objLogin = {
   /*
    * Click functions
    */
-  btnsubmitclick: function (e) {
-    e.preventDefault();
-    var self = this;
-
+  btnsubmitclick: function () {
+    alert(objConfig.urls.urlshiblogin + '?rnd=' + Math.random());
     //reload the complete page to force shibboleth authentication and reset to default or remembered state
     location.href = objConfig.urls.urlshiblogin + '?rnd=' + Math.random();
   },
