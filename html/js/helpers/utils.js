@@ -466,7 +466,7 @@ function countryClicked(idCountry) {
     //objMap.detailspanel(idCountry);
   } else {
     //debugger;
-    getEl('messagelist').innerHTML = 'No Lives Improved based on current VIPP data.';
+    getEl('messagelist').innerHTML = 'No data according to current sales data.';
     objLogin.showmessages();
   }
 }
