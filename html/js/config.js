@@ -30,6 +30,12 @@ var objConfig = {
       middle: '#98C833',
       high: '#7dba00'
     },
+    BS9001: { //lighting (2)
+      low: '#CBF277',
+      middle: '#98C833',
+      high: '#7dba00'
+    },
+
     PD0200: { //consumer lifestyle
       low: '#BE67E9',
       middle: '#8737B0',
