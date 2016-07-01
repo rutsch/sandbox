@@ -16,30 +16,30 @@ var objConfig = {
   },
   colors: {
     philips: { //philips group
-      low: '#7DABF1',
-      middle: '#3D7FDF',
-      high: '#0b5ed7'
+      low: '#b3c8e6',
+      middle: '#0066a1',
+      high: '#0f204b'
     },
     PD0900: { //healthcare
-      low: '#99EAF0',
-      middle: '#30B6BF',
-      high: '#2badb5'
+      low: '#cae3e9',
+      middle: '#1e9d8b',
+      high: '#22505f'
     },
     PD0100: { //lighting
-      low: '#CBF277',
-      middle: '#98C833',
-      high: '#7dba00'
+      low: '#e0e96e',
+      middle: '#5b8f22',
+      high: '#024731'
     },
     BS9001: { //lighting (2)
-      low: '#CBF277',
-      middle: '#98C833',
-      high: '#7dba00'
+      low: '#e0e96e',
+      middle: '#5b8f22',
+      high: '#024731'
     },
 
     PD0200: { //consumer lifestyle
-      low: '#BE67E9',
-      middle: '#8737B0',
-      high: '#68049c'
+      low: '#dbcfe9',
+      middle: '#7d0063',
+      high: '#42145f'
     }
 
   },
