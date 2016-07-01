@@ -13,7 +13,7 @@ var objMap = {
 	maps: {
 		world: { url: 'jvector_world.svg' },
 		region: { url: 'jvector_continents.svg' },
-		market: { url: 'jvector_markets.svg' },
+		market: { url: 'philips_markets.svg' },
 		country: { url: 'jvector_countries.svg' }
 	},
 	getcolorforpercentage: function (pct, low_color, middle_color, high_color) {
@@ -54,7 +54,7 @@ var objMap = {
 		self.state.mapname = objOruFilter.convertoruleveltomarket(objPageState.state.filter.orulevel);
 
 		//attempt to retrieve the svg data from localstorage
-		var svgdata = objStore.getlocalstorageitem('map_' + self.state.mapname);
+		var svgdata = objStore.getlocalstorageitem('map_' + self.state.mapname + '_v3');
 
 	  //test if real SVG data was returned from the local storage
 		var performAjax=true;
@@ -80,7 +80,7 @@ var objMap = {
 				debug: false
 			});
 
-			objStore.setlocalstorageitem('map_' + self.state.mapname, svgdata);
+			objStore.setlocalstorageitem('map_' + self.state.mapname + '_v3', svgdata);
 			return svgdata;
 
 
