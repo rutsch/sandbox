@@ -12,7 +12,7 @@ var objMap = {
 	data: null,
 	maps: {
 		world: { url: 'jvector_world.svg' },
-		region: { url: 'jvector_continents.svg' },
+		region: { url: 'philips_regions.svg' },
 		market: { url: 'philips_markets.svg' },
 		country: { url: 'jvector_countries.svg' }
 	},
