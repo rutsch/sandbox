@@ -17,8 +17,13 @@ var objMap = {
 		country: { url: 'jvector_countries.svg' }
 	},
 	getcolorforpercentage: function (pct, low_color, middle_color, high_color) {
-		var self = this;
+	  var self = this;
+
+	  //console.log('pct: ' + pct);
+
 		pct /= 100;
+
+		//console.log('pct (%): '+ pct);
 
 		var percentColors = [
 				{ pct: 0.0000001, color: rgbFromHex(low_color) },
@@ -158,7 +163,7 @@ var objMap = {
 
 
 		//settings for the coloring
-		var minimumPercentage = 15; //anything below this percentage will get the 'low' color
+		var minimumPercentage = 0; //anything below this percentage will get the 'low' color
 		var factor = (intLivesImprovedPercentageMax - intLivesImprovedPercentageMin) / (100 - minimumPercentage);
 
 		for (var i = 0; i < arrRegions.length; i++) {
@@ -186,7 +191,9 @@ var objMap = {
 					percentageForColor = (percentageLI - intLivesImprovedPercentageMin) / factor + minimumPercentage;
 				}
 
-				if (percentageForColor >= 100) percentageForColor = 99;
+        // Correct for percentages above 100 and below 0
+				if (percentageForColor >= 100) percentageForColor = 100;
+				if (percentageForColor < 0) percentageForColor = 0;
 				//console.log(regionId+' colorprc: '+percentageForColor);
 				var colorToSet = self.getcolorforpercentage(percentageForColor, objConfig.colors[objPageState.state.filter.sector].low, objConfig.colors[objPageState.state.filter.sector].middle, objConfig.colors[objPageState.state.filter.sector].high);
 

@@ -461,8 +461,8 @@ var objTrendGraph = {
 					intPercentage = 25;
 					break;
 			}
-			console.log('intDecimalPlacesIn: %s, intFactor: %s, intPercentage: %s, intLength: %s', intDecimalPlacesIn, intFactor, intPercentage, intLength);
-			console.log(self.props.axis);
+			//console.log('intDecimalPlacesIn: %s, intFactor: %s, intPercentage: %s, intLength: %s', intDecimalPlacesIn, intFactor, intPercentage, intLength);
+			//console.log(self.props.axis);
 
 			var intMargin = ((self.props.axis.ymax - self.props.axis.ymin) / 100) * intPercentage;
 			//% from top
