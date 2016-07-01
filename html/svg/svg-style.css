@@ -1,0 +1,34 @@
+/* Countries map */
+.changed-market {
+  /*
+stroke: red;
+  stroke-width: 3;
+  */
+  
+}
+
+
+
+.asean {
+  fill: rgb(187,101,229)!important;
+}
+
+.france{
+  fill: blue!important;
+}
+
+/* Markets Map */
+.russiacentralasia,
+g#russia_central-asia *{
+  fill: rgb(135,55,176)!important;
+}
+
+.latinamerica,
+g#latin_america *{
+  fill: rgb(203,242,119)!important;
+}
+
+.italyisraelgreece,
+g#italy_israel_greece *{
+  fill: green!important;
+}
