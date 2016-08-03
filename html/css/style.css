@@ -801,18 +801,26 @@ body.PD0900 #simulation_wrapper h1 {
 
 li#PD0100.selected,
 li#PD0100 .selected {
-  color: #7dba00 !important;
+  color: #7dba00!important;
 }
 
 li#PD0200.selected,
 li#PD0200 .selected {
-  color: #68049c !important;
+  color: #68049c!important;
 }
 
-li#PD0900.selected,
-li#PD0900 .selected {
-  color: #2badb5 !important;
+/* NEW (filter select box) */
+li#DHS001.selected,
+li#DHS001 .selected {
+  color: #4B801A!important;
 }
+
+li#DHS003.selected,
+li#DHS003 .selected {
+  color: #E6285F!important;
+}
+/* END NEW */
+
 
 #activity_filter_container div {
   width: 50%;
@@ -971,6 +979,38 @@ body.philips #arc_path {
 body.philips #arc_path_left {
   stroke: #022a64;
 }
+
+/* NEW */
+body.DHS001 #arc_path {
+  stroke: #9b4bc5;
+}
+
+body.DHS001 #arc_path_left {
+  stroke: #27003c;
+}
+
+body.DHS001 .nr_label,
+body.DHS001 #lives_improved_percentage_sub tspan,
+body.DHS001 #nr_lives_improved_label {
+  fill: #999;
+}
+
+body.DHS003 #arc_path {
+  stroke: #9b4bc5;
+}
+
+body.DHS003 #arc_path_left {
+  stroke: #27003c;
+}
+
+body.DHS003 .nr_label,
+body.DHS003 #lives_improved_percentage_sub tspan,
+body.DHS003 #nr_lives_improved_label {
+  fill: #999;
+}
+
+
+/* END NEW */
 
 #nr_lives_improved_label,
 .nr_label {
@@ -1229,6 +1269,23 @@ body.PD0900 #arrow_down {
   background: #2badb5;
 }
 
+/* NEW (4B801A)*/
+li#DHS001 .mru_sector_color,
+body.DHS001 #region_info,
+body.DHS001 #region_history,
+body.DHS001 #show_current,
+body.DHS001 #arrow_down {
+  background: #093825;
+}
+
+li#DHS003 .mru_sector_color,
+body.DHS003 #region_info,
+body.DHS003 #region_history,
+body.DHS003 #show_current,
+body.DHS003 #arrow_down {
+  background: #521536;
+}
+
 body.PD0100 #arrow_down,
 body.PD0100 #show_simulation_text {
   fill: #7dba00;
@@ -1264,6 +1321,37 @@ body.PD0900 #lives_improved_percentage_sub tspan,
 body.PD0900 #nr_lives_improved_label {
   fill: #124a4d;
 }
+
+/* NEW */
+/* mobile layout */
+body.DHS001 #arrow_down,
+body.DHS001 #show_simulation_text {
+  fill: #093825;
+}
+
+
+body.DHS001 #arrow_up,
+body.DHS001 #show_current_text,
+body.DHS001 .nr_label,
+body.DHS001 #lives_improved_percentage_sub tspan,
+body.DHS001 #nr_lives_improved_label {
+  fill: #DAE95B;
+}
+
+body.DHS003 #arrow_down,
+body.DHS003 #show_simulation_text {
+  fill: #521536;
+}
+
+body.DHS003 #arrow_up,
+body.DHS003 #show_current_text,
+body.DHS003 .nr_label,
+body.DHS003 #lives_improved_percentage_sub tspan,
+body.DHS003 #nr_lives_improved_label {
+  fill: #E4B8C0;
+}
+
+/* END NEW */
 
 body.philips #arrow_down,
 body.philips #show_simulation_text {
@@ -1544,6 +1632,22 @@ div#debug_layer {
   body.philips #simulation_wrapper h1 {
     color: #0b5ed7;
   }
+
+  /* NEW (trend panel and slider) */
+  body.DHS001 .slider_value,
+  body.DHS001 #simulation_wrapper h1 {
+    color: #093825;
+  }
+
+  body.DHS003 .slider_value,
+  body.DHS003 #simulation_wrapper h1 {
+    color: #521536;
+  }
+
+
+
+  /* END NEW */
+
   div#debug_layer {
     display: block;
     width: 200px;

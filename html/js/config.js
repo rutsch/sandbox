@@ -40,8 +40,19 @@ var objConfig = {
       low: '#dbcfe9',
       middle: '#7d0063',
       high: '#42145f'
-    }
+    },
 
+    DHS001: { //Diagnosis & Treatment
+      low: '#DAE95B',
+      middle: '#4B801A',
+      high: '#093825'
+    },
+
+    DHS003: { //Connected Care & Health Informatics
+      low: '#E4B8C0',
+      middle: '#E6285F',
+      high: '#521536'
+    }
   },
   resources: {
     css: [
