@@ -16,42 +16,47 @@ var objConfig = {
   },
   colors: {
     philips: { //philips group
-      low: '#b3c8e6',
-      middle: '#0066a1',
-      high: '#0f204b'
+      low: '#D2E9FF',
+      middle: '#0E6EB3',
+      high: '#002E6C'
     },
-    PD0900: { //healthcare
-      low: '#cae3e9',
-      middle: '#1e9d8b',
-      high: '#22505f'
+    PD0900: { //healthsystems  (to be removed)
+      low: '#B7D9E3',
+      middle: '#0E6EB3',
+      high: '#074178'
     },
     PD0100: { //lighting
-      low: '#e0e96e',
-      middle: '#5b8f22',
-      high: '#024731'
+      low: '#F3DDC2',
+      middle: '#F2A41C',
+      high: '#EE7706'
     },
-    BS9001: { //lighting (2)
-      low: '#e0e96e',
-      middle: '#5b8f22',
-      high: '#024731'
+    BS9001: { //lighting (2) - can this be removed??
+      low: '#F3DDC2',
+      middle: '#F2A41C',
+      high: '#EE7706'
     },
 
-    PD0200: { //consumer lifestyle
-      low: '#dbcfe9',
-      middle: '#7d0063',
-      high: '#42145f'
+    PD0200: { //personal health (previously known as Consumer Lifestyle)
+      low: '#E0FEE4',
+      middle: '#3A8D3F',
+      high: '#123727'
     },
 
     DHS001: { //Diagnosis & Treatment
-      low: '#DAE95B',
-      middle: '#4B801A',
-      high: '#093825'
+      low: '#E1DDFA',
+      middle: '#570E60',
+      high: '#2E0740'
     },
 
     DHS003: { //Connected Care & Health Informatics
-      low: '#E4B8C0',
-      middle: '#E6285F',
-      high: '#521536'
+      low: '#CEDFFF',
+      middle: '#6B91D5',
+      high: '#094B89'
+    },
+    royalphilips: { //royal philips (new)
+      low: '#DFFFFB',
+      middle: '#1E8877',
+      high: '#095D67'
     }
   },
   resources: {
