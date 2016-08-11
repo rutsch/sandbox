@@ -1100,7 +1100,8 @@ div#explain_panel div.faq_wrapper div.faq_content p {
 g#svgcontentwrapper {
   -webkit-transform: translateZ();
 }
-g#svgcontentwrapper path.jvectormap-region {
+g#svgcontentwrapper path.jvectormap-region,
+g#svgcontentwrapper g {
   cursor: pointer;
 }
 .hide,
