@@ -37,7 +37,7 @@ var objConfig = {
     },
 
     PD0200: { //personal health (previously known as Consumer Lifestyle)
-      low: '#E0FEE4',
+      low: '#B5DFB7',
       middle: '#3A8D3F',
       high: '#123727'
     },
