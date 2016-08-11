@@ -618,6 +618,7 @@ circle#background {
   opacity: 0;
   z-index: 100;
   display: none;
+  cursor: pointer;
 }
 
 #show_simulation_text {
@@ -634,6 +635,7 @@ circle#background {
   background: inherit;
   text-align: center;
   display: none;
+  cursor: pointer;
 }
 
 #show_current_text {
@@ -790,32 +792,40 @@ circle#background {
   padding-left: 10px;
 }
 
-#filter_container ul {
-  list-style-type: none;
-  padding-left: 10px;
+#filter_container {
+  ul {
+    list-style-type: none;
+    padding-left: 10px;
+  }
+
+  ul li div:not(.mru_sector_color) {
+    cursor: pointer!important;
+  }
+
+  ul > li {
+    position: relative;
+    margin-top: 20px;
+    font-size: 20px;
+    color: #2d2d2d;
+  }
+
+  ul > li ul {
+    padding-top: 2px;
+    margin-left: 20px;
+    overflow: hidden;
+  }
+
+  ul li li {
+    margin-top: 5px;
+    font-size: 14px;
+  }
+
+  ul > li ul li ul {
+    height: 0;
+  }
+
 }
 
-#filter_container ul > li {
-  position: relative;
-  margin-top: 20px;
-  font-size: 20px;
-  color: #2d2d2d;
-}
-
-#filter_container ul > li ul {
-  padding-top: 2px;
-  margin-left: 20px;
-  overflow: hidden;
-}
-
-#filter_container ul li li {
-  margin-top: 5px;
-  font-size: 14px;
-}
-
-#filter_container ul > li ul li ul {
-  height: 0;
-}
 
 .mru_sector_color {
   position: absolute;
@@ -1313,6 +1323,7 @@ div#explain_panel{
       padding-bottom: 1px;
       font-size: 18px;
       font-family: gill;
+      cursor: pointer;
     }
 
     div.faq_content {
@@ -1342,6 +1353,10 @@ div#explain_panel{
 
 g#svgcontentwrapper {
   -webkit-transform: translateZ();
+
+  path.jvectormap-region {
+    cursor:pointer;
+  }
 }
 
 .hide,

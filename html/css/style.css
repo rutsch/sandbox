@@ -505,6 +505,7 @@ circle#background {
   opacity: 0;
   z-index: 100;
   display: none;
+  cursor: pointer;
 }
 #show_simulation_text {
   font-size: 1.5em;
@@ -519,6 +520,7 @@ circle#background {
   background: inherit;
   text-align: center;
   display: none;
+  cursor: pointer;
 }
 #show_current_text {
   font-size: 1.5em;
@@ -654,6 +656,9 @@ circle#background {
 #filter_container ul {
   list-style-type: none;
   padding-left: 10px;
+}
+#filter_container ul li div:not(.mru_sector_color) {
+  cursor: pointer!important;
 }
 #filter_container ul > li {
   position: relative;
@@ -1071,6 +1076,7 @@ div#explain_panel div.faq_wrapper div.faq_header {
   padding-bottom: 1px;
   font-size: 18px;
   font-family: gill;
+  cursor: pointer;
 }
 div#explain_panel div.faq_wrapper div.faq_content {
   max-height: 0;
@@ -1093,6 +1099,9 @@ div#explain_panel div.faq_wrapper div.faq_content p {
 }
 g#svgcontentwrapper {
   -webkit-transform: translateZ();
+}
+g#svgcontentwrapper path.jvectormap-region {
+  cursor: pointer;
 }
 .hide,
 #region_info.less #up,
