@@ -61,8 +61,14 @@ var objMruFilter = {
 			return 'PD0900';
 		} else if (str.indexOf('ighting') > -1) {
 			return 'PD0100';
-		} else if (str.indexOf('ifestyle') > -1) {
+		} else if (str.indexOf('ifestyle') > -1 || str.indexOf('ersonal') > -1) {
 			return 'PD0200';
+		} else if (str.indexOf('onnected') > -1) {
+		  return 'DHS003';
+		} else if (str.indexOf('iagnosis') > -1) {
+		  return 'DHS001';
+		} else if (str.indexOf('oyal') > -1) {
+		  return 'royalphilips';
 		} else {
 			return 'philips';
 		}
