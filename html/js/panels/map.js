@@ -16,8 +16,9 @@ var objMap = {
 		market: { url: 'philips_markets.svg' },
 		country: { url: 'jvector_countries.svg' }
 	},
-	getcolorforpercentage: function (pct, low_color, middle_color, high_color) {
+	getcolorforpercentage: function (pct, lowColor, middleColor, highColor) {
 	  var self = this;
+	  var useMiddleColor = false;
 
 	  //console.log('pct: ' + pct);
 
@@ -26,26 +27,38 @@ var objMap = {
 		//console.log('pct (%): '+ pct);
 
 		var percentColors = [
-				{ pct: 0.0000001, color: rgbFromHex(low_color) },
-				{ pct: 0.5, color: rgbFromHex(middle_color) },
-				{ pct: 1.0, color: rgbFromHex(high_color) }
-			];
+				{ pct: 0.0000001, color: rgbFromHex(lowColor) },
+				{ pct: 0.5, color: rgbFromHex(middleColor) },
+				{ pct: 1.0, color: rgbFromHex(highColor) }
+		];
+
+		if (!useMiddleColor) {
+		  percentColors = [
+          { pct: 0.0000001, color: rgbFromHex(lowColor) },
+          { pct: 1.0, color: rgbFromHex(highColor) }
+		  ];
+		}
+
 
 		for (var i = 0; i < percentColors.length; i++) {
-			if (pct <= percentColors[i].pct) {
-				var lower = percentColors[i - 1] || { pct: 0.1, color: { r: 0x0, g: 0x00, b: 0} };
-				var upper = percentColors[i];
-				var range = upper.pct - lower.pct;
-				var rangePct = (pct - lower.pct) / range;
-				var pctLower = 1 - rangePct;
-				var pctUpper = rangePct;
-				var color = {
-					r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
-					g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
-					b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
-				};
-				return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
-			}
+      // Skip middle color if needed
+		  //if (useMiddleColor && i == 1) {
+        if (pct <= percentColors[i].pct) {
+				  var lower = percentColors[i - 1] || { pct: 0.1, color: { r: 0x0, g: 0x00, b: 0} };
+				  var upper = percentColors[i];
+				  var range = upper.pct - lower.pct;
+				  var rangePct = (pct - lower.pct) / range;
+				  var pctLower = 1 - rangePct;
+				  var pctUpper = rangePct;
+				  var color = {
+					  r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+					  g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+					  b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+				  };
+				  return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+			  }
+		  //}
+			
 		}
 	},
 	/*
