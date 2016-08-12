@@ -183,7 +183,7 @@ var objConfig = {
       }
     }
 
-    console.log('self.sitetype: %s', self.sitetype);
+    //console.log('self.sitetype: %s', self.sitetype);
 
     /*
     Calculate the absolute URL's to use in the application
@@ -194,7 +194,7 @@ var objConfig = {
 
       var strUrlCurrent = self.urls[self.sitetype].replace(pattrn, "$1");
 
-      console.log(strUrlCurrent);
+      //console.log(strUrlCurrent);
 
       self.urls.dynamicresourceurl = self.urls.dynamicresourceurl.replace(pattrn, strUrlCurrent + "$3"); //'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
       self.urls.authurl2 = self.urls.authurl2.replace(pattrn, strUrlCurrent + "$3"); // "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
