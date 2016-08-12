@@ -1,7 +1,7 @@
 /*
 Utilities
 */
-function reloadApp(){
+function reloadApp() {
   location.reload();
 }
 var objUtils = {
@@ -169,6 +169,18 @@ function rgbFromHex(hex) {
     b: hexToB(hex)
   }
 }
+
+/*
+Calculates the color in between two colors (beginning=dark color, end=light color)
+*/
+function colourGradientor(p, rgb_beginning, rgb_end) {
+
+  var w1 = ((p * 2 - 1) + 1) / 2.0;
+  var w2 = 1 - w1;
+
+  return [parseInt(rgb_beginning[0] * w1 + rgb_end[0] * w2), parseInt(rgb_beginning[1] * w1 + rgb_end[1] * w2), parseInt(rgb_beginning[2] * w1 + rgb_end[2] * w2)];
+};
+
 function encodeUrl(sStr) {
   return escape(sStr).replace(/\+/g, '%2C').replace(/\"/g, '%22').replace(/\'/g, '%27').replace(/\//g, '%2F');
 }
@@ -213,7 +225,7 @@ function handleShibbolethLoginRequired(cb) {
   console.log('!!Shibboleth login is required!!');
   //remember the state so we can return to it after we have passed the authentication step
   if (objStore.getlocalstorageitem('stateremembered') == null) {
-    if (location.hash.indexOf('login/')>-1) {
+    if (location.hash.indexOf('login/') > -1) {
       objStore.setlocalstorageitem('stateremembered', JSON.stringify(app.defaultpagestate));
     } else {
       objStore.setlocalstorageitem('stateremembered', JSON.stringify(objPageState.hash2object(location.hash)));
@@ -259,7 +271,7 @@ function psv(type, url, objParams, cb) {
         if (xmlhttp.responseText.toLowerCase().indexOf('name="samlrequest"') > 0) {
 
           handleShibbolethLoginRequired(cb)
-          
+
         } else {
           if (bolPerformCatch) {
             //reccomended for production
