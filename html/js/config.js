@@ -3,6 +3,8 @@ var objConfig = {
     base: 'https://www.livesimproved.philips.com/webapp/html',
     dev: 'https://dev.livesimproved.philips.com/webapp/html',
     troper: 'https://www.troperlaunna2010.philips.com/webapp/html',
+    devpublic: 'https://dev.public.livesimproved.philips.com/webapp/html',
+    prodpublic: 'https://www.public.livesimproved.philips.com/webapp/html',
     devhealthtech: 'https://dev.healthtech.livesimproved.philips.com/webapp/html',
     prodhealthtech: 'https://www.healthtech.livesimproved.philips.com/webapp/html',
     devlighting: 'https://dev.lighting.livesimproved.philips.com/webapp/html',
@@ -137,6 +139,10 @@ var objConfig = {
         self.sitetype = 'johan';
       } else if (self.urls.rutger.indexOf(location.hostname) > -1) {
         self.sitetype = 'rutger';
+      } else if (self.urls.devpublic.indexOf(location.hostname) > -1) {
+        self.sitetype = 'devpublic';
+      } else if (self.urls.prodpublic.indexOf(location.hostname) > -1) {
+        self.sitetype = 'prodpublic';
       }
       console.log('sitetype: %s', self.sitetype);
 
@@ -190,7 +196,7 @@ var objConfig = {
     */
     var pattrn = /^((http|https):\/\/.*?)(\/.*)$/;
     //if we are on the dev site, then we need to use a local url for data retrieval etc.
-    if (self.sitetype == 'dev' || self.sitetype == 'troper' || self.sitetype == 'prodhealthtech' || self.sitetype == 'prodlighting' || self.sitetype == 'devhealthtech' || self.sitetype == 'devlighting') {
+    if (self.sitetype == 'dev' || self.sitetype == 'troper' || self.sitetype == 'prodhealthtech' || self.sitetype == 'prodlighting' || self.sitetype == 'prodpublic' || self.sitetype == 'devhealthtech' || self.sitetype == 'devlighting' || self.sitetype == 'devpublic') {
 
       var strUrlCurrent = self.urls[self.sitetype].replace(pattrn, "$1");
 
