@@ -192,6 +192,17 @@ input:focus {
   width: 100%;
   z-index: 2000;
 }
+/* marking the public sites */
+body.devpublic #menu_bar,
+body.prodpublic #menu_bar,
+body.devpublic #title_bar,
+body.prodpublic #title_bar,
+body.devpublic #menu_bar .btn,
+body.prodpublic #menu_bar .btn,
+body.devpublic #title_bar .btn,
+body.prodpublic #title_bar .btn {
+  background: #0e6eb3;
+}
 #btn_back {
   position: absolute;
   width: 60px;

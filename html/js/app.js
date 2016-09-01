@@ -271,6 +271,8 @@ var app = {
       }
     }
 
+    //set the class of the body element to refect the site type
+    document.body.className = objConfig.sitetype;
 
     /*
 		This is where it all starts...
