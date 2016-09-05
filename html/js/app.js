@@ -272,7 +272,7 @@ var app = {
     }
 
     //set the class of the body element to refect the site type
-    document.body.className = objConfig.sitetype;
+    getEl('content_outer_wrapper').className = objConfig.sitetype;
 
     /*
 		This is where it all starts...

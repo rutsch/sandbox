@@ -5,7 +5,8 @@ var objOruFilter = {
 		selectedoruguid: null // the selected country/region - replaced with objPageState.state.filter.oru
 	},
 	el: {
-		mrufilter: null
+	  mrufilter: null,
+    wrapper: null
 	},
 	//fired when the filter panel is opened - sets the state of the filter to match the filter state of the application
 	setorufilterstate: function () {
@@ -57,8 +58,11 @@ var objOruFilter = {
 	* UI functions
 	*/
 	selectoru: function (el, strOru) {
-		var self = this;
-		self.el.wrapper = getEl('oru_filter_container');
+	  var self = this;
+
+	  console.log('objOruFilter.selectoru()');
+
+		if (self.el.wrapper===null) self.el.wrapper = getEl('oru_filter_container');
 		//remove all selected classes
 		var arrAllLi = self.el.wrapper.getElementsByTagName('div');
 		for (var a = 0; a < arrAllLi.length; a++) {
@@ -68,6 +72,9 @@ var objOruFilter = {
 		self.state.selectedoru = strOru;
 		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
 		if (arguments.length == 2) objFilter.blink();
+
+	  // Apply the filter automatically in case of the public website
+		if (objConfig.sitetype.indexOf('public') > -1) objFilter.applyfilter();
 		//objMap.updatemap();
 	},
 	settocurrentoru: function () {

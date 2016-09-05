@@ -192,17 +192,6 @@ input:focus {
   width: 100%;
   z-index: 2000;
 }
-/* marking the public sites */
-body.devpublic #menu_bar,
-body.prodpublic #menu_bar,
-body.devpublic #title_bar,
-body.prodpublic #title_bar,
-body.devpublic #menu_bar .btn,
-body.prodpublic #menu_bar .btn,
-body.devpublic #title_bar .btn,
-body.prodpublic #title_bar .btn {
-  background: #0e6eb3;
-}
 #btn_back {
   position: absolute;
   width: 60px;
@@ -1459,3 +1448,46 @@ div#debug_layer {
   /* Styles */
 }
 /* END MEDIA SECTION */
+/*
+  BEGIN PUBLIC WEBSITES STYLING
+*/
+div#content_outer_wrapper.devpublic,
+div#content_outer_wrapper.prodpublic {
+  /* show filter buttons */
+}
+div#content_outer_wrapper.devpublic #menu_bar,
+div#content_outer_wrapper.prodpublic #menu_bar,
+div#content_outer_wrapper.devpublic #title_bar,
+div#content_outer_wrapper.prodpublic #title_bar,
+div#content_outer_wrapper.devpublic #menu_bar .btn,
+div#content_outer_wrapper.prodpublic #menu_bar .btn,
+div#content_outer_wrapper.devpublic #title_bar .btn,
+div#content_outer_wrapper.prodpublic #title_bar .btn {
+  background: #0e6eb3;
+}
+div#content_outer_wrapper.devpublic div#filter_panel,
+div#content_outer_wrapper.prodpublic div#filter_panel {
+  display: block!important;
+  opacity: 1;
+}
+div#content_outer_wrapper.devpublic div#filter_panel div.panel_header,
+div#content_outer_wrapper.prodpublic div#filter_panel div.panel_header {
+  display: none;
+}
+div#content_outer_wrapper.devpublic div#filter_panel div.modal_content,
+div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content {
+  top: 0px;
+}
+div#content_outer_wrapper.devpublic div#filter_panel div.modal_content h4,
+div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content h4 {
+  display: none;
+}
+div#content_outer_wrapper.devpublic div#filter_panel div.modal_content div#oru_filter_container,
+div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content div#oru_filter_container {
+  height: 40px;
+}
+div#content_outer_wrapper.devpublic div#filter_panel div.modal_content div#oru_filter_container div,
+div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content div#oru_filter_container div {
+  margin-top: 0px;
+  height: 40px;
+}

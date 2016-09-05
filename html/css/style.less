@@ -252,17 +252,7 @@ input:focus {
   z-index: 2000;
 }
 
-/* marking the public sites */
-body.devpublic,
-body.prodpublic{
-  #menu_bar,
-  #title_bar,
-  #menu_bar .btn,
-  #title_bar .btn
-   {
-    background: @philips-medium;
-  }
-}
+
 
 
 #btn_back {
@@ -1803,4 +1793,55 @@ div#debug_layer {
 
 
 /* END MEDIA SECTION */
+
+
+/*
+  BEGIN PUBLIC WEBSITES STYLING
+*/
+div#content_outer_wrapper{
+  &.devpublic,
+  &.prodpublic{
+    #menu_bar,
+    #title_bar,
+    #menu_bar .btn,
+    #title_bar .btn
+     {
+      background: @philips-medium;
+    }
+
+    /* show filter buttons */
+    div#filter_panel{
+      display: block!important;
+      opacity: 1;
+
+      div.panel_header{
+        display: none;
+      }
+
+      div.modal_content{
+        top: 0px;
+        h4{
+          display:none;
+        }
+
+        div#oru_filter_container{
+          height: 40px;
+          div{
+            margin-top: 0px;
+            height: 40px;
+          }
+
+        }
+
+      }
+
+
+    }
+
+
+
+
+
+  }
+}
 
