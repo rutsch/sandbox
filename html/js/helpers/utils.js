@@ -7,8 +7,10 @@ function reloadApp() {
 var objUtils = {
 
 }
+
+// Find an element by id, by classname, by tagname or return null
 function getEl(id) {
-  return document.getElementById(id);
+  return document.getElementById(id) || document.getElementsByClassName(id)[0] || document.getElementsByTagName(id)[0] || null;
 }
 function findPos(obj) {
   var curleft = curtop = 0;
