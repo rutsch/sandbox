@@ -539,5 +539,7 @@ function hasProperty(obj, propName) {
 }
 
 
-
+function isPublicSite() {
+  return (objConfig.sitetype.indexOf('public') > -1) ? true : false;
+}
 

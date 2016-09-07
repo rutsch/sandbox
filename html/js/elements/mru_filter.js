@@ -162,6 +162,9 @@ var objMruFilter = {
 
 		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
 		if (arguments.length == 2) objFilter.blink();
+
+    // Apply the filter immediately if we are on the public website
+		if (isPublicSite()) objFilter.applyfilter();
 		//objMap.updatemap();		
 	},
 	init: function (cb) {

@@ -73,10 +73,10 @@ var objFilter = {
 	},
 	applyfilter: function () {
 		var self = this;
-		console.log('objFilter.applyfilter()');
+		//console.log('objFilter.applyfilter()');
 		//update the objPageState properties with the filter selection we have just made
 
-		if (objConfig.sitetype.indexOf('public') == -1) self.hide();
+		if (!isPublicSite()) self.hide();
 
 		self.state.currentfilterhtml = self.el.filtercontent.innerHTML;
 

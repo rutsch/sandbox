@@ -501,6 +501,9 @@ var objPageState = {
 
     }
 
+    //7) open the filter panel if this is the public website
+    if (isPublicSite() && !objFilter.state.visible) objFilter.show();
+
     //debugger;
     self.setstateobject(objPageStateNew);
   },

@@ -60,7 +60,7 @@ var objOruFilter = {
 	selectoru: function (el, strOru) {
 	  var self = this;
 
-	  console.log('objOruFilter.selectoru()');
+	  //console.log('objOruFilter.selectoru()');
 
 		if (self.el.wrapper===null) self.el.wrapper = getEl('oru_filter_container');
 		//remove all selected classes
@@ -74,7 +74,7 @@ var objOruFilter = {
 		if (arguments.length == 2) objFilter.blink();
 
 	  // Apply the filter automatically in case of the public website
-		if (objConfig.sitetype.indexOf('public') > -1) objFilter.applyfilter();
+		if (isPublicSite()) objFilter.applyfilter();
 		//objMap.updatemap();
 	},
 	settocurrentoru: function () {
