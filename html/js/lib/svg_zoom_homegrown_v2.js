@@ -633,8 +633,6 @@ function handleZoomDesktop(evt) {
 
 
 	handleZoom(evt, Math.pow(1 + objZoomPanSettings.zoomscale, delta));
-
-
 }
 
 
