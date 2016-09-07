@@ -63,7 +63,7 @@ input:focus {
   left: 0;
   right: 0;
   height: 0;
-  background: #999;
+  background: #999999;
   color: #FF0000;
   opacity: 1;
   z-index: 10;
@@ -658,7 +658,7 @@ circle#background {
   padding-left: 10px;
 }
 #filter_container ul li div:not(.mru_sector_color) {
-  cursor: pointer!important;
+  cursor: pointer !important;
 }
 #filter_container ul > li {
   position: relative;
@@ -693,7 +693,7 @@ circle#background {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  background: #999;
+  background: #999999;
   color: #2d2d2d;
   margin-top: 5px;
   margin-bottom: 15px;
@@ -708,7 +708,7 @@ circle#background {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  background: #999;
+  background: #999999;
   color: #2d2d2d;
   margin-top: 5px;
   margin-bottom: 15px;
@@ -739,7 +739,7 @@ circle#background {
 #bookmarks_panel ul li {
   height: 50px;
   position: relative;
-  border-bottom: 1px solid #999;
+  border-bottom: 1px solid #999999;
   cursor: pointer;
 }
 .bookmark_color {
@@ -771,7 +771,7 @@ circle#background {
 body.PD0200 .nr_label,
 body.PD0200 #lives_improved_percentage_sub tspan,
 body.PD0200 #nr_lives_improved_label {
-  fill: #999;
+  fill: #999999;
 }
 body.philips #region_info,
 body.philips #region_history,
@@ -1167,7 +1167,7 @@ li#PD0900 .mru_sector_color {
 }
 li#DHS001.selected,
 li#DHS001 .selected {
-  color: #570e60 !important;
+  color: #71357d !important;
 }
 li#DHS001 .mru_sector_color {
   background: #570e60;
@@ -1453,7 +1453,9 @@ div#debug_layer {
 */
 div#content_outer_wrapper.devpublic,
 div#content_outer_wrapper.prodpublic {
-  /* show filter buttons */
+  /* hide the menu and bottom toolbars */
+  /* position/style the filter dialog in a different way */
+  /* style the results panel differently */
 }
 div#content_outer_wrapper.devpublic #menu_bar,
 div#content_outer_wrapper.prodpublic #menu_bar,
@@ -1464,11 +1466,27 @@ div#content_outer_wrapper.prodpublic #menu_bar .btn,
 div#content_outer_wrapper.devpublic #title_bar .btn,
 div#content_outer_wrapper.prodpublic #title_bar .btn {
   background: #0e6eb3;
+  display: none;
 }
 div#content_outer_wrapper.devpublic div#filter_panel,
 div#content_outer_wrapper.prodpublic div#filter_panel {
-  display: block!important;
-  opacity: 1;
+  height: 0px !important;
+  max-height: none !important;
+}
+div#content_outer_wrapper.devpublic div#filter_panel.panel,
+div#content_outer_wrapper.prodpublic div#filter_panel.panel {
+  position: inline !important;
+  overflow: visible;
+}
+div#content_outer_wrapper.devpublic div#filter_panel.modal,
+div#content_outer_wrapper.prodpublic div#filter_panel.modal {
+  margin: 0px 0px 0px 0px !important;
+  height: auto;
+  top: 0px !important;
+  left: 0px !important;
+  right: 0px !important;
+  padding: 0 !important;
+  max-width: none !important;
 }
 div#content_outer_wrapper.devpublic div#filter_panel div.panel_header,
 div#content_outer_wrapper.prodpublic div#filter_panel div.panel_header {
@@ -1477,6 +1495,7 @@ div#content_outer_wrapper.prodpublic div#filter_panel div.panel_header {
 div#content_outer_wrapper.devpublic div#filter_panel div.modal_content,
 div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content {
   top: 0px;
+  overflow: visible;
 }
 div#content_outer_wrapper.devpublic div#filter_panel div.modal_content h4,
 div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content h4 {
@@ -1484,10 +1503,56 @@ div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content h4 {
 }
 div#content_outer_wrapper.devpublic div#filter_panel div.modal_content div#oru_filter_container,
 div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content div#oru_filter_container {
-  height: 40px;
+  width: 150px;
+  float: left;
+  background-color: #ececec;
+}
+div#content_outer_wrapper.devpublic div#filter_panel div.modal_content div#oru_filter_container:before,
+div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content div#oru_filter_container:before {
+  content: "\00a0 Geographical detail:";
 }
 div#content_outer_wrapper.devpublic div#filter_panel div.modal_content div#oru_filter_container div,
 div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content div#oru_filter_container div {
   margin-top: 0px;
   height: 40px;
+  width: 100%;
+  margin-bottom: 0;
+  border-right: 0px;
+}
+div#content_outer_wrapper.devpublic div#filter_panel div.modal_content div#filter_container,
+div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content div#filter_container {
+  width: 150px;
+  float: right;
+  border: 0px solid red;
+  background-color: #ececec;
+}
+div#content_outer_wrapper.devpublic div#filter_panel div.modal_content div#filter_container:before,
+div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content div#filter_container:before {
+  content: "\00a0 Business detail:";
+}
+div#content_outer_wrapper.devpublic div#filter_panel div.modal_content div#filter_container ul,
+div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content div#filter_container ul {
+  padding-left: 0px;
+  margin: 0;
+}
+div#content_outer_wrapper.devpublic div#filter_panel div.modal_content div#filter_container ul > li,
+div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content div#filter_container ul > li {
+  font-size: 12px;
+  margin-top: 6px;
+  text-align: center;
+  margin: 0px;
+  background-color: #999999;
+}
+div#content_outer_wrapper.devpublic div#app_panel div#app_wrapper,
+div#content_outer_wrapper.prodpublic div#app_panel div#app_wrapper {
+  top: 0px;
+  bottom: 0px;
+}
+div#content_outer_wrapper.devpublic div#app_panel div#app_wrapper div#top_panel div#region_history,
+div#content_outer_wrapper.prodpublic div#app_panel div#app_wrapper div#top_panel div#region_history {
+  display: none;
+}
+div#content_outer_wrapper.devpublic div#app_panel div#app_wrapper div#bottom_panel div#simulation,
+div#content_outer_wrapper.prodpublic div#app_panel div#app_wrapper div#bottom_panel div#simulation {
+  display: none;
 }

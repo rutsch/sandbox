@@ -11,7 +11,8 @@ var objFilter = {
 	show: function () {
 		var self = this;
 		self.state.currentfilterhtml = self.el.filtercontent.innerHTML;
-		objOverlay.show();
+    // For the public websites we do not show the overlay in combination with the filter
+		if (!isPublicSite()) objOverlay.show();
 		self.state.tweening = true;
 		self.el.wrapper.style.display = 'block';
 		TweenLite.to(self.el.wrapper, 0.3, {
@@ -41,7 +42,8 @@ var objFilter = {
 		TweenLite.to(self.el.wrapper, 0.3, {
 			opacity: 0,
 			onComplete: function () {
-				objOverlay.hide();
+			  // For the public websites we do not show the overlay in combination with the filter
+			  if (!isPublicSite()) objOverlay.hide();
 				self.el.filtercontent.innerHTML = self.state.currentfilterhtml;
 				self.el.wrapper.style.display = 'none';
 				self.state.tweening = false;

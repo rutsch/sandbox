@@ -476,30 +476,35 @@ var objMap = {
 		key = objPageState.state.filter.mru + '_' + (objPageState.state.filter.oru.length < 4 ? objPageState.state.filter.oru : objPageState.state.filter.oru.toLowerCase()),
 		regionData = self.data[key];
 
-
     var elRegion = getEl(objPageState.state.filter.oru);
-    var opacity = elRegion.style.opacity;
-    TweenLite.to(elRegion, 0.5, {
-      opacity: 0.7,
-      onComplete: function () {
-        //alert('in')
-        //debugger;
+    if (elRegion) {
+      var opacity = elRegion.style.opacity;
+      TweenLite.to(elRegion, 0.5, {
+        opacity: 0.7,
+        onComplete: function () {
+          //alert('in')
+          //debugger;
 
-        //JT: I introduced a very crappy way to check for a tablet - can this be improved and become app.state.tablet ?
-        if (app.state.width > 768) {
-          self.updateui(regionData, objPageState.state.filter.oru, elRegion);
-        } else {
-          TweenLite.to(self.el.elsvgholder, 0.2, {
-            opacity: 0,
-            onComplete: function () {
-              self.updateui(regionData, objPageState.state.filter.oru, elRegion);
-            }
-          });
+          //JT: I introduced a very crappy way to check for a tablet - can this be improved and become app.state.tablet ?
+          if (app.state.width > 768) {
+            self.updateui(regionData, objPageState.state.filter.oru, elRegion);
+          } else {
+            TweenLite.to(self.el.elsvgholder, 0.2, {
+              opacity: 0,
+              onComplete: function () {
+                self.updateui(regionData, objPageState.state.filter.oru, elRegion);
+              }
+            });
+          }
+
+
         }
-
-
-      }
-    });
+      });
+    } else {
+      console.log('Could not find the region in the map to animate.');
+      console.log(objPageState.state.filter.oru);
+    }
+    
 
 
   },
