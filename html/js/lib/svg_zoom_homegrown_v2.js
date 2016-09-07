@@ -613,7 +613,7 @@ function handleZoomMobile(ev){
 
 
 function handleZoomDesktop(evt) {
-  if (!objZoomPanSettings.zoom || objFilter.state.visible) return;
+  if (!objZoomPanSettings.zoom || (objFilter.state.visible && !isPublicSite())) return;
 
 	objTouchVars.eventcount++;
 
