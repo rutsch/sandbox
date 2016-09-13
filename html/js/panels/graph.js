@@ -550,13 +550,16 @@ var objTrendGraph = {
 		self.el.popupvaluenumber = document.getElementById('popup_value_number');
 		self.el.popuptrendtextwrapper = document.getElementById('popup_trend_text_wrapper');
 
-		//getBoundingClientRect() gets the width & height in "scale" size, getBBox() gets the original size.... 
-		self.vars.popuptrendwidth = self.el.popuptrend.getBBox().width;
-		self.vars.popuptrendheight = self.el.popuptrend.getBBox().height;
-		self.vars.popupvaluewidth = self.el.popupvalue.getBBox().width;
-		self.vars.popupvalueheight = self.el.popupvalue.getBBox().height;
-		self.vars.popuptrendtextwrapperheight = self.el.popuptrendtextwrapper.getBBox().height;
-		//console.log(self.vars);
+	  //getBoundingClientRect() gets the width & height in "scale" size, getBBox() gets the original size.... 
+		if (!isPublicSite()) {
+		  self.vars.popuptrendwidth = self.el.popuptrend.getBBox().width;
+		  self.vars.popuptrendheight = self.el.popuptrend.getBBox().height;
+		  self.vars.popupvaluewidth = self.el.popupvalue.getBBox().width;
+		  self.vars.popupvalueheight = self.el.popupvalue.getBBox().height;
+		  self.vars.popuptrendtextwrapperheight = self.el.popuptrendtextwrapper.getBBox().height;
+		  //console.log(self.vars);
+		}
+
 		var objSerializer = new XMLSerializer();
 		self.vars.template = objSerializer.serializeToString(self.el.root);
 
