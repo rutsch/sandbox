@@ -154,6 +154,12 @@ function svgSetTransform(elSvg, objSvgProperties) {
 
 }
 
+//retrieves the matrix zoom level
+function svgRetrieveZoomLevel(elSvg) {
+  var zoomLevel = parseFloat(elSvg.getAttributeNS(null, 'transform').replace(/.*bla\(\s*(\d[^\,]*).*/g, '$1'));
+  return (isNaN(zoomLevel))?1:zoomLevel;
+}
+
 function getTransformedWidth(svg, el) {
   //debugger;
   var matrix = el.getTransformToElement(svg);

@@ -651,6 +651,12 @@ window.onresize = function () {
   //rework the dimensions of the map based on the new dimensions of the window
   objMap.resizeworldmap();
 
+  //center the worldmap
+  objMap.centerworldmap(objMap.el.rootanimate);
+
+  // On the public version of the application, stretch the worldmap to the maximum size of the window
+  if (isPublicSite()) objMap.maximizeworldmap(objMap.el.rootanimate);
+
   objRegionInfo.hide();
 };
 

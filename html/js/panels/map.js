@@ -19,7 +19,7 @@ var objMap = {
   getcolorforpercentage: function (pct, lowColor, middleColor, highColor) {
     var self = this;
     var useMiddleColor = true;
-    
+
     //console.log('pct: ' + pct);
     pct /= 100;
     //console.log('pct (%): ' + pct);
@@ -285,6 +285,8 @@ var objMap = {
 
     self.centerworldmap(self.el.rootanimate);
 
+    // On the public version of the application, stretch the worldmap to the maximum size of the window
+    if (isPublicSite()) self.maximizeworldmap(self.el.rootanimate);
 
     objLoading.hide();
     //hideLoadingPanel();
@@ -364,7 +366,7 @@ var objMap = {
       attr = attrs.item(i);
       //alert(attr.nodeName);
       if (attr.nodeName == 'transform') {
-        //perform srting manipulation to find all the values used in the transform
+        //perform string manipulation to find all the values used in the transform
       }
       objSvgElementProperties[attr.nodeName] = attr.nodeValue;
     }
@@ -434,9 +436,9 @@ var objMap = {
   //centers the worldmap in the screen
   centerworldmap: function (elSvg) {
     var self = this;
-    //set the worldmap to position 0,0
+    //set the worldmap to position 0,0, but respect the current zoom level
     svgSetTransform(elSvg, {
-      scale: 1,
+      scale: svgRetrieveZoomLevel(elSvg),
       translatex: 0,
       translatey: 0,
       transformmatrix: {}
@@ -445,6 +447,43 @@ var objMap = {
 
     //move to new position
     self.moveworldmap((app.state.width / 2) - (self.state.rootanimateattributevalues.size.width / 2) - self.state.rootanimateattributevalues.x, (app.state.height / 2) - (self.state.rootanimateattributevalues.size.height / 2) - self.state.rootanimateattributevalues.y);
+
+    //store the state of the map in a new object
+    self.state.rootanimateattributevalues = self.retrievesvgelementobject(self.el.rootanimate);
+  },
+  maximizeworldmap: function (elSvg) {
+    var self = this;
+
+    var zoomFactor = 1, deltaX = 0, deltaY = 0;
+
+    // Determine how to maximize the map
+    if ((app.state.width / app.state.height) >= (self.state.rootanimateattributevalues.size.width / self.state.rootanimateattributevalues.size.height)) {
+      // Stretch to height and horizontally center
+      zoomFactor = app.state.height / self.state.rootanimateattributevalues.size.height;
+      // how much should we move the map after it has been zoomed correctly
+      deltaX = (app.state.width - (self.state.rootanimateattributevalues.size.width * zoomFactor)) / 2;
+    } else {
+      //Stretch to width and vertically center
+      zoomFactor = app.state.width / self.state.rootanimateattributevalues.size.width;
+      // how much should we move the map after it has been zoomed correctly
+      deltaY = (app.state.height - (self.state.rootanimateattributevalues.size.height * zoomFactor)) / 2;
+    }
+
+    //console.log('- zoomFactor: ' + zoomFactor + ', deltaX: ' + deltaX + ', deltaY: ' + deltaY);
+
+    // Zoom the map
+    svgSetTransform(elSvg, {
+      scale: zoomFactor,
+      translatex: 0,
+      translatey: 0,
+      transformmatrix: {}
+    });
+
+    // Move the map
+    self.moveworldmap(deltaX, deltaY);
+
+    // store the state of the map in a new object
+    self.state.rootanimateattributevalues = self.retrievesvgelementobject(self.el.rootanimate);
   },
   detailspanel: function () {
     var self = this;
@@ -504,7 +543,7 @@ var objMap = {
       console.log('Could not find the region in the map to animate.');
       console.log(objPageState.state.filter.oru);
     }
-    
+
 
 
   },
