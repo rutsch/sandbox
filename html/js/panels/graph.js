@@ -178,7 +178,6 @@ var objTrendGraph = {
     }
 
     //align the popup
-    self.getbbox();
     //var intCorrection=((self.state.trendpopupflipped)?-10:10);
     var strTranslateValue = self.el.popuptrend.getAttributeNS(null, 'transform').replace(/^.*\)\s+(.*)$/, '$1');
     if (app.state.ie) {
