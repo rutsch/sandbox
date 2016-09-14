@@ -43,17 +43,62 @@
 @grey-light: #ececec;
 
 /*
-  Rules
+  Font definitions
 */
-@font-face {
-  font-family: gill;
-  src: url(../fonts/gsa_wg_l-webfont.woff);
+@hairline: 100;
+@xthin: 200;
+@thin: 300;
+@xlight: 400;
+@light: 500;
+@book: 600;
+@medium: 700;
+@bold: 800;  
+@xbold: 900; 
+
+
+.declareFont(@name, @file, @style, @weight, @hash){
+  font-family: @name;
+  font-style: @style;
+  font-weight: @weight;
+  src: url('../fonts/@{file}.eot') format('eot'); 
+  src: url('../fonts/@{file}.eot?#iefix') format('embedded-opentype'), 
+  url('../fonts/@{file}.woff') format('woff'),
+  url('../fonts/@{file}.ttf')  format('truetype'), 
+  url('../fonts/@{file}.svg#@{hash}') format('svg'); 
 }
 
-@font-face {
-  font-family: gill_header;
-  src: url('../fonts/gsa_wg-webfont.woff');
+.declareFontSet(@name, @base, @weight, @hashNormal, @hashItalic){
+  @font-face { .declareFont(@name, '@{base}',       normal, @weight,  @hashNormal); }
+  @font-face { .declareFont(@name, '@{base}Italic', italic, @weight,  @hashItalic); }
 }
+ 
+
+.declareFontSet('CentraleSans', 'CentraleSans-Hairline',  @hairline,  '3e8f9638cef28de44c5f0ef5a2ac1f86', '4d2f53df18bb5b2094d87985d0e83b1f');
+.declareFontSet('CentraleSans', 'CentraleSans-XThin',     @xthin,     '6249393d0e2fa98463a1576bfb5a98dc', '1c655fab601ffc026afa8f553e514127');
+.declareFontSet('CentraleSans', 'CentraleSans-Thin',      @thin,      '1231844b5cf0b94274c7dceb758a518f', 'b4442d5a0271a1a31bc43d121e5171e6');
+.declareFontSet('CentraleSans', 'CentraleSans-XLight',    @xlight,    '0776b0bc35c0190bb9f39c287b0e6737', '280be28bc7e8ac52003d38d0d68c01ca');
+.declareFontSet('CentraleSans', 'CentraleSans-Light',     @light,     'd22854b5c8a257945cfe36032fb48365', 'e1165f88416a600732f9d34befbddc06');
+.declareFontSet('CentraleSans', 'CentraleSans-Book',      @book,      '1d84a514a13dcf4f9de78cc3753dbf03', 'd6af579292c57141dd4d73bd8e7332f1');
+.declareFontSet('CentraleSans', 'CentraleSans-Medium',    @medium,    '919c5c091df8f3d5bd02f587b9494055', '2e0966e06b18b0eaf7b97cfa6909a0f1');
+.declareFontSet('CentraleSans', 'CentraleSans-Bold',      @bold,      '7aed1b68c527ea246edf61790a121845', '229bc988ba600d5efed93c68af43633e');
+.declareFontSet('CentraleSans', 'CentraleSans-Xbold',     @xbold,     '9a864760680d346e5852a22d8d46f391', 'cce15fd5072d3bc364b3a5d5801a6c49');
+
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Hairline',  @hairline,  '3e8f9638cef28de44c5f0ef5a2ac1f86', '4d2f53df18bb5b2094d87985d0e83b1f');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-XThin',     @xthin,     '6249393d0e2fa98463a1576bfb5a98dc', '1c655fab601ffc026afa8f553e514127');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Thin',      @thin,      '1231844b5cf0b94274c7dceb758a518f', 'b4442d5a0271a1a31bc43d121e5171e6');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-XLight',    @xlight,    '0776b0bc35c0190bb9f39c287b0e6737', '280be28bc7e8ac52003d38d0d68c01ca');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Light',     @light,     'd22854b5c8a257945cfe36032fb48365', 'e1165f88416a600732f9d34befbddc06');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Book',      @book,      '1d84a514a13dcf4f9de78cc3753dbf03', 'd6af579292c57141dd4d73bd8e7332f1');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Medium',    @medium,    '919c5c091df8f3d5bd02f587b9494055', '2e0966e06b18b0eaf7b97cfa6909a0f1');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Bold',      @bold,      '7aed1b68c527ea246edf61790a121845', '229bc988ba600d5efed93c68af43633e');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-XBold',     @xbold,     '9a864760680d346e5852a22d8d46f391', 'cce15fd5072d3bc364b3a5d5801a6c49');
+
+
+
+/*
+  Rules
+*/
+
 
 a,
 button {
@@ -67,7 +112,7 @@ body {
   left: 0;
   bottom: 0;
   overflow: hidden;
-  font-family: gill;
+  font-family: CentraleSans;
   font-size: 100%;
   margin: 0;
 }
@@ -403,7 +448,7 @@ input:focus {
 #region_name {
   color: #fff;
   font-size: 22px;
-  font-family: gill;
+  font-family: CentraleSans;
   padding-top: 4px;
   white-space: nowrap;
 }
@@ -1274,7 +1319,7 @@ input#slidergreensales {
 
 h2 {
   font-size: 17px;
-  font-family: gill;
+  font-family: CentraleSans;
   margin: 10px;
 }
 
@@ -1292,7 +1337,7 @@ h4 {
   font-size: 15px;
   margin-bottom: 2%;
   margin-top: 2%;
-  font-family: gill;
+  font-family: CentraleSans;
 }
 
 #first_login_content h3 {
@@ -1324,7 +1369,7 @@ div#explain_panel {
       padding-top: 5px;
       padding-bottom: 1px;
       font-size: 18px;
-      font-family: gill;
+      font-family: CentraleSans;
       cursor: pointer;
     }
 

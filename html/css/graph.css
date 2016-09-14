@@ -1,6 +1,6 @@
 
 svg.graph {
-	font-family: gill;
+	font-family: CentraleSans;
 	font-size: 1em;
 }
 
@@ -118,7 +118,7 @@ svg.graph text#popup_trend_text{
 	text-anchor: end;
 }
 svg.graph text#popup_trend_text{
-	font-size: .68em;
+	font-size: .62em;
 }
 svg.graph text#popup_trend_number{
 	text-anchor: middle;
