@@ -1472,6 +1472,7 @@ div#content_outer_wrapper.devpublic div#filter_panel,
 div#content_outer_wrapper.prodpublic div#filter_panel {
   height: 0px !important;
   max-height: none !important;
+  z-index: 6!important;
 }
 div#content_outer_wrapper.devpublic div#filter_panel.panel,
 div#content_outer_wrapper.prodpublic div#filter_panel.panel {
@@ -1494,7 +1495,7 @@ div#content_outer_wrapper.prodpublic div#filter_panel div.panel_header {
 }
 div#content_outer_wrapper.devpublic div#filter_panel div.modal_content,
 div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content {
-  top: 0px;
+  top: 150px;
   overflow: visible;
 }
 div#content_outer_wrapper.devpublic div#filter_panel div.modal_content h4,
@@ -1543,10 +1544,23 @@ div#content_outer_wrapper.prodpublic div#filter_panel div.modal_content div#filt
   margin: 0px;
   background-color: #999999;
 }
+div#content_outer_wrapper.devpublic div#app_panel,
+div#content_outer_wrapper.prodpublic div#app_panel {
+  /* needed to work with the z-indez of the content individually... */
+  z-index: auto;
+}
 div#content_outer_wrapper.devpublic div#app_panel div#app_wrapper,
 div#content_outer_wrapper.prodpublic div#app_panel div#app_wrapper {
   top: 0px;
   bottom: 0px;
+}
+div#content_outer_wrapper.devpublic div#app_panel div#app_wrapper div#top_panel div#region_info,
+div#content_outer_wrapper.prodpublic div#app_panel div#app_wrapper div#top_panel div#region_info {
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+  height: 100%;
 }
 div#content_outer_wrapper.devpublic div#app_panel div#app_wrapper div#top_panel div#region_history,
 div#content_outer_wrapper.prodpublic div#app_panel div#app_wrapper div#top_panel div#region_history {
@@ -1555,4 +1569,26 @@ div#content_outer_wrapper.prodpublic div#app_panel div#app_wrapper div#top_panel
 div#content_outer_wrapper.devpublic div#app_panel div#app_wrapper div#bottom_panel div#simulation,
 div#content_outer_wrapper.prodpublic div#app_panel div#app_wrapper div#bottom_panel div#simulation {
   display: none;
+}
+div#content_outer_wrapper.devpublic div#overlay,
+div#content_outer_wrapper.prodpublic div#overlay {
+  /* mis use the loader div to create a close button */
+}
+div#content_outer_wrapper.devpublic div#overlay div#loader,
+div#content_outer_wrapper.prodpublic div#overlay div#loader {
+  left: auto;
+  right: 0;
+  top: 0;
+  color: white;
+  cursor: pointer;
+  height: 42px;
+  font-size: 32px;
+}
+div#content_outer_wrapper.devpublic div#overlay div#loader:after,
+div#content_outer_wrapper.prodpublic div#overlay div#loader:after {
+  content: "x";
+}
+div#content_outer_wrapper.devpublic div#overlay div#loader:hover,
+div#content_outer_wrapper.prodpublic div#overlay div#loader:hover {
+  font-weight: bold;
 }

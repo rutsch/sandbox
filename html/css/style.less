@@ -1833,6 +1833,8 @@ div#debug_layer {
 div#content_outer_wrapper {
   &.devpublic,
   &.prodpublic {
+    
+
     /* hide the menu and bottom toolbars */
     #menu_bar,
     #title_bar,
@@ -1845,6 +1847,7 @@ div#content_outer_wrapper {
     div#filter_panel {
       height: 0px !important;
       max-height: none !important;
+      z-index: 6!important;
 
       &.panel {
         position: inline !important;
@@ -1866,7 +1869,7 @@ div#content_outer_wrapper {
       }
 
       div.modal_content {
-        top: 0px;
+        top: 150px;
         overflow: visible;
 
         h4 {
@@ -1918,12 +1921,22 @@ div#content_outer_wrapper {
     }
     /* style the results panel differently */
     div#app_panel {
+      /* needed to work with the z-indez of the content individually... */
+      z-index: auto;
+
       div#app_wrapper {
         top: 0px;
         bottom: 0px;
 
         div#top_panel {
           div#region_info {
+            //position: fixed;
+            top: 50%;
+            left: 50%;
+            /* bring your own prefixes */
+            transform: translate(-50%, -50%);
+            //background-color: transparent;
+            height:100%;
           }
 
           div#region_history {
@@ -1938,5 +1951,25 @@ div#content_outer_wrapper {
         }
       }
     }
+
+    div#overlay{
+      /* mis use the loader div to create a close button */
+      div#loader{
+        left: auto;
+        right: 0;
+        top: 0;
+        color: white;
+        cursor: pointer;
+        height: 42px;
+        font-size: 32px;
+        &:after {
+          content: "x";
+        }
+        &:hover{
+          font-weight: bold;
+        }
+      }
+    }
+
   }
 }

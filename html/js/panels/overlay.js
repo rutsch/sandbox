@@ -4,7 +4,8 @@ var objOverlay = {
 		tweening: null
 	},
 	el: {
-		wrapper: null
+	  wrapper: null,
+	  closebutton: null
 	},
 	show: function(cb, animate){
 		var self = this;
@@ -60,11 +61,19 @@ var objOverlay = {
 			if(bolCallback)cb();
 		}
 	},
+	btncloseclick: function(){
+	  objHeader.btnbackclick();
+	},
 	init: function(){
 		var self = this;
 		self.state.tweening = false;
 		self.state.visible = false;
 		
 		self.el.wrapper = getEl('overlay');
+
+		if (isPublicSite()) {
+		  self.el.wrapper.closebutton = getEl('loader');
+		  self.el.wrapper.closebutton.setAttributeNS(null, 'onclick', 'objOverlay.btncloseclick();');
+		}
 	}
 }
