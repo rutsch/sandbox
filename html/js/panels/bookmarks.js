@@ -36,13 +36,15 @@ var objBookmarks = {
 		return false;
 	},
 	findfavourites: function () {
-		var arrResult = [];
-		for (var i = 0; i < objStore.store.length; i++) {
-			var key = localStorage.key(i);
-			if (key.indexOf('fav_') > -1) {
-				arrResult.push(objStore.store.getItem(key));
-			}
-		}
+	  var arrResult = [];
+	  if (objStore.vars.uselocalstorage) {
+	    for (var i = 0; i < objStore.store.length; i++) {
+	      var key = localStorage.key(i);
+	      if (key.indexOf('fav_') > -1) {
+	        arrResult.push(objStore.store.getItem(key));
+	      }
+	    }
+	  }
 		return arrResult;
 	},
 	renderfavouritepanel: function () {
