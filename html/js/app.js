@@ -36,7 +36,7 @@ var app = {
     stylecurrentline: '' //overwrite the style of the line to the current data point
   },
   el: {
-
+    outerwrapper: null
   },
   btnfilterclick: function (el) {
     //add an action to the stats object
@@ -272,7 +272,8 @@ var app = {
     }
 
     //set the class of the body element to refect the site type
-    getEl('content_outer_wrapper').className = objConfig.sitetype;
+    app.el.outerwrapper = getEl('content_outer_wrapper');
+    app.el.outerwrapper.className = objConfig.sitetype;
 
     /*
 		This is where it all starts...

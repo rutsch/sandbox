@@ -507,9 +507,9 @@ var objMap = {
 
     objRegionInfo.hidehistory();
 
-    document.getElementsByTagName("body")[0].className = objPageState.state.filter.sector;
-    //var color=colors[objPageVars.current_sector].middle;
-    //appPanels.region_info.style.background = color;
+    // add the current ORU sector as a class to the wrapper div
+    app.el.outerwrapper.className = objConfig.sitetype + ' ' + objPageState.state.filter.sector;
+
     var sec = {},
 		back = {},
 		key = objPageState.state.filter.mru + '_' + (objPageState.state.filter.oru.length < 4 ? objPageState.state.filter.oru : objPageState.state.filter.oru.toLowerCase()),
