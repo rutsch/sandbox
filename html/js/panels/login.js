@@ -164,7 +164,7 @@ var objLogin = {
 
       //TODO: currently using the IOS app release notes. This should be changed so that we show website updates independantly from app updates
 
-      storedConfig = JSON.parse(storedConfig);
+      storedConfig = (storedConfig)?JSON.parse(storedConfig):null;
       if (storedConfig) {
         if (storedConfig.iosid != newConfig.iosid) {
           self.state.messages.push(strBaseMessage);
