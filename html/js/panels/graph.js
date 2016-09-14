@@ -543,15 +543,19 @@ var objTrendGraph = {
   },
   getbbox: function () {
     var self = this;
-
+    //getBoundingClientRect() gets the width & height in "scale" size, getBBox() gets the original size....
+    // In some browsers you need to unhide the SVG element before you can use getBBox()
     try {
+      self.el.toppanel.className = 'show';
       if (self.vars.popuptrendwidth==0) self.vars.popuptrendwidth = self.el.popuptrend.getBBox().width;
       if (self.vars.popuptrendheight == 0) self.vars.popuptrendheight = self.el.popuptrend.getBBox().height;
       if (self.vars.popupvaluewidth == 0) self.vars.popupvaluewidth = self.el.popupvalue.getBBox().width;
       if (self.vars.popupvalueheight == 0) self.vars.popupvalueheight = self.el.popupvalue.getBBox().height;
       if (self.vars.popuptrendtextwrapperheight == 0) self.vars.popuptrendtextwrapperheight = self.el.popuptrendtextwrapper.getBBox().height;
+      self.el.toppanel.className = 'hide';
     } catch (e) {
       console.log(e);
+      console.trace();
     }
   },
   init: function () {
@@ -563,6 +567,7 @@ var objTrendGraph = {
     self.el.popuptrendbase = document.getElementById('popup_trend_base');
     self.el.popupvaluenumber = document.getElementById('popup_value_number');
     self.el.popuptrendtextwrapper = document.getElementById('popup_trend_text_wrapper');
+    self.el.toppanel = getEl('top_panel');
 
     //getBoundingClientRect() gets the width & height in "scale" size, getBBox() gets the original size.... 
     if (!isPublicSite()) {
