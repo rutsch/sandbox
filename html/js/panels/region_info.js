@@ -19,67 +19,40 @@ var objRegionInfo = {
     var self = this;
     self.state.tweening = true;
 
-    self.el.toppanel.className = 'show animate';
-    self.el.bottompanel.className = 'show animate';
+    self.el.toppanel.className = 'visible animate';
+    self.el.bottompanel.className = 'visible animate';
 
-
+    // In the public version of the tool, we show the data in an overlay
+    if (isPublicSite()) objOverlay.show();
 
     // slide down top_panel
     if (app.state.width > 768) {
       TweenLite.to(self.el.toppanel, 0.3, {
         top: '0%',
-        onComplete: function () {
-          //debugger;
-          self.state.tweening = false;
-          self.state.visible = true;
-          self.el.toppanel.className = 'show';
-        }
+        onComplete: self.showcomplete(self.el.toppanel)
       });
       TweenLite.to(self.el.bottompanel, 0.3, {
         top: '0%',
-        onComplete: function () {
-          self.state.tweening = false;
-          self.state.visible = true;
-          self.el.bottompanel.className = 'show';
-        }
+        onComplete: self.showcomplete(self.el.bottompanel)
       });
     } else {
       self.el.btnshowcurrent.style.display = 'block';
       self.el.btnshowsimulation.style.display = 'block';
       TweenLite.to(self.el.toppanel, 0.3, {
         top: '0%',
-        onComplete: function () {
-          //debugger;
-          self.state.tweening = false;
-          self.state.visible = true;
-          self.el.toppanel.className = 'show';
-        }
+        onComplete: self.showcomplete(self.el.toppanel)
       });
       TweenLite.to(self.el.btnshowsimulation, 0, {
         opacity: 1,
-        onComplete: function () {
-          //debugger;
-          self.state.tweening = false;
-          self.state.visible = true;
-
-        }
+        onComplete: self.showcomplete
       });
       TweenLite.to(self.el.btnshowcurrent, 0, {
         opacity: 0,
-        onComplete: function () {
-          //debugger;
-          self.state.tweening = false;
-          self.state.visible = true;
-
-        }
+        onComplete: self.showcomplete
       });
       TweenLite.to(self.el.bottompanel, 0.3, {
         bottom: '-35%',
-        onComplete: function () {
-          self.state.tweening = false;
-          self.state.visible = true;
-          self.el.bottompanel.className = 'show';
-        }
+        onComplete: self.showcomplete(self.el.bottompanel)
       });
     }
 
@@ -91,55 +64,47 @@ var objRegionInfo = {
       objStore.setlocalstorageitem('seenRegionInfoIntro', 'true');
     }
   },
+  // Central onComplete handler for show() function
+  showcomplete: function (el) {
+    var self = objRegionInfo;
+    self.state.tweening = false;
+    self.state.visible = true;
+    if (el) el.className = 'visible';
+  },
   hide: function () {
     var self = this;
 
     if (self.state.visible) {
-      self.el.toppanel.className = 'hide animate';
-      self.el.bottompanel.className = 'hide animate';
+      self.el.toppanel.className = 'hidden animate';
+      self.el.bottompanel.className = 'hidden animate';
 
       // Hide the panel
       self.state.tweening = true;
       objSliders.vars.simulatorsampling = false;
       self.el.bottompanel.removeAttribute('style');
+
       if (app.state.width > 768) {
         TweenLite.to(self.el.toppanel, 0.3, {
           top: '-30%',
-          onComplete: function () {
-            //debugger;
-            self.state.tweening = false;
-            self.state.visible = false;
-            self.el.toppanel.className = 'hide';
-          }
+          onComplete: self.hidecomplete(self.el.toppanel)
         });
         TweenLite.to(self.el.bottompanel, 0.3, {
           top: '-30%',
-          onComplete: function () {
-            self.state.tweening = false;
-            self.state.visible = false;
-            self.el.bottompanel.className = 'hide';
-          }
+          onComplete: self.hidecomplete(self.el.bottompanel)
         });
       } else {
         TweenLite.to(self.el.toppanel, 0.3, {
           top: '-86%',
-          onComplete: function () {
-            self.state.tweening = false;
-            self.state.visible = false;
-            self.el.toppanel.className = 'hide';
-          }
+          onComplete: self.hidecomplete(self.el.toppanel)
         });
         TweenLite.to(self.el.bottompanel, 0.3, {
           bottom: '-50%',
           onComplete: function () {
-            self.state.tweening = false;
-            self.state.visible = false;
-            self.el.bottompanel.className = 'hide';
+            self.hidecomplete(self.el.bottompanel);
             TweenLite.to(objMap.el.elsvgholder, 0.3, {
               opacity: 1,
               onComplete: function () {
                 objMap.el.elsvgholder.style.display = 'block';
-
               }
             });
           }
@@ -147,18 +112,14 @@ var objRegionInfo = {
         TweenLite.to(self.el.btnshowsimulation, 0.3, {
           opacity: 0,
           onComplete: function () {
-            //debugger;
-            self.state.tweening = false;
-            self.state.visible = false;
+            self.hidecomplete();
             self.el.btnshowsimulation.style.display = 'none';
           }
         });
         TweenLite.to(self.el.btnshowcurrent, 0, {
           opacity: 0,
           onComplete: function () {
-            //debugger;
-            self.state.tweening = false;
-            self.state.visible = false;
+            self.hidecomplete();
             self.el.btnshowcurrent.style.display = 'none';
           }
         });
@@ -166,6 +127,17 @@ var objRegionInfo = {
     }
     objHeader.hidefavouritebutton();
 
+  },
+  // Central onComplete handler for hide() function
+  hidecomplete: function (el) {
+    var self = objRegionInfo;
+    self.state.tweening = false;
+    self.state.visible = false;
+
+    // In the public version of the tool, we show the data in an overlay
+    if (isPublicSite() && objOverlay.state.visible) objOverlay.hide();
+
+    if (el) el.className = 'hidden';
   },
   showsimulation: function (self) {
     var self = this;
@@ -175,38 +147,29 @@ var objRegionInfo = {
     TweenLite.to(self.el.btnshowsimulation, 0.3, {
       opacity: 0,
       onComplete: function () {
-        //debugger;
-        self.state.tweening = false;
-        self.state.visible = true;
+        self.showsimulationcomplete();
         self.state.panel = 'simulation';
         self.el.btnshowsimulation.style.display = 'none';
       }
     });
     TweenLite.to(self.el.btnshowcurrent, 0.3, {
       opacity: 1,
-      onComplete: function () {
-        //debugger;
-        self.state.tweening = false;
-        self.state.visible = true;
-
-      }
+      onComplete: self.showsimulationcomplete
     });
     TweenLite.to(self.el.toppanel, 0.3, {
       top: '-35%',
-      onComplete: function () {
-        //debugger;
-        self.state.tweening = false;
-        self.state.visible = true;
-
-      }
+      onComplete: self.showsimulationcomplete
     });
     TweenLite.to(self.el.bottompanel, 0.3, {
       bottom: '0%',
-      onComplete: function () {
-        self.state.tweening = false;
-        self.state.visible = true;
-      }
+      onComplete: self.showsimulationcomplete
     });
+  },
+  // Central onComplete handler for showsimulation() function
+  showsimulationcomplete: function () {
+    var self = objRegionInfo;
+    self.state.tweening = false;
+    self.state.visible = true;
   },
   showcurrent: function (self) {
     var self = this;
@@ -217,43 +180,34 @@ var objRegionInfo = {
       opacity: 0,
       onComplete: function () {
         //debugger;
-        self.state.tweening = false;
-        self.state.visible = true;
+        self.showcurrentcomplete();
         self.state.panel = 'current';
         self.el.btnshowcurrent.style.display = 'none';
       }
     });
     TweenLite.to(self.el.bottompanel, 0.3, {
       bottom: '-35%',
-      onComplete: function () {
-        self.state.tweening = false;
-        self.state.visible = true;
-      }
+      onComplete: self.showcurrentcomplete
     });
     TweenLite.to(self.el.btnshowsimulation, 0.3, {
       opacity: 1,
-      onComplete: function () {
-        //debugger;
-        self.state.tweening = false;
-        self.state.visible = true;
-
-      }
+      onComplete: self.showcurrentcomplete
     });
 
     TweenLite.to(self.el.toppanel, 0.3, {
       top: '0%',
-      onComplete: function () {
-        //debugger;
-        self.state.tweening = false;
-        self.state.visible = true;
-
-      }
+      onComplete: self.showcurrentcomplete
     });
 
   },
+  // Central onComplete handler for showcurrent() function
+  showcurrentcomplete: function(){
+    var self = objRegionInfo;
+    self.state.tweening = false;
+    self.state.visible = true;
+  },
   showhistory: function () {
     var self = this;
-    self.el.history = getEl('graph');
     TweenLite.to(self.el.history, 0.3, {
       opacity: 1,
       onComplete: function () {
@@ -264,7 +218,6 @@ var objRegionInfo = {
   },
   hidehistory: function () {
     var self = this;
-    self.el.history = getEl('graph');
     TweenLite.to(self.el.history, 0.3, {
       opacity: 0,
       onComplete: function () {
@@ -292,6 +245,7 @@ var objRegionInfo = {
     self.el.gdp = getEl('nr_gdp');
     self.el.btnshowcurrent = getEl('show_current');
     self.el.btnshowsimulation = getEl('show_simulation');
+    self.el.history = getEl('graph');
 
     objArcProps.targetnode = getEl('arc_path');
     objArcProps.targetleftwrapper = getEl('arc_path_left_wrapper');
