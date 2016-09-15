@@ -1994,7 +1994,7 @@ div#content_outer_wrapper {
         }
         // Product group selection
         div#filter_container {
-          width: 160px;
+          width: 240px;
           float: right;
           border: 0px solid red;
           background-color: @grey-light;
@@ -2008,11 +2008,20 @@ div#content_outer_wrapper {
             margin: 0;
 
             > li {
-              font-size: 12px;
-              margin-top: 6px;
+              font-size: 16px;
+              padding-top: 10px;
+              height: 30px;
               text-align: center;
               margin: 0px;
               background-color: @grey-medium;
+
+              &.selected{
+                background-color: @grey-dark;
+              }
+
+              div.mru_sector_color{
+                display: none;
+              }
             }
           }
         }
