@@ -1922,7 +1922,7 @@ div#content_outer_wrapper {
         }
         // World, Region, Marke, Country selection
         div#oru_filter_container {
-          width: 150px;
+          width: 160px;
           float: left;
           background-color: @grey-light;
 
@@ -1940,7 +1940,7 @@ div#content_outer_wrapper {
         }
         // Product group selection
         div#filter_container {
-          width: 150px;
+          width: 160px;
           float: right;
           border: 0px solid red;
           background-color: @grey-light;
@@ -1974,14 +1974,30 @@ div#content_outer_wrapper {
         bottom: 0px;
 
         div#top_panel {
+          &.hidden{
+            display:none;
+            &.animate{
+              display: block!important;
+            }
+          }
+
+
           div#region_info {
             //position: fixed;
-            top: 50%;
+            top: 100%;
             left: 50%;
             /* bring your own prefixes */
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, 0%);
             //background-color: transparent;
             height:100%;
+
+            div.svg_wrapper{
+              bottom: auto;
+              width: auto;
+              height: auto;
+              position: static;
+            }
+
           }
 
           div#region_history {
