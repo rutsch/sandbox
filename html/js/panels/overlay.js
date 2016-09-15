@@ -69,7 +69,7 @@ var objOverlay = {
 
     if (isPublicSite()) {
       self.el.wrapper.closebutton = getEl('loader');
-      self.el.wrapper.closebutton.setAttributeNS(null, 'onclick', 'objOverlay.btncloseclick();');
+      self.el.wrapper.setAttributeNS(null, 'onclick', 'objOverlay.btncloseclick();');
     }
   }
 }
