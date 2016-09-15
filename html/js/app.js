@@ -137,8 +137,7 @@ var app = {
     var usedAppBefore = objStore.getlocalstorageitem('seenAppIntro');
 
     //TODO: this needs to change so that we can show website updates and app updates independently
-    //debugger;
-    if ((usedAppBefore && app.state.mobile) || (!app.state.mobile)) {
+    if ((usedAppBefore && app.state.mobile) || (!app.state.mobile) || isPublicSite()) {
       objLogin.showupdatemessages();
     } else {
       objPanelInfo.show('app');

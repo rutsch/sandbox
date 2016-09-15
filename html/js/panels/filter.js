@@ -29,7 +29,7 @@ var objFilter = {
     objOruFilter.setorufilterstate();
 
     var seenPanelBefore = objStore.getlocalstorageitem('seenFilterIntro');
-    if (seenPanelBefore) {
+    if (seenPanelBefore || isPublicSite()) {
 
     } else {
       objPanelInfo.show('filter');
