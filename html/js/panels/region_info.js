@@ -253,6 +253,8 @@ var objRegionInfo = {
     self.el.btnshowsimulation = getEl('show_simulation');
     self.el.history = getEl('graph');
 
+    self.el.regioninfotitle = getEl('region_info_title');
+
     objArcProps.targetnode = getEl('arc_path');
     objArcProps.targetleftwrapper = getEl('arc_path_left_wrapper');
     objArcProps.targetleftnode = getEl('arc_path_left');

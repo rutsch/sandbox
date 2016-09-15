@@ -1974,6 +1974,7 @@ div#content_outer_wrapper {
         bottom: 0px;
 
         div#top_panel {
+          height: 40%;
           &.hidden{
             display:none;
             &.animate{
@@ -1987,9 +1988,16 @@ div#content_outer_wrapper {
             top: 100%;
             left: 50%;
             /* bring your own prefixes */
-            transform: translate(-50%, 0%);
+            transform: translate(-50%, -10%);
             //background-color: transparent;
             height:100%;
+
+            div#region_info_title_wrapper{
+              display: block;
+              h2{
+
+              }
+            }
 
             div.svg_wrapper{
               bottom: auto;

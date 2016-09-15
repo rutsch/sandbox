@@ -110,48 +110,56 @@ var objHeader = {
 	setregionname: function (name) {
 		var self = this;
 		if (typeof name != 'undefined') {
-			TweenLite.to(self.el.regionname, 0.3, {
-				opacity: 0,
-				onComplete: function () {
-					if (name !== objMap.state.mapname) {
-						name = objMap.state.mapname + ' &bull; ' + name;
-					}
-					self.el.regionname.innerHTML = name;
-					self.el.regionnamemarquee = new Marquee("region_name", {
-						behavior: 'scroll',
-						direction: 'rtl',
-						interrupt: 'no',
-						step: 0.1
-					});
-					if (self.el.regionname.scrollWidth > self.el.regionname.clientWidth) {
+		  if (isPublicSite()) {
+		    // Grab the selected region from the header and dump it
+		    objRegionInfo.el.regioninfotitle.innerHTML = name;
+		  } else {
+		    TweenLite.to(self.el.regionname, 0.3, {
+		      opacity: 0,
+		      onComplete: function () {
+		        if (name !== objMap.state.mapname) {
+		          name = objMap.state.mapname + ' &bull; ' + name;
+		        }
+		        self.el.regionname.innerHTML = name;
+		        self.el.regionnamemarquee = new Marquee("region_name", {
+		          behavior: 'scroll',
+		          direction: 'rtl',
+		          interrupt: 'no',
+		          step: 0.1
+		        });
+		        if (self.el.regionname.scrollWidth > self.el.regionname.clientWidth) {
 
-					} else {
-						if (self.el.regionnamemarquee) {
-							self.el.regionnamemarquee.pause();
-						}
-					}
+		        } else {
+		          if (self.el.regionnamemarquee) {
+		            self.el.regionnamemarquee.pause();
+		          }
+		        }
 
 
 
-					/*if(self.el.regionnamemarquee){
-					self.el.regionnamemarquee.el.innerHTML = '';
-					self.el.breadcrumb.scrollWidth = 0;
-					}
-					self.el.regionname = getEl('region_name');
-					self.el.regionname.innerHTML = name;
-					//debugger;
-					if(self.el.regionname.scrollWidth > self.el.regionname.clientWidth){
-					self.el.regionnamemarquee = new Marquee({el:self.el.regionname, mouseStops: false}).init();
-					}else{
-					if(self.el.regionnamemarquee){
-					self.el.regionnamemarquee.stop();
-					}
-					}		*/
-					TweenLite.to(self.el.regionname, 0.3, {
-						opacity: 1
-					});
-				}
-			});
+		        /*if(self.el.regionnamemarquee){
+            self.el.regionnamemarquee.el.innerHTML = '';
+            self.el.breadcrumb.scrollWidth = 0;
+            }
+            self.el.regionname = getEl('region_name');
+            self.el.regionname.innerHTML = name;
+            //debugger;
+            if(self.el.regionname.scrollWidth > self.el.regionname.clientWidth){
+            self.el.regionnamemarquee = new Marquee({el:self.el.regionname, mouseStops: false}).init();
+            }else{
+            if(self.el.regionnamemarquee){
+            self.el.regionnamemarquee.stop();
+            }
+            }		*/
+		        TweenLite.to(self.el.regionname, 0.3, {
+		          opacity: 1
+		        });
+		      }
+		    });
+		  }
+
+
+		  
 		}
 
 	},
