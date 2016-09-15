@@ -22,8 +22,11 @@ var objRegionInfo = {
     self.el.toppanel.className = 'visible animate';
     self.el.bottompanel.className = 'visible animate';
 
-    // In the public version of the tool, we show the data in an overlay
-    if (isPublicSite()) objOverlay.show();
+    // In the public version of the tool, we show the data in an overlay and hide the filter panel
+    if (isPublicSite()) {
+      objFilter.hide();
+      objOverlay.show();
+    }
 
     // slide down top_panel
     if (app.state.width > 768) {
@@ -135,7 +138,10 @@ var objRegionInfo = {
     self.state.visible = false;
 
     // In the public version of the tool, we show the data in an overlay
-    if (isPublicSite() && objOverlay.state.visible) objOverlay.hide();
+    if (isPublicSite() && objOverlay.state.visible) {
+      objOverlay.hide();
+      objFilter.show();
+    }
 
     if (el) el.className = 'hidden';
   },

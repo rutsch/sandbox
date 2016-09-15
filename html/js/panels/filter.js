@@ -1,115 +1,125 @@
 var objFilter = {
-	state: {
-		visible: null,
-		tweening: null,
-		currentfilterhtml: ''
-	},
-	el: {
-		wrapper: null,
-		filtercontent: null
-	},
-	show: function () {
-		var self = this;
-		self.state.currentfilterhtml = self.el.filtercontent.innerHTML;
+  state: {
+    visible: null,
+    tweening: null,
+    currentfilterhtml: ''
+  },
+  el: {
+    wrapper: null,
+    filtercontent: null
+  },
+  show: function () {
+    var self = this;
+    self.state.currentfilterhtml = self.el.filtercontent.innerHTML;
     // For the public websites we do not show the overlay in combination with the filter
-		if (!isPublicSite()) objOverlay.show();
-		self.state.tweening = true;
-		self.el.wrapper.style.display = 'block';
-		TweenLite.to(self.el.wrapper, 0.3, {
-			opacity: 1,
-			onComplete: function () {
-				//debugger;
-				self.state.tweening = false;
-				self.state.visible = true;
-			}
-		});
+    if (!isPublicSite()) objOverlay.show();
 
-		//set the mru and oru filter objects to the current state
-		objMruFilter.setmrufilterstate();
-		objOruFilter.setorufilterstate();
+    self.state.tweening = true;
+    self.el.wrapper.style.display = 'block';
+    TweenLite.to(self.el.wrapper, 0.3, {
+      opacity: 1,
+      onComplete: function () {
+        //debugger;
+        self.state.tweening = false;
+        self.state.visible = true;
+      }
+    });
 
-		var seenPanelBefore = objStore.getlocalstorageitem('seenFilterIntro');
-		if (seenPanelBefore) {
+    //set the mru and oru filter objects to the current state
+    objMruFilter.setmrufilterstate();
+    objOruFilter.setorufilterstate();
 
-		} else {
-			objPanelInfo.show('filter');
-			objStore.setlocalstorageitem('seenFilterIntro', 'true');
-		}
-	},
-	hide: function () {
-		var self = this;
-		self.state.tweening = true;
-		TweenLite.to(self.el.wrapper, 0.3, {
-			opacity: 0,
-			onComplete: function () {
-			  // For the public websites we do not show the overlay in combination with the filter
-			  if (!isPublicSite()) objOverlay.hide();
-				self.el.filtercontent.innerHTML = self.state.currentfilterhtml;
-				self.el.wrapper.style.display = 'none';
-				self.state.tweening = false;
-				self.state.visible = false;
-				self.el.btnapply.style.display = 'none';
-			}
-		});
-	},
-	blink: function () {
-		var self = this;
+    var seenPanelBefore = objStore.getlocalstorageitem('seenFilterIntro');
+    if (seenPanelBefore) {
 
-		TweenLite.to(self.el.filtercontent, 0.2, {
-			opacity: 0.5,
-			onComplete: function () {
-				//debugger;
-				self.el.loader.style.display = 'block';
-				TweenLite.to(self.el.filtercontent, 0.4, {
-					opacity: 1,
-					onComplete: function () {
-						//debugger;
-						self.el.loader.style.display = 'none';
-						//if(self.el.btnapply.style.display == 'none'){
-						self.el.btnapply.style.display = 'block';
-						//}
-					}
-				});
-			}
-		});
-	},
-	applyfilter: function () {
-		var self = this;
-		//console.log('objFilter.applyfilter()');
-		//update the objPageState properties with the filter selection we have just made
+    } else {
+      objPanelInfo.show('filter');
+      objStore.setlocalstorageitem('seenFilterIntro', 'true');
+    }
+  },
+  hide: function () {
+    var self = this;
+    self.state.tweening = true;
+    TweenLite.to(self.el.wrapper, 0.3, {
+      opacity: 0,
+      onComplete: function () {
+        // For the public websites we do not show the overlay in combination with the filter
+        if (!isPublicSite()) objOverlay.hide();
+        self.el.filtercontent.innerHTML = self.state.currentfilterhtml;
+        self.el.wrapper.style.display = 'none';
+        self.state.tweening = false;
+        self.state.visible = false;
+        self.el.btnapply.style.display = 'none';
+      }
+    });
+  },
+  blink: function () {
+    var self = this;
 
-		if (!isPublicSite()) self.hide();
+    TweenLite.to(self.el.filtercontent, 0.2, {
+      opacity: 0.5,
+      onComplete: function () {
+        //debugger;
+        self.el.loader.style.display = 'block';
+        TweenLite.to(self.el.filtercontent, 0.4, {
+          opacity: 1,
+          onComplete: function () {
+            //debugger;
+            self.el.loader.style.display = 'none';
+            //if(self.el.btnapply.style.display == 'none'){
+            self.el.btnapply.style.display = 'block';
+            //}
+          }
+        });
+      }
+    });
+  },
+  applyfilter: function () {
+    var self = this;
+    //console.log('objFilter.applyfilter()');
+    //update the objPageState properties with the filter selection we have just made
 
-		self.state.currentfilterhtml = self.el.filtercontent.innerHTML;
+    if (!isPublicSite() && self.state.visible && !self.state.tweening) self.hide();
 
-		self.el.btnapply.style.display = 'none';
+    self.state.currentfilterhtml = self.el.filtercontent.innerHTML;
 
-		//objMap.updatemap();
-		objPageState.updatepagestate({
-			view: 'worldmap',
-			filter: {
-				orulevel: objOruFilter.state.selectedoru, //for worldmap data 1, 2, 3, 4
-				oru: 'none', //selected country/region
-				sector: objMruFilter.state.selectedsector, //main sector
-				mru: objMruFilter.state.selectedmru //product group
-			}
-		});
+    self.el.btnapply.style.display = 'none';
+
+    //console.log(objPageState.vars.processed);
+    //debugger;
+
+    // Because we auto-apply the filter for the public site, we need to handle it in a different way.
+    if (objPageState.vars.processed < 2 && isPublicSite()) {
+      //objMap.updatemap();
+      objPageState.updatepagestate(objPageState.state);
+    } else {
+      objPageState.updatepagestate({
+        view: 'worldmap',
+        filter: {
+          orulevel: objOruFilter.state.selectedoru, //for worldmap data 1, 2, 3, 4
+          oru: 'none', //selected country/region
+          sector: objMruFilter.state.selectedsector, //main sector
+          mru: objMruFilter.state.selectedmru //product group
+        }
+      });
+    }
 
 
-		//hide the details panel
-		objRegionInfo.hide();
-	},
-	init: function () {
-		var self = this;
-		self.state.visible = false;
-		self.state.tweening = false;
 
-		self.el.wrapper = getEl('filter_panel');
-		self.el.loader = getEl('filter_loader');
-		self.el.filtercontent = Sizzle('#filter_panel div.modal_content')[0];
-		self.el.btnapply = getEl('btn_apply_filter');
-		self.el.btnapply.style.display = 'none';
+    //hide the details panel
+    if (objRegionInfo.state.visible && !objRegionInfo.state.tweening) objRegionInfo.hide();
+  },
+  init: function () {
+    var self = this;
+    self.state.visible = false;
+    self.state.tweening = false;
 
-		self.state.currentfilterhtml = self.el.filtercontent.innerHTML;
-	}
+    self.el.wrapper = getEl('filter_panel');
+    self.el.loader = getEl('filter_loader');
+    self.el.filtercontent = Sizzle('#filter_panel div.modal_content')[0];
+    self.el.btnapply = getEl('btn_apply_filter');
+    self.el.btnapply.style.display = 'none';
+
+    self.state.currentfilterhtml = self.el.filtercontent.innerHTML;
+  }
 }

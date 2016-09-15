@@ -333,6 +333,9 @@ var objPageState = {
   stateremembered: {
 
   },
+  vars: {
+    processed: 0
+  },
   clonestateobject: function () {
     var self = this;
     return {
@@ -377,6 +380,7 @@ var objPageState = {
     //console.log(objPageState.object2hash(objCurrentState));
     //debugger;
     location.hash = objPageState.object2hash(objCurrentState);
+    objPageState.vars.processed++;
   },
   hash2object: function (strHash) {
     // converts a hash string into a state javascript object

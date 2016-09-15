@@ -62,7 +62,7 @@ var objOruFilter = {
 
 	  //console.log('objOruFilter.selectoru()');
 
-		if (self.el.wrapper===null) self.el.wrapper = getEl('oru_filter_container');
+		self.el.wrapper = getEl('oru_filter_container');
 		//remove all selected classes
 		var arrAllLi = self.el.wrapper.getElementsByTagName('div');
 		for (var a = 0; a < arrAllLi.length; a++) {
