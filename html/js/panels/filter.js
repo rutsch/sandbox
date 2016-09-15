@@ -90,7 +90,6 @@ var objFilter = {
 
     // Because we auto-apply the filter for the public site, we need to handle it in a different way.
     if (objPageState.vars.processed < 2 && isPublicSite()) {
-      //objMap.updatemap();
       objPageState.updatepagestate(objPageState.state);
     } else {
       objPageState.updatepagestate({
