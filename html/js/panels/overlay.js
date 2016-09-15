@@ -20,24 +20,22 @@ var objOverlay = {
       TweenLite.to(self.el.wrapper, 0.3, {
         opacity: 0.7,
         delay: 0,
-        onComplete: function () {
-          self.state.visible = true;
-          self.state.tweening = false;
-
-          if (bolCallback) cb();
-        }
+        onComplete: self.showcomplete(cb)
       });
     } else {
       self.el.wrapper.style.opacity = 0.7;
-      self.state.visible = true;
-      self.state.tweening = false;
-      if (bolCallback) cb();
+      self.showcomplete(cb);
     }
+  },
+  showcomplete: function (cb) {
+    objOverlay.state.visible = true;
+    objOverlay.state.tweening = false;
+    var bolCallback = (typeof cb === 'undefined') ? false : ((typeof cb === 'boolean') ? false : true);
+    if (bolCallback) cb();
   },
   hide: function (cb, animate) {
     var self = this;
 
-    var bolCallback = (typeof cb === 'undefined') ? false : ((typeof cb === 'boolean') ? false : true);
     var bolAnimate = (typeof animate === 'undefined') ? false : animate;
 
     self.state.tweening = true;
@@ -46,20 +44,18 @@ var objOverlay = {
       TweenLite.to(self.el.wrapper, 0.3, {
         opacity: 0,
         delay: 0,
-        onComplete: function () {
-          self.el.wrapper.style.display = "none";
-          self.state.visible = false;
-          self.state.tweening = false;
-
-          if (bolCallback) cb();
-        }
+        onComplete: self.hidecomplete(cb)
       });
     } else {
-      self.el.wrapper.style.display = "none";
-      self.state.visible = false;
-      self.state.tweening = false;
-      if (bolCallback) cb();
+      self.hidecomplete(cb);
     }
+  },
+  hidecomplete: function(cb){
+    objOverlay.el.wrapper.style.display = "none";
+    objOverlay.state.visible = false;
+    objOverlay.state.tweening = false;
+    var bolCallback = (typeof cb === 'undefined') ? false : ((typeof cb === 'boolean') ? false : true);
+    if (bolCallback) cb();
   },
   btncloseclick: function () {
     objHeader.btnbackclick();
