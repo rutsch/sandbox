@@ -60,7 +60,7 @@ var objRegionInfo = {
     }
 
     var seenPanelBefore = objStore.getlocalstorageitem('seenRegionInfoIntro');
-    if (seenPanelBefore) {
+    if (seenPanelBefore || isPublicSite()) {
 
     } else {
       objPanelInfo.show('region_info');
