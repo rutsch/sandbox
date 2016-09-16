@@ -90,6 +90,8 @@ var objConfig = {
     ]
   },
   sitetype: 'prod',
+  lang: 'en',
+  fragments: {},
   hideinactivecountries: true,
   snapshots: null,
   currentsnapshotid: 'nothing',
@@ -188,6 +190,11 @@ var objConfig = {
         }
       }
     }
+
+    /*
+    Calculate the language
+    */
+    if (location.href.indexOf('_zh.htm') > -1) self.lang = 'zh';
 
     //console.log('self.sitetype: %s', self.sitetype);
 

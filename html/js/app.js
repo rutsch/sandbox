@@ -12,7 +12,7 @@ var app = {
     initialmapview: true
   },
   vars: {
-
+    basehtml: null
 
   },
   defaultpagestate: {
@@ -86,7 +86,8 @@ var app = {
     }
   },
   //retrieves oru and mru metadata structures
-  retrievemetadata: function (callback) {
+  retrievemetadata: function () {
+    var self = this;
     var objData = {
       fulldomain: location.protocol + "//" + location.hostname,
       method: 'getoruandproductdata',
@@ -94,32 +95,34 @@ var app = {
       token: objLogin.token,
       snapshotid: objConfig.currentsnapshotid
     }
-    psv('GET', objConfig.urls.dynamicresourceurl, objData, function retrieveMetadataHandler(err, data) {
-      if (err || hasProperty(data, 'error')) {
-        if (hasProperty(data, 'error')) {
-          objError.show('There was an error retrieving metadata information. ' + ((typeof data == 'object') ? JSON.stringify(data) : data), true);
-        } else {
-          objError.show('There was an error retrieving metadata information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
-        }
+    psv('GET', objConfig.urls.dynamicresourceurl, objData, app.retrievemetadatahandler);
+  },
+  retrievemetadatahandler: function (err, data) {
+
+    if (err || hasProperty(data, 'error')) {
+      if (hasProperty(data, 'error')) {
+        objError.show('There was an error retrieving metadata information. ' + ((typeof data == 'object') ? JSON.stringify(data) : data), true);
       } else {
-        //console.log(data);
-
-        //check if authentication is required
-        if (data.hasOwnProperty('authenticated') && !data.authenticated) {
-          handleShibbolethLoginRequired();
-        } else {
-          //load the retrieved data into the ORU object
-          objOruFilter.json = data.result.orudata;
-
-          //load the retrieved data into the MRU (product) object
-          objMruFilter.preparehtml(data.result.productdata);
-
-          //execute the callback routine if needed
-          if (callback) callback();
-        }
-
+        objError.show('There was an error retrieving metadata information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
       }
-    });
+    } else {
+      //console.log(data);
+
+      //check if authentication is required
+      if (data.hasOwnProperty('authenticated') && !data.authenticated) {
+        handleShibbolethLoginRequired();
+      } else {
+        //load the retrieved data into the ORU object
+        objOruFilter.json = data.result.orudata;
+
+        //load the retrieved data into the MRU (product) object
+        objMruFilter.preparehtml(data.result.productdata);
+
+        //render the initial view of the app
+        app.processinitialview(true);
+      }
+
+    }
   },
   start: function (bolShowDetailView) {
     //init elements with async because elements require external data
@@ -218,11 +221,9 @@ var app = {
     }
 
   },
-  init: function () {
+  // Initiates the objects in this application
+  initobjects: function () {
     var self = this;
-
-    //load the main content in the wrapper
-    getEl('content_outer_wrapper').innerHTML = serverSideRequest({ url: objConfig.urls.base + '/data/body_content.html', method: 'get', debug: false });
 
     //retrieve the dimensions
     self.getdimensions();
@@ -271,46 +272,59 @@ var app = {
     }
 
     //set the class of the body element to refect the site type
-    app.el.outerwrapper = getEl('content_outer_wrapper');
     app.el.outerwrapper.className = objConfig.sitetype;
 
     /*
 		This is where it all starts...
 		*/
-    //1) retrieve snapshot id (public info - no login needed)
-    objLogin.getsnapshotconfig(function () {
+    
+    objLogin.getsnapshotconfig();
 
-      //2) test if we are logged in
-      var objData = {
-        fulldomain: location.protocol + "//" + location.hostname,
-        method: 'checksession',
-        type: 'json'
-      }
-      psv('GET', objConfig.urls.authurl2, objData, function checkSessionHandler(err, data) {
-        if (err || hasProperty(data, 'error')) {
-          if (hasProperty(data, 'error')) {
-            objError.show('There was an error retrieving session information. ' + ((typeof data == 'object') ? JSON.stringify(data) : data), true);
-          } else {
-            objError.show('There was an error retrieving session information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
-          }
-        } else {
-          //change the view if we need to login
-          if (!data.authenticated) {
-            handleShibbolethLoginRequired();
-          } else {
-            // store the token
-            objLogin.token = data.token;
+  },
 
-            self.defaultpagestate.view = 'worldmap';
-            //load the metadata
-            self.retrievemetadata(function () {
-              self.processinitialview(true);
-            });
-          }
+  init: function () {
+    var self = this;
+
+    //load the main html content
+    app.el.outerwrapper = getEl('content_outer_wrapper');
+    self.vars.basehtml = serverSideRequest({ url: objConfig.urls.base + '/data/body_content.html', method: 'get', debug: false });
+
+    //load the translation fragments
+    psv('GET', location.href.replace(/^(.*)index.*$/, '$1') + 'data/locale-' + objConfig.lang + ((objConfig.lang == 'en') ? '_US' : '_CN') + '.json', { v: 1 }, function retrieveFragmentsHandler(err, data) {
+      if (err) {
+        objError.show('There was an error retrieving translation fragments. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
+      } else {
+        //console.log(data);
+
+        // Attach the data to the objConfig.fragments object
+        for (key in data) {
+          //console.log(key);
+          objConfig.fragments[key] = data[key];
         }
-      });
+        //console.log(objConfig.fragments);
 
+        // Start translating stuff
+        // translate fragments in the HTML and inject it back into the UI
+        self.vars.basehtml = self.vars.basehtml.replace(/\[([a-zA-Z\s_-]*?)\]/g, function replacementHandler(match, contents, offset, s) {
+            return translateFragment(contents);
+          }
+        );
+
+        // Inject the translated HTML into the DOM of our page
+        app.el.outerwrapper.innerHTML = self.vars.basehtml;
+
+        // Continue by initiating the onjects of this application
+        self.initobjects();
+      }
     });
+
+
+
+
+
+
+
+
 
   }
 }

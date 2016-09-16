@@ -544,8 +544,12 @@ function hasProperty(obj, propName) {
   return obj.hasOwnProperty(propName);
 }
 
-
+//determines if we are a public site or not
 function isPublicSite() {
   return (objConfig.sitetype.indexOf('public') > -1) ? true : false;
 }
 
+function translateFragment(id) {
+  if (objConfig.fragments.hasOwnProperty(id)) return objConfig.fragments[id];
+  return '['+id+']';
+}

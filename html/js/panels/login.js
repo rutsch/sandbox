@@ -58,7 +58,8 @@ var objLogin = {
     //console.log('latest snapshot id '+objConfig.currentsnapshotid);
 
   },
-  getsnapshotconfig: function (cb) {
+  //1) Retrieve snapshot id (public info - no login needed)
+  getsnapshotconfig: function () {
     var self = this;
 
     var objData = {
@@ -92,14 +93,48 @@ var objLogin = {
             //test if we need to show an update message and store this in the local storage
             self.checkappconfigforupdates(response);
 
-            //continue processing
-            cb();
+            //check if we need to start an authentication procedure
+            self.checksession();
           }
         }
 
       }
     });
   },
+  //2) Test if we need to start an authentication process, if not then store the token
+  checksession: function () {
+
+    //2) test if we are logged in
+    var objData = {
+      fulldomain: location.protocol + "//" + location.hostname,
+      method: 'checksession',
+      type: 'json'
+    }
+    psv('GET', objConfig.urls.authurl2, objData, function checkSessionHandler(err, data) {
+      if (err || hasProperty(data, 'error')) {
+        if (hasProperty(data, 'error')) {
+          objError.show('There was an error retrieving session information. ' + ((typeof data == 'object') ? JSON.stringify(data) : data), true);
+        } else {
+          objError.show('There was an error retrieving session information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
+        }
+      } else {
+        //change the view if we need to login
+        if (!data.authenticated) {
+          handleShibbolethLoginRequired();
+        } else {
+          // store the token
+          objLogin.token = data.token;
+
+          app.defaultpagestate.view = 'worldmap';
+
+          //load the metadata
+          app.retrievemetadata();
+        }
+      }
+    });
+
+  },
+
   checksnapshotconfigforupdates: function (response) {
     var self = this;
     //check if there are updates in the snapshotconfig
@@ -164,7 +199,7 @@ var objLogin = {
 
       //TODO: currently using the IOS app release notes. This should be changed so that we show website updates independantly from app updates
 
-      storedConfig = (storedConfig)?JSON.parse(storedConfig):null;
+      storedConfig = (storedConfig) ? JSON.parse(storedConfig) : null;
       if (storedConfig) {
         if (storedConfig.iosid != newConfig.iosid) {
           self.state.messages.push(strBaseMessage);
