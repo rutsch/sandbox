@@ -33,9 +33,9 @@
 @pd0900-light: #B7D9E3;
 
 // Royal Philips (NEW)
-@royalphilips-dark: #002E6C;
-@royalphilips-medium: #0E6EB3;
-@royalphilips-light: #D2E9FF;
+@royalphilips-dark: #095D67;
+@royalphilips-medium: #1E8877;
+@royalphilips-light: #DFFFFB;
 
 // Shades of grey
 @grey-dark: #2d2d2d;
@@ -1036,6 +1036,51 @@ circle#background {
   }
 }
 
+.royalphilips {
+  // fold out background colors
+  #region_info,
+  #region_history,
+  #show_current,
+  #arrow_down {
+    background: @royalphilips-medium;
+  }
+
+  // region info title
+  #region_info_title_wrapper{
+    background-color: @royalphilips-dark;
+    h2{
+      color: white;
+    }
+  }
+
+  // lives improved circle diagram
+  #arc_path {
+    stroke: @royalphilips-light;
+  }
+
+  #arc_path_left {
+    stroke: @royalphilips-dark;
+  }
+  // sliders
+  input[type=range] {
+    border: 1px solid @royalphilips-medium;
+    background: @royalphilips-medium;
+  }
+
+  #arrow_down,
+  #show_simulation_text {
+    fill: @royalphilips-medium;
+  }
+
+  #arrow_up,
+  #show_current_text,
+  .nr_label,
+  #lives_improved_percentage_sub tspan,
+  #nr_lives_improved_label {
+    fill: @royalphilips-dark;
+  }
+}
+
 .PD0100 {
   // fold out background colors
   #region_info,
@@ -1512,6 +1557,17 @@ li#philips {
   }
 }
 
+li#royalphilips {
+  &.selected,
+  .selected {
+    color: @royalphilips-medium !important;
+  }
+
+  .mru_sector_color {
+    background: @royalphilips-medium;
+  }
+}
+
 li#PD0100 {
   &.selected,
   .selected {
@@ -1858,6 +1914,13 @@ div#debug_layer {
     .slider_value,
     #simulation_wrapper h1 {
       color: @philips-medium;
+    }
+  }
+
+  .royalphilips {
+    .slider_value,
+    #simulation_wrapper h1 {
+      color: @royalphilips-medium;
     }
   }
 
