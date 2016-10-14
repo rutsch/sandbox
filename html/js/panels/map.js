@@ -132,6 +132,11 @@ var objMap = {
     objLoading.show();
 
     /*
+    0) update the ui to set if we will use the simulator or not
+    */
+    if (data.hasOwnProperty('usesimulator')) objSliders.togglesimulator(data.usesimulator);
+
+    /*
 		1) store the data in this object as a property
 		*/
     self.data = data.snapshotdata;
@@ -508,7 +513,7 @@ var objMap = {
     objRegionInfo.hidehistory();
 
     // add the current ORU sector as a class to the wrapper div
-    app.el.outerwrapper.className = objConfig.sitetype + ' ' + objPageState.state.filter.sector;
+    app.el.outerwrapper.className = objConfig.sitetype + ' ' + objPageState.state.filter.sector + ((objSliders.vars.setupsimulator)?' simulator':' nosimulator');
 
     var sec = {},
 		back = {},

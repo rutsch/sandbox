@@ -52,46 +52,46 @@
 @light: 500;
 @book: 600;
 @medium: 700;
-@bold: 800;  
-@xbold: 900; 
+@bold: 800;
+@xbold: 900;
 
 
-.declareFont(@name, @file, @style, @weight, @hash){
+.declareFont(@name, @file, @style, @weight, @hash) {
   font-family: @name;
   font-style: @style;
   font-weight: @weight;
-  src: url('../fonts/@{file}.eot') format('eot'); 
-  src: url('../fonts/@{file}.eot?#iefix') format('embedded-opentype'), 
-  url('../fonts/@{file}.woff') format('woff'),
-  url('../fonts/@{file}.ttf')  format('truetype'), 
-  url('../fonts/@{file}.svg#@{hash}') format('svg'); 
+  src: url('../fonts/@{file}.eot') format('eot');
+  src: url('../fonts/@{file}.eot?#iefix') format('embedded-opentype'), url('../fonts/@{file}.woff') format('woff'), url('../fonts/@{file}.ttf') format('truetype'), url('../fonts/@{file}.svg#@{hash}') format('svg');
 }
 
-.declareFontSet(@name, @base, @weight, @hashNormal, @hashItalic){
-  @font-face { .declareFont(@name, '@{base}',       normal, @weight,  @hashNormal); }
-  @font-face { .declareFont(@name, '@{base}Italic', italic, @weight,  @hashItalic); }
+.declareFontSet(@name, @base, @weight, @hashNormal, @hashItalic) {
+  @font-face {
+    .declareFont(@name, '@{base}', normal, @weight, @hashNormal);
+  }
+
+  @font-face {
+    .declareFont(@name, '@{base}Italic', italic, @weight, @hashItalic);
+  }
 }
- 
 
-.declareFontSet('CentraleSans', 'CentraleSans-Hairline',  @hairline,  '3e8f9638cef28de44c5f0ef5a2ac1f86', '4d2f53df18bb5b2094d87985d0e83b1f');
-.declareFontSet('CentraleSans', 'CentraleSans-XThin',     @xthin,     '6249393d0e2fa98463a1576bfb5a98dc', '1c655fab601ffc026afa8f553e514127');
-.declareFontSet('CentraleSans', 'CentraleSans-Thin',      @thin,      '1231844b5cf0b94274c7dceb758a518f', 'b4442d5a0271a1a31bc43d121e5171e6');
-.declareFontSet('CentraleSans', 'CentraleSans-XLight',    @xlight,    '0776b0bc35c0190bb9f39c287b0e6737', '280be28bc7e8ac52003d38d0d68c01ca');
-.declareFontSet('CentraleSans', 'CentraleSans-Light',     @light,     'd22854b5c8a257945cfe36032fb48365', 'e1165f88416a600732f9d34befbddc06');
-.declareFontSet('CentraleSans', 'CentraleSans-Book',      @book,      '1d84a514a13dcf4f9de78cc3753dbf03', 'd6af579292c57141dd4d73bd8e7332f1');
-.declareFontSet('CentraleSans', 'CentraleSans-Medium',    @medium,    '919c5c091df8f3d5bd02f587b9494055', '2e0966e06b18b0eaf7b97cfa6909a0f1');
-.declareFontSet('CentraleSans', 'CentraleSans-Bold',      @bold,      '7aed1b68c527ea246edf61790a121845', '229bc988ba600d5efed93c68af43633e');
-.declareFontSet('CentraleSans', 'CentraleSans-Xbold',     @xbold,     '9a864760680d346e5852a22d8d46f391', 'cce15fd5072d3bc364b3a5d5801a6c49');
-
-.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Hairline',  @hairline,  '3e8f9638cef28de44c5f0ef5a2ac1f86', '4d2f53df18bb5b2094d87985d0e83b1f');
-.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-XThin',     @xthin,     '6249393d0e2fa98463a1576bfb5a98dc', '1c655fab601ffc026afa8f553e514127');
-.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Thin',      @thin,      '1231844b5cf0b94274c7dceb758a518f', 'b4442d5a0271a1a31bc43d121e5171e6');
-.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-XLight',    @xlight,    '0776b0bc35c0190bb9f39c287b0e6737', '280be28bc7e8ac52003d38d0d68c01ca');
-.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Light',     @light,     'd22854b5c8a257945cfe36032fb48365', 'e1165f88416a600732f9d34befbddc06');
-.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Book',      @book,      '1d84a514a13dcf4f9de78cc3753dbf03', 'd6af579292c57141dd4d73bd8e7332f1');
-.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Medium',    @medium,    '919c5c091df8f3d5bd02f587b9494055', '2e0966e06b18b0eaf7b97cfa6909a0f1');
-.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Bold',      @bold,      '7aed1b68c527ea246edf61790a121845', '229bc988ba600d5efed93c68af43633e');
-.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-XBold',     @xbold,     '9a864760680d346e5852a22d8d46f391', 'cce15fd5072d3bc364b3a5d5801a6c49');
+.declareFontSet('CentraleSans', 'CentraleSans-Hairline', @hairline, '3e8f9638cef28de44c5f0ef5a2ac1f86', '4d2f53df18bb5b2094d87985d0e83b1f');
+.declareFontSet('CentraleSans', 'CentraleSans-XThin', @xthin, '6249393d0e2fa98463a1576bfb5a98dc', '1c655fab601ffc026afa8f553e514127');
+.declareFontSet('CentraleSans', 'CentraleSans-Thin', @thin, '1231844b5cf0b94274c7dceb758a518f', 'b4442d5a0271a1a31bc43d121e5171e6');
+.declareFontSet('CentraleSans', 'CentraleSans-XLight', @xlight, '0776b0bc35c0190bb9f39c287b0e6737', '280be28bc7e8ac52003d38d0d68c01ca');
+.declareFontSet('CentraleSans', 'CentraleSans-Light', @light, 'd22854b5c8a257945cfe36032fb48365', 'e1165f88416a600732f9d34befbddc06');
+.declareFontSet('CentraleSans', 'CentraleSans-Book', @book, '1d84a514a13dcf4f9de78cc3753dbf03', 'd6af579292c57141dd4d73bd8e7332f1');
+.declareFontSet('CentraleSans', 'CentraleSans-Medium', @medium, '919c5c091df8f3d5bd02f587b9494055', '2e0966e06b18b0eaf7b97cfa6909a0f1');
+.declareFontSet('CentraleSans', 'CentraleSans-Bold', @bold, '7aed1b68c527ea246edf61790a121845', '229bc988ba600d5efed93c68af43633e');
+.declareFontSet('CentraleSans', 'CentraleSans-Xbold', @xbold, '9a864760680d346e5852a22d8d46f391', 'cce15fd5072d3bc364b3a5d5801a6c49');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Hairline', @hairline, '3e8f9638cef28de44c5f0ef5a2ac1f86', '4d2f53df18bb5b2094d87985d0e83b1f');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-XThin', @xthin, '6249393d0e2fa98463a1576bfb5a98dc', '1c655fab601ffc026afa8f553e514127');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Thin', @thin, '1231844b5cf0b94274c7dceb758a518f', 'b4442d5a0271a1a31bc43d121e5171e6');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-XLight', @xlight, '0776b0bc35c0190bb9f39c287b0e6737', '280be28bc7e8ac52003d38d0d68c01ca');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Light', @light, 'd22854b5c8a257945cfe36032fb48365', 'e1165f88416a600732f9d34befbddc06');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Book', @book, '1d84a514a13dcf4f9de78cc3753dbf03', 'd6af579292c57141dd4d73bd8e7332f1');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Medium', @medium, '919c5c091df8f3d5bd02f587b9494055', '2e0966e06b18b0eaf7b97cfa6909a0f1');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-Bold', @bold, '7aed1b68c527ea246edf61790a121845', '229bc988ba600d5efed93c68af43633e');
+.declareFontSet('CentraleSansCnd', 'CentraleSansCnd-XBold', @xbold, '9a864760680d346e5852a22d8d46f391', 'cce15fd5072d3bc364b3a5d5801a6c49');
 
 
 
@@ -152,6 +152,31 @@ input:focus {
 
 #content_outer_wrapper {
   height: 100%;
+  /* when we do not want to show the simulator */
+  &.nosimulator {
+    /* Desktops and laptops ----------- */
+    @media only screen and (min-width: 768px) {
+      #region_info,
+      #region_history {
+        width: 50%;
+      }
+
+      #region_history {
+        left: 50%;
+      }
+    }
+
+
+
+    #show_simulation {
+      background-color: red;
+      height: 0;
+    }
+
+    #bottom_panel {
+      display: none;
+    }
+  }
 }
 
 #error {
@@ -999,15 +1024,14 @@ circle#background {
   #arrow_down {
     background: @philips-medium;
   }
-
   // region info title
-  #region_info_title_wrapper{
+  #region_info_title_wrapper {
     background-color: @philips-dark;
-    h2{
+
+    h2 {
       color: white;
     }
   }
-
   // lives improved circle diagram
   #arc_path {
     stroke: @philips-light;
@@ -1044,15 +1068,14 @@ circle#background {
   #arrow_down {
     background: @royalphilips-medium;
   }
-
   // region info title
-  #region_info_title_wrapper{
+  #region_info_title_wrapper {
     background-color: @royalphilips-dark;
-    h2{
+
+    h2 {
       color: white;
     }
   }
-
   // lives improved circle diagram
   #arc_path {
     stroke: @royalphilips-light;
@@ -1089,15 +1112,14 @@ circle#background {
   #arrow_down {
     background: @pd0100-medium;
   }
-
   // region info title
-  #region_info_title_wrapper{
+  #region_info_title_wrapper {
     background-color: @pd0100-dark;
-    h2{
+
+    h2 {
       color: white;
     }
   }
-
   // lives improved circle diagram
   #arc_path {
     stroke: @pd0100-light;
@@ -1134,15 +1156,14 @@ circle#background {
   #arrow_down {
     background: @pd0200-medium;
   }
-
   // region info title
-  #region_info_title_wrapper{
+  #region_info_title_wrapper {
     background-color: @pd0200-dark;
-    h2{
+
+    h2 {
       color: white;
     }
   }
-
   // lives improved circle diagram
   #arc_path {
     stroke: @pd0200-light;
@@ -1177,15 +1198,14 @@ circle#background {
   #arrow_down {
     background: @pd0900-medium;
   }
-
   // region info title
-  #region_info_title_wrapper{
+  #region_info_title_wrapper {
     background-color: @pd0900-dark;
-    h2{
+
+    h2 {
       color: white;
     }
   }
-
   // lives improved circle diagram
   #arc_path {
     stroke: @pd0900-light;
@@ -1223,15 +1243,14 @@ circle#background {
   #arrow_down {
     background: @dhs001-medium;
   }
-
   // region info title
-  #region_info_title_wrapper{
+  #region_info_title_wrapper {
     background-color: @dhs001-dark;
-    h2{
+
+    h2 {
       color: white;
     }
   }
-
   // lives improved circle diagram
   #arc_path {
     stroke: @dhs001-light;
@@ -1269,15 +1288,14 @@ circle#background {
   #arrow_down {
     background: @dhs003-medium;
   }
-
   // region info title
-  #region_info_title_wrapper{
+  #region_info_title_wrapper {
     background-color: @dhs003-dark;
-    h2{
+
+    h2 {
       color: white;
     }
   }
-
   // lives improved circle diagram
   #arc_path {
     stroke: @dhs003-light;
@@ -1752,10 +1770,19 @@ div#debug_layer {
 
   #simulation_wrapper {
     width: 90%;
-    position: absolute;
+    position: relative;
+    top: 0%;
     bottom: 0%;
     margin-top: 0%;
+
+    h1 {
+      margin: 1% 0 0 0;
+      line-height: 30px;
+      font-size: 20px;
+      color: @pd0900-medium;
+    }
   }
+
 
   .data_wrapper {
     width: 25%;
@@ -1829,27 +1856,7 @@ div#debug_layer {
     border-bottom: 1px solid @grey-light;
   }
 
-  #simulation {
-    overflow: hidden;
-    left: 66%;
-    top: 0%;
-    width: 34%;
-    height: 100%;
-    border-bottom: 1px solid @grey-light;
-  }
 
-  #simulation_wrapper {
-    position: relative;
-    top: 0%;
-    margin-top: 0%;
-  }
-
-  #simulation_wrapper h1 {
-    margin: 1% 0 0 0;
-    line-height: 30px;
-    font-size: 20px;
-    color: @pd0900-medium;
-  }
 
   .data_wrapper {
     width: 25%;
@@ -1995,8 +2002,6 @@ div#debug_layer {
 div#content_outer_wrapper {
   &.devpublic,
   &.prodpublic {
-    
-
     /* hide the menu and bottom toolbars */
     #menu_bar,
     #title_bar,
@@ -2009,7 +2014,7 @@ div#content_outer_wrapper {
     div#filter_panel {
       height: 0px !important;
       max-height: none !important;
-      z-index: 6!important;
+      z-index: 6 !important;
 
       &.panel {
         position: inline !important;
@@ -2079,11 +2084,11 @@ div#content_outer_wrapper {
               margin: 0px;
               background-color: @grey-medium;
 
-              &.selected{
+              &.selected {
                 background-color: @grey-dark;
               }
 
-              div.mru_sector_color{
+              div.mru_sector_color {
                 display: none;
               }
             }
@@ -2102,10 +2107,12 @@ div#content_outer_wrapper {
 
         div#top_panel {
           height: 40%;
-          &.hidden{
-            display:none;
-            &.animate{
-              display: block!important;
+
+          &.hidden {
+            display: none;
+
+            &.animate {
+              display: block !important;
             }
           }
 
@@ -2117,26 +2124,25 @@ div#content_outer_wrapper {
             /* bring your own prefixes */
             transform: translate(-50%, -10%);
             //background-color: transparent;
-            height:100%;
+            height: 100%;
 
-            div#region_info_title_wrapper{
+            div#region_info_title_wrapper {
               display: block;
-              h2{
-                margin-top: 0px!important;
-                margin-bottom: 0px!important;
+
+              h2 {
+                margin-top: 0px !important;
+                margin-bottom: 0px !important;
                 padding-top: 5px;
                 padding-bottom: 2px;
-
               }
             }
 
-            div.svg_wrapper{
+            div.svg_wrapper {
               bottom: auto;
               width: auto;
               height: auto;
               position: static;
             }
-
           }
 
           div#region_history {
@@ -2152,9 +2158,9 @@ div#content_outer_wrapper {
       }
     }
 
-    div#overlay{
+    div#overlay {
       /* mis use the loader div to create a close button */
-      div#loader{
+      div#loader {
         left: auto;
         right: 0;
         top: 0;
@@ -2162,14 +2168,15 @@ div#content_outer_wrapper {
         cursor: pointer;
         height: 42px;
         font-size: 32px;
+
         &:after {
           content: "x";
         }
-        &:hover{
+
+        &:hover {
           font-weight: bold;
         }
       }
     }
-
   }
 }

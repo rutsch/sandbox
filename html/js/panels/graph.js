@@ -66,6 +66,17 @@ var objTrendGraph = {
     },
     title: {
       text: 'Trend'
+    },
+    line: {
+      lastsegment: {
+        id: 'last_segment',
+        class: 'last'
+      },
+      lastpoint: {
+        id: 'last_point',
+        class: 'last'
+      }
+        
     }
   },
   //new routine where time is used to calculate x-axis values
@@ -338,7 +349,7 @@ var objTrendGraph = {
       objCoords = self.getsvgcoordinatesforpointflex(objPoint.value, objPoint.utcend);
       var strId = '';
       if (i == (self.vars.data.points.length - 1)) {
-        strId = 'last_point';
+        strId = self.props.line.lastpoint.id;
       }
 
       //console.log(objCoords);
@@ -373,8 +384,8 @@ var objTrendGraph = {
           y2: objCoords.y
         });
         if (i == (self.vars.data.points.length - 1)) {
-          elLine.setAttributeNS(null, 'class', 'last');
-          elLine.setAttributeNS(null, 'id', 'last_segment');
+          elLine.setAttributeNS(null, 'class', self.props.line.lastsegment.class);
+          elLine.setAttributeNS(null, 'id', self.props.line.lastsegment.id);
         }
         if (i == (self.vars.data.points.length - 2)) {
           elLine.setAttributeNS(null, 'class', 'current');
@@ -534,8 +545,8 @@ var objTrendGraph = {
 
 
     //store commonly used elements in global variables for efficient use later
-    self.el.lastsegment = document.getElementById('last_segment');
-    self.el.lastpoint = document.getElementById('last_point');
+    self.el.lastsegment = document.getElementById(self.props.line.lastsegment.id);
+    self.el.lastpoint = document.getElementById(self.props.line.lastpoint.id);
 
     if (typeof objRegionInfo !== "undefined") objRegionInfo.showhistory();
 

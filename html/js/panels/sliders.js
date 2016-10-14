@@ -102,16 +102,14 @@ var objSliders = {
       if (response.hasOwnProperty('authenticated') && !response.authenticated) {
         handleShibbolethLoginRequired();
       } else {
+        //check if we have received an error
         if (hasProperty(response, 'error')) {
-          //self.el.innerwrapper.style.display='none';
-          self.el.errorwrapper.style.display = 'block';
-          self.el.errorwrapper.innerHTML = "<div class='simulator_data_error'>" + response.error.message + "</div>";
-
-          //show the interface
-          //self.show();	
-
-          //objError.show(response.error.message, true);
+          objError.show(response.error.message, true);
         } else {
+          //check if we have actually received simulator cache data and update the setupsimulator variable accordingly
+          self.vars.setupsimulator = (response.hasOwnProperty('sales') && response.hasOwnProperty('greensales') && response.hasOwnProperty('scenario'));
+
+
           //store the data we have received
           self.vars.data = response;
 
@@ -227,7 +225,7 @@ var objSliders = {
     //console.log(intMaxValue)
 
     //add the last element (year end prediction)
-    if (self.vars.data.livesimproved.s0g0) {
+    if (self.vars.setupsimulator && self.vars.data.livesimproved.s0g0) {
       objGraphData.points.push({
         value: objMap.roundlivesimproveddataobject({ l: self.vars.data.livesimproved.s0g0, g: -1, p: -1 }).displayl,
         label: strPredicionLabel,
@@ -285,6 +283,9 @@ var objSliders = {
     objGraphData.styles = {};
     objGraphData.styles.stylecurrentline = app.trendgraph.stylecurrentline;
 
+    //set other properties for the graph
+    objTrendGraph.props.line.lastsegment.class = 'lastsegment';
+    objTrendGraph.props.line.lastpoint.id = 'lp';
     //console.log(objGraphData);
 
     //draw the graph
@@ -342,7 +343,7 @@ var objSliders = {
     //console.log('gspslidermin: %s, gspslidermax: %s', self.vars.gspslidermin, self.vars.gspslidermax);
     //console.log(self.vars.data.scenario);
     var intLeftSales = (Math.abs(self.vars.data.scenario.salesmin)) / (Math.abs(self.vars.data.scenario.salesmin) + self.vars.salesmax) * 100 - 2;
-    var intLeftGreensales = (self.vars.gsp - self.vars.gspslidermin) / (self.vars.gspslidermax - self.vars.gspslidermin) * 100 -3;
+    var intLeftGreensales = (self.vars.gsp - self.vars.gspslidermin) / (self.vars.gspslidermax - self.vars.gspslidermin) * 100 - 3;
     //console.log('intLeftGreensales: %s', intLeftGreensales);
     //debugger;
     getEl('saleszero').style.left = intLeftSales + '%';
@@ -518,6 +519,11 @@ var objSliders = {
 
 
 
+  },
+  togglesimulator: function (useSimulator) {
+    var self = this;
+    self.vars.setupsimulator = useSimulator;
+    self.el.innerwrapper.style.display = (useSimulator) ? 'block' : 'none';
   },
   init: function () {
     var self = this;
