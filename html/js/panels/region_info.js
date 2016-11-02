@@ -59,7 +59,9 @@ var objRegionInfo = {
       });
     }
 
-    var seenPanelBefore = objStore.getlocalstorageitem('seenRegionInfoIntro');
+    //disabled for now
+    //var seenPanelBefore = objStore.getlocalstorageitem('seenRegionInfoIntro');
+    var seenPanelBefore = true;
     if (seenPanelBefore || isPublicSite()) {
 
     } else {

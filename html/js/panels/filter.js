@@ -28,7 +28,10 @@ var objFilter = {
     objMruFilter.setmrufilterstate();
     objOruFilter.setorufilterstate();
 
-    var seenPanelBefore = objStore.getlocalstorageitem('seenFilterIntro');
+    
+    //disabled for now
+    //var seenPanelBefore = objStore.getlocalstorageitem('seenFilterIntro');
+    var seenPanelBefore = true;
     if (seenPanelBefore || isPublicSite()) {
 
     } else {
