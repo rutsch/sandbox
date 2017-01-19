@@ -248,7 +248,8 @@ function iterate(obj, type, value) {
 // Function that handles the situation where shibboleth login required
 function handleShibbolethLoginRequired(cb) {
     console.log('!!Shibboleth login is required!!');
-    console.trace();
+    // console.trace();
+    // debugger;
 
     // Remember the state so we can return to it after we have passed the authentication step
     if (window.objStore.getlocalstorageitem('stateremembered') == null) {
@@ -537,11 +538,11 @@ var formattedMoney = formatMoney(myMoney, 2,'.',',');
 */
 function formatMoney(n, decPlaces, thouSeparator, decSeparator, currencySymbol) {
     var decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-        decSeparator = decSeparator == undefined ? "." : decSeparator,
-        thouSeparator = thouSeparator == undefined ? "," : thouSeparator,
-        currencySymbol = currencySymbol == undefined ? "$" : currencySymbol,
+        decSeparator = decSeparator === undefined ? "." : decSeparator,
+        thouSeparator = thouSeparator === undefined ? "," : thouSeparator,
+        currencySymbol = currencySymbol === undefined ? "$" : currencySymbol,
         sign = n < 0 ? "-" : "",
-        i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+        i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces), 10) + "",
         j = (j = i.length) > 3 ? j % 3 : 0;
     return sign + currencySymbol + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
 }
@@ -581,7 +582,7 @@ function hasProperty(obj, propName) {
     return obj.hasOwnProperty(propName);
 }
 
-//determines if we are a public site or not
+// Determines if we are a public site or not
 function isPublicSite() {
     return (window.objConfig.sitetype.indexOf('public') > -1) ? true : false;
 }

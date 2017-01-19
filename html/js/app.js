@@ -199,9 +199,10 @@ var app = {
                 try {
                     var objPageStateRemembered = JSON.parse(window.objStore.getlocalstorageitem('stateremembered'));
                     window.objStore.removelocalstorageitem('stateremembered');
-                    location.hash = objPageState.object2hash(objPageStateRemembered);
+                    location.hash = window.objPageState.object2hash(objPageStateRemembered);
                 } catch (e) {
                     window.objStore.removelocalstorageitem('stateremembered');
+                    
                     // Set the page state to default
                     location.hash = window.objPageState.object2hash(self.defaultpagestate);
                 }
