@@ -14,13 +14,13 @@ var objLogin = {
         wrapper: null,
         submit: null
     },
-    
+
     /*
      * Click functions
      */
     btnsubmitclick: function () {
         var loginUrl = (window.objConfig.urls.hasOwnProperty('urlshiblogin')) ? window.objConfig.urls.urlshiblogin : 'https://www.livesimproved.philips.com/tools/shibboleth-authenticate.aspx';
-        
+
         // Reload the complete page to force shibboleth authentication and reset to default or remembered state
         location.href = loginUrl + '?rnd=' + Math.random();
     },
@@ -59,7 +59,7 @@ var objLogin = {
         window.objConfig.currentsnapshotid = strLatestSnapshotId;
 
     },
-    
+
     // 1) Retrieve snapshot id (public info - no login needed)
     getsnapshotconfig: function () {
         var self = this;
@@ -95,14 +95,18 @@ var objLogin = {
                         self.checkappconfigforupdates(response);
 
                         // Check if we need to start an authentication procedure
-                        self.checksession();
+                        if (window.isPublicSite()) {
+                            self.continueretrievemetadata();
+                        } else {
+                            self.checksession();
+                        } 
                     }
                 }
 
             }
         });
     },
-    
+
     // 2) Test if we need to start an authentication process, if not then store the token
     checksession: function () {
 
@@ -127,14 +131,19 @@ var objLogin = {
                     // Store the token
                     objLogin.token = data.token;
 
-                    window.app.defaultpagestate.view = 'worldmap';
-
-                    // Load the metadata
-                    window.app.retrievemetadata();
+                    // Continue to the retrieve metadata step
+                    objLogin.continueretrievemetadata();
                 }
             }
         });
 
+    },
+
+    continueretrievemetadata: function () {
+        window.app.defaultpagestate.view = 'worldmap';
+
+        // Load the metadata
+        window.app.retrievemetadata();
     },
 
     checksnapshotconfigforupdates: function (response) {
@@ -246,8 +255,8 @@ var objLogin = {
     show: function () {
         var self = this;
 
-        console.trace();
-        debugger;
+        // console.trace();
+        // debugger;
 
         // Reset some variables
         window.objSliders.vars.simulatorsampling = false;
@@ -292,10 +301,10 @@ var objLogin = {
 
     showupdatemessages: function () {
         var self = this;
-        
+
         // debugger;
         window.getEl('messagelist').innerHTML = '';
-        
+
         // debugger;
         if (self.state.messages.length > 0) {
             for (var i = 0; i < self.state.messages.length; i++) {
@@ -338,7 +347,7 @@ var objLogin = {
         self.state.passworddisabled = false;
         self.state.usernamedisabled = false;
         self.state.authenticating = false;
-        
+
         // Fill elements object
         self.el.wrapper = window.getEl('login_panel');
         self.el.submit = window.getEl('btn_submit');

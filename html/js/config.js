@@ -17,45 +17,45 @@ var objConfig = {
         urlshiblogin: "https://www.livesimproved.philips.com/tools/shibboleth-authenticate.aspx"
     },
     colors: {
-        philips: { //philips group
+        philips: { // Philips group
             low: '#D2E9FF',
             middle: '#0E6EB3',
             high: '#002E6C'
         },
-        PD0900: { //healthsystems  (to be removed)
+        PD0900: { // Healthsystems  (to be removed)
             low: '#B7D9E3',
             middle: '#0E6EB3',
             high: '#074178'
         },
-        PD0100: { //lighting
+        PD0100: { // Lighting
             low: '#F3DDC2',
             middle: '#F2A41C',
             high: '#EE7706'
         },
-        BS9001: { //lighting (2) - can this be removed??
+        BS9001: { // Lighting (2) - can this be removed??
             low: '#F3DDC2',
             middle: '#F2A41C',
             high: '#EE7706'
         },
 
-        PD0200: { //personal health (previously known as Consumer Lifestyle)
+        PD0200: { // Personal health (previously known as Consumer Lifestyle)
             low: '#B5DFB7',
             middle: '#3A8D3F',
             high: '#123727'
         },
 
-        DHS001: { //Diagnosis & Treatment
+        DHS001: { // Diagnosis & Treatment
             low: '#E1DDFA',
             middle: '#570E60',
             high: '#2E0740'
         },
 
-        DHS003: { //Connected Care & Health Informatics
+        DHS003: { // Connected Care & Health Informatics
             low: '#CEDFFF',
             middle: '#6B91D5',
             high: '#094B89'
         },
-        royalphilips: { //royal philips (new)
+        royalphilips: { // Royal Philips (new)
             low: '#DFFFFB',
             middle: '#1E8877',
             high: '#095D67'
@@ -98,11 +98,11 @@ var objConfig = {
     loadremotefile: function (filename) {
         var self = this;
 
-        if (filename.indexOf('js') > -1) { //if filename is a external JavaScript file
+        if (filename.indexOf('js') > -1) { // If filename is a external JavaScript file
             var fileref = document.createElement('script')
             fileref.setAttribute("type", "text/javascript")
             fileref.setAttribute("src", self.urls.base + filename + '?rnd=' + Math.round(Math.random() * 100000000))
-        } else if (filename.indexOf('css') > -1) { //if filename is an external CSS file
+        } else if (filename.indexOf('css') > -1) { // If filename is an external CSS file
             var fileref = document.createElement("link")
             fileref.setAttribute("rel", "stylesheet")
             fileref.setAttribute("type", "text/css")
@@ -114,9 +114,9 @@ var objConfig = {
     calculateconfigsettings: function () {
         var self = this;
 
-        //base url's of the resources
+        // Base url's of the resources
         if (location.href.indexOf('http') > -1) {
-            //running on a website - grab the base url
+            // Running on a website - grab the base url
             if (location.href.indexOf('.html') > -1) {
                 self.urls.base = location.href.replace(/^(.*)\/.*?\.html.*$/, "$1");
             } else {
@@ -124,7 +124,7 @@ var objConfig = {
                 self.urls.base = self.urls.base.replace(/^(.*)(\/)$/, "$1");
             }
 
-            //determine site
+            // Determine site
             if (self.urls.dev.indexOf(location.hostname) > -1) {
                 self.sitetype = 'dev';
             } else if (self.urls.prodhealthtech.indexOf(location.hostname) > -1) {
@@ -138,7 +138,7 @@ var objConfig = {
             } else if (self.urls.troper.indexOf(location.hostname) > -1) {
                 self.sitetype = 'troper';
             } else if (self.urls.johan.indexOf(location.hostname) > -1) {
-                self.sitetype = 'johan';
+                self.sitetype = 'devpublic';
             } else if (self.urls.rutger.indexOf(location.hostname) > -1) {
                 self.sitetype = 'rutger';
             } else if (self.urls.devpublic.indexOf(location.hostname) > -1) {
@@ -149,24 +149,24 @@ var objConfig = {
             console.log('sitetype: %s', self.sitetype);
 
         } else {
-            //running inside the app or running from the filesystem
-            //baseurl can be overwritten using the querystring
+            // Running inside the app or running from the filesystem
+            // Baseurl can be overwritten using the querystring
             if (location.search.indexOf('sitetype') > -1) {
 
                 if (location.search.indexOf('sitetype=johan') > -1) {
-                    //johan
+                    // johan
                     self.urls.base = self.urls.johan;
                     self.sitetype = 'johan';
                 } else if (location.search.indexOf('sitetype=rutger') > -1) {
-                    //rutger
+                    // rutger
                     self.urls.base = self.urls.rutger;
                     self.sitetype = 'rutger';
                 } else if (location.search.indexOf('sitetype=dev') > -1) {
-                    //development
+                    // development
                     self.urls.base = self.urls.dev;
                     self.sitetype = 'dev';
                 } else if (location.search.indexOf('sitetype=troper') > -1) {
-                    //troperlaunna
+                    // troperlaunna
                     self.urls.base = self.urls.troper;
                     self.sitetype = 'troper';
                 }
@@ -194,9 +194,10 @@ var objConfig = {
         /*
         Calculate the language
         */
-        if (location.href.indexOf('_zh.htm') > -1) self.lang = 'zh';
+        // TODO: This needs to improve!
+        if (location.href.indexOf('_zh.htm') > -1 || location.href.indexOf('.com.cn') > -1) self.lang = 'zh';
 
-        //console.log('self.sitetype: %s', self.sitetype);
+        // console.log('self.sitetype: %s', self.sitetype);
 
         /*
         Calculate the absolute URL's to use in the application for interacting with the backend
@@ -227,15 +228,16 @@ var objConfig = {
         }
 
         // Special case to test the app
-        if (self.sitetype === 'johan') {
+        if (self.sitetype.indexOf('public') > -1) {
             calculateUrls('');
+            self.urls.dynamicresourceurl = '/tools/api.aspx';
         }
 
 
     },
     startapplication: function () {
         var self = this;
-        //console.log('testing')
+        // console.log('testing')
         if (typeof app !== 'undefined' &&
             typeof objUtils !== 'undefined' &&
             typeof objStore !== 'undefined' &&
