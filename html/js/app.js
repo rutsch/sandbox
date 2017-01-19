@@ -85,9 +85,9 @@ var app = {
             return 'ontouchstart' in document.documentElement;
         }
     },
+    
     // Retrieves oru and mru metadata structures
     retrievemetadata: function () {
-        var self = this;
         var objData = {
             fulldomain: location.protocol + "//" + location.hostname,
             method: 'getoruandproductdata',
@@ -130,7 +130,7 @@ var app = {
         // Hide the login
         window.objLogin.hide();
 
-        // Setup the worldmap and load the data
+        // Setup the worldmap, load the data and afterwards show the introduction message
         window.objMap.updatemap(bolShowDetailView, app.showappintromessage);
     },
     showappintromessage: function () {
@@ -138,13 +138,19 @@ var app = {
         // objFilter.show();
         var usedAppBefore = window.objStore.getlocalstorageitem('seenAppIntro');
 
-        //TODO: this needs to change so that we can show website updates and app updates independently
-        if ((usedAppBefore && app.state.mobile) || (!app.state.mobile) || window.isPublicSite()) {
-            window.objLogin.showupdatemessages();
+        // TODO: this needs to change so that we can show website updates and app updates independently
+        if (!window.isPublicSite()) {
+            if ((usedAppBefore && app.state.mobile) || (!app.state.mobile)) {
+                window.objLogin.showupdatemessages();
+            } else {
+                window.objPanelInfo.show('app');
+                window.objStore.setlocalstorageitem('seenAppIntro', 'true');
+            }
         } else {
-            window.objPanelInfo.show('app');
+            // Mark the seenAppIntro as true for the public version of the site
             window.objStore.setlocalstorageitem('seenAppIntro', 'true');
         }
+
     },
     getdimensions: function () {
         var self = this;
@@ -202,7 +208,7 @@ var app = {
                     location.hash = window.objPageState.object2hash(objPageStateRemembered);
                 } catch (e) {
                     window.objStore.removelocalstorageitem('stateremembered');
-                    
+
                     // Set the page state to default
                     location.hash = window.objPageState.object2hash(self.defaultpagestate);
                 }
@@ -301,7 +307,7 @@ var app = {
                     // console.log(key);
                     if (typeof key === 'string') window.objConfig.fragments[key] = data[key];
                 }
-                
+
                 // console.log(objConfig.fragments);
 
                 // Start translating stuff
@@ -359,7 +365,7 @@ var objPageState = {
 
         if (obj.hasOwnProperty("view")) self.state.view = obj.view;
         if (obj.hasOwnProperty("popup")) self.state.popup = obj.popup;
-        
+
         // debugger;
         if (obj.hasOwnProperty("filter")) {
             if (obj.filter.hasOwnProperty("orulevel")) self.state.filter.orulevel = obj.filter.orulevel;
@@ -373,7 +379,7 @@ var objPageState = {
 
         if (obj.hasOwnProperty("view")) objCurrentState.view = obj.view;
         if (obj.hasOwnProperty("popup")) objCurrentState.popup = obj.popup;
-        
+
         // debugger;
         if (obj.hasOwnProperty("filter")) {
             if (obj.filter.hasOwnProperty("orulevel")) objCurrentState.filter.orulevel = obj.filter.orulevel;
@@ -381,7 +387,7 @@ var objPageState = {
             if (obj.filter.hasOwnProperty("sector")) objCurrentState.filter.sector = obj.filter.sector;
             if (obj.filter.hasOwnProperty("mru")) objCurrentState.filter.mru = obj.filter.mru;
         }
-        
+
         // debugger;
         // console.log(obj);
         // console.log(objCurrentState);
@@ -692,7 +698,7 @@ window.onhashchange = function () {
     // Parse the received hash into the objPageState.state object
 
     var objPageStateNew = objPageState.hash2object(location.hash);
-    
+
     // debugger;
     // console.log(objPageStateNew);
     if (objPageStateNew.hasOwnProperty("error")) {
