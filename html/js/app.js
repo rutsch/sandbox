@@ -1,694 +1,704 @@
 var app = {
-  state: {
-    width: null,
-    height: null,
-    mobile: null,
-    ios: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false),
-    ios7: (navigator.userAgent.match(/OS 7_/g) ? true : false),
-    ipad: (navigator.userAgent.match(/(iPad)/g) ? true : false),
-    orientation: '',
-    ie: !!window.MSStream,
-    webbrowser: ((location.href.indexOf('http') > -1)),
-    initialmapview: true
-  },
-  vars: {
-    basehtml: null
+    state: {
+        width: null,
+        height: null,
+        mobile: null,
+        ios: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false),
+        ios7: (navigator.userAgent.match(/OS 7_/g) ? true : false),
+        ipad: (navigator.userAgent.match(/(iPad)/g) ? true : false),
+        orientation: '',
+        ie: !!window.MSStream,
+        webbrowser: ((location.href.indexOf('http') > -1)),
+        initialmapview: true
+    },
+    vars: {
+        basehtml: null
 
-  },
-  defaultpagestate: {
-    view: 'worldmap',
-    popup: 'none',
-    filter: {
-      orulevel: '3', //for worldmap data 1, 2, 3, 4
-      oru: 'none', //selected country/region
-      sector: 'philips', //main sector
-      mru: 'philips' //product group
-    }
-  },
-  labels: {
-    simulatortitle: ' simulation'
-  },
-  trendgraph: {
-    //if left empty ('') then the system will assume that the simulator point is year end data
-    predictionlabel: 'Q1 2014', //set the label of the last point (simulator) in the graph to a manual value
-    predictiondate: '2014-03-31', //(yyyy-mm-dd) set to a date to ovewrite the year end date that will normally be calculated
-    pointsvisible: null, //set to a value to limit the number of points shown in the graph
-    stylecurrentline: '' //overwrite the style of the line to the current data point
-  },
-  el: {
-    outerwrapper: null
-  },
-  btnfilterclick: function (el) {
-    //add an action to the stats object
-    objAnalytics.data.events.push({
-      category: 'button' /*required - object that was interacted with*/,
-      action: 'click' /*required - type of interaction*/,
-      label: 'open filter panel' /*optional - used for categorization of events*/
-    });
-    objFilter.show();
-  },
-  btnbookmarksclick: function (el) {
-    //add an action to the stats object
-    objAnalytics.data.events.push({
-      category: 'button' /*required - object that was interacted with*/,
-      action: 'click' /*required - type of interaction*/,
-      label: 'open bookmarks panel' /*optional - used for categorization of events*/
-    });
-    objBookmarks.show();
-  },
-  btnexplainclick: function (el) {
-    //add an action to the stats object
-    objAnalytics.data.events.push({
-      category: 'button' /*required - object that was interacted with*/,
-      action: 'click' /*required - type of interaction*/,
-      label: 'open help panel' /*optional - used for categorization of events*/
-    });
-    objExplain.show();
-  },
-  btnlogoutclick: function (el) {
-    //add an action to the stats object
-    objAnalytics.data.events.push({
-      category: 'button' /*required - object that was interacted with*/,
-      action: 'click' /*required - type of interaction*/,
-      label: 'logout' /*optional - used for categorization of events*/
-    });
-    objLogin.logout();
-  },
-  showtransparentlayer: function () {
-    getEl('transparentlayer').style.display = 'block';
-  },
-  hidetransparentlayer: function () {
-    getEl('transparentlayer').style.display = 'none';
-  },
-  isMobile: {
-    any: function () {
-      return 'ontouchstart' in document.documentElement;
-    }
-  },
-  //retrieves oru and mru metadata structures
-  retrievemetadata: function () {
-    var self = this;
-    var objData = {
-      fulldomain: location.protocol + "//" + location.hostname,
-      method: 'getoruandproductdata',
-      type: 'json',
-      token: objLogin.token,
-      snapshotid: objConfig.currentsnapshotid
-    }
-    psv('GET', objConfig.urls.dynamicresourceurl, objData, app.retrievemetadatahandler);
-  },
-  retrievemetadatahandler: function (err, data) {
+    },
+    defaultpagestate: {
+        view: 'worldmap',
+        popup: 'none',
+        filter: {
+            orulevel: '3', // For worldmap data 1, 2, 3, 4
+            oru: 'none', // Selected country/region
+            sector: 'philips', // Main sector
+            mru: 'philips' // Product group
+        }
+    },
+    labels: {
+        simulatortitle: ' simulation'
+    },
+    trendgraph: {
+        // If left empty ('') then the system will assume that the simulator point is year end data
+        predictionlabel: 'Q1 2014', // Set the label of the last point (simulator) in the graph to a manual value
+        predictiondate: '2014-03-31', // (yyyy-mm-dd) set to a date to ovewrite the year end date that will normally be calculated
+        pointsvisible: null, // Set to a value to limit the number of points shown in the graph
+        stylecurrentline: '' // Overwrite the style of the line to the current data point
+    },
+    el: {
+        outerwrapper: null
+    },
+    btnfilterclick: function (el) {
+        // Add an action to the stats object
+        window.objAnalytics.data.events.push({
+            category: 'button',
+            action: 'click',
+            label: 'open filter panel'
+        });
+        window.objFilter.show();
+    },
+    btnbookmarksclick: function (el) {
+        // Add an action to the stats object
+        window.objAnalytics.data.events.push({
+            category: 'button',
+            action: 'click',
+            label: 'open bookmarks panel'
+        });
+        window.objBookmarks.show();
+    },
+    btnexplainclick: function (el) {
+        // Add an action to the stats object
+        window.objAnalytics.data.events.push({
+            category: 'button',
+            action: 'click',
+            label: 'open help panel'
+        });
+        window.objExplain.show();
+    },
+    btnlogoutclick: function (el) {
+        // Add an action to the stats object
+        window.objAnalytics.data.events.push({
+            category: 'button',
+            action: 'click',
+            label: 'logout'
+        });
+        window.objLogin.logout();
+    },
+    showtransparentlayer: function () {
+        window.getEl('transparentlayer').style.display = 'block';
+    },
+    hidetransparentlayer: function () {
+        window.getEl('transparentlayer').style.display = 'none';
+    },
+    isMobile: {
+        any: function () {
+            return 'ontouchstart' in document.documentElement;
+        }
+    },
+    // Retrieves oru and mru metadata structures
+    retrievemetadata: function () {
+        var self = this;
+        var objData = {
+            fulldomain: location.protocol + "//" + location.hostname,
+            method: 'getoruandproductdata',
+            type: 'json',
+            token: window.objLogin.token,
+            snapshotid: window.objConfig.currentsnapshotid
+        }
+        window.psv('GET', window.objConfig.urls.dynamicresourceurl, objData, app.retrievemetadatahandler);
+    },
+    retrievemetadatahandler: function (err, data) {
 
-    if (err || hasProperty(data, 'error')) {
-      if (hasProperty(data, 'error')) {
-        objError.show('There was an error retrieving metadata information. ' + ((typeof data == 'object') ? JSON.stringify(data) : data), true);
-      } else {
-        objError.show('There was an error retrieving metadata information. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
-      }
-    } else {
-      //console.log(data);
+        if (err || window.hasProperty(data, 'error')) {
+            if (window.hasProperty(data, 'error')) {
+                window.objError.show('There was an error retrieving metadata information. ' + ((typeof data === 'object') ? JSON.stringify(data) : data), true);
+            } else {
+                window.objError.show('There was an error retrieving metadata information. ' + ((typeof err === 'object') ? JSON.stringify(err) : err), true);
+            }
+        } else {
+            // console.log(data);
 
-      //check if authentication is required
-      if (data.hasOwnProperty('authenticated') && !data.authenticated) {
-        handleShibbolethLoginRequired();
-      } else {
-        //load the retrieved data into the ORU object
-        objOruFilter.json = data.result.orudata;
+            // Check if authentication is required
+            if (data.hasOwnProperty('authenticated') && !data.authenticated) {
+                window.handleShibbolethLoginRequired();
+            } else {
+                // Load the retrieved data into the ORU object
+                window.objOruFilter.json = data.result.orudata;
 
-        //load the retrieved data into the MRU (product) object
-        objMruFilter.preparehtml(data.result.productdata);
+                // Load the retrieved data into the MRU (product) object
+                window.objMruFilter.preparehtml(data.result.productdata);
 
-        //render the initial view of the app
-        app.processinitialview(true);
-      }
+                // Render the initial view of the app
+                app.processinitialview(true);
+            }
 
-    }
-  },
-  start: function (bolShowDetailView) {
-    //init elements with async because elements require external data
+        }
+    },
+    start: function (bolShowDetailView) {
+        // Init elements with async because elements require external data
 
-    //hide the login
-    objLogin.hide();
+        // Hide the login
+        window.objLogin.hide();
 
-    //setup the worldmap and load the data
-    objMap.updatemap(bolShowDetailView, app.showappintromessage);
+        // Setup the worldmap and load the data
+        window.objMap.updatemap(bolShowDetailView, app.showappintromessage);
+    },
+    showappintromessage: function () {
+        // TODO: add logic to show bookmarks, filter or messages
+        // objFilter.show();
+        var usedAppBefore = window.objStore.getlocalstorageitem('seenAppIntro');
 
-  },
-  showappintromessage: function () {
-    //TODO: add logic to show bookmarks, filter or messages
-    //objFilter.show();
-    var usedAppBefore = objStore.getlocalstorageitem('seenAppIntro');
+        //TODO: this needs to change so that we can show website updates and app updates independently
+        if ((usedAppBefore && app.state.mobile) || (!app.state.mobile) || window.isPublicSite()) {
+            window.objLogin.showupdatemessages();
+        } else {
+            window.objPanelInfo.show('app');
+            window.objStore.setlocalstorageitem('seenAppIntro', 'true');
+        }
+    },
+    getdimensions: function () {
+        var self = this;
+        self.state.width = document.body.clientWidth;
+        self.state.height = document.documentElement["clientHeight"];
+        if (self.state.width > self.state.height) {
+            self.state.orientation = 'landscape';
+        } else {
+            self.state.orientation = 'portrait';
+        }
+    },
+    processinitialview: function (bolAuthenticated) {
+        var self = this;
 
-    //TODO: this needs to change so that we can show website updates and app updates independently
-    if ((usedAppBefore && app.state.mobile) || (!app.state.mobile) || isPublicSite()) {
-      objLogin.showupdatemessages();
-    } else {
-      objPanelInfo.show('app');
-      objStore.setlocalstorageitem('seenAppIntro', 'true');
-    }
-  },
-  getdimensions: function () {
-    var self = this;
-    self.state.width = document.body.clientWidth;
-    self.state.height = document.documentElement["clientHeight"];
-    if (self.state.width > self.state.height) {
-      self.state.orientation = 'landscape';
-    } else {
-      self.state.orientation = 'portrait';
-    }
-  },
-  processinitialview: function (bolAuthenticated) {
-    var self = this;
+        // console.log('processinitialview - bolAuthenticated: %s, current hash: %s', bolAuthenticated, location.hash);
+        // debugger;
 
-    //console.log('processinitialview - bolAuthenticated: %s, current hash: %s', bolAuthenticated, location.hash);
-    //debugger;
-
-    //set or process the information supplied in the hash
-    if (location.hash.length > 0) {
-      var objPageStateNew = objPageState.hash2object(location.hash);
-      //console.log(objPageStateNew);
-      if (objPageStateNew.hasOwnProperty("error")) {
-        //could not properly parse the hash into a state object - default to standard object
-        location.hash = objPageState.object2hash(self.defaultpagestate);
-      } else {
-
-
-        if (!bolAuthenticated) {
-          //console.log('in !bolAuthenticated');
+        // Set or process the information supplied in the hash
+        if (location.hash.length > 0) {
+            var objPageStateNew = window.objPageState.hash2object(location.hash);
+            // console.log(objPageStateNew);
+            if (objPageStateNew.hasOwnProperty("error")) {
+                // Could not properly parse the hash into a state object - default to standard object
+                location.hash = window.objPageState.object2hash(self.defaultpagestate);
+            } else {
 
 
+                if (!bolAuthenticated) {
+                    // console.log('in !bolAuthenticated');
 
-          if (location.hash.indexOf('!/login/') > -1) {
-            //location.hash = objPageState.object2hash(self.defaultpagestate) + "/";
-          } else {
-            //remember the state so we can return to it after we have passed the authentication step
-            objStore.setlocalstorageitem('stateremembered', JSON.stringify(objPageStateNew));
+                    if (location.hash.indexOf('!/login/') > -1) {
+                        // location.hash = objPageState.object2hash(self.defaultpagestate) + "/";
+                    } else {
+                        // Remember the state so we can return to it after we have passed the authentication step
+                        window.objStore.setlocalstorageitem('stateremembered', JSON.stringify(objPageStateNew));
 
-            //assure that we will show the login screen
-            objPageStateNew.view = 'login';
-            location.hash = objPageState.object2hash(objPageStateNew);
-          }
+                        // Assure that we will show the login screen
+                        objPageStateNew.view = 'login';
+                        location.hash = window.objPageState.object2hash(objPageStateNew);
+                    }
 
-
+                } else {
+                    // Go to the view originally requested
+                    window.objPageState.handlechange(objPageStateNew);
+                }
+            }
 
 
         } else {
-          //go to the view originally requested
-          objPageState.handlechange(objPageStateNew);
+            // Attempt to use the old page state (which we stored in app.js) to restore to the view to the state before we were logged out
+            if (window.objStore.getlocalstorageitem('stateremembered') !== null) {
+                try {
+                    var objPageStateRemembered = JSON.parse(window.objStore.getlocalstorageitem('stateremembered'));
+                    window.objStore.removelocalstorageitem('stateremembered');
+                    location.hash = objPageState.object2hash(objPageStateRemembered);
+                } catch (e) {
+                    window.objStore.removelocalstorageitem('stateremembered');
+                    // Set the page state to default
+                    location.hash = window.objPageState.object2hash(self.defaultpagestate);
+                }
+
+
+            } else {
+                // Set the page state to default
+                location.hash = window.objPageState.object2hash(self.defaultpagestate);
+            }
+
         }
-      }
 
+    },
 
-    } else {
-      //attempt to use the old page state (which we stored in app.js) to restore to the view to the state before we were logged out
-      if (objStore.getlocalstorageitem('stateremembered') != null) {
-        try {
-          var objPageStateRemembered = JSON.parse(objStore.getlocalstorageitem('stateremembered'));
-          objStore.removelocalstorageitem('stateremembered');
-          location.hash = objPageState.object2hash(objPageStateRemembered);
-        } catch (e) {
-          objStore.removelocalstorageitem('stateremembered');
-          //set the page state to default
-          location.hash = objPageState.object2hash(self.defaultpagestate);
+    // Initiates the objects in this application
+    initobjects: function () {
+        var self = this;
+
+        // Retrieve the dimensions
+        self.getdimensions();
+
+        // Detect mobile/desktop
+        self.state.mobile = self.isMobile.any();
+
+        // Init storage
+        window.objStore.init();
+
+        // Init the stats
+        window.objAnalytics.init();
+
+        // Init panels
+        window.objLogin.init();
+        window.objMap.init();
+        window.objFooter.init();
+        window.objHeader.init();
+        window.objOverlay.init();
+        window.objRegionInfo.init();
+        window.objSliders.init();
+        window.objError.init();
+        window.objFilter.init();
+        window.objBookmarks.init();
+        window.objExplain.init();
+        window.objTrendGraph.init();
+        window.objLoading.init();
+        window.objPanelInfo.init();
+
+        // Init the filters
+        window.objOruFilter.init();
+        window.objMruFilter.init();
+
+        // Change the settings for the zoom/pan based on the device
+        if (self.state.ios) {
+            window.objZoomPanSettings.dragtimerdelay = 800;
+            window.objZoomPanSettings.touchtimerdelay = 300;
+
+            // For status/carrier bar issue
+            if (self.state.ios7) {
+                window.getEl('title_bar').style.height = "65px";
+                window.getEl('info').style.top = "10px";
+                window.getEl('btn_back').style.top = "10px";
+                window.getEl('toggle_favourite').style.top = "10px";
+            }
         }
 
+        // Set the class of the body element to refect the site type
+        app.el.outerwrapper.className = window.objConfig.sitetype;
 
-      } else {
-        //set the page state to default
-        location.hash = objPageState.object2hash(self.defaultpagestate);
-      }
+        /*
+        This is where it all starts...
+        */
+        window.objLogin.getsnapshotconfig();
+    },
 
+    init: function () {
+        var self = this;
+
+        // Load the main html content
+        app.el.outerwrapper = window.getEl('content_outer_wrapper');
+        self.vars.basehtml = window.serverSideRequest({
+            url: window.objConfig.urls.base + '/data/body_content.html',
+            method: 'get',
+            debug: false
+        });
+
+        // Load the translation fragments
+        window.psv('GET', location.href.replace(/^(.*)index.*$/, '$1') + 'data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json', {
+            v: 1
+        }, function retrieveFragmentsHandler(err, data) {
+            if (err) {
+                window.objError.show('There was an error retrieving translation fragments. ' + ((typeof err === 'object') ? JSON.stringify(err) : err), true);
+            } else {
+                // console.log(data);
+
+                // Attach the data to the objConfig.fragments object
+                for (var key in data) {
+                    // console.log(key);
+                    if (typeof key === 'string') window.objConfig.fragments[key] = data[key];
+                }
+                
+                // console.log(objConfig.fragments);
+
+                // Start translating stuff
+
+                // Translate fragments in the HTML and inject it back into the UI
+                self.vars.basehtml = self.vars.basehtml.replace(/\[([a-zA-Z\s_-]*?)\]/g, function replacementHandler(match, contents, offset, s) {
+                    return window.translateFragment(contents);
+                });
+
+                // Inject the translated HTML into the DOM of our page
+                app.el.outerwrapper.innerHTML = self.vars.basehtml;
+
+                // Continue by initiating the onjects of this application
+                self.initobjects();
+            }
+        });
     }
-
-  },
-  // Initiates the objects in this application
-  initobjects: function () {
-    var self = this;
-
-    //retrieve the dimensions
-    self.getdimensions();
-
-    //detect mobile/desktop
-    self.state.mobile = self.isMobile.any();
-
-    //init storage
-    objStore.init();
-
-    //init the stats
-    objAnalytics.init();
-
-    //init panels
-    objLogin.init();
-    objMap.init();
-    objFooter.init();
-    objHeader.init();
-    objOverlay.init();
-    objRegionInfo.init();
-    objSliders.init();
-    objError.init();
-    objFilter.init();
-    objBookmarks.init();
-    objExplain.init();
-    objTrendGraph.init();
-    objLoading.init();
-    objPanelInfo.init();
-
-    //init the filters
-    objOruFilter.init();
-    objMruFilter.init();
-
-    //change the settings for the zoom/pan based on the device
-    if (self.state.ios) {
-      objZoomPanSettings.dragtimerdelay = 800;
-      objZoomPanSettings.touchtimerdelay = 300;
-
-      //for status/carrier bar issue
-      if (self.state.ios7) {
-        getEl('title_bar').style.height = "65px";
-        getEl('info').style.top = "10px";
-        getEl('btn_back').style.top = "10px";
-        getEl('toggle_favourite').style.top = "10px";
-      }
-    }
-
-    //set the class of the body element to refect the site type
-    app.el.outerwrapper.className = objConfig.sitetype;
-
-    /*
-		This is where it all starts...
-		*/
-    
-    objLogin.getsnapshotconfig();
-
-  },
-
-  init: function () {
-    var self = this;
-
-    //load the main html content
-    app.el.outerwrapper = getEl('content_outer_wrapper');
-    self.vars.basehtml = serverSideRequest({ url: objConfig.urls.base + '/data/body_content.html', method: 'get', debug: false });
-
-    //load the translation fragments
-    psv('GET', location.href.replace(/^(.*)index.*$/, '$1') + 'data/locale-' + objConfig.lang + ((objConfig.lang == 'en') ? '_US' : '_CN') + '.json', { v: 1 }, function retrieveFragmentsHandler(err, data) {
-      if (err) {
-        objError.show('There was an error retrieving translation fragments. ' + ((typeof err == 'object') ? JSON.stringify(err) : err), true);
-      } else {
-        //console.log(data);
-
-        // Attach the data to the objConfig.fragments object
-        for (key in data) {
-          //console.log(key);
-          objConfig.fragments[key] = data[key];
-        }
-        //console.log(objConfig.fragments);
-
-        // Start translating stuff
-        // translate fragments in the HTML and inject it back into the UI
-        self.vars.basehtml = self.vars.basehtml.replace(/\[([a-zA-Z\s_-]*?)\]/g, function replacementHandler(match, contents, offset, s) {
-            return translateFragment(contents);
-          }
-        );
-
-        // Inject the translated HTML into the DOM of our page
-        app.el.outerwrapper.innerHTML = self.vars.basehtml;
-
-        // Continue by initiating the onjects of this application
-        self.initobjects();
-      }
-    });
-
-
-
-
-
-
-
-
-
-  }
 }
 
-//regular expression to match a valid hash
+// Regular expression to match a valid hash
 var regValid = /^#\!\/(login|worldmap|detail?)\/((\w|\d|-)+)\/((\w|\d|-)+)\/((\w|\d|-)+)\/((\w|\d|-)+)\/(filter|faq|help|bookmark|none?)$/g;
 
 var objPageState = {
-  state: {
-    view: null,
-    popup: null,
-    filter: {
-      orulevel: null, //for worldmap data 1, 2, 3, 4
-      oru: null, //selected country/region
-      sector: null, //main sector
-      mru: null //product group
-    }
-  },
-  stateremembered: {
-
-  },
-  vars: {
-    processed: 0
-  },
-  clonestateobject: function () {
-    var self = this;
-    return {
-      view: self.state.view,
-      popup: self.state.popup,
-      filter: {
-        orulevel: self.state.filter.orulevel,
-        oru: self.state.filter.oru,
-        sector: self.state.filter.sector,
-        mru: self.state.filter.mru
-      }
-    }
-  },
-  setstateobject: function (obj) {
-    var self = this;
-
-    if (obj.hasOwnProperty("view")) self.state.view = obj.view;
-    if (obj.hasOwnProperty("popup")) self.state.popup = obj.popup;
-    //debugger;
-    if (obj.hasOwnProperty("filter")) {
-      if (obj.filter.hasOwnProperty("orulevel")) self.state.filter.orulevel = obj.filter.orulevel;
-      if (obj.filter.hasOwnProperty("oru")) self.state.filter.oru = obj.filter.oru;
-      if (obj.filter.hasOwnProperty("sector")) self.state.filter.sector = obj.filter.sector;
-      if (obj.filter.hasOwnProperty("mru")) self.state.filter.mru = obj.filter.mru;
-    }
-  },
-  updatepagestate: function (obj) {
-    var objCurrentState = objPageState.clonestateobject();
-
-    if (obj.hasOwnProperty("view")) objCurrentState.view = obj.view;
-    if (obj.hasOwnProperty("popup")) objCurrentState.popup = obj.popup;
-    //debugger;
-    if (obj.hasOwnProperty("filter")) {
-      if (obj.filter.hasOwnProperty("orulevel")) objCurrentState.filter.orulevel = obj.filter.orulevel;
-      if (obj.filter.hasOwnProperty("oru")) objCurrentState.filter.oru = obj.filter.oru;
-      if (obj.filter.hasOwnProperty("sector")) objCurrentState.filter.sector = obj.filter.sector;
-      if (obj.filter.hasOwnProperty("mru")) objCurrentState.filter.mru = obj.filter.mru;
-    }
-    //debugger;
-    //console.log(obj);
-    //console.log(objCurrentState);
-    //console.log(objPageState.object2hash(objCurrentState));
-    //debugger;
-    location.hash = objPageState.object2hash(objCurrentState);
-    objPageState.vars.processed++;
-  },
-  hash2object: function (strHash) {
-    // converts a hash string into a state javascript object
-    // #!/view(1)/orulevel(2)/oru(4)/sector(6)/mru(8)/popup(10)
-    // #!/worldmap/2/emea/PD0100/BS9001/none
-    var bolFilterOnly = false;
-    if (arguments.length > 1) bolFilterOnly = bolReturnFilterOnly;
-
-    if (regValid.test(strHash)) {
-      return {
-        view: strHash.replace(regValid, "$1"),
-        popup: strHash.replace(regValid, "$10"),
+    state: {
+        view: null,
+        popup: null,
         filter: {
-          orulevel: strHash.replace(regValid, "$2"),
-          oru: strHash.replace(regValid, "$4"),
-          sector: strHash.replace(regValid, "$6"),
-          mru: strHash.replace(regValid, "$8")
+            orulevel: null, //for worldmap data 1, 2, 3, 4
+            oru: null, //selected country/region
+            sector: null, //main sector
+            mru: null //product group
         }
-      }
-    } else {
-      return { error: true };
-    }
-  },
-  object2hash: function (obj) {
-    //console.log(obj);
-    // #!/view(1)/orulevel(2)/oru(4)/sector(6)/mru(8)/popup(10)
-    return '#!/' + obj.view + '/' + obj.filter.orulevel + '/' + obj.filter.oru + '/' + obj.filter.sector + '/' + obj.filter.mru + '/' + obj.popup;
-  },
-  handlechange: function (objPageStateNew) {
-    //check which properties have changed and act accordingly
-    var self = this;
+    },
+    stateremembered: {
 
-    //0) add the view to the analytics object so that it will be tracked by google analytics
-    objAnalytics.data.views.push({
-      page: location.hash.substr(2),
-      title: location.hash.replace(regValid, function () {
-        if (objPageStateNew.view == 'login') {
-          return '/login';
-        } else {
-          if (objOruFilter.json == null) {
-            return '/nothing';
-          } else {
-            //construct a readable page title (breadcrumb format)
-            //debugger;
-            //console.log(objMruFilter.getmrufilteraxisarray(arguments[8]));
-            var pageName = '/' + arguments[1] + '/' + objOruFilter.convertoruleveltomarket(arguments[2]).toLowerCase() + '/' + arguments[4] + '/';
-
-            var arrAxis = objMruFilter.getmrufilteraxisarray(arguments[8]);
-            var arrBreadcrumb = [];
-            for (var a = 0; a < arrAxis.length; a++) {
-              arrBreadcrumb.push(arrAxis[a].name.toLowerCase().replace(/[\s]/gi, '_').replace(/&amp;/, 'and'));
+    },
+    vars: {
+        processed: 0
+    },
+    clonestateobject: function () {
+        var self = this;
+        return {
+            view: self.state.view,
+            popup: self.state.popup,
+            filter: {
+                orulevel: self.state.filter.orulevel,
+                oru: self.state.filter.oru,
+                sector: self.state.filter.sector,
+                mru: self.state.filter.mru
             }
-            pageName += arrBreadcrumb.join('/') + '/' + arguments[10];
-
-
-            //var strGoogleAnalyticsPath = '/' + arguments[1] + '/' + objOruFilter.convertoruleveltomarket(arguments[2]).toLowerCase() + '/' + arguments[4] + '/' + arguments[6] + '/' + arguments[8] + '/' + arguments[10];
-            //console.log(pageName);
-
-            return pageName;
-          }
         }
-      })
-    });
+    },
+    setstateobject: function (obj) {
+        var self = this;
 
-    //1) check if a filter has changed
-    var bolFilterChangeDetected = false, bolFilterOruLevelChanged = false, bolFilterOruChanged = false, bolFilterSectorChanged = false, bolFilterMruChanged = false, bolFromLogin = false;
-    if (self.state.filter.orulevel != objPageStateNew.filter.orulevel) {
-      bolFilterOruLevelChanged = true;
-      bolFilterChangeDetected = true;
-    }
-    if (self.state.filter.oru != objPageStateNew.filter.oru) {
-      bolFilterOruChanged = true;
-      bolFilterChangeDetected = true;
-    }
-    if (self.state.filter.sector != objPageStateNew.filter.sector) {
-      bolFilterSectorChanged = true;
-      bolFilterChangeDetected = true;
-    }
-    if (self.state.filter.mru != objPageStateNew.filter.mru) {
-      bolFilterMruChanged = true;
-      bolFilterChangeDetected = true;
-    }
+        if (obj.hasOwnProperty("view")) self.state.view = obj.view;
+        if (obj.hasOwnProperty("popup")) self.state.popup = obj.popup;
+        
+        // debugger;
+        if (obj.hasOwnProperty("filter")) {
+            if (obj.filter.hasOwnProperty("orulevel")) self.state.filter.orulevel = obj.filter.orulevel;
+            if (obj.filter.hasOwnProperty("oru")) self.state.filter.oru = obj.filter.oru;
+            if (obj.filter.hasOwnProperty("sector")) self.state.filter.sector = obj.filter.sector;
+            if (obj.filter.hasOwnProperty("mru")) self.state.filter.mru = obj.filter.mru;
+        }
+    },
+    updatepagestate: function (obj) {
+        var objCurrentState = objPageState.clonestateobject();
 
-    //2) check we we are coming from login
-    if (self.state.view == 'login' && objPageStateNew.view != 'login') bolFromLogin = true;
+        if (obj.hasOwnProperty("view")) objCurrentState.view = obj.view;
+        if (obj.hasOwnProperty("popup")) objCurrentState.popup = obj.popup;
+        
+        // debugger;
+        if (obj.hasOwnProperty("filter")) {
+            if (obj.filter.hasOwnProperty("orulevel")) objCurrentState.filter.orulevel = obj.filter.orulevel;
+            if (obj.filter.hasOwnProperty("oru")) objCurrentState.filter.oru = obj.filter.oru;
+            if (obj.filter.hasOwnProperty("sector")) objCurrentState.filter.sector = obj.filter.sector;
+            if (obj.filter.hasOwnProperty("mru")) objCurrentState.filter.mru = obj.filter.mru;
+        }
+        
+        // debugger;
+        // console.log(obj);
+        // console.log(objCurrentState);
+        // console.log(objPageState.object2hash(objCurrentState));
 
-    //3) show the transparent layer one time only
-    if (self.state.mobile && self.state.initialmapview && bolFromLogin && objPageStateNew.view != 'login') app.showtransparentlayer();
+        location.hash = objPageState.object2hash(objCurrentState);
+        objPageState.vars.processed++;
+    },
+    hash2object: function (strHash) {
+        // Converts a hash string into a state javascript object
+        // #!/view(1)/orulevel(2)/oru(4)/sector(6)/mru(8)/popup(10)
+        // #!/worldmap/2/emea/PD0100/BS9001/none
 
-    //4) handle view change
-    //console.log(self.state.view);
-    //console.log(objPageStateNew.view);
-    if (self.state.view != objPageStateNew.view) {
-      //console.log('viewchange detected: self.state.view=' + self.state.view + ' - objPageStateNew.view=' + objPageStateNew.view);
-      switch (objPageStateNew.view) {
-        case 'worldmap':
-          self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, false);
-          break;
-        case 'login':
-          self.stateremembered = self.clonestateobject();
-          self.setstateobject(objPageStateNew);
-          objLogin.show();
-          break;
-        case 'detail':
-          self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, true);
-          break;
-      }
-    } else {
-      //5) handle filter change
-      if (bolFilterChangeDetected) {
-        //console.log('filter change detected');
-        //if the detail view is open then we need to reload the data in it
-        if (objPageStateNew.view == 'detail') {
-          self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, true);
+        if (regValid.test(strHash)) {
+            return {
+                view: strHash.replace(regValid, "$1"),
+                popup: strHash.replace(regValid, "$10"),
+                filter: {
+                    orulevel: strHash.replace(regValid, "$2"),
+                    oru: strHash.replace(regValid, "$4"),
+                    sector: strHash.replace(regValid, "$6"),
+                    mru: strHash.replace(regValid, "$8")
+                }
+            }
         } else {
-          //called when a change in the filter panel has occured
-          self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, false);
+            return {
+                error: true
+            };
         }
-      } else {
-        //6) handle a popup panel change
+    },
+    object2hash: function (obj) {
+        // console.log(obj);
+        // #!/view(1)/orulevel(2)/oru(4)/sector(6)/mru(8)/popup(10)
+        return '#!/' + obj.view + '/' + obj.filter.orulevel + '/' + obj.filter.oru + '/' + obj.filter.sector + '/' + obj.filter.mru + '/' + obj.popup;
+    },
+    handlechange: function (objPageStateNew) {
+        // Check which properties have changed and act accordingly
+        var self = this;
 
-      }
+        // 0) add the view to the analytics object so that it will be tracked by google analytics
+        window.objAnalytics.data.views.push({
+            page: location.hash.substr(2),
+            title: location.hash.replace(regValid, function () {
+                if (objPageStateNew.view === 'login') {
+                    return '/login';
+                } else {
+                    if (window.objOruFilter.json == null) {
+                        return '/nothing';
+                    } else {
+                        // Construct a readable page title (breadcrumb format)
+                        // debugger;
+                        // console.log(objMruFilter.getmrufilteraxisarray(arguments[8]));
+                        var pageName = '/' + arguments[1] + '/' + window.objOruFilter.convertoruleveltomarket(arguments[2]).toLowerCase() + '/' + arguments[4] + '/';
 
-    }
+                        var arrAxis = window.objMruFilter.getmrufilteraxisarray(arguments[8]);
+                        var arrBreadcrumb = [];
+                        for (var a = 0; a < arrAxis.length; a++) {
+                            arrBreadcrumb.push(arrAxis[a].name.toLowerCase().replace(/[\s]/gi, '_').replace(/&amp;/, 'and'));
+                        }
+                        pageName += arrBreadcrumb.join('/') + '/' + arguments[10];
 
-    //7) open the filter panel if this is the public website
-    if (isPublicSite() && !objFilter.state.visible) objFilter.show();
 
-    //debugger;
-    self.setstateobject(objPageStateNew);
-  },
-  updateworldmapview: function (objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, bolShowDetailsPanel) {
-    var self = this;
-    //debugger;
-    if (typeof objMap.data == "object" && !bolFilterSectorChanged && !bolFilterMruChanged && !bolFilterOruLevelChanged && bolFilterOruChanged) {
-      if (objPageStateNew.view == 'detail') {
+                        // var strGoogleAnalyticsPath = '/' + arguments[1] + '/' + objOruFilter.convertoruleveltomarket(arguments[2]).toLowerCase() + '/' + arguments[4] + '/' + arguments[6] + '/' + arguments[8] + '/' + arguments[10];
+                        // console.log(pageName);
+
+                        return pageName;
+                    }
+                }
+            })
+        });
+
+        // 1) check if a filter has changed
+        var bolFilterChangeDetected = false,
+            bolFilterOruLevelChanged = false,
+            bolFilterOruChanged = false,
+            bolFilterSectorChanged = false,
+            bolFilterMruChanged = false,
+            bolFromLogin = false;
+        if (self.state.filter.orulevel !== objPageStateNew.filter.orulevel) {
+            bolFilterOruLevelChanged = true;
+            bolFilterChangeDetected = true;
+        }
+        if (self.state.filter.oru !== objPageStateNew.filter.oru) {
+            bolFilterOruChanged = true;
+            bolFilterChangeDetected = true;
+        }
+        if (self.state.filter.sector !== objPageStateNew.filter.sector) {
+            bolFilterSectorChanged = true;
+            bolFilterChangeDetected = true;
+        }
+        if (self.state.filter.mru !== objPageStateNew.filter.mru) {
+            bolFilterMruChanged = true;
+            bolFilterChangeDetected = true;
+        }
+
+        // 2) check we we are coming from login
+        if (self.state.view === 'login' && objPageStateNew.view !== 'login') bolFromLogin = true;
+
+        // 3) show the transparent layer one time only
+        if (self.state.mobile && self.state.initialmapview && bolFromLogin && objPageStateNew.view !== 'login') app.showtransparentlayer();
+
+        // 4) handle view change
+        // console.log(self.state.view);
+        // console.log(objPageStateNew.view);
+        if (self.state.view !== objPageStateNew.view) {
+            // console.log('viewchange detected: self.state.view=' + self.state.view + ' - objPageStateNew.view=' + objPageStateNew.view);
+            switch (objPageStateNew.view) {
+                case 'worldmap':
+                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, false);
+                    break;
+                case 'login':
+                    self.stateremembered = self.clonestateobject();
+                    self.setstateobject(objPageStateNew);
+                    window.objLogin.show();
+                    break;
+                case 'detail':
+                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, true);
+                    break;
+            }
+        } else {
+            // 5) handle filter change
+            if (bolFilterChangeDetected) {
+                // console.log('filter change detected');
+                // if the detail view is open then we need to reload the data in it
+                if (objPageStateNew.view === 'detail') {
+                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, true);
+                } else {
+                    // Called when a change in the filter panel has occured
+                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, false);
+                }
+            } else {
+                // 6) handle a popup panel change
+
+            }
+
+        }
+
+        // 7) open the filter panel if this is the public website
+        if (window.isPublicSite() && !window.objFilter.state.visible) window.objFilter.show();
+
+        // debugger;
         self.setstateobject(objPageStateNew);
-        objMap.detailspanel();
-      } else {
-        //this assumes that we are hitting 'back' from a details panel
-        objRegionInfo.hide();
+    },
+    updateworldmapview: function (objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, bolShowDetailsPanel) {
+        var self = this;
+        // debugger;
+        if (typeof window.objMap.data === "object" && !bolFilterSectorChanged && !bolFilterMruChanged && !bolFilterOruLevelChanged && bolFilterOruChanged) {
+            if (objPageStateNew.view === 'detail') {
+                self.setstateobject(objPageStateNew);
+                window.objMap.detailspanel();
+            } else {
+                // This assumes that we are hitting 'back' from a details panel
+                window.objRegionInfo.hide();
 
-        //set the header
-        objHeader.setregionname(objMap.state.mapname);
-      }
-    } else {
-      //load the svg map, the map data and open the details panel afterwards
-      self.setstateobject(objPageStateNew);
-      //reload all the data
-      if (bolShowDetailsPanel) {
-        app.start(true);
-      } else {
-        app.start();
-      }
-    }
+                // Set the header
+                window.objHeader.setregionname(window.objMap.state.mapname);
+            }
+        } else {
+            // Load the svg map, the map data and open the details panel afterwards
+            self.setstateobject(objPageStateNew);
 
-  },
-  copyfilterattributes: function (objPageStateNew) {
-    if (self.state.filter.orulevel != objPageStateNew.filter.orulevel) {
-      self.state.filter.orulevel = objPageStateNew.filter.orulevel;
-    }
-    if (self.state.filter.oru != objPageStateNew.filter.oru) {
-      self.state.filter.oru = objPageStateNew.filter.oru;
-    }
-    if (self.state.filter.sector != objPageStateNew.filter.sector) {
-      self.state.filter.sector = objPageStateNew.filter.sector;
-    }
-    if (self.state.filter.mru != objPageStateNew.filter.mru) {
-      self.state.filter.mru = objPageStateNew.filter.mru;
-    }
-  },
-  init: function () {
-    var self = this;
+            // Reload all the data
+            if (bolShowDetailsPanel) {
+                app.start(true);
+            } else {
+                app.start();
+            }
+        }
 
-  }
+    },
+    copyfilterattributes: function (objPageStateNew) {
+        if (self.state.filter.orulevel !== objPageStateNew.filter.orulevel) {
+            self.state.filter.orulevel = objPageStateNew.filter.orulevel;
+        }
+        if (self.state.filter.oru !== objPageStateNew.filter.oru) {
+            self.state.filter.oru = objPageStateNew.filter.oru;
+        }
+        if (self.state.filter.sector !== objPageStateNew.filter.sector) {
+            self.state.filter.sector = objPageStateNew.filter.sector;
+        }
+        if (self.state.filter.mru !== objPageStateNew.filter.mru) {
+            self.state.filter.mru = objPageStateNew.filter.mru;
+        }
+    },
+    init: function () {
+        var self = this;
+
+    }
 }
 
 var objAnalytics = {
-  data: {
-    views: [], //contains an array of objects to send to google analytics { page: '/start', title: 'My New Page Title' }
-    events: [] //contains an array of objects with the events to send to google analytics {category: 'button' /*required - object that was interacted with*/, action: 'click' /*required - type of interaction*/, label: 'some description' /*optional - used for categorization of events*/, value: 1 /*optional - counter*/ }
-  },
-  //this self-calling function will check the data object on fixed intervals and populate Google Analytics with the data accordingly
-  asyncanalytics: function () {
-    var self = this;
+    data: {
+        views: [], // Contains an array of objects to send to google analytics { page: '/start', title: 'My New Page Title' }
+        events: [] // Contains an array of objects with the events to send to google analytics {category: 'button' /*required - object that was interacted with*/, action: 'click' /*required - type of interaction*/, label: 'some description' /*optional - used for categorization of events*/, value: 1 /*optional - counter*/ }
+    },
+    // This self-calling function will check the data object on fixed intervals and populate Google Analytics with the data accordingly
+    asyncanalytics: function () {
+        var self = this;
 
-    for (var a = 0; a < self.data.views.length; a++) {
-      //send the view to google analytics
-      ga('send', 'pageview', self.data.views[a]);
+        // Send the views to Google Analytics        
+        for (var a = 0; a < self.data.views.length; a++) {
+            // Send the view to google analytics
+            window.ga('send', 'pageview', self.data.views[a]);
 
-      if (a == (self.data.views.length - 1)) {
-        //last element -> clear out the array
-        self.data.views.length = 0;
-      }
-    }
-
-    for (var a = 0; a < self.data.events.length; a++) {
-      //debugger;
-      if (self.data.events[a].hasOwnProperty("category") && self.data.events[a].hasOwnProperty("action")) {
-        switch (Object.keys(self.data.events[a]).length) {
-          case 2:
-            ga('send', 'event', self.data.events[a].category, self.data.events[a].action);
-            break;
-          case 3:
-            if (self.data.events[a].hasOwnProperty("label")) {
-              ga('send', 'event', self.data.events[a].category, self.data.events[a].action, self.data.events[a].label);
+            if (a === (self.data.views.length - 1)) {
+                // Last element -> clear out the array
+                self.data.views.length = 0;
             }
-            break;
-          case 4:
-            if (self.data.events[a].hasOwnProperty("label") && self.data.events[a].hasOwnProperty("value")) {
-              ga('send', 'event', self.data.events[a].category, self.data.events[a].action, self.data.events[a].label, self.data.events[a].value);
-            }
-            break;
-          default:
-            //incorrect number of properties
-            break;
         }
-      }
 
-      if (a == (self.data.events.length - 1)) {
-        //last element -> clear out the array
-        self.data.events.length = 0;
-      }
+        // Send the events to Google Analytics        
+        for (var a = 0; a < self.data.events.length; a++) {
+            // debugger;
+            if (self.data.events[a].hasOwnProperty("category") && self.data.events[a].hasOwnProperty("action")) {
+                switch (Object.keys(self.data.events[a]).length) {
+                    case 2:
+                        window.ga('send', 'event', self.data.events[a].category, self.data.events[a].action);
+                        break;
+                    case 3:
+                        if (self.data.events[a].hasOwnProperty("label")) {
+                            window.ga('send', 'event', self.data.events[a].category, self.data.events[a].action, self.data.events[a].label);
+                        }
+                        break;
+                    case 4:
+                        if (self.data.events[a].hasOwnProperty("label") && self.data.events[a].hasOwnProperty("value")) {
+                            window.ga('send', 'event', self.data.events[a].category, self.data.events[a].action, self.data.events[a].label, self.data.events[a].value);
+                        }
+                        break;
+                    default:
+                        // Incorrect number of properties
+                        break;
+                }
+            }
+
+            if (a === (self.data.events.length - 1)) {
+                // Last element -> clear out the array
+                self.data.events.length = 0;
+            }
+        }
+
+        // Calls this function again
+        var intTimerId = window.setTimeout(function () {
+            objAnalytics.asyncanalytics();
+        }, 500);
+
+    },
+
+    init: function () {
+        var self = this;
+
+        // Inject analytics.js
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', ((location.href.indexOf('http') > -1) ? '//www.google-analytics.com/analytics.js' : 'js/lib/analytics.js'), 'ga');
+
+        // Create the tracker
+        var options;
+        if (location.href.indexOf('http') > -1) {
+            options = 'auto';
+        } else {
+            // We are running inside the app
+            options = {
+                'storage': 'none',
+                'clientId': window.objStore.getlocalstorageitem('statguid')
+            };
+        }
+        window.ga('create', 'UA-52778332-1', options);
+
+        // Assure that we will always use https to communicate with google
+        window.ga('set', 'forceSSL', true);
+
+        // Send an initial hit to the server
+        window.ga('send', 'pageview', {
+            page: '/start' + ((location.href.indexOf('http') > -1) ? '/website' : '/app')
+        });
+
+        // Start the async checker
+        self.asyncanalytics();
     }
-
-    var intTimerId = window.setTimeout(function () {
-      objAnalytics.asyncanalytics();
-    }, 500);
-
-  },
-
-  init: function () {
-    var self = this;
-
-    //inject analytics.js
-    (function (i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-        (i[r].q = i[r].q || []).push(arguments)
-      }, i[r].l = 1 * new Date(); a = s.createElement(o),
-				m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', ((location.href.indexOf('http') > -1) ? '//www.google-analytics.com/analytics.js' : 'js/lib/analytics.js'), 'ga');
-
-    //create the tracker
-    var options;
-    if (location.href.indexOf('http') > -1) {
-      options = 'auto';
-    } else {
-      //we are running inside the app
-      options = {
-        'storage': 'none',
-        'clientId': objStore.getlocalstorageitem('statguid')
-      };
-    }
-    ga('create', 'UA-52778332-1', options);
-
-    //assure that we will always use https to communicate with google
-    ga('set', 'forceSSL', true);
-
-    //send an initial hit to the server
-    ga('send', 'pageview', { page: '/start' + ((location.href.indexOf('http') > -1) ? '/website' : '/app') });
-
-    //start the async checker
-    self.asyncanalytics();
-
-  }
 
 }
 
 window.onresize = function () {
-  //update the width and height variables
-  app.getdimensions();
+    // Update the width and height variables
+    app.getdimensions();
 
-  //rework the dimensions of the map based on the new dimensions of the window
-  objMap.resizeworldmap();
+    // Rework the dimensions of the map based on the new dimensions of the window
+    window.objMap.resizeworldmap();
 
-  //center the worldmap
-  objMap.centerworldmap(objMap.el.rootanimate);
+    // Center the worldmap
+    window.objMap.centerworldmap(window.objMap.el.rootanimate);
 
-  // On the public version of the application, stretch the worldmap to the maximum size of the window
-  if (isPublicSite()) objMap.maximizeworldmap(objMap.el.rootanimate);
+    // On the public version of the application, stretch the worldmap to the maximum size of the window
+    if (window.isPublicSite()) window.objMap.maximizeworldmap(window.objMap.el.rootanimate);
 
-  objRegionInfo.hide();
+    window.objRegionInfo.hide();
 };
 
 window.onhashchange = function () {
-  //parse the received hash into the objPageState.state object
+    // Parse the received hash into the objPageState.state object
 
-  var objPageStateNew = objPageState.hash2object(location.hash);
-  //debugger;
-  //console.log(objPageStateNew);
-  if (objPageStateNew.hasOwnProperty("error")) {
-    //could not properly parse the hash into a state object - default to standard object
-    location.hash = objPageState.object2hash(app.defaultpagestate);
-  } else {
-    //go to the view requested
-    objPageState.handlechange(objPageStateNew);
-  }
+    var objPageStateNew = objPageState.hash2object(location.hash);
+    
+    // debugger;
+    // console.log(objPageStateNew);
+    if (objPageStateNew.hasOwnProperty("error")) {
+        // Could not properly parse the hash into a state object - default to standard object
+        location.hash = objPageState.object2hash(app.defaultpagestate);
+    } else {
+        // Go to the view requested
+        objPageState.handlechange(objPageStateNew);
+    }
 }
