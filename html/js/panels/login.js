@@ -96,10 +96,15 @@ var objLogin = {
 
                         // Check if we need to start an authentication procedure
                         if (window.isPublicSite()) {
+                            // For the public website just render a token
+                            objLogin.token = window.generateUniqueId().replace(/x/g, '');
+
+                            // Continue to retrieve the metadata    
                             self.continueretrievemetadata();
                         } else {
+                            // Retrieve a server session
                             self.checksession();
-                        } 
+                        }
                     }
                 }
 
