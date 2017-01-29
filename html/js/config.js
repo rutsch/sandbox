@@ -10,7 +10,7 @@ var objConfig = {
         devlighting: 'https://dev.lighting.livesimproved.philips.com/webapp/html',
         prodlighting: 'https://www.lighting.livesimproved.philips.com/webapp/html',
         johan: 'http://resultshub.com',
-        rutger: 'http://95.97.163.236/sandbox/html',
+        rutger: 'https://test.results.philips.com',
         dynamicresourceurl: 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
         authurl2: "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
         authurl3: "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx",
@@ -18,9 +18,9 @@ var objConfig = {
     },
     colors: {
         philips: { // Philips group
-            low: '#D2E9FF',
-            middle: '#0E6EB3',
-            high: '#002E6C'
+            low: '#5BBBB7',
+            middle: '#1E9D8B',
+            high: '#22505F'
         },
         PD0900: { // Healthsystems  (to be removed)
             low: '#B7D9E3',
@@ -115,81 +115,38 @@ var objConfig = {
         var self = this;
 
         // Base url's of the resources
-        if (location.href.indexOf('http') > -1) {
-            // Running on a website - grab the base url
-            if (location.href.indexOf('.html') > -1) {
-                self.urls.base = location.href.replace(/^(.*)\/.*?\.html.*$/, "$1");
-            } else {
-                self.urls.base = location.href.replace(/^(.*)\/(\?.*).$/, "$1");
-                self.urls.base = self.urls.base.replace(/^(.*)(\/)$/, "$1");
-            }
 
-            // Determine site
-            if (self.urls.dev.indexOf(location.hostname) > -1) {
-                self.sitetype = 'dev';
-            } else if (self.urls.prodhealthtech.indexOf(location.hostname) > -1) {
-                self.sitetype = 'prodhealthtech';
-            } else if (self.urls.prodlighting.indexOf(location.hostname) > -1) {
-                self.sitetype = 'prodlighting';
-            } else if (self.urls.devhealthtech.indexOf(location.hostname) > -1) {
-                self.sitetype = 'devhealthtech';
-            } else if (self.urls.devlighting.indexOf(location.hostname) > -1) {
-                self.sitetype = 'devlighting';
-            } else if (self.urls.troper.indexOf(location.hostname) > -1) {
-                self.sitetype = 'troper';
-            } else if (self.urls.johan.indexOf(location.hostname) > -1) {
-                self.sitetype = 'devpublic';
-            } else if (self.urls.rutger.indexOf(location.hostname) > -1) {
-                self.sitetype = 'rutger';
-            } else if (self.urls.devpublic.indexOf(location.hostname) > -1) {
-                self.sitetype = 'devpublic';
-            } else if (self.urls.prodpublic.indexOf(location.hostname) > -1) {
-                self.sitetype = 'prodpublic';
-            }
-            console.log('sitetype: %s', self.sitetype);
-
+        // Running on a website - grab the base url
+        if (location.href.indexOf('.html') > -1) {
+            self.urls.base = location.href.replace(/^(.*)\/.*?\.html.*$/, "$1");
         } else {
-            // Running inside the app or running from the filesystem
-            // Baseurl can be overwritten using the querystring
-            if (location.search.indexOf('sitetype') > -1) {
-
-                if (location.search.indexOf('sitetype=johan') > -1) {
-                    // johan
-                    self.urls.base = self.urls.johan;
-                    self.sitetype = 'johan';
-                } else if (location.search.indexOf('sitetype=rutger') > -1) {
-                    // rutger
-                    self.urls.base = self.urls.rutger;
-                    self.sitetype = 'rutger';
-                } else if (location.search.indexOf('sitetype=dev') > -1) {
-                    // development
-                    self.urls.base = self.urls.dev;
-                    self.sitetype = 'dev';
-                } else if (location.search.indexOf('sitetype=troper') > -1) {
-                    // troperlaunna
-                    self.urls.base = self.urls.troper;
-                    self.sitetype = 'troper';
-                }
-            } else {
-                if (location.href.indexOf('johan') > -1) {
-                    //johan
-                    self.urls.base = self.urls.johan;
-                    self.sitetype = 'johan';
-                } else if (location.href.indexOf('rutger') > -1) {
-                    //rutger
-                    self.urls.base = self.urls.rutger;
-                    self.sitetype = 'rutger';
-                } else if (location.href.indexOf('dev') > -1) {
-                    //development
-                    self.urls.base = self.urls.dev;
-                    self.sitetype = 'dev';
-                } else if (location.href.indexOf('troperlaunna') > -1) {
-                    //troperlaunna
-                    self.urls.base = self.urls.troper;
-                    self.sitetype = 'troper';
-                }
-            }
+            self.urls.base = location.href.replace(/^(.*)\/(\?.*).$/, "$1");
+            self.urls.base = self.urls.base.replace(/^(.*)(\/)$/, "$1");
         }
+
+        // Determine site
+        if (self.urls.dev.indexOf(location.hostname) > -1) {
+            self.sitetype = 'dev';
+        } else if (self.urls.prodhealthtech.indexOf(location.hostname) > -1) {
+            self.sitetype = 'prodhealthtech';
+        } else if (self.urls.prodlighting.indexOf(location.hostname) > -1) {
+            self.sitetype = 'prodlighting';
+        } else if (self.urls.devhealthtech.indexOf(location.hostname) > -1) {
+            self.sitetype = 'devhealthtech';
+        } else if (self.urls.devlighting.indexOf(location.hostname) > -1) {
+            self.sitetype = 'devlighting';
+        } else if (self.urls.troper.indexOf(location.hostname) > -1) {
+            self.sitetype = 'troper';
+        } else if (self.urls.johan.indexOf(location.hostname) > -1) {
+            self.sitetype = 'devpublic';
+        } else if (self.urls.rutger.indexOf(location.hostname) > -1) {
+            self.sitetype = 'devpublic';
+        } else if (self.urls.devpublic.indexOf(location.hostname) > -1) {
+            self.sitetype = 'devpublic';
+        } else if (self.urls.prodpublic.indexOf(location.hostname) > -1) {
+            self.sitetype = 'prodpublic';
+        }
+        console.log('sitetype: %s', self.sitetype);
 
         /*
         Calculate the language
@@ -204,13 +161,13 @@ var objConfig = {
         */
         var pattrn = /^((http|https):\/\/.*?)(\/.*)$/;
 
-        // Helper function that reworks the default remote URL's so that they use the domain name as provided by the baseRemoteUrl argument        
+        // Helper function that reworks the default remote URL's so that they use the domain name as provided by the baseRemoteUrl argument
         function calculateUrls(baseRemoteUrl) {
             self.urls.dynamicresourceurl = self.urls.dynamicresourceurl.replace(pattrn, baseRemoteUrl + "$3"); //'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
             self.urls.authurl2 = self.urls.authurl2.replace(pattrn, baseRemoteUrl + "$3"); // "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
             self.urls.authurl3 = self.urls.authurl3.replace(pattrn, baseRemoteUrl + "$3"); //
             self.urls.urlshiblogin = self.urls.urlshiblogin.replace(pattrn, baseRemoteUrl + "$3");
-           
+
             // console.log(JSON.stringify(self.urls));
         }
 
