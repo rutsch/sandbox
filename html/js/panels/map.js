@@ -496,7 +496,7 @@ var objMap = {
 
         for (var i=0; i<lis.length; i++) {
             lis[i].addEventListener('click', function() {
-                countryClicked(this.getAttribute('data-target'));
+                countryClicked(this.getAttribute('data-target'), true);
             }, false);
         }
         console.log(list);

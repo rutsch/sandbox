@@ -44,20 +44,28 @@ var objRegionInfo = {
             objFilter.hide();
             objOverlay.show();
         }
-
-        // slide down top_panel
-        if (app.state.width > 768) {
-            TweenLite.to(self.el.regionpanel, 0.3, {
-                bottom: '0%',
-				opacity: 1,
-                onComplete: self.showcomplete(self.el.regionpanel)
-            });
+        if (objPageState.mobile === true) {
+            self.removeMobileRegionInfos();
+            // Copy region info html to correct LI
+            var el = Sizzle('[data-target='+objPageState.state.filter.oru+']')[0];
+            el.innerHTML = el.innerHTML + getEl(objDataFilter.state.filter.datasource).outerHTML;
+            el.getElementsByClassName('region_info_wrapper')[0].removeAttribute('style');
         } else {
-            TweenLite.to(self.el.regionpanel, 0.3, {
-                bottom: '0%',
-				opacity: 1,
-                onComplete: self.showcomplete(self.el.regionpanel)
-            });
+
+            // slide down top_panel
+            if (app.state.width > 768) {
+                TweenLite.to(self.el.regionpanel, 0.3, {
+                    bottom: '0%',
+                    opacity: 1,
+                    onComplete: self.showcomplete(self.el.regionpanel)
+                });
+            } else {
+                TweenLite.to(self.el.regionpanel, 0.3, {
+                    bottom: '0%',
+                    opacity: 1,
+                    onComplete: self.showcomplete(self.el.regionpanel)
+                });
+            }
         }
 
         //disabled for now
@@ -106,6 +114,11 @@ var objRegionInfo = {
                 });
             }
         }
+
+        if (objPageState.mobile) {
+            self.removeMobileRegionInfos();
+        }
+
         objHeader.hidefavouritebutton();
 
     },
@@ -132,6 +145,12 @@ var objRegionInfo = {
 		});
 	}
     ,
+    removeMobileRegionInfos: function () {
+        var el = Sizzle('[data-target] > div');
+        for(var i = 0; i <  el.length; i++) {
+            el[i].parentNode.removeChild(el[i]);
+        }
+    },
     showsimulation: function(self) {
         var self = this;
 

@@ -2,18 +2,26 @@
 	> div > ul {
 		display: flex;
 		justify-content: space-between;
+
+		flex-direction: column;
 		list-style-type: none;
 		padding-left: 0;
+		@media #{$medium-up} {
+			flex-direction: row;
+		}
 		> li {
 			margin-left: 0;
-			padding-left: 0;
-			padding-bottom: 5px;
+			padding: 10px 0;
 			width: 100%;
-			text-align: center;
+			text-align: left;
 			border-bottom: 1px solid #22505F;
 			cursor: pointer;
 			position: relative;
-
+			@media #{$medium-up} {
+				text-align: center;
+				padding-left: 0;
+				padding-bottom: 5px;
+			}
 			&.active-tab {
 				color: #fff;
 				font-weight: 700;
@@ -26,7 +34,7 @@
 				width: 25px;
 				height: 25px;
 				background: transparent;
-				
+
 				&:hover {
 					background: #48979A;
 					ul {

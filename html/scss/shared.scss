@@ -29,33 +29,47 @@ body {
 
 #app_panel {
 	#app_wrapper {
+        padding: 0 10px;
 		.map-tab_panels {
-			position: absolute;
 			display: block;
 			top: 0%;
-			height: 10%;
 			width: 100%;
+            @media #{$medium-up} {
+                height: 10%;
+                position: absolute;
+            }
 		}
 		#oru_filter_container {
-			position: absolute;
 			display: block;
 			top: 10%;
-			height: 5%;
 			width: 100%;
+            @media #{$medium-up} {
+                position: absolute;
+                height: 5%;
+            }
 
 			select {
-				position: absolute;
-				bottom: 0;
 				padding: .5em 1em;
 				width: 150px;
+                @media #{$medium-up} {
+                    position: absolute;
+                    bottom: 0;
+                }
 			}
 		}
 		#map {
-			position: absolute;
-			display: block;
 			top: 18%;
-			height: calc(100% - 18% - 250px);
-			width: 100%;
+            height: calc(100% - 18% - 250px);
+            width: 100%;
+            position: absolute;
+            opacity: 0;
+			// width: 1px;
+            // height: 1px;
+            // text-indent: -9999px;
+            @media #{$medium-up} {
+                height: calc(100% - 18% - 250px);
+                width: 100%;
+            }
 			svg * {
 				fill: #7CC9C5;
 				transition: fill .5s ease;
@@ -66,13 +80,53 @@ body {
 			}
 		}
 
+        #regions {
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 50px 0;
+                li {
+                    font-size: 21px;
+                    padding: 10px 0;
+                    position: relative;
+                    &:after {
+            			border-style: solid;
+            		    border-width: .10em .10em 0 0;
+            		    content: "";
+            		    display: inline-block;
+            		    height: .50em;
+                        margin-left: 25px;
+                        right: 10px;
+            		    position: absolute;
+            		    top: 15px;
+            		    -webkit-transform: rotate(135deg);
+            		    -ms-transform: rotate(135deg);
+            		    transform: rotate(135deg);
+            		    vertical-align: top;
+            		    width: .50em;
+
+            		}
+                    .region_info_wrapper {
+                        display: block!important;
+                        opacity: 1;
+                        position: relative;
+                    }
+                }
+            }
+            @media #{$medium-up} {
+                display: none;
+            }
+        }
+
 		#bottom_panel {
-			position: absolute;
 			display: block;
 			bottom: 0;
-			height: 250px;
-			width: 100%;
-            top: calc(100% - 200px);
+            width: 100%;
+            @media #{$medium-up} {
+    			height: 250px;
+                top: calc(100% - 200px);
+                position: absolute;
+            }
 
 		}
 

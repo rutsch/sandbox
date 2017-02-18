@@ -133,9 +133,10 @@ function svgSetTransform(elSvg, objSvgProperties) {
 
     if (bolUseStringMethod) {
         /* String method */
-
         // var strTransformValue='translate('+objSvgProperties['translatex']+', '+objSvgProperties['translatey']+') scale('+objSvgProperties['scale']+')';
+        if(objSvgProperties.scale === 'Infinity') objSvgProperties.scale = 1;
         var strTransformValue = 'matrix(' + objSvgProperties.scale + ',0,0,' + objSvgProperties.scale + ',' + objSvgProperties.translatex + ',' + objSvgProperties.translatey + ')';
+
         elSvg.setAttributeNS(null, 'transform', strTransformValue);
     } else {
         /* Native method */
@@ -509,8 +510,14 @@ function serverSideRequest(objArguments) {
     //objXmlHttpLocal = null;
 }
 
-function countryClicked(idCountry) {
+function countryClicked(idCountry, mobile) {
     var elRegion = getEl(idCountry);
+
+    if(mobile) {
+        objPageState.mobile  = true;
+    } else {
+        objPageState.mobile  = false;
+    }
 
     if (idCountry !== "" && elRegion.style.fill !== '#999999' && elRegion.style.fill !== '#999' && elRegion.style.fill !== 'rgb(153, 153, 153)' && elRegion.style.fill !== 'rgb(153,153,153)') {
         //update the hash and initiate the new view based on that
