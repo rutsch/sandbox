@@ -99,7 +99,7 @@ var objLogin = {
                             // For the public website just render a token
                             objLogin.token = window.generateUniqueId().replace(/x/g, '');
 
-                            // Continue to retrieve the metadata    
+                            // Continue to retrieve the metadata
                             self.continueretrievemetadata();
                         } else {
                             // Retrieve a server session
@@ -149,6 +149,7 @@ var objLogin = {
 
         // Load the metadata
         window.app.retrievemetadata();
+
     },
 
     checksnapshotconfigforupdates: function (response) {

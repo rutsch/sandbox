@@ -112,7 +112,11 @@ var objHeader = {
 		if (typeof name != 'undefined') {
 		  if (isPublicSite()) {
 		    // Grab the selected region from the header and dump it
-		    objRegionInfo.el.regioninfotitle.innerHTML = objMruFilter.getmrufilterbreadcrumb() + ' &bull; ' + name;
+		    var elements = document.getElementsByClassName('region_info_title');
+			for (var i=0;i<elements.length;i++) {
+				elements[i].innerHTML = name;
+			}
+		    //objRegionInfo.el.regioninfotitle.innerHTML = name;
 		  } else {
 		    TweenLite.to(self.el.regionname, 0.3, {
 		      opacity: 0,
@@ -159,7 +163,7 @@ var objHeader = {
 		  }
 
 
-		  
+
 		}
 
 	},

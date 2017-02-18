@@ -77,7 +77,7 @@ var objMap = {
         self.state.mapname = window.objOruFilter.convertoruleveltomarket(window.objPageState.state.filter.orulevel);
 
         // Attempt to retrieve the svg data from localstorage
-        var svgdata = window.objStore.getlocalstorageitem('map_' + self.state.mapname + '_v3');
+        var svgdata = window.objStore.getlocalstorageitem('map_' + self.state.mapname + '_v5');
 
         // Test if real SVG data was returned from the local storage
         var performAjax = true;
@@ -86,7 +86,7 @@ var objMap = {
         }
 
         if (!performAjax) {
-            return svgdata;
+            return svgdata.replace(/fill:#00ffff/g, '');
         } else {
             // Load svg data via http
             var arrFormData = [];
@@ -95,6 +95,7 @@ var objMap = {
             arrFormData['method'] = 'getsvgworldmap';
             arrFormData['fulldomain'] = location.protocol + "//" + location.hostname;
             arrFormData['token'] = window.objLogin.token;
+            arrFormData['v'] = Math.random();
 
             svgdata = window.serverSideRequest({
                 url: window.objConfig.urls.authurl2,
@@ -103,59 +104,111 @@ var objMap = {
                 debug: false
             });
 
+            svgdata = svgdata.replace(/fill:#00ffff/g, '');
+
             if (typeof svgdata === 'string') {
-                window.objStore.setlocalstorageitem('map_' + self.state.mapname + '_v3', svgdata);
+                window.objStore.setlocalstorageitem('map_' + self.state.mapname + '_v5', svgdata);
                 return svgdata;
             } else {
                 return "";
             }
 
         }
+
+
     },
 
     // Retrieves the lives improved data
     getworldmapdata: function () {
         var self = this;
 
-        var objData = {
-            fulldomain: location.protocol + "//" + location.hostname,
-            method: 'getworldmapdata',
-            type: 'json',
-            token: window.objLogin.token,
-            oru: window.objPageState.state.filter.orulevel,
-            mru: window.objPageState.state.filter.mru,
-            snapshotid: window.objConfig.currentsnapshotid
-        }
-        //showLoadingPanel();
-        window.psv('GET', window.objConfig.urls.dynamicresourceurl, objData, function getWorldmapDataHandler(err, data) {
-            //hideLoadingPanel();
-            if (err != null) {
-                console.log(err);
-                window.objError.show('There was an error retrieving the worldmap data. ' + ((typeof err === 'object') ? JSON.parse(err) : err), true);
-            } else {
-                // Check if authentication is required
-                if (data.hasOwnProperty('authenticated') && !data.authenticated) {
-                    window.handleShibbolethLoginRequired();
-                } else {
-                    if (data.hasOwnProperty('error')) {
-                        window.objError.show('There was an error retrieving the worldmap data. ' + data.error.message, true);
+        var objData;
+
+        // debugger;
+        switch (window.objDataFilter.state.filter.datasource) {
+            case "lives_improved":
+            case "":
+                objData = {
+                    fulldomain: location.protocol + "//" + location.hostname,
+                    method: 'getworldmapdata',
+                    type: 'json',
+                    token: window.objLogin.token,
+                    oru: window.objPageState.state.filter.orulevel,
+                    mru: window.objPageState.state.filter.mru,
+                    snapshotid: window.objConfig.currentsnapshotid
+                }
+                //showLoadingPanel();
+                window.psv('GET', window.objConfig.urls.dynamicresourceurl, objData, function getWorldmapDataHandler(err, data) {
+                    //hideLoadingPanel();
+                    if (err != null) {
+                        console.log(err);
+                        window.objError.show('There was an error retrieving the worldmap data. ' + ((typeof err === 'object') ? JSON.parse(err) : err), true);
                     } else {
-                        self.postprocessworldmapdata(data);
+                        // Check if authentication is required
+                        if (data.hasOwnProperty('authenticated') && !data.authenticated) {
+                            window.handleShibbolethLoginRequired();
+                        } else {
+                            if (data.hasOwnProperty('error')) {
+                                window.objError.show('There was an error retrieving the worldmap data. ' + data.error.message, true);
+                            } else {
+                                self.postprocessworldmapdata(data);
+                            }
+                        }
                     }
+                });
+                break;
+            case 'sustainability':
+                self.postprocessworldmapdata(window.objData.sustainability);
+
+                break;
+            case 'global_presence':
+                self.postprocessworldmapdata(window.objData.global_presence);
+
+                break;
+
+
+        }
+
+    },
+    createDataTypeListForRegions: function(regions) {
+        var self = this,
+            listSustain = [],
+            listGlobal = [];
+        regions.forEach(function(region) {
+            listSustain = [];
+            listGlobal = [];
+            var regionId = 'philips_' + region.getAttribute('id');
+            // loop through object properties
+            // debugger;
+            for (var key in window.objData.sustainability.snapshotdata[regionId]) {
+                if (window.objData.sustainability.snapshotdata[regionId].hasOwnProperty(key)) {
+                    // do stuff
+                    listSustain.push(key);
                 }
             }
+            for (var key in window.objData.global_presence.snapshotdata[regionId]) {
+                if (window.objData.global_presence.snapshotdata[regionId].hasOwnProperty(key)) {
+                    // do stuff
+                    listGlobal.push(key);
+                }
+            }
+            // $.each(self.data[region], function(key, value) {
+            //     list.push(key);
+            // });
         });
+        return {
+            global_presence: listGlobal,
+            sustainability: listSustain
+        };
     },
-
     postprocessworldmapdata: function (data) {
         var self = this;
 
         objLoading.show();
-
         /*
         0) update the ui to set if we will use the simulator or not
         */
-        if (data.hasOwnProperty('usesimulator')) objSliders.togglesimulator(data.usesimulator);
+        // if (data.hasOwnProperty('usesimulator')) objSliders.togglesimulator(data.usesimulator);
 
         /*
 		1) store the data in this object as a property
@@ -169,25 +222,44 @@ var objMap = {
         //console.log(elSvgWrapper);
         var arrRegions = getFirstLevelChildElements(elSvgWrapper, 'path');
         if (arrRegions.length == 0) arrRegions = getFirstLevelChildElements(elSvgWrapper, 'g')
-        //console.log(arrRegions);
 
         /*
 		3) set the proper coloring
 		*/
-        //analyze the data we have received
-        var intLivesImprovedTotal = 0;
-        var intLivesImprovedPercentageMax = 0;
-        var intLivesImprovedPercentageMin = 100;
-        for (var key in self.data) {
-            if (self.data[key].l >= 0) {
-                intLivesImprovedTotal += self.data[key].l;
 
-                var livesImprovedPercentage = (self.data[key].l * 100 / self.data[key].p);
-                if (livesImprovedPercentage > intLivesImprovedPercentageMax) intLivesImprovedPercentageMax = livesImprovedPercentage;
-                if (livesImprovedPercentage < intLivesImprovedPercentageMin) intLivesImprovedPercentageMin = livesImprovedPercentage;
+        // If oru not world and datafilter subtype not all, calculate percentages
+
+        if (objOruFilter.state.selectedoru !== 1 && ((objDataFilter.state.filter.datasource === 'global_presence' || objDataFilter.state.filter.datasource === 'sustainability') && objDataFilter.state.filter.subtype !== 'all') || objDataFilter.state.filter.datasource === 'lives_improved') {
+            var property = 'l';
+            //analyze the data we have received
+            var intLivesImprovedPercentageMax = 0;
+            var intLivesImprovedPercentageMin = 100;
+            if (objDataFilter.state.filter.datasource === 'lives_improved') {
+                for (var key in self.data) {
+                    if (self.data[key].l >= 0) {
+
+                        var livesImprovedPercentage = (self.data[key].l * 100 / self.data[key].p);
+                        if (livesImprovedPercentage > intLivesImprovedPercentageMax) intLivesImprovedPercentageMax = livesImprovedPercentage;
+                        if (livesImprovedPercentage < intLivesImprovedPercentageMin) intLivesImprovedPercentageMin = livesImprovedPercentage;
+                    }
+                }
+            } else {
+                for (var key in self.data) {
+                    if (self.data[key][objDataFilter.state.filter.subtype] >= 0) {
+
+                        var livesImprovedPercentage = (self.data[key][objDataFilter.state.filter.subtype] * 100 / self.data['philips_world'][objDataFilter.state.filter.subtype]);
+                        if (livesImprovedPercentage > intLivesImprovedPercentageMax) intLivesImprovedPercentageMax = livesImprovedPercentage;
+                        if (livesImprovedPercentage < intLivesImprovedPercentageMin) intLivesImprovedPercentageMin = livesImprovedPercentage;
+                    }
+                }
+
             }
+
+            console.log(' - intLivesImprovedPercentageMax: '+intLivesImprovedPercentageMax+' - intLivesImprovedPercentageMin: '+intLivesImprovedPercentageMin);
+        } else {
+            intLivesImprovedPercentageMax = 100;
+            intLivesImprovedPercentageMin = 100;
         }
-        //console.log('- intLivesImprovedTotal: '+intLivesImprovedTotal+' - intLivesImprovedPercentageMax: '+intLivesImprovedPercentageMax+' - intLivesImprovedPercentageMin: '+intLivesImprovedPercentageMin);
 
 
         //settings for the coloring
@@ -207,17 +279,29 @@ var objMap = {
         //console.log('* ' + JSON.stringify(self.getcolorforpercentage(50, objConfig.colors[objPageState.state.filter.sector].low, objConfig.colors[objPageState.state.filter.sector].middle, objConfig.colors[objPageState.state.filter.sector].high)));
         //alert('stop');
 
+        var percentageMax = 0,
+            percentageMin = 100;
+
         for (var i = 0; i < arrRegions.length; i++) {
             var region = arrRegions[i],
-                regionId = region.id == 'UK' ? 'GB' : region.id,
-                key = objPageState.state.filter.mru + '_' + (objPageState.state.filter.orulevel != 4 ? regionId.toLowerCase() : regionId),
-                regionData = (self.data[key]) ? self.data[key] : false;
+            regionId = region.id == 'UK' ? 'GB' : region.id,
+            key = objPageState.state.filter.mru + '_' + (objPageState.state.filter.orulevel != 4 ? regionId.toLowerCase() : regionId),
+            regionData = (self.data[key]) ? self.data[key] : false;
 
             //console.log(key+' - '+regionData);
-            //debugger;
+            // debugger;
             if (regionData) {
-                //calculate percentage lives improved and store that in the worldmapdata object
-                var percentageLI = (regionData.l * 100) / regionData.p || 0;
+                var percentageLI;
+                if (objDataFilter.state.filter.datasource === 'lives_improved') {
+                    //calculate percentage lives improved and store that in the worldmapdata object
+                    percentageLI = (regionData.l * 100) / regionData.p || 0;
+                } else {
+                    if (objDataFilter.state.filter.subtype !== 'all') {
+                        percentageLI = (regionData[objDataFilter.state.filter.subtype] * 100) / self.data['philips_world'][objDataFilter.state.filter.subtype] || 0;
+                    } else {
+                        percentageLi = 100;
+                    }
+                }
 
                 self.data[key].percentageLI = percentageLI;
 
@@ -235,6 +319,12 @@ var objMap = {
                 // Correct for percentages above 100 and below 0
                 if (percentageForColor >= 100) percentageForColor = 100;
                 if (percentageForColor < 0) percentageForColor = 0;
+
+                if (percentageForColor > percentageMax) percentageMax = percentageForColor;
+                if (percentageForColor < percentageMin) percentageMin = percentageForColor;
+
+                self.intLivesImprovedPercentageMin = percentageMin;
+                self.intLivesImprovedPercentageMax = percentageMax;
                 //console.log('- regionId: ' + regionId + ', percentageLI: ' + percentageLI + ', percentageForColor: ' + percentageForColor);
                 var colorToSet = self.getcolorforpercentage(percentageForColor, objConfig.colors[objPageState.state.filter.sector].rgb.low, objConfig.colors[objPageState.state.filter.sector].rgb.middle, objConfig.colors[objPageState.state.filter.sector].rgb.high);
 
@@ -253,11 +343,13 @@ var objMap = {
                         //paths[ii].style.opacity=1;
                     }
                 }
-                //JT: end change							
+                //JT: end change
             } else {
                 region.style.fill = '#999';
             }
         }
+
+
 
         /*
 		4) perform post processing (set events and center map)
@@ -353,6 +445,9 @@ var objMap = {
 
         //1) retrieve the svg map
         var strSvg = self.retrieveworldmapsvg();
+
+
+
         //console.log(strSvg);
 
         if (strSvg != null) {
@@ -367,11 +462,89 @@ var objMap = {
                 self.el.elsvgholder.innerHTML = '';
                 self.el.elsvgholder.innerHTML = strSvg;
 
+                // Render the data filter panels for Global presence and sustainability based on the map that we have loaded
+                var elSvgWrapper = getEl('svgcontentwrapper');
+                //console.log(elSvgWrapper);
+                var arrRegions = getFirstLevelChildElements(elSvgWrapper, 'path');
+                if (arrRegions.length == 0) arrRegions = getFirstLevelChildElements(elSvgWrapper, 'g');
+                console.log(arrRegions);
+
+                // Set the datatypes for this data section
+                self.datatypes = self.createDataTypeListForRegions(arrRegions);
+                self.renderDataTypeFilters();
+                console.log(self.datatypes);
+
+                // window.objDataFilter.renderDataTypeList(self.datatypes);
+                // Render a country list
+                self.renderCountryList(arrRegions);
                 //get worldmap livesimproved data
                 self.getworldmapdata();
             });
         }
 
+    },
+    renderCountryList: function(regions) {
+        var list = '<ul class="c-region-list">';
+        regions.forEach(function(region) {
+            list += '<li class="mapselector" data-target="'+region.id+'">'+translateFragment(region.id)+'</li>';
+        });
+        list += '</ul>';
+        getEl('regions').innerHTML = list;
+
+        // Attach click events
+        var lis = document.getElementsByClassName('mapselector');
+
+        for (var i=0; i<lis.length; i++) {
+            lis[i].addEventListener('click', function() {
+                countryClicked(this.getAttribute('data-target'));
+            }, false);
+        }
+        console.log(list);
+    },
+    mapdatatypekeys: function (key) {
+        var obj = {
+            'value_co2': 'c_o_2',
+            'value_fte': 'number_of_employees',
+            'value_waste': 'waste',
+            'value_water': 'water',
+            'value_emissions': 'emissions',
+            'value_emissionshaz': 'emissionshaz',
+            'value_lwc': 'lwc_rate',
+            'value_wasterecycled': 'recycled',
+            'value_sales': 'number_sales',
+            'value_male': 'percentage_male',
+            'value_female': 'percentage_female',
+            'value_research': 'r_and_d_centers',
+            'value_plants': 'manufacturing_sites',
+            'value_assets': 'number_assets',
+            'value_employees': 'number_of_employees',
+        }
+        return obj[key];
+    },
+    renderDataTypeFilters: function () {
+        var self = this;
+        var htmlSustain = '<ul><li class="datafilter" data-subtype="all">All data</li>';
+        self.datatypes.sustainability.forEach(function(datatype) {
+            htmlSustain += '<li class="datatypefilter" data-subtype="' + datatype + '">' + objConfig.fragments[self.mapdatatypekeys(datatype)] + '</li>';
+        });
+        htmlSustain += '</ul>';
+        Sizzle('li[data-panel=sustainability] .datatype-filter')[0].innerHTML = htmlSustain;
+        console.log(htmlSustain);
+
+        var htmlGlobal = '<ul><li class="datafilter" data-subtype="all">All data</li>'
+        self.datatypes.global_presence.forEach(function(datatype) {
+            htmlGlobal += '<li class="datafilter" data-subtype="' + datatype + '">' + objConfig.fragments[self.mapdatatypekeys(datatype)] + '</li>';
+        });
+        htmlGlobal += '</ul>';
+        Sizzle('li[data-panel=global_presence] .datatype-filter')[0].innerHTML = htmlGlobal;
+
+
+        var subtypes = Sizzle('.datatype-filter li');
+        console.log(subtypes.length);
+        for (var i =0; i < subtypes.length; i++) {
+            subtypes[i].addEventListener('click', objDataFilter.subtypeChanged, false);
+        }
+        console.log(htmlGlobal);
     },
     retrievesvgelementobject: function (elSvg) {
         var self = this;
@@ -420,7 +593,7 @@ var objMap = {
     //moves the worldmap by mimicking a drag in the browser window
     moveworldmap: function (intDeltaX, intDeltaY) {
         var self = this;
-        //create a custom object that mimics the mousemove event 
+        //create a custom object that mimics the mousemove event
         if (objTouchVars.elanimate != null) {
             var objFakeEventObject = {
                 gesture: {
@@ -513,6 +686,57 @@ var objMap = {
         // store the state of the map in a new object
         self.state.rootanimateattributevalues = self.retrievesvgelementobject(self.el.rootanimate);
     },
+	hideSelectedCountries: function() {
+		Array.prototype.slice.call(document.getElementsByClassName('active')).forEach(function(el) {el.removeAttribute('class')});
+	},
+	zoomIn: function (){
+		var self = this;
+		var currentZoom = self.state.rootanimateattributevalues.scale;
+		if (currentZoom < 5) {
+			svgSetTransform(self.el.rootanimate, {
+	            scale: currentZoom + 1,
+				translatex: 0,
+	            translatey: 0,
+	            transformmatrix: {}
+	        });
+			self.state.rootanimateattributevalues.scale = currentZoom + 1;
+
+			var zoomFactor = 1,
+	            deltaX = 0,
+	            deltaY = 0;
+
+	        // Determine how to maximize the map
+	        if ((app.state.width / app.state.height) >= (self.state.rootanimateattributevalues.size.width / self.state.rootanimateattributevalues.size.height)) {
+	            // Stretch to height and horizontally center
+	            zoomFactor = app.state.height / self.state.rootanimateattributevalues.size.height;
+	            // how much should we move the map after it has been zoomed correctly
+	            deltaX = (app.state.width - (self.state.rootanimateattributevalues.size.width * self.state.rootanimateattributevalues.scale)) / 2;
+	        } else {
+	            //Stretch to width and vertically center
+	            zoomFactor = app.state.width / self.state.rootanimateattributevalues.size.width;
+	            // how much should we move the map after it has been zoomed correctly
+	            deltaY = (app.state.height - (self.state.rootanimateattributevalues.size.height * self.state.rootanimateattributevalues.scale)) / 2;
+	        }
+			self.moveworldmap(deltaX, deltaY);
+			// self.centerworldmap(self.el.rootanimate);
+		}
+
+	},
+	zoomOut: function() {
+		var self = this;
+		var currentZoom = self.state.rootanimateattributevalues.scale;
+		if (currentZoom > 1) {
+			svgSetTransform(self.el.rootanimate, {
+	            scale: currentZoom - 1,
+				translatex: 0,
+	            translatey: 0,
+	            transformmatrix: {}
+	        });
+			self.state.rootanimateattributevalues.scale = currentZoom - 1;
+			// self.centerworldmap(self.el.rootanimate);
+			self.moveworldmap(self.state.rootanimateattributevalues.translatex, self.state.rootanimateattributevalues.translatey);
+		}
+	},
     detailspanel: function () {
         var self = this;
 
@@ -531,12 +755,12 @@ var objMap = {
 
 
         //initiates the simulator
-        objSliders.start();
+        // objSliders.start();
 
-        objRegionInfo.hidehistory();
+        //objRegionInfo.hidehistory();
 
         // add the current ORU sector as a class to the wrapper div
-        app.el.outerwrapper.className = objConfig.sitetype + ' ' + objPageState.state.filter.sector + ((objSliders.vars.setupsimulator) ? ' simulator' : ' nosimulator');
+        app.el.outerwrapper.className = objConfig.sitetype + ' ' + objPageState.state.filter.sector ;
 
         var sec = {},
             back = {},
@@ -546,12 +770,13 @@ var objMap = {
         var elRegion = getEl(objPageState.state.filter.oru);
         if (elRegion) {
             var opacity = elRegion.style.opacity;
-            TweenLite.to(elRegion, 0.5, {
+            TweenLite.to(elRegion, 0, {
                 opacity: 0.7,
                 onComplete: function () {
                     //alert('in')
                     //debugger;
-
+					self.hideSelectedCountries();
+					elRegion.setAttribute('class', 'active');
                     //JT: I introduced a very crappy way to check for a tablet - can this be improved and become app.state.tablet ?
                     if (app.state.width > 768) {
                         self.updateui(regionData, objPageState.state.filter.oru, elRegion);
@@ -590,11 +815,36 @@ var objMap = {
         if (regionData.percentageLI < 10 && regionData.percentageLI > 0.1) regionData.percentageLI = Math.round(regionData.percentageLI * 10) / 10;
         if (regionData.percentageLI < 0.1) regionData.percentageLI = '< 0.1';
 
-        objRegionInfo.el.percentagelivesimproved.textContent = regionData.percentageLI + '%';
+		// Set the calculated lives improved percentage
+        objRegionInfo.el.data.percentagelivesimproved.textContent = regionData.percentageLI + '%';
+
+		// Set the correct images matching the percentage
+		var elLivesImprovedIcons = getEl('lives_improved_icons');
+		// Clear images that where set before
+		elLivesImprovedIcons.innerHTML = '';
+
+		function doScaledTimeout(i, elem) {
+			setTimeout(function() {
+				elLivesImprovedIcons.appendChild(elem);
+			}, i * 0);
+		}
+		for (var i = 0; i < 100; i++) {
+			var elem = document.createElement("img");
+			if (i < regionData.percentageLI) {
+				// Add selected icon
+				elem.setAttribute("src", "img/person-selected.png");
+			} else {
+				// Add unselected icon
+				elem.setAttribute("src", "img/person.png");
+			}
+			// We can add a timeout effect for the loading of the images here by switching the comments on both lines below
+			// doScaledTimeout(i, elem);
+			elLivesImprovedIcons.appendChild(elem);
+		}
 
         //set the labels in the header
         objHeader.setregionname(objOruFilter.getregionnamebyid((idCountry.length < 4 ? idCountry : idCountry.toLowerCase())));
-        objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
+        // objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
 
         //if(getEl('btn_back').className.indexOf('hide')> -1){
         //	toggleClass(getEl('btn_back'), 'hide');
@@ -604,27 +854,150 @@ var objMap = {
         objRegionInfo.show();
 
 
-        TweenLite.to(elRegion, 0.5, {
+        TweenLite.to(elRegion, 0.3, {
             opacity: 1,
             onComplete: function () {
-                animateArc({
-                    start: 0,
-                    end: (regionData.percentageLI * 360) / 100
-                }, 1);
+
             }
         });
 
     },
     //updates the fields in the ui with new data
     setroundeddatainui: function (objData) {
+        //debugger;
         var self = this;
         var objExtendedData = self.roundlivesimproveddataobject(objData);
+
+        var elLivesImproved = getEl('region_info_wrapper lives_improved');
+        var elGlobalPresence = getEl('region_info_wrapper global_presence');
+        var elSustainability = getEl('region_info_wrapper sustainability');
         //console.log(objExtendedData)
 
-        objRegionInfo.el.nrlivesimproved.textContent = objExtendedData.displayl;
-        objRegionInfo.el.labellivesimproved.textContent = objExtendedData.labell;
-        objRegionInfo.el.gdp.textContent = '$' + objExtendedData.displayg + objExtendedData.labelg;
-        objRegionInfo.el.population.textContent = objExtendedData.displayp + objExtendedData.labelp;
+        if (objDataFilter.state.filter.datasource === 'lives_improved') {
+            // Lives improved
+            objRegionInfo.el.data.nrlivesimproved.textContent = objExtendedData.displayl + ' ' + objConfig.fragments['million'];
+            objRegionInfo.el.data.labellivesimproved.textContent = objConfig.fragments['lives_improved'];
+            objRegionInfo.el.data.gdp.textContent = '$' + objExtendedData.displayg + objExtendedData.labelg;
+            objRegionInfo.el.data.population.textContent = objExtendedData.displayp + objExtendedData.labelp;
+
+            TweenLite.to(elGlobalPresence, 0.3, {
+                opacity: 0,
+                'z-index': -1,
+                onComplete: function () {
+
+                }
+            });
+            TweenLite.to(elSustainability, 0.3, {
+                opacity: 0,
+                'z-index': -1,
+                onComplete: function () {
+
+                }
+            });
+            TweenLite.to(elLivesImproved, 0.3, {
+                opacity: 1,
+                'z-index': 1,
+                onComplete: function () {
+
+                }
+            });
+        }
+
+        else if (objDataFilter.state.filter.datasource === 'global_presence') {
+            // Global presence
+            objRegionInfo.el.data.assets.textContent = objExtendedData.value_assets;
+            objRegionInfo.el.data.employees.textContent = objExtendedData.value_employees;
+            objRegionInfo.el.data.female.textContent = objExtendedData.value_female + '%';
+            objRegionInfo.el.data.male.textContent = objExtendedData.value_male + '%';
+            objRegionInfo.el.data.plants.textContent = objExtendedData.value_plants;
+            objRegionInfo.el.data.research.textContent = objExtendedData.value_research;
+            objRegionInfo.el.data.sales.textContent = objExtendedData.value_sales;
+
+            if (objDataFilter.state.filter.subtype !== 'all') {
+                self.hideOtherElements(objDataFilter.state.filter.subtype);
+            } else {
+                self.showAllElements();
+            }
+
+            TweenLite.to(elGlobalPresence, 0.3, {
+                opacity: 1,
+                'z-index': 1,
+                onComplete: function () {
+
+                }
+            });
+            TweenLite.to(elSustainability, 0.3, {
+                opacity: 0,
+                'z-index': -1,
+                onComplete: function () {
+
+                }
+            });
+            TweenLite.to(elLivesImproved, 0.3, {
+                opacity: 0,
+                'z-index': -1,
+                onComplete: function () {
+
+                }
+            });
+        }
+        else if (objDataFilter.state.filter.datasource === 'sustainability') {
+            // Sustainability
+            objRegionInfo.el.data.co2.textContent = objExtendedData.value_co2;
+            objRegionInfo.el.data.emission.textContent = objExtendedData.value_emissions;
+            objRegionInfo.el.data.emissionhaz.textContent = objExtendedData.value_emissionshaz;
+            objRegionInfo.el.data.fte.textContent = objExtendedData.value_fte;
+            objRegionInfo.el.data.lwc.textContent = objExtendedData.value_lwc;
+            objRegionInfo.el.data.waste.textContent = objExtendedData.value_waste;
+            objRegionInfo.el.data.wasterecycled.textContent = objExtendedData.value_wasterecycled;
+            objRegionInfo.el.data.water.textContent = objExtendedData.value_water;
+
+            if (objDataFilter.state.filter.subtype !== 'all') {
+                self.hideOtherElements(objDataFilter.state.filter.subtype);
+            } else {
+                self.showAllElements();
+            }
+
+            TweenLite.to(elGlobalPresence, 0.3, {
+                opacity: 0,
+                'z-index': -1,
+                onComplete: function () {
+
+                }
+            });
+            TweenLite.to(elSustainability, 0.3, {
+                opacity: 1,
+                'z-index': 1,
+                onComplete: function () {
+
+                }
+            });
+            TweenLite.to(elLivesImproved, 0.3, {
+                opacity: 0,
+                'z-index': -1,
+                onComplete: function () {
+
+                }
+            });
+        }
+
+
+    },
+    hideOtherElements: function (subtype) {
+        for (var property in objRegionInfo.el.data) {
+            if (objRegionInfo.el.data.hasOwnProperty(property)) {
+                if(objRegionInfo.el.data[property].className !== subtype.replace('value_', 'nr_')) {
+                    objRegionInfo.el.data[property].parentNode.style.display = 'none';
+                }
+            }
+        }
+    },
+    showAllElements: function () {
+        for (var property in objRegionInfo.el.data) {
+            if (objRegionInfo.el.data.hasOwnProperty(property)) {
+                objRegionInfo.el.data[property].parentNode.style.display = 'block';
+            }
+        }
     },
     //rounds the data befor sending it to the app
     roundlivesimproveddataobject: function (objData) {

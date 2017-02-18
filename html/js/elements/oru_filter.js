@@ -11,6 +11,7 @@ var objOruFilter = {
 	//fired when the filter panel is opened - sets the state of the filter to match the filter state of the application
 	setorufilterstate: function () {
 		var self = this;
+		console.log('bla');
 
 		self.state.selectedoru = objPageState.state.filter.orulevel;
 		var strButtonId = 'btn_country';
@@ -60,14 +61,19 @@ var objOruFilter = {
 	selectoru: function (el, strOru) {
 	  var self = this;
 
-	  //console.log('objOruFilter.selectoru()');
+		console.log(strOru);
 
 		self.el.wrapper = getEl('oru_filter_container');
 		//remove all selected classes
-		var arrAllLi = self.el.wrapper.getElementsByTagName('div');
-		for (var a = 0; a < arrAllLi.length; a++) {
-			arrAllLi[a].className = '';
-		}
+		// var arrAllLi = self.el.wrapper.getElementsByTagName('option');
+		// console.log(arrAllLi);
+		// //debugger;
+		// for (var a = 0; a < arrAllLi.length; a++) {
+		// 	console.log(arrAllLi[a].getAttribute('value'));
+		// 	if (arrAllLi[a].getAttribute('value') === strOru) {
+		// 		arrAllLi[a].setAttribute('selected', 'selected')
+		// 	}
+		// }
 		el.className = 'selected';
 		self.state.selectedoru = strOru;
 		objHeader.setbreadcrumb(objMruFilter.getmrufilterbreadcrumb());
@@ -79,6 +85,17 @@ var objOruFilter = {
 	},
 	settocurrentoru: function () {
 		var self = this;
+		// Remove all selected classes
+		var arrAllLi = self.el.wrapper.getElementsByTagName('option');
+		console.log(objPageState.state.filter.orulevel);
+
+		// Debugger;
+		for (var a = 0; a < arrAllLi.length; a++) {
+			if (arrAllLi[a].getAttribute('value') === objPageState.state.filter.orulevel) {
+				console.log(arrAllLi[a].getAttribute('value'));
+				arrAllLi[a].setAttribute('selected', 'selected')
+			}
+		}
 		//debugger;
 	},
 	convertoruleveltomarket: function (oruLevel) {

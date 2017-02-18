@@ -10,7 +10,8 @@ var objConfig = {
         devlighting: 'https://dev.lighting.livesimproved.philips.com/webapp/html',
         prodlighting: 'https://www.lighting.livesimproved.philips.com/webapp/html',
         johan: 'http://resultshub.com',
-        rutger: 'https://test.results.philips.com',
+        rutger: 'https://www.test.results.philips.com',
+        suus: 'https://www.dev.results.philips.com',
         dynamicresourceurl: 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
         authurl2: "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
         authurl3: "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx",
@@ -86,6 +87,7 @@ var objConfig = {
             '/js/panels/panel_info.js',
             '/js/elements/mru_filter.js',
             '/js/elements/oru_filter.js',
+            '/js/elements/data_filter.js',
             '/js/app.js'
         ]
     },
@@ -140,6 +142,8 @@ var objConfig = {
         } else if (self.urls.johan.indexOf(location.hostname) > -1) {
             self.sitetype = 'devpublic';
         } else if (self.urls.rutger.indexOf(location.hostname) > -1) {
+            self.sitetype = 'devpublic';
+        } else if (self.urls.suus.indexOf(location.hostname) > -1) {
             self.sitetype = 'devpublic';
         } else if (self.urls.devpublic.indexOf(location.hostname) > -1) {
             self.sitetype = 'devpublic';

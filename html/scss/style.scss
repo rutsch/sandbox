@@ -1,0 +1,76 @@
+$grid-gutter-large: 50px;
+$grid-gutter-small: 50px;
+$grid-columns: 12;
+$global-width: 100%;
+$content-width: 960px;
+$content-width-large: 1280px;
+
+/**********************************************************
+    Media queries
+***********************************************************/
+
+$tiny-only-breakpoint:   399px;
+$tiny-breakpoint:        420px;
+$small-breakpoint:       769px;
+$medium-breakpoint:      1024px;
+$large-breakpoint:       1400px;
+$xlarge-breakpoint:      2000px;
+
+$screen: "only screen";
+
+$landscape:         "#{$screen} and (orientation: landscape)";
+$portrait:          "#{$screen} and (orientation: portrait)";
+$tiny-up:           $screen;
+$tiny-only:         "#{$screen} and (max-width: #{$tiny-only-breakpoint})";
+$small-up:          "#{$screen} and (min-width: #{$tiny-breakpoint})";
+$small-down:        "#{$screen} and (max-width: #{$small-breakpoint})";
+$small-only:        "#{$screen} and (min-width: #{$tiny-breakpoint}) and (max-width: #{$small-breakpoint})";
+$medium-up:         "#{$screen} and (min-width: #{$small-breakpoint})";
+$medium-down:       "#{$screen} and (max-width: #{$medium-breakpoint})";
+$medium-only:       "#{$screen} and (min-width: #{$small-breakpoint}) and (max-width: #{$medium-breakpoint})";
+$large-up:          "#{$screen} and (min-width: #{$medium-breakpoint})";
+$large-down:        "#{$screen} and (max-width: #{$large-breakpoint})";
+$large-only:        "#{$screen} and (min-width: #{$medium-breakpoint}) and (max-width: #{$large-breakpoint})";
+$xlarge-up:         "#{$screen} and (min-width: #{$large-breakpoint})";
+$xlarge-only:       "#{$screen} and (min-width: #{$large-breakpoint}) and (max-width: 99999999)";
+$xxlarge-up:         "#{$screen} and (min-width: #{$xlarge-breakpoint})";
+
+$hairline: 100;
+$xthin: 200;
+$thin: 300;
+$xlight: 400;
+$light: 500;
+$normal: 600;
+$medium: 700;
+$bold: 800;
+$xbold: 900;
+
+
+@mixin declareFont($name, $file, $style, $weight){
+  font-family: $name;
+  font-style: $style;
+  font-weight: $weight;
+  src: url('../fonts/#{$file}.eot') format('eot');
+  src: url('../fonts/#{$file}.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/#{$file}.woff') format('woff');
+}
+
+@mixin declareFontSet($name, $base, $weight){
+  @font-face { @include declareFont($name, $base, normal, $weight); }
+  @font-face { @include declareFont($name, $base + 'Italic', 	italic, $weight); }
+}
+
+
+@include declareFontSet('CentraleSans', 'CentraleSans-Hairline',  $hairline);
+@include declareFontSet('CentraleSans', 'CentraleSans-XThin',     $xthin);
+@include declareFontSet('CentraleSans', 'CentraleSans-Thin',      $thin);
+@include declareFontSet('CentraleSans', 'CentraleSans-XLight',    $xlight);
+@include declareFontSet('CentraleSans', 'CentraleSans-Light',     $light);
+@include declareFontSet('CentraleSans', 'CentraleSans-Book',      $normal);
+@include declareFontSet('CentraleSans', 'CentraleSans-Medium',    $medium);
+@include declareFontSet('CentraleSans', 'CentraleSans-Bold',      $bold);
+@include declareFontSet('CentraleSans', 'CentraleSans-XBold',     $xbold);
+
+$color-highlight: #E2EA6D;
+
+@import 'shared';

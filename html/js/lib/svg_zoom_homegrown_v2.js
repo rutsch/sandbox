@@ -172,6 +172,7 @@ function initSgvZoomPan(elSvgRoot, elSvgNodeToAnimate){
 
 function setupHandlers(){
 	//setup event handlers
+
 	if(objZoomPanSettings.mobile){
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log('setting up for mobile'); }
@@ -211,6 +212,7 @@ function setupHandlers(){
  * Register handlers for desktop
  */
 function setupHandlersDesktop(){
+	// debugger;
 	setAttributes(objTouchVars.elsvg, {
 		"onmouseup" : "handleClickTouchEnd(evt)",
 		"onmousedown" : "handleClickTouchStart(evt)",
@@ -218,11 +220,11 @@ function setupHandlersDesktop(){
 		//"onmouseout" : "handleClickTouchEnd(evt)", // Decomment this to stop the pan functionality when dragging out of the SVG element
 	});
 	//be aware that the events below are attached to the window - not to the svg or holder div
-	if(navigator.userAgent.toLowerCase().indexOf('firefox') == -1){
-		window.addEventListener('mousewheel', handleZoomDesktop, false); // Chrome/Safari
-	}else{
-		window.addEventListener('DOMMouseScroll', handleZoomDesktop, false); // Others
-	}
+	// if(navigator.userAgent.toLowerCase().indexOf('firefox') == -1){
+	// 	window.addEventListener('mousewheel', handleZoomDesktop, false); // Chrome/Safari
+	// }else{
+	// 	window.addEventListener('DOMMouseScroll', handleZoomDesktop, false); // Others
+	// }
 }
 
 
@@ -234,7 +236,7 @@ function setupHandlersMobile(){
 		if(objTouchSettings.debug && objTouchSettings.debugtoconsole){
 			//if(window.console) { console.log(ev); }
 		}
-		
+
 		objTouchVars.eventcount++;
 
 		objTouchVars.dragging=true;
@@ -538,7 +540,7 @@ function shouldStillZoom(){
 		}else{
 			//return the previously calculated value
 			bolExecuteZoom=objTouchVars.zoomlimit;
-		}		
+		}
 	}
 
 	return bolExecuteZoom;
@@ -613,6 +615,7 @@ function handleZoomMobile(ev){
 
 
 function handleZoomDesktop(evt) {
+	// debugger;
   if (!objZoomPanSettings.zoom || objOverlay.state.visible) return;
 
 	objTouchVars.eventcount++;
@@ -685,7 +688,7 @@ function handleDrag(evt) {
 	if(objZoomPanSettings.boundarycheck){
 		if(evt.gesture || evt.webkitMovementX){
 
-			//this is a hammer event	
+			//this is a hammer event
 			objTouchVars.eventcount++;
 			if(objTouchVars.eventcount%objTouchSettings.dragsampling==0){
 
@@ -718,14 +721,14 @@ function handleDrag(evt) {
 
 				//console.log(objTouchVars.svgsize);
 
-				
+
 
 			}
-		}		
+		}
 	}
 
 
-	
+
 
 	//console.log('+++++++')
 	//console.log(evt);
@@ -742,7 +745,7 @@ function handleDrag(evt) {
 		//console.log('pan');
 		if(bolXmax)p.x=objTouchVars.svgpointorigin.x;
 		if(bolYmax)p.y=objTouchVars.svgpointorigin.y;
-		
+
 		setCTM(g, objTouchVars.svgmatrix.inverse().translate(p.x - objTouchVars.svgpointorigin.x, p.y - objTouchVars.svgpointorigin.y));
 	} else if(objTouchVars.state == 'drag' && objZoomPanSettings.drag) {
 		// Drag mode
@@ -1033,5 +1036,3 @@ function debugLog(){
 
 	objPageElements.debugdetails.innerHTML=arrContent.join('<br/>');
 }
-
-

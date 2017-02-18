@@ -19,6 +19,7 @@ var app = {
         view: 'worldmap',
         popup: 'none',
         filter: {
+            datasource: 'lives_improved',
             orulevel: '3', // For worldmap data 1, 2, 3, 4
             oru: 'none', // Selected country/region
             sector: 'philips', // Main sector
@@ -85,7 +86,26 @@ var app = {
             return 'ontouchstart' in document.documentElement;
         }
     },
-    
+    retrievechartdata: function (type) {
+        var objData = {
+            _type: 'json',
+            method: 'getworldmapdata',
+            token: window.objLogin.token,
+            source: type,
+            period: 'future'
+        }
+        //showLoadingPanel();
+        window.psv('GET', window.objConfig.urls.dynamicresourceurl, objData, function (err, data) {
+            //hideLoadingPanel();
+            if (err != null) {
+                console.log(err);
+                window.objError.show('There was an error retrieving the worldmap data. ' + ((typeof err === 'object') ? JSON.parse(err) : err), true);
+            } else {
+                // store data in variable for later use
+                window.objData[type] = data;
+            }
+        });
+    },
     // Retrieves oru and mru metadata structures
     retrievemetadata: function () {
         var objData = {
@@ -117,6 +137,10 @@ var app = {
 
                 // Load the retrieved data into the MRU (product) object
                 window.objMruFilter.preparehtml(data.result.productdata);
+
+                // Load the Global Presence and Sustainability data sets
+                app.retrievechartdata('sustainability');
+                app.retrievechartdata('global_presence');
 
                 // Render the initial view of the app
                 app.processinitialview(true);
@@ -155,7 +179,7 @@ var app = {
     getdimensions: function () {
         var self = this;
         self.state.width = document.body.clientWidth;
-        self.state.height = document.documentElement["clientHeight"];
+        self.state.height = document.documentElement["clientHeight"] - (document.documentElement["clientHeight"] * .15) - 250;
         if (self.state.width > self.state.height) {
             self.state.orientation = 'landscape';
         } else {
@@ -246,18 +270,19 @@ var app = {
         window.objHeader.init();
         window.objOverlay.init();
         window.objRegionInfo.init();
-        window.objSliders.init();
+        // window.objSliders.init();
         window.objError.init();
         window.objFilter.init();
         window.objBookmarks.init();
         window.objExplain.init();
-        window.objTrendGraph.init();
+        // window.objTrendGraph.init();
         window.objLoading.init();
         window.objPanelInfo.init();
 
         // Init the filters
         window.objOruFilter.init();
         window.objMruFilter.init();
+        window.objDataFilter.init();
 
         // Change the settings for the zoom/pan based on the device
         if (self.state.ios) {
@@ -288,7 +313,7 @@ var app = {
         // Load the main html content
         app.el.outerwrapper = window.getEl('content_outer_wrapper');
         self.vars.basehtml = window.serverSideRequest({
-            url: window.objConfig.urls.base + '/data/body_content.html',
+            url: window.objConfig.urls.base + '/data/body_content.html?v=' + Math.random(),
             method: 'get',
             debug: false
         });
@@ -328,13 +353,14 @@ var app = {
 }
 
 // Regular expression to match a valid hash
-var regValid = /^#\!\/(login|worldmap|detail?)\/((\w|\d|-)+)\/((\w|\d|-)+)\/((\w|\d|-)+)\/((\w|\d|-)+)\/(filter|faq|help|bookmark|none?)$/g;
+var regValid = /^#\!\/(login|worldmap|detail?)\/((\w|\d|-)+)\/((\w|\d|-)+)\/((\w|\d|-)+)\/((\w|\d|-)+)\/(filter|faq|help|bookmark|none?)\/((\w|\d|-)+)\/((\w|\d|-)+?)$/g;
 
 var objPageState = {
     state: {
         view: null,
         popup: null,
         filter: {
+            datasource: null, // lives improved, global ppresence or sustainability
             orulevel: null, //for worldmap data 1, 2, 3, 4
             oru: null, //selected country/region
             sector: null, //main sector
@@ -356,7 +382,8 @@ var objPageState = {
                 orulevel: self.state.filter.orulevel,
                 oru: self.state.filter.oru,
                 sector: self.state.filter.sector,
-                mru: self.state.filter.mru
+                mru: self.state.filter.mru,
+                datasource: objPageState.state.filter.datasource
             }
         }
     },
@@ -367,26 +394,32 @@ var objPageState = {
         if (obj.hasOwnProperty("popup")) self.state.popup = obj.popup;
 
         // debugger;
+        console.log('setting state object');
         if (obj.hasOwnProperty("filter")) {
             if (obj.filter.hasOwnProperty("orulevel")) self.state.filter.orulevel = obj.filter.orulevel;
             if (obj.filter.hasOwnProperty("oru")) self.state.filter.oru = obj.filter.oru;
             if (obj.filter.hasOwnProperty("sector")) self.state.filter.sector = obj.filter.sector;
             if (obj.filter.hasOwnProperty("mru")) self.state.filter.mru = obj.filter.mru;
+            if (obj.filter.hasOwnProperty("datasource")) self.state.filter.datasource = obj.filter.datasource;
         }
     },
     updatepagestate: function (obj) {
+		//  debugger;
         var objCurrentState = objPageState.clonestateobject();
 
         if (obj.hasOwnProperty("view")) objCurrentState.view = obj.view;
         if (obj.hasOwnProperty("popup")) objCurrentState.popup = obj.popup;
 
-        // debugger;
+
         if (obj.hasOwnProperty("filter")) {
             if (obj.filter.hasOwnProperty("orulevel")) objCurrentState.filter.orulevel = obj.filter.orulevel;
             if (obj.filter.hasOwnProperty("oru")) objCurrentState.filter.oru = obj.filter.oru;
             if (obj.filter.hasOwnProperty("sector")) objCurrentState.filter.sector = obj.filter.sector;
             if (obj.filter.hasOwnProperty("mru")) objCurrentState.filter.mru = obj.filter.mru;
+            if (obj.filter.hasOwnProperty("datasource")) objCurrentState.filter.datasource = obj.filter.datasource;
+            if (obj.filter.hasOwnProperty("subtype")) objCurrentState.filter.subtype = obj.filter.subtype;
         }
+
 
         // debugger;
         // console.log(obj);
@@ -409,7 +442,9 @@ var objPageState = {
                     orulevel: strHash.replace(regValid, "$2"),
                     oru: strHash.replace(regValid, "$4"),
                     sector: strHash.replace(regValid, "$6"),
-                    mru: strHash.replace(regValid, "$8")
+                    mru: strHash.replace(regValid, "$8"),
+                    datasource: strHash.replace(regValid, "$11"),
+                    subtype: strHash.replace(regValid, "$13")
                 }
             }
         } else {
@@ -421,7 +456,7 @@ var objPageState = {
     object2hash: function (obj) {
         // console.log(obj);
         // #!/view(1)/orulevel(2)/oru(4)/sector(6)/mru(8)/popup(10)
-        return '#!/' + obj.view + '/' + obj.filter.orulevel + '/' + obj.filter.oru + '/' + obj.filter.sector + '/' + obj.filter.mru + '/' + obj.popup;
+        return '#!/' + obj.view + '/' + obj.filter.orulevel + '/' + obj.filter.oru + '/' + obj.filter.sector + '/' + obj.filter.mru + '/' + obj.popup + '/' + obj.filter.datasource + '/' + (obj.filter.subtype ? obj.filter.subtype : 'all');
     },
     handlechange: function (objPageStateNew) {
         // Check which properties have changed and act accordingly
@@ -465,6 +500,7 @@ var objPageState = {
             bolFilterOruChanged = false,
             bolFilterSectorChanged = false,
             bolFilterMruChanged = false,
+            bolFilterDataChanged = false,
             bolFromLogin = false;
         if (self.state.filter.orulevel !== objPageStateNew.filter.orulevel) {
             bolFilterOruLevelChanged = true;
@@ -483,6 +519,11 @@ var objPageState = {
             bolFilterChangeDetected = true;
         }
 
+        if (self.state.filter.datasource !== objPageStateNew.filter.datasource || self.state.filter.subtype !== objPageStateNew.filter.subtype) {
+            bolFilterDataChanged = true;
+            bolFilterChangeDetected = true;
+        }
+
         // 2) check we we are coming from login
         if (self.state.view === 'login' && objPageStateNew.view !== 'login') bolFromLogin = true;
 
@@ -492,11 +533,12 @@ var objPageState = {
         // 4) handle view change
         // console.log(self.state.view);
         // console.log(objPageStateNew.view);
+
         if (self.state.view !== objPageStateNew.view) {
             // console.log('viewchange detected: self.state.view=' + self.state.view + ' - objPageStateNew.view=' + objPageStateNew.view);
             switch (objPageStateNew.view) {
                 case 'worldmap':
-                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, false);
+                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, false, bolFilterDataChanged);
                     break;
                 case 'login':
                     self.stateremembered = self.clonestateobject();
@@ -504,19 +546,21 @@ var objPageState = {
                     window.objLogin.show();
                     break;
                 case 'detail':
-                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, true);
+                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, true, bolFilterDataChanged);
                     break;
             }
         } else {
+
             // 5) handle filter change
             if (bolFilterChangeDetected) {
                 // console.log('filter change detected');
                 // if the detail view is open then we need to reload the data in it
                 if (objPageStateNew.view === 'detail') {
-                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, true);
+                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, true, bolFilterDataChanged);
                 } else {
                     // Called when a change in the filter panel has occured
-                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, false);
+
+                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, false, bolFilterDataChanged);
                 }
             } else {
                 // 6) handle a popup panel change
@@ -526,21 +570,27 @@ var objPageState = {
         }
 
         // 7) open the filter panel if this is the public website
-        if (window.isPublicSite() && !window.objFilter.state.visible) window.objFilter.show();
+        // if (window.isPublicSite() && !window.objFilter.state.visible) window.objFilter.show();
 
         // debugger;
         self.setstateobject(objPageStateNew);
     },
-    updateworldmapview: function (objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, bolShowDetailsPanel) {
+    updateworldmapview: function (objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, bolShowDetailsPanel, bolFilterDataChanged) {
         var self = this;
         // debugger;
         if (typeof window.objMap.data === "object" && !bolFilterSectorChanged && !bolFilterMruChanged && !bolFilterOruLevelChanged && bolFilterOruChanged) {
             if (objPageStateNew.view === 'detail') {
                 self.setstateobject(objPageStateNew);
+
                 window.objMap.detailspanel();
             } else {
                 // This assumes that we are hitting 'back' from a details panel
+                if (self.state.filter.datasource !== objPageStateNew.filter.datasource) {
+                    //debugger;
+                    window.objMap.updatemap(false, app.showappintromessage);
+                }
                 window.objRegionInfo.hide();
+				window.objMap.hideSelectedCountries();
 
                 // Set the header
                 window.objHeader.setregionname(window.objMap.state.mapname);
@@ -548,7 +598,7 @@ var objPageState = {
         } else {
             // Load the svg map, the map data and open the details panel afterwards
             self.setstateobject(objPageStateNew);
-
+			objOruFilter.settocurrentoru();
             // Reload all the data
             if (bolShowDetailsPanel) {
                 app.start(true);
@@ -556,6 +606,7 @@ var objPageState = {
                 app.start();
             }
         }
+
 
     },
     copyfilterattributes: function (objPageStateNew) {
@@ -587,7 +638,7 @@ var objAnalytics = {
     asyncanalytics: function () {
         var self = this;
 
-        // Send the views to Google Analytics        
+        // Send the views to Google Analytics
         for (var a = 0; a < self.data.views.length; a++) {
             // Send the view to google analytics
             window.ga('send', 'pageview', self.data.views[a]);
@@ -598,7 +649,7 @@ var objAnalytics = {
             }
         }
 
-        // Send the events to Google Analytics        
+        // Send the events to Google Analytics
         for (var a = 0; a < self.data.events.length; a++) {
             // debugger;
             if (self.data.events[a].hasOwnProperty("category") && self.data.events[a].hasOwnProperty("action")) {
@@ -696,11 +747,11 @@ window.onresize = function () {
 
 window.onhashchange = function () {
     // Parse the received hash into the objPageState.state object
-
+    // debugger;
     var objPageStateNew = objPageState.hash2object(location.hash);
 
     // debugger;
-    // console.log(objPageStateNew);
+    console.log(objPageStateNew);
     if (objPageStateNew.hasOwnProperty("error")) {
         // Could not properly parse the hash into a state object - default to standard object
         location.hash = objPageState.object2hash(app.defaultpagestate);
@@ -709,3 +760,5 @@ window.onhashchange = function () {
         objPageState.handlechange(objPageStateNew);
     }
 }
+
+window.objData = {};

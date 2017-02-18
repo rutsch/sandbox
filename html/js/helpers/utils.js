@@ -515,12 +515,25 @@ function countryClicked(idCountry) {
     if (idCountry !== "" && elRegion.style.fill !== '#999999' && elRegion.style.fill !== '#999' && elRegion.style.fill !== 'rgb(153, 153, 153)' && elRegion.style.fill !== 'rgb(153,153,153)') {
         //update the hash and initiate the new view based on that
         //console.log('click in map ' + idCountry);
-        window.objPageState.updatepagestate({
-            view: 'detail',
-            filter: {
-                oru: idCountry
-            }
-        });
+        if (window.objPageState.state.view === 'detail' && window.objPageState.state.filter.oru === idCountry) {
+			window.objPageState.updatepagestate({
+				view: 'worldmap',
+				filter: {
+					oru: 'none',
+                    datasource: objDataFilter.state.filter.datasource,
+                    subtype: objDataFilter.state.filter.subtype
+				}
+			});
+		} else {
+			window.objPageState.updatepagestate({
+				view: 'detail',
+				filter: {
+					oru: idCountry,
+                    datasource: objDataFilter.state.filter.datasource,
+                    subtype: objDataFilter.state.filter.subtype
+				}
+			});
+		}
         //objMap.detailspanel(idCountry);
     } else {
         //debugger;
@@ -529,7 +542,7 @@ function countryClicked(idCountry) {
     }
 }
 
-/* 
+/*
 Formats a generic integer as a money
 usage
 var myMoney=3543.75873;

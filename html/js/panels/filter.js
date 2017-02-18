@@ -28,7 +28,7 @@ var objFilter = {
     objMruFilter.setmrufilterstate();
     objOruFilter.setorufilterstate();
 
-    
+
     //disabled for now
     //var seenPanelBefore = objStore.getlocalstorageitem('seenFilterIntro');
     var seenPanelBefore = true;
@@ -88,6 +88,7 @@ var objFilter = {
   },
   applyfilter: function () {
     var self = this;
+	// debugger;
     //console.log('objFilter.applyfilter()');
     //update the objPageState properties with the filter selection we have just made
 
@@ -98,19 +99,32 @@ var objFilter = {
     self.el.btnapply.style.display = 'none';
 
     //console.log(objPageState.vars.processed);
-    //debugger;
+    // debugger;
 
     // Because we auto-apply the filter for the public site, we need to handle it in a different way.
-    if (objPageState.vars.processed < 2 && isPublicSite()) {
-      objPageState.updatepagestate(objPageState.state);
+    if (isPublicSite()) {
+    //   objPageState.updatepagestate(objPageState.state);
+	  objPageState.updatepagestate({
+		  view: 'worldmap',
+		  filter: {
+              datasource: objDataFilter.state.filter.datasource,
+              subtype: objDataFilter.state.filter.subtype,
+			  orulevel: objOruFilter.state.selectedoru, //for worldmap data 1, 2, 3, 4
+			  oru: 'none', //selected country/region
+			  sector: objMruFilter.state.selectedsector, //main sector
+			  mru: objMruFilter.state.selectedmru //product group
+		  }
+	  });
     } else {
       objPageState.updatepagestate({
         view: 'worldmap',
         filter: {
-          orulevel: objOruFilter.state.selectedoru, //for worldmap data 1, 2, 3, 4
-          oru: 'none', //selected country/region
-          sector: objMruFilter.state.selectedsector, //main sector
-          mru: objMruFilter.state.selectedmru //product group
+            datasource: objDataFilter.state.filter.datasource,
+            subtype: objDataFilter.state.filter.subtype,
+            orulevel: objOruFilter.state.selectedoru, //for worldmap data 1, 2, 3, 4
+            oru: 'none', //selected country/region
+            sector: objMruFilter.state.selectedsector, //main sector
+            mru: objMruFilter.state.selectedmru //product group
         }
       });
     }

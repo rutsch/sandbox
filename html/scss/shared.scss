@@ -1,0 +1,122 @@
+@import 'mixins';
+@import './panels/region_info';
+@import './panels/map_tools';
+@import './panels/tab_panel';
+
+
+body {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  overflow: hidden;
+  font-family: CentraleSans;
+  font-size: 100%;
+  margin: 0;
+  background-color: #7CC9C5;
+}
+
+#title_bar,
+#menu_bar,
+#producttree_temp {
+	display: none;
+}
+
+[id*='_panel']:not(#app_panel) {
+	display: none;
+}
+
+#app_panel {
+	#app_wrapper {
+		.map-tab_panels {
+			position: absolute;
+			display: block;
+			top: 0%;
+			height: 10%;
+			width: 100%;
+		}
+		#oru_filter_container {
+			position: absolute;
+			display: block;
+			top: 10%;
+			height: 5%;
+			width: 100%;
+
+			select {
+				position: absolute;
+				bottom: 0;
+				padding: .5em 1em;
+				width: 150px;
+			}
+		}
+		#map {
+			position: absolute;
+			display: block;
+			top: 18%;
+			height: calc(100% - 18% - 250px);
+			width: 100%;
+			svg * {
+				fill: #7CC9C5;
+				transition: fill .5s ease;
+				cursor: pointer;
+			}
+			.active *{
+				fill: $color-highlight!important;
+			}
+		}
+
+		#bottom_panel {
+			position: absolute;
+			display: block;
+			bottom: 0;
+			height: 250px;
+			width: 100%;
+            top: calc(100% - 200px);
+
+		}
+
+		#slider_indicator,
+		#show_simulation,
+		#show_current {
+			display: none;
+		}
+	}
+}
+
+
+#error {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  background: #ccc;
+  color: #FF0000;
+  opacity: 1;
+  z-index: 10;
+  text-align: center;
+  margin: 10px 10px;
+}
+
+#loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  margin-top: -16px;
+  background: url(../img/ajax-loader.gif) no-repeat center;
+  z-index: 10000;
+  opacity: 0;
+}
+
+.container {
+	max-width: $content-width;
+	margin: 0 auto;
+
+	@media #{$xlarge-up} {
+		max-width: $content-width-large;
+	}
+}

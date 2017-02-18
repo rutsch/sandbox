@@ -1,0 +1,72 @@
+@mixin grid-row() {
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(100% + #{$grid-gutter-small});
+    margin-left: -$grid-gutter-small;
+    margin-top: -$grid-gutter-small;
+
+    .no-flexbox & {
+        overflow: hidden;
+        clear: both;
+    }
+
+    @media #{$medium-up} {
+        width: calc(100% + #{$grid-gutter-large});
+        margin-left: -$grid-gutter-large;
+        margin-top: -$grid-gutter-large*2;
+    }
+}
+
+@mixin grid-col($size: null) {
+    box-sizing: border-box;
+    padding-left: $grid-gutter-small;
+    padding-top: $grid-gutter-small;
+    max-width: $global-width;
+
+    @if $size == null {
+        flex: 1;
+    }
+
+    @if $size != null {
+        flex: 0 1 auto;
+        width: ($size/$grid-columns * 100%);
+    }
+
+    .no-flexbox & {
+        float: left;
+    }
+
+    @media #{$medium-up} {
+        padding-left: $grid-gutter-large;
+        padding-top: $grid-gutter-large*2
+    }
+}
+
+@mixin grid-pull-right() {
+    margin-left: auto;
+
+    .no-flexbox & {
+        float: right;
+    }
+}
+
+// Calculate width for given number of columns
+// size {number} Number of columns
+// relative {boolean} Should this calculation be relative to it's parent or to $global-width
+// return {percentage} width in percentage
+
+@function grid-size($size: null, $relative: true) {
+    // determine startwidth, 100% when relative or $global-width when not
+    $startWidth: 100%;
+    @if $relative == false {
+        $startWidth: $global-width;
+    }
+
+    // Calculation steps:
+    // $1. add 1 gutter to make each column end with a gutter: ( #{$startWidth} + #{$grid-gutter-large} )
+    // $2. calculate width of 1 column: ( $1 / #{$grid-columns} )
+    // $3. calculate width of asked columns: ( $2 * #{$size} )
+    // $4. substract the extra added gutter: ( $3 - #{$grid-gutter-large} )
+
+    @return calc( ( ( ( #{$startWidth} + #{$grid-gutter-large} ) / #{$grid-columns} ) * #{$size} ) - #{$grid-gutter-large} );
+}

@@ -21,7 +21,7 @@
 			}else{
 				//assume we are running in the app (cordova)
 				document.write('\x3Cscript type="text/javascript" charset="utf-8" src="../cordova.js">\x3C/script>');
-				document.write('\x3Cscript type="text/javascript" src="js/config.js">\x3C/script>');			
+				document.write('\x3Cscript type="text/javascript" src="js/config.js">\x3C/script>');
 			}
 		</script>
 
@@ -34,6 +34,8 @@
 		<script type="text/javascript" src="js/lib/hammer.min.js">//</script>
 		<script type="text/javascript" src="js/lib/sizzle.min.js">//</script>
 		<script type="text/javascript" src="js/lib/marquee.js">//</script>
+
+
 
 	</head>
 	<body>
@@ -48,7 +50,7 @@
 				if (typeof objConfig != 'undefined') {
 					//ie only stylesheet...
 					if (!!window.MSStream) objConfig.resources.css.push('/css/ie-all-versions.css')
-					
+
 					//load the css files
 					for(var i=0; i<objConfig.resources.css.length; i++){
 						objConfig.loadremotefile(objConfig.resources.css[i])
@@ -68,6 +70,11 @@
 				}
 			}
 			loadExternalResources();
+		</script>
+		
+		<script type="text/javascript">
+			// Livereload
+			document.write('<script src="http://' + (location.host || 'localhost').split(':')[0]+ ':' + ((location.host.split(':')[1]*1) +1000) + '/livereload.js"></'+ 'script>');
 		</script>
 	</body>
 </html>

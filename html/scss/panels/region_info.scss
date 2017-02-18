@@ -1,0 +1,153 @@
+.region_info {
+	color: #3A707A;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+    position: absolute;
+
+	.container {
+		opacity: 0;
+		z-index: -1;
+		justify-content: space-between;
+		height: 100%;
+		position: absolute;
+		width: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		display: flex;
+		&.lives_improved {
+			height: 165px;
+		}
+	}
+	&_close {
+		position: absolute;
+		right: 0;
+		width: 26px;
+		height: 26px;
+		border-radius: 2px;
+		flex: 1 0 auto;
+		background: #3A707A;
+		color: #fff;
+		cursor: pointer;
+
+		&:after, &:before {
+		    position: absolute;
+		    top: 5px;
+		    left: 12px;
+		    content: ' ';
+		    height: 15px;
+		    width: 2px;
+		    background-color: #fff;
+		}
+		&:before {
+		    -webkit-transform: rotate(45deg);
+		    -ms-transform: rotate(45deg);
+		    transform: rotate(45deg);
+		}
+		&:after {
+		    -webkit-transform: rotate(-45deg);
+		    -ms-transform: rotate(-45deg);
+		    transform: rotate(-45deg);
+		}
+	}
+	.nr_label {
+		width: 100%;
+		padding: .3em 0;
+		border-bottom: 1px solid #3A707A;
+		span {
+			float: right;
+			color: #fff;
+			font-weight: 700;
+		}
+		&:last-of-type {
+			border: 0;
+		}
+	}
+	&_left {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		width: grid-size(4);
+
+		h2 {
+			margin: 0;
+			font-size: 34px;
+		}
+
+	}
+	&_right {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		width: grid-size(7);
+		margin-left: grid-size(0);
+		margin-right: grid-size(1.2);
+
+		.sustainability &,
+		.global_presence & {
+			background-image: url('../img/sustainability_bg.png');
+			background-repeat: no-repeat;
+			background-position: left -10px;
+		}
+
+		.data-wrapper {
+			width: grid-size(9, false);
+			align-self: flex-end;
+		}
+
+		&_header {
+			border-bottom: 1px solid #3A707A;
+		}
+
+		.nr_lives_improved_label {
+			font-size: 34px;
+		}
+		.nr_lives_improved {
+			float: right;
+			font-size: 34px;
+			color: #fff;
+			font-weight: 700;
+		}
+		.lives_improved_wrapper	{
+
+		}
+		.lives_improved_percentage {
+			font-size: 86px;
+			line-height: 86px;
+			color: $color-highlight;
+			font-weight: 800;
+		}
+		.lives_improved_percentage_sub {
+			color: $color-highlight;
+			font-size: 21px;
+			font-weight: 800;
+			margin-top: -5px;
+		}
+		.lives_improved_wrapper {
+			display: flex;
+			justify-content: space-between;
+		}
+		.lives_improved_numbers {
+			width: grid-size(6);
+			display: flex;
+			flex-direction: column;
+		}
+
+		.lives_improved_icons {
+			width: 250px;
+			flex-wrap: wrap;
+			align-self: flex-end;
+
+			img {
+				height: 22px;
+				margin-left: 2px;
+			}
+		}
+	}
+	&_title {
+		color: $color-highlight;
+	}
+	.region_info_content {
+		margin: 0 2em;
+	}
+}
