@@ -5,12 +5,7 @@
 
 
 body {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  overflow: hidden;
+    overflow: hidden;
   font-family: CentraleSans;
   font-size: 100%;
   margin: 0;
@@ -34,41 +29,33 @@ body {
 			display: block;
 			top: 0%;
 			width: 100%;
-            @media #{$medium-up} {
-                height: 10%;
-                position: absolute;
-            }
+
 		}
 		#oru_filter_container {
 			display: block;
 			top: 10%;
 			width: 100%;
-            @media #{$medium-up} {
-                position: absolute;
-                height: 5%;
-            }
+
 
 			select {
 				padding: .5em 1em;
 				width: 150px;
-                @media #{$medium-up} {
-                    position: absolute;
-                    bottom: 0;
-                }
+
 			}
 		}
 		#map {
 			top: 18%;
-            height: calc(100% - 18% - 250px);
+            min-height: 400px;
             width: 100%;
-            position: absolute;
-            opacity: 0;
+            display: none;
 			// width: 1px;
             // height: 1px;
             // text-indent: -9999px;
             @media #{$medium-up} {
                 height: calc(100% - 18% - 250px);
                 width: 100%;
+                display: block;
+                opacity: 1;
             }
 			svg * {
 				fill: #7CC9C5;
@@ -122,10 +109,9 @@ body {
 			display: block;
 			bottom: 0;
             width: 100%;
+            position: relative;
             @media #{$medium-up} {
     			height: 250px;
-                top: calc(100% - 200px);
-                position: absolute;
             }
 
 		}

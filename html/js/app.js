@@ -83,7 +83,8 @@ var app = {
     },
     isMobile: {
         any: function () {
-            return 'ontouchstart' in document.documentElement;
+            // return 'ontouchstart' in document.documentElement;
+            return window.getComputedStyle(getEl('map'), null).display === 'none';
         }
     },
     retrievechartdata: function (type) {
@@ -730,19 +731,26 @@ var objAnalytics = {
 }
 
 window.onresize = function () {
+    var self = this;
     // Update the width and height variables
     app.getdimensions();
+    try {
+        if (!app.isMobile.any()) {
+            // Rework the dimensions of the map based on the new dimensions of the window
+            window.objMap.resizeworldmap();
 
-    // Rework the dimensions of the map based on the new dimensions of the window
-    window.objMap.resizeworldmap();
+            // Center the worldmap
+            window.objMap.centerworldmap(window.objMap.el.rootanimate);
 
-    // Center the worldmap
-    window.objMap.centerworldmap(window.objMap.el.rootanimate);
+            // On the public version of the application, stretch the worldmap to the maximum size of the window
+            if (window.isPublicSite()) window.objMap.maximizeworldmap(window.objMap.el.rootanimate);
 
-    // On the public version of the application, stretch the worldmap to the maximum size of the window
-    if (window.isPublicSite()) window.objMap.maximizeworldmap(window.objMap.el.rootanimate);
+            window.objRegionInfo.hide();
+        }
+    } catch (e) {
+        //
+    }
 
-    window.objRegionInfo.hide();
 };
 
 window.onhashchange = function () {

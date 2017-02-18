@@ -54,6 +54,22 @@
 
 
 		<div id="bottom_panel">
+			<div class="map_tools">
+				<div class="container">
+					<div class="map_tools__legend">
+						<h4 class="map_tools__legend__title">Lives improved</h4>
+						<span class="map_tools__legend__subtitle">% of population</span>
+						<ul class="map_tools__legend--values">
+							<li class="map_tools__legend__top_value"></li>
+							<li class="map_tools__legend__low_value"></li>
+						</ul>
+					</div>
+					<div class="map_tools__zoom">
+						<div class="map_tools__zoom--in" onclick="objMap.zoomIn();"></div>
+						<div class="map_tools__zoom--out" onclick="objMap.zoomOut();"></div>
+					</div>
+				</div>
+			</div>
 			<div class="region_info">
 				<div class="region_info_wrapper container lives_improved">
 					<div class="region_info_close" onclick="objHeader.btnbackclick();"></div>
@@ -108,8 +124,7 @@
 							<div class="nr_label">CO<sub>2</sub> emitted (tonnes)<span class="nr_co2"></span></div>
 							<div class="nr_label">Emissions of restricted substances (kg)<span class="nr_emission"></span></div>
 							<div class="nr_label">Emissions of hazardous substances (kg)<span class="nr_emissionhaz"></span></div>
-							<div class="nr_label">FTE<span class="nr_fte"></span></div>
-							<div class="nr_label">Lost Workday Injury rate<span class="nr_lwc"></span></div>
+							<div class="nr_label">Lost Workday Injury rate<span class="nr_trc"></span></div>
 							<div class="nr_label">Waste (tonnes)<span class="nr_waste"></span></div>
 							<div class="nr_label">Recycled (%)<span class="nr_wasterecycled"></span></div>
 							<div class="nr_label">Water<span class="nr_water"></span></div>
@@ -117,22 +132,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="map_tools">
-				<div class="container">
-					<div class="map_tools__legend">
-						<h4 class="map_tools__legend__title">Lives improved</h4>
-						<span class="map_tools__legend__subtitle">% of population</span>
-						<ul class="map_tools__legend--values">
-							<li class="map_tools__legend__top_value"></li>
-							<li class="map_tools__legend__low_value"></li>
-						</ul>
-					</div>
-					<div class="map_tools__zoom">
-						<div class="map_tools__zoom--in" onclick="objMap.zoomIn();"></div>
-						<div class="map_tools__zoom--out" onclick="objMap.zoomOut();"></div>
-					</div>
-				</div>
-			</div>
+
 		</div>
 		<div id="top_panel"></div>
 		<div id="slider_indicator"></div>

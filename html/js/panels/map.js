@@ -404,7 +404,7 @@ var objMap = {
         self.centerworldmap(self.el.rootanimate);
 
         // On the public version of the application, stretch the worldmap to the maximum size of the window
-        if (isPublicSite()) self.maximizeworldmap(self.el.rootanimate);
+        if (isPublicSite() &! app.isMobile.any()) self.maximizeworldmap(self.el.rootanimate);
 
         objLoading.hide();
         //hideLoadingPanel();
@@ -946,8 +946,7 @@ var objMap = {
             objRegionInfo.el.data.co2.textContent = objExtendedData.value_co2;
             objRegionInfo.el.data.emission.textContent = objExtendedData.value_emissions;
             objRegionInfo.el.data.emissionhaz.textContent = objExtendedData.value_emissionshaz;
-            objRegionInfo.el.data.fte.textContent = objExtendedData.value_fte;
-            objRegionInfo.el.data.lwc.textContent = objExtendedData.value_lwc;
+            objRegionInfo.el.data.trc.textContent = objExtendedData.value_trc;
             objRegionInfo.el.data.waste.textContent = objExtendedData.value_waste;
             objRegionInfo.el.data.wasterecycled.textContent = objExtendedData.value_wasterecycled;
             objRegionInfo.el.data.water.textContent = objExtendedData.value_water;
@@ -984,6 +983,7 @@ var objMap = {
 
     },
     hideOtherElements: function (subtype) {
+
         for (var property in objRegionInfo.el.data) {
             if (objRegionInfo.el.data.hasOwnProperty(property)) {
                 if(objRegionInfo.el.data[property].className !== subtype.replace('value_', 'nr_')) {
