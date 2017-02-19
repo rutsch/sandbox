@@ -1,4 +1,7 @@
 .map-tab_panels {
+	@media #{$medium-up} {
+		height: 90px;
+	}
 	> div > ul {
 		display: flex;
 		justify-content: space-between;
@@ -26,21 +29,51 @@
 				color: #fff;
 				font-weight: 700;
 				border-bottom: 1px solid #fff;
+				.datatype-filter:after {
+					border-color: #fff;
+				}
+			}
+			.subtypeindicator{
+				position: absolute;
+			    top: 100%;
+			    width: 100%;
+			    margin-top: 10px;
 			}
 			.datatype-filter {
 				position: absolute;
 				right: 0;
-				top: -1px;
-				width: 25px;
-				height: 25px;
+				top: 0px;
+				width: 35px;
+				height: 35px;
 				background: transparent;
+				&:after {
+					border-color: #28777F;
+					border-style: solid;
+					border-width: .10em .10em 0 0;
+					content: "";
+					display: inline-block;
+					height: .50em;
+					margin-left: 25px;
+					right: 12px;
+					position: absolute;
+					top: 10px;
+					-webkit-transform: rotate(135deg);
+					-ms-transform: rotate(135deg);
+					transform: rotate(135deg);
+					vertical-align: top;
+					width: .50em;
+
+				}
 
 				&:hover {
 					background: #48979A;
+					&:after {
+						border-color: #fff;
+					}
 					ul {
 						width: calc(#{$content-width} / 3);
-					    right: calc(100% - 25px);
-					    top: 10px;
+					    right: calc(100% - 35px);
+					    top: 20px;
 						height: auto;
 
 						@media #{$xlarge-up} {

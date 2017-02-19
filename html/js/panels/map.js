@@ -246,7 +246,6 @@ var objMap = {
             } else {
                 for (var key in self.data) {
                     if (self.data[key][objDataFilter.state.filter.subtype] >= 0) {
-
                         var livesImprovedPercentage = (self.data[key][objDataFilter.state.filter.subtype] * 100 / self.data['philips_world'][objDataFilter.state.filter.subtype]);
                         if (livesImprovedPercentage > intLivesImprovedPercentageMax) intLivesImprovedPercentageMax = livesImprovedPercentage;
                         if (livesImprovedPercentage < intLivesImprovedPercentageMin) intLivesImprovedPercentageMin = livesImprovedPercentage;
@@ -264,7 +263,9 @@ var objMap = {
 
         //settings for the coloring
         var minimumPercentage = 0; //anything below this percentage will get the 'low' color
-        var factor = (intLivesImprovedPercentageMax - intLivesImprovedPercentageMin) / (100 - minimumPercentage);
+        var factor = (100 - minimumPercentage) / (intLivesImprovedPercentageMax - intLivesImprovedPercentageMin);
+
+        console.log(factor);
 
         //calculate rgb colors if needed
         if (!objConfig.colors[objPageState.state.filter.sector].hasOwnProperty('rgb')) {
@@ -299,7 +300,7 @@ var objMap = {
                     if (objDataFilter.state.filter.subtype !== 'all') {
                         percentageLI = (regionData[objDataFilter.state.filter.subtype] * 100) / self.data['philips_world'][objDataFilter.state.filter.subtype] || 0;
                     } else {
-                        percentageLi = 100;
+                        percentageLI = 100;
                     }
                 }
 
@@ -313,8 +314,12 @@ var objMap = {
                 //calculate the color to place on the map
                 var percentageForColor = 80;
                 if (intLivesImprovedPercentageMax > intLivesImprovedPercentageMin) {
-                    percentageForColor = (percentageLI - intLivesImprovedPercentageMin) / factor + minimumPercentage;
+                    // debugger;
+                    // percentageForColor = (percentageLI - intLivesImprovedPercentageMin) / factor + minimumPercentage;
+                    percentageForColor = percentageLI * factor;
                 }
+
+                console.log(percentageForColor);
 
                 // Correct for percentages above 100 and below 0
                 if (percentageForColor >= 100) percentageForColor = 100;
@@ -509,7 +514,7 @@ var objMap = {
             'value_water': 'water',
             'value_emissions': 'emissions',
             'value_emissionshaz': 'emissionshaz',
-            'value_lwc': 'lwc_rate',
+            'value_trc': 'lwc_rate',
             'value_wasterecycled': 'recycled',
             'value_sales': 'number_sales',
             'value_male': 'percentage_male',
@@ -525,7 +530,9 @@ var objMap = {
         var self = this;
         var htmlSustain = '<ul><li class="datafilter" data-subtype="all">All data</li>';
         self.datatypes.sustainability.forEach(function(datatype) {
-            htmlSustain += '<li class="datatypefilter" data-subtype="' + datatype + '">' + objConfig.fragments[self.mapdatatypekeys(datatype)] + '</li>';
+            if(datatype.indexOf('value_') > -1) {
+                htmlSustain += '<li class="datatypefilter" data-subtype="' + datatype + '">' + objConfig.fragments[self.mapdatatypekeys(datatype)] + '</li>';
+            }
         });
         htmlSustain += '</ul>';
         Sizzle('li[data-panel=sustainability] .datatype-filter')[0].innerHTML = htmlSustain;
@@ -533,7 +540,9 @@ var objMap = {
 
         var htmlGlobal = '<ul><li class="datafilter" data-subtype="all">All data</li>'
         self.datatypes.global_presence.forEach(function(datatype) {
-            htmlGlobal += '<li class="datafilter" data-subtype="' + datatype + '">' + objConfig.fragments[self.mapdatatypekeys(datatype)] + '</li>';
+            if(datatype.indexOf('value_') > -1) {
+                htmlGlobal += '<li class="datafilter" data-subtype="' + datatype + '">' + objConfig.fragments[self.mapdatatypekeys(datatype)] + '</li>';
+            }
         });
         htmlGlobal += '</ul>';
         Sizzle('li[data-panel=global_presence] .datatype-filter')[0].innerHTML = htmlGlobal;

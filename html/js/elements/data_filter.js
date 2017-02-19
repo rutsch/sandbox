@@ -26,6 +26,11 @@ var objDataFilter = {
 			items[i].removeAttribute('class');
 		}
 		this.setAttribute('class', 'active-tab');
+
+        var subtypeindicators = objDataFilter.el.wrapper.getElementsByClassName('subtypeindicator');
+		for (var i =0; i < subtypeindicators.length; i++) {
+			subtypeindicators[i].innerText = 'All data';
+		}
         // Show or hide the legend
         objFilter.applyfilter();
         if(objDataFilter.state.filter.datasource === 'lives_improved' || objDataFilter.state.filter.subtype !== 'all') {
@@ -45,8 +50,11 @@ var objDataFilter = {
         e.stopPropagation();
         // get subtype
         var subtype = this.getAttribute('data-subtype');
+        // Set the subtype name to div below the data type
+        this.parentNode.parentNode.parentNode.getElementsByClassName('subtypeindicator')[0].innerHTML = this.innerText;
 
         objDataFilter.state.filter.subtype = subtype;
+        getEl('body').setAttribute('data-subtype', subtype);
         objFilter.applyfilter();
         if(objDataFilter.state.filter.datasource === 'lives_improved' || objDataFilter.state.filter.subtype !== 'all') {
             objRegionInfo.renderLegend();

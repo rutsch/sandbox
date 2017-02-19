@@ -127,6 +127,21 @@
   src: url("../fonts/CentraleSans-XBoldItalic.eot") format("eot");
   src: url("../fonts/CentraleSans-XBoldItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/CentraleSans-XBoldItalic.woff") format("woff"); }
 
+[data-subtype=value_male] .st1:first-of-type {
+  fill: #E2EA6D; }
+
+[data-subtype=value_female] .st1:last-of-type {
+  fill: #E2EA6D; }
+
+[data-subtype=value_co2] .st1 {
+  fill: #E2EA6D; }
+
+[data-subtype=value_wasterecycled] .st2 {
+  fill: #E2EA6D; }
+
+[data-subtype=value_waste] .st0 {
+  fill: #E2EA6D; }
+
 .region_info,
 .region_info_wrapper {
   color: #3A707A;
@@ -234,19 +249,36 @@
         width: calc( ( ( ( 100% + 50px ) / 12 ) * 7 ) - 50px);
         margin-left: calc( ( ( ( 100% + 50px ) / 12 ) * 0 ) - 50px);
         margin-right: calc( ( ( ( 100% + 50px ) / 12 ) * 1.2 ) - 50px); }
-        .sustainability .region_info_right,
-        .global_presence .region_info_right, .sustainability
+        .global_presence .region_info_right,
+        .sustainability .region_info_right, .global_presence
         .region_info_wrapper_right,
-        .global_presence
+        .sustainability
         .region_info_wrapper_right {
-          background-image: url("../img/sustainability_bg.png");
-          background-repeat: no-repeat;
-          background-position: left -10px; } }
+          flex-direction: row;
+          width: calc( ( ( ( 100% + 50px ) / 12 ) * 8 ) - 50px); }
+          .global_presence .region_info_right .data-wrapper,
+          .sustainability .region_info_right .data-wrapper, .global_presence
+          .region_info_wrapper_right .data-wrapper,
+          .sustainability
+          .region_info_wrapper_right .data-wrapper {
+            align-self: flex-start; } }
+    .region_info_right .image,
+    .region_info_wrapper_right .image {
+      display: none; }
     @media only screen and (min-width: 769px) {
       .region_info_right .data-wrapper,
       .region_info_wrapper_right .data-wrapper {
-        width: calc( ( ( ( 100% + 50px ) / 12 ) * 9 ) - 50px);
-        align-self: flex-end; } }
+        width: calc( ( ( ( 100% + 50px ) / 12 ) * 8 ) - 50px);
+        align-self: flex-end; }
+      .region_info_right .image,
+      .region_info_wrapper_right .image {
+        display: block;
+        width: calc( ( ( ( 100% + 50px ) / 12 ) * 4 ) - 50px); }
+        .region_info_right .image svg, .region_info_right .image use,
+        .region_info_wrapper_right .image svg,
+        .region_info_wrapper_right .image use {
+          width: 100%;
+          height: 100%; } }
     .region_info_right_header,
     .region_info_wrapper_right_header {
       border-bottom: 1px solid #3A707A; }
@@ -396,6 +428,10 @@
     .map_tools__zoom--out:after {
       display: none; }
 
+@media only screen and (min-width: 769px) {
+  .map-tab_panels {
+    height: 90px; } }
+
 .map-tab_panels > div > ul {
   display: flex;
   justify-content: space-between;
@@ -422,19 +458,44 @@
       color: #fff;
       font-weight: 700;
       border-bottom: 1px solid #fff; }
+      .map-tab_panels > div > ul > li.active-tab .datatype-filter:after {
+        border-color: #fff; }
+    .map-tab_panels > div > ul > li .subtypeindicator {
+      position: absolute;
+      top: 100%;
+      width: 100%;
+      margin-top: 10px; }
     .map-tab_panels > div > ul > li .datatype-filter {
       position: absolute;
       right: 0;
-      top: -1px;
-      width: 25px;
-      height: 25px;
+      top: 0px;
+      width: 35px;
+      height: 35px;
       background: transparent; }
+      .map-tab_panels > div > ul > li .datatype-filter:after {
+        border-color: #28777F;
+        border-style: solid;
+        border-width: .10em .10em 0 0;
+        content: "";
+        display: inline-block;
+        height: .50em;
+        margin-left: 25px;
+        right: 12px;
+        position: absolute;
+        top: 10px;
+        -webkit-transform: rotate(135deg);
+        -ms-transform: rotate(135deg);
+        transform: rotate(135deg);
+        vertical-align: top;
+        width: .50em; }
       .map-tab_panels > div > ul > li .datatype-filter:hover {
         background: #48979A; }
+        .map-tab_panels > div > ul > li .datatype-filter:hover:after {
+          border-color: #fff; }
         .map-tab_panels > div > ul > li .datatype-filter:hover ul {
           width: calc(960px / 3);
-          right: calc(100% - 25px);
-          top: 10px;
+          right: calc(100% - 35px);
+          top: 20px;
           height: auto; }
           @media only screen and (min-width: 1400px) {
             .map-tab_panels > div > ul > li .datatype-filter:hover ul {

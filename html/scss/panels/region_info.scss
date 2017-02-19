@@ -1,10 +1,38 @@
+$yellow: #E2EA6D;
+
+[data-subtype=value_male] {
+	.st1:first-of-type {
+		fill: $yellow;
+	}
+}
+[data-subtype=value_female] {
+	.st1:last-of-type {
+		fill: $yellow;
+	}
+}
+[data-subtype=value_co2] {
+	.st1 {
+		fill: $yellow;
+	}
+}
+[data-subtype=value_wasterecycled] {
+	.st2 {
+		fill: $yellow;
+	}
+}
+[data-subtype=value_waste] {
+	.st0 {
+		fill: $yellow;
+	}
+}
+
 .region_info,
 .region_info_wrapper {
 	color: #3A707A;
 	width: 100%;
 	height: 100%;
 	opacity: 0;
-	position: relative;  
+	position: relative;
 
 	&_wrapper {
 		padding-top: 10px;
@@ -106,17 +134,34 @@
 			width: grid-size(7);
 			margin-left: grid-size(0);
 			margin-right: grid-size(1.2);
-			.sustainability &,
-			.global_presence & {
-				background-image: url('../img/sustainability_bg.png');
-				background-repeat: no-repeat;
-				background-position: left -10px;
+
+			.global_presence &,
+			.sustainability & {
+				flex-direction: row;
+				width: grid-size(8);
+				.data-wrapper {
+					align-self: flex-start;
+				}
 			}
+		}
+		.image {
+			display: none;
+
 		}
 		@media #{$medium-up} {
 			.data-wrapper {
-				width: grid-size(9, false);
+				width: grid-size(8, false);
 				align-self: flex-end;
+			}
+			.image {
+				display: block;
+				width: grid-size(4, false);
+				svg, use {
+					width: 100%;
+					height: 100%;
+
+				}
+
 			}
 		}
 
