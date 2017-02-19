@@ -98,6 +98,19 @@ body {
                         opacity: 1;
                         position: relative;
                     }
+
+                }
+                .mapselector {
+
+                    &.selected {
+                        color: #E1E96D;
+                        &:after {
+                            transform: rotate(-45deg);
+                        }
+                        *:not(.lives_improved_percentage) {
+                            font-size: 14px;
+                        }
+                    }
                 }
             }
             @media #{$medium-up} {

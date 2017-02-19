@@ -537,6 +537,12 @@ body {
         display: block !important;
         opacity: 1;
         position: relative; }
+    #app_panel #app_wrapper #regions ul .mapselector.selected {
+      color: #E1E96D; }
+      #app_panel #app_wrapper #regions ul .mapselector.selected:after {
+        transform: rotate(-45deg); }
+      #app_panel #app_wrapper #regions ul .mapselector.selected *:not(.lives_improved_percentage) {
+        font-size: 14px; }
   @media only screen and (min-width: 769px) {
     #app_panel #app_wrapper #regions {
       display: none; } }

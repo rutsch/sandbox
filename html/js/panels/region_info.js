@@ -48,6 +48,8 @@ var objRegionInfo = {
             self.removeMobileRegionInfos();
             // Copy region info html to correct LI
             var el = Sizzle('[data-target='+objPageState.state.filter.oru+']')[0];
+
+            el.className = 'mapselector selected';
             el.innerHTML = el.innerHTML + getEl(objDataFilter.state.filter.datasource).outerHTML;
             el.getElementsByClassName('region_info_wrapper')[0].removeAttribute('style');
         } else {
@@ -148,6 +150,7 @@ var objRegionInfo = {
     removeMobileRegionInfos: function () {
         var el = Sizzle('[data-target] > div');
         for(var i = 0; i <  el.length; i++) {
+            el[i].parentNode.className = 'mapselector';
             el[i].parentNode.removeChild(el[i]);
         }
     },
