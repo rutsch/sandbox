@@ -127,21 +127,6 @@
   src: url("../fonts/CentraleSans-XBoldItalic.eot") format("eot");
   src: url("../fonts/CentraleSans-XBoldItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/CentraleSans-XBoldItalic.woff") format("woff"); }
 
-[data-subtype=value_male] .st1:first-of-type {
-  fill: #E2EA6D; }
-
-[data-subtype=value_female] .st1:last-of-type {
-  fill: #E2EA6D; }
-
-[data-subtype=value_co2] .st1 {
-  fill: #E2EA6D; }
-
-[data-subtype=value_wasterecycled] .st2 {
-  fill: #E2EA6D; }
-
-[data-subtype=value_waste] .st0 {
-  fill: #E2EA6D; }
-
 .region_info,
 .region_info_wrapper {
   color: #3A707A;
@@ -447,6 +432,7 @@
     width: 100%;
     text-align: left;
     border-bottom: 1px solid #22505F;
+    opacity: .9;
     cursor: pointer;
     position: relative; }
     @media only screen and (min-width: 769px) {
@@ -461,21 +447,29 @@
       .map-tab_panels > div > ul > li.active-tab .datatype-filter:after {
         border-color: #fff; }
     .map-tab_panels > div > ul > li .subtypeindicator {
+      display: none;
       position: absolute;
       top: 100%;
       width: 100%;
       margin-top: 10px; }
+      @media only screen and (min-width: 769px) {
+        .map-tab_panels > div > ul > li .subtypeindicator {
+          display: block; } }
     .map-tab_panels > div > ul > li .datatype-filter {
+      display: none;
       position: absolute;
       right: 0;
       top: 0px;
       width: 35px;
       height: 35px;
       background: transparent; }
+      @media only screen and (min-width: 769px) {
+        .map-tab_panels > div > ul > li .datatype-filter {
+          display: block; } }
       .map-tab_panels > div > ul > li .datatype-filter:after {
         border-color: #28777F;
         border-style: solid;
-        border-width: .10em .10em 0 0;
+        border-width: .05em .05em 0 0;
         content: "";
         display: inline-block;
         height: .50em;
@@ -556,12 +550,13 @@ body {
       width: 150px; }
   #app_panel #app_wrapper #map {
     top: 18%;
-    min-height: 400px;
+    height: 400px;
     width: 100%;
+    padding: 20px 0;
     display: none; }
     @media only screen and (min-width: 769px) {
       #app_panel #app_wrapper #map {
-        height: calc(100% - 18% - 250px);
+        height: 400px;
         width: 100%;
         display: block;
         opacity: 1; } }
@@ -581,7 +576,7 @@ body {
       position: relative; }
       #app_panel #app_wrapper #regions ul li:after {
         border-style: solid;
-        border-width: .10em .10em 0 0;
+        border-width: .05em .05em 0 0;
         content: "";
         display: inline-block;
         height: .50em;

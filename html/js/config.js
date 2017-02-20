@@ -12,6 +12,7 @@ var objConfig = {
         johan: 'http://resultshub.com',
         rutger: 'https://www.test.results.philips.com',
         suus: 'https://www.dev.results.philips.com',
+        resultshubpublic: 'https://www.results.philips.com',
         dynamicresourceurl: 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
         authurl2: "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
         authurl3: "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx",
@@ -142,6 +143,8 @@ var objConfig = {
         } else if (self.urls.johan.indexOf(location.hostname) > -1) {
             self.sitetype = 'devpublic';
         } else if (self.urls.rutger.indexOf(location.hostname) > -1) {
+            self.sitetype = 'devpublic';
+        } else if (self.urls.resultshubpublic.indexOf(location.hostname) > -1) {
             self.sitetype = 'devpublic';
         } else if (self.urls.suus.indexOf(location.hostname) > -1) {
             self.sitetype = 'devpublic';
