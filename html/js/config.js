@@ -233,7 +233,7 @@ var objConfig = {
     init: function () {
         var self = this;
 
-        //determine the configuration settings
+        // Determine the configuration settings
         self.calculateconfigsettings();
     }
 }

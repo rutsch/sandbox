@@ -395,7 +395,7 @@ var objPageState = {
         if (obj.hasOwnProperty("popup")) self.state.popup = obj.popup;
 
         // debugger;
-        console.log('setting state object');
+        // console.log('setting state object');
         if (obj.hasOwnProperty("filter")) {
             if (obj.filter.hasOwnProperty("orulevel")) self.state.filter.orulevel = obj.filter.orulevel;
             if (obj.filter.hasOwnProperty("oru")) self.state.filter.oru = obj.filter.oru;
@@ -759,7 +759,7 @@ window.onhashchange = function () {
     var objPageStateNew = objPageState.hash2object(location.hash);
 
     // debugger;
-    console.log(objPageStateNew);
+    // console.log(objPageStateNew);
     if (objPageStateNew.hasOwnProperty("error")) {
         // Could not properly parse the hash into a state object - default to standard object
         location.hash = objPageState.object2hash(app.defaultpagestate);
