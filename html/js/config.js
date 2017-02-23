@@ -12,6 +12,7 @@ var objConfig = {
         johanzh: 'http://resultshub.com.cn',
         johan: 'http://resultshub.com',
         rutger: 'https://www.test.results.philips.com',
+        rutgerzh: 'https://www.test.results.philips.com.cn',
         suus: 'https://www.dev.results.philips.com',
         resultshubpublic: 'https://www.results.philips.com',
         resultshubpubliccn: 'https://www.results.philips.com.cn',
@@ -147,6 +148,8 @@ var objConfig = {
         } else if (self.urls.johanzh.indexOf(location.hostname) > -1) {
             self.sitetype = 'devpublic';
         } else if (self.urls.rutger.indexOf(location.hostname) > -1) {
+            self.sitetype = 'devpublic';
+        } else if (self.urls.rutgerzh.indexOf(location.hostname) > -1) {
             self.sitetype = 'devpublic';
         } else if (self.urls.resultshubpublic.indexOf(location.hostname) > -1) {
             self.sitetype = 'devpublic';

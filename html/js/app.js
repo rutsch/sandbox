@@ -320,14 +320,14 @@ var app = {
         });
         var file;
         if (parent.window) {
-            file = parent.window.location.href.replace(parent.window.location.hash, '') + '/publications/ar16/data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json';
+            file = parent.window.location.href.replace(parent.window.location.hash, '') + 'publications/ar16/data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json';
         } else {
             file = location.href.replace(/^(.*)index.*$/, '$1') + 'data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json'
         }
         // console.log(file);
         // Load the translation fragments
         window.psv('GET', file, {
-            v: 1
+            v: Math.random()
         }, function retrieveFragmentsHandler(err, data) {
             if (err) {
                 window.objError.show('There was an error retrieving translation fragments. ' + ((typeof err === 'object') ? JSON.stringify(err) : err), true);
