@@ -83,8 +83,7 @@ var app = {
     },
     isMobile: {
         any: function () {
-            // return 'ontouchstart' in document.documentElement;
-            return window.getComputedStyle(getEl('map'), null).display === 'none';
+            return window.getComputedStyle(window.getEl('map'), null).display === 'none';
         }
     },
     retrievechartdata: function (type) {
@@ -95,9 +94,10 @@ var app = {
             source: type,
             period: 'future'
         }
-        //showLoadingPanel();
+
+        // showLoadingPanel();
         window.psv('GET', window.objConfig.urls.dynamicresourceurl, objData, function (err, data) {
-            //hideLoadingPanel();
+            // hideLoadingPanel();
             if (err != null) {
                 console.log(err);
                 window.objError.show('There was an error retrieving the worldmap data. ' + ((typeof err === 'object') ? JSON.parse(err) : err), true);
@@ -318,9 +318,15 @@ var app = {
             method: 'get',
             debug: false
         });
-
+        var file;
+        if (parent.window) {
+            file = parent.window.location.href.replace(parent.window.location.hash, '') + '/publications/ar16/data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json';
+        } else {
+            file = location.href.replace(/^(.*)index.*$/, '$1') + 'data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json'
+        }
+        // console.log(file);
         // Load the translation fragments
-        window.psv('GET', location.href.replace(/^(.*)index.*$/, '$1') + 'data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json', {
+        window.psv('GET', file, {
             v: 1
         }, function retrieveFragmentsHandler(err, data) {
             if (err) {
@@ -405,7 +411,7 @@ var objPageState = {
         }
     },
     updatepagestate: function (obj) {
-		//  debugger;
+        //  debugger;
         var objCurrentState = objPageState.clonestateobject();
 
         if (obj.hasOwnProperty("view")) objCurrentState.view = obj.view;
@@ -570,6 +576,9 @@ var objPageState = {
 
         }
 
+        // 8) Set the oru level as an attribute on the body
+        window.objOruFilter.setdatalevelattribute(objPageState.state.filter.orulevel);
+
         // 7) open the filter panel if this is the public website
         // if (window.isPublicSite() && !window.objFilter.state.visible) window.objFilter.show();
 
@@ -591,7 +600,7 @@ var objPageState = {
                     window.objMap.updatemap(false, app.showappintromessage);
                 }
                 window.objRegionInfo.hide();
-				window.objMap.hideSelectedCountries();
+                window.objMap.hideSelectedCountries();
 
                 // Set the header
                 window.objHeader.setregionname(window.objMap.state.mapname);
@@ -599,7 +608,7 @@ var objPageState = {
         } else {
             // Load the svg map, the map data and open the details panel afterwards
             self.setstateobject(objPageStateNew);
-			objOruFilter.settocurrentoru();
+            window.objOruFilter.settocurrentoru();
             // Reload all the data
             if (bolShowDetailsPanel) {
                 app.start(true);

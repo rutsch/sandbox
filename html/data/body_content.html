@@ -18,16 +18,16 @@
 			<div class="container">
 				<ul>
 					<li data-panel="lives_improved" class="datafilter active-tab">
-						Lives improved
+						[lives_improved]
 					</li>
 					<li data-panel="global_presence" class="datafilter">
-						Global presence
-						<div class="subtypeindicator">All data</div>
+						[global_presence]
+						<div class="subtypeindicator">[all_data]</div>
 						<div class="datatype-filter"></div>
 					</li>
 					<li data-panel="sustainability" class="datafilter">
-						Sustainability
-						<div class="subtypeindicator">All data</div>
+						[sustainability]
+						<div class="subtypeindicator">[all_data]</div>
 						<div class="datatype-filter"></div>
 					</li>
 				</ul>
@@ -36,10 +36,10 @@
 		<div id="oru_filter_container">
 
 			<div class="container">
-				<select onchange="objOruFilter.selectoru(this, this.value);">
-					<option id="btn_world" value="1">Global</option>
-					<option id="btn_region" value="2">Region</option>
-					<option id="btn_bmc" value="3">Market</option>
+				<select id="oru-select" onchange="objOruFilter.selectoru(this, this.value);">
+					<option id="btn_world" value="1">[world]</option>
+					<option id="btn_region" value="2">[region]</option>
+					<option id="btn_bmc" value="3">[market]</option>
 					<!-- <option id="btn_country" value="4">Country</option> -->
 				</select>
 			</div>
@@ -59,8 +59,8 @@
 			<div class="map_tools">
 				<div class="container">
 					<div class="map_tools__legend">
-						<h4 class="map_tools__legend__title">Lives improved</h4>
-						<span class="map_tools__legend__subtitle">% of population</span>
+						<h4 class="map_tools__legend__title">[lives_improved]</h4>
+						<span class="map_tools__legend__subtitle">% [of_total_population]</span>
 						<ul class="map_tools__legend--values">
 							<li class="map_tools__legend__top_value"></li>
 							<li class="map_tools__legend__low_value"></li>
@@ -84,13 +84,13 @@
 					</div>
 					<div class="region_info_right">
 						<div class="region_info_right_header">
-							<span class="nr_lives_improved_label">Lives improved</span><span class="nr_lives_improved">70.3</span>
+							<span class="nr_lives_improved_label">[lives_improved]</span><span class="nr_lives_improved">70.3</span>
 						</div>
 						<div class="lives_improved_wrapper">
 							<div class="lives_improved_numbers">
 								<div class="lives_improved_percentage">100%</div>
 			                    <div class="lives_improved_percentage_sub">
-								  	<span>of total population</span>
+								  	<span>[of_total_population]</span>
 								</div>
 							</div>
 							<div class="lives_improved_icons">
@@ -168,13 +168,13 @@
 							</svg>
 						</div>
 						<div class="data-wrapper">
-							<div class="nr_label">Assets<span class="nr_assets"></span></div>
-							<div class="nr_label">Number of employees<span class="nr_employees"></span></div>
-							<div class="nr_label">Male<span class="nr_male"></span></div>
-							<div class="nr_label">Female<span class="nr_female"></span></div>
-							<div class="nr_label">Manufacturing sites<span class="nr_plants"></span></div>
-							<div class="nr_label">R &amp; D centers<span class="nr_research"></span></div>
-							<div class="nr_label">Sales (EUR million)<span class="nr_sales"></span></div>
+							<div class="nr_label">[number_assets]<span class="nr_assets"></span></div>
+							<div class="nr_label">[number_of_employees]<span class="nr_employees"></span></div>
+							<div class="nr_label">[percentage_male]<span class="nr_male"></span></div>
+							<div class="nr_label">[percentage_female]<span class="nr_female"></span></div>
+							<div class="nr_label">[manifacturing_sites]<span class="nr_plants"></span></div>
+							<div class="nr_label">[r_and_d_centers]<span class="nr_research"></span></div>
+							<div class="nr_label">[number_sales]<span class="nr_sales"></span></div>
 						</div>
 					</div>
 				</div>
@@ -228,13 +228,13 @@
 
 						</div>
 						<div class="data-wrapper">
-							<div class="nr_label">CO<sub>2</sub> emitted (tonnes)<span class="nr_co2"></span></div>
-							<div class="nr_label">Emissions of restricted substances (kg)<span class="nr_emission"></span></div>
-							<div class="nr_label">Emissions of hazardous substances (kg)<span class="nr_emissionhaz"></span></div>
-							<div class="nr_label">Lost Workday Injury rate<span class="nr_trc"></span></div>
-							<div class="nr_label">Waste (tonnes)<span class="nr_waste"></span></div>
-							<div class="nr_label">Recycled (%)<span class="nr_wasterecycled"></span></div>
-							<div class="nr_label">Water<span class="nr_water"></span></div>
+							<div class="nr_label">[c_o_2]<span class="nr_co2"></span></div>
+							<div class="nr_label">[emissions]<span class="nr_emission"></span></div>
+							<div class="nr_label">[emissionshaz]<span class="nr_emissionhaz"></span></div>
+							<div class="nr_label">[lwc_rate]<span class="nr_trc"></span></div>
+							<div class="nr_label">[waste]<span class="nr_waste"></span></div>
+							<div class="nr_label">[recycled]<span class="nr_wasterecycled"></span></div>
+							<div class="nr_label">[water]<span class="nr_water"></span></div>
 						</div>
 					</div>
 				</div>

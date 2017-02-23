@@ -141,7 +141,7 @@ var objMap = {
                 window.psv('GET', window.objConfig.urls.dynamicresourceurl, objData, function getWorldmapDataHandler(err, data) {
                     //hideLoadingPanel();
                     if (err != null) {
-                        console.log(err);
+                        // console.log(err);
                         window.objError.show('There was an error retrieving the worldmap data. ' + ((typeof err === 'object') ? JSON.parse(err) : err), true);
                     } else {
                         // Check if authentication is required
@@ -232,7 +232,7 @@ var objMap = {
 
         if (window.objOruFilter.state.selectedoru !== 1 && ((window.objDataFilter.state.filter.datasource === 'global_presence' || window.objDataFilter.state.filter.datasource === 'sustainability') && window.objDataFilter.state.filter.subtype !== 'all') || window.objDataFilter.state.filter.datasource === 'lives_improved') {
             var property = 'l';
-            //analyze the data we have received
+            // Analyze the data we have received
             var intLivesImprovedPercentageMax = 0;
             var intLivesImprovedPercentageMin = 100;
             if (window.objDataFilter.state.filter.datasource === 'lives_improved') {
@@ -255,20 +255,20 @@ var objMap = {
 
             }
 
-            if(debugRoutine) console.log(' - intLivesImprovedPercentageMax: ' + intLivesImprovedPercentageMax + ' - intLivesImprovedPercentageMin: ' + intLivesImprovedPercentageMin);
+            if (debugRoutine) console.log(' - intLivesImprovedPercentageMax: ' + intLivesImprovedPercentageMax + ' - intLivesImprovedPercentageMin: ' + intLivesImprovedPercentageMin);
         } else {
             intLivesImprovedPercentageMax = 100;
             intLivesImprovedPercentageMin = 100;
         }
 
 
-        //settings for the coloring
-        var minimumPercentage = 0; //anything below this percentage will get the 'low' color
+        // Settings for the coloring
+        var minimumPercentage = 0; // Anything below this percentage will get the 'low' color
         var factor = (100 - minimumPercentage) / (intLivesImprovedPercentageMax - intLivesImprovedPercentageMin);
 
-        if(debugRoutine) console.log(factor);
+        if (debugRoutine) console.log(factor);
 
-        //calculate rgb colors if needed
+        // Calculate rgb colors if needed
         if (!window.objConfig.colors[window.objPageState.state.filter.sector].hasOwnProperty('rgb')) {
             window.objConfig.colors[window.objPageState.state.filter.sector].rgb = {};
             window.objConfig.colors[window.objPageState.state.filter.sector].rgb.low = window.rgbFromHex(window.objConfig.colors[window.objPageState.state.filter.sector].low);
@@ -320,7 +320,7 @@ var objMap = {
                     percentageForColor = percentageLI * factor;
                 }
 
-                if(debugRoutine) console.log(percentageForColor);
+                if (debugRoutine) console.log(percentageForColor);
 
                 // Correct for percentages above 100 and below 0
                 if (percentageForColor >= 100) percentageForColor = 100;
@@ -361,6 +361,8 @@ var objMap = {
         /*
 		4) perform post processing (set events and center map)
 		*/
+
+
         // Retrieve the base svg elements
         self.el.rootanimate = window.getEl('viewport');
         self.el.rootsvg = window.getEl('holder_1000').getElementsByTagName('svg')[0];
@@ -431,6 +433,26 @@ var objMap = {
 
         // Post processing
         self.el.elsvgholder.style.visibility = 'visible';
+
+        // If the are on global level and we have not selected a sub element to view, then we need to fire a click on the map to make it selected
+        var subFilterDataSourceCombination = false;
+        if (window.objPageState.state.filter.datasource === 'lives_improved') {
+            subFilterDataSourceCombination = true;
+        } else {
+            if (window.objDataFilter.state.filter.subtype === 'all') subFilterDataSourceCombination = true;
+        }
+
+        // console.log(parseInt(window.objPageState.state.filter.orulevel, 10) + ' - 1');
+        // console.log(subFilterDataSourceCombination + ' - true');
+        // console.log(window.objPageState.state.view + ' - "worldmap"');
+        // console.log(window.objPageState.state.filter.oru + ' - "none"')
+
+        if (parseInt(window.objPageState.state.filter.orulevel, 10) === 1 &&
+            subFilterDataSourceCombination &&
+            window.objPageState.state.view === 'worldmap' &&
+            window.objPageState.state.filter.oru === 'none') {
+            window.countryClicked('world', window.app.isMobile.any(), 'detail');
+        }
     },
 
     /*
@@ -451,8 +473,6 @@ var objMap = {
 
         // 1) retrieve the svg map
         var strSvg = self.retrieveworldmapsvg();
-
-
 
         // console.log(strSvg);
 
@@ -815,8 +835,8 @@ var objMap = {
                 }
             });
         } else {
-            console.log('Could not find the region in the map to animate.');
-            console.log(window.objPageState.state.filter.oru);
+            // console.log('Could not find the region in the map to animate.');
+            // console.log(window.objPageState.state.filter.oru);
         }
 
 
@@ -1076,7 +1096,7 @@ var objMap = {
                 intDecimals = 1;
             }
             objData.displayg = window.formatMoney(objData.roundedg, intDecimals, ',', '.', '');
-            objData.labelg = ' billion';
+            objData.labelg = ' ' + window.objConfig.fragments['billion'];
         }
 
         //population
@@ -1089,7 +1109,7 @@ var objMap = {
                 intDecimals = 1;
             }
             objData.displayp = window.formatMoney(objData.roundedp, intDecimals, ',', '.', '');
-            objData.labelp = ' million';
+            objData.labelp = ' ' + window.objConfig.fragments['million'];
         }
 
         return objData;

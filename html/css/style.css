@@ -615,6 +615,9 @@ body {
   #app_panel #app_wrapper #show_current {
     display: none; }
 
+.level1 .active * {
+  fill: red !important; }
+
 #error {
   position: absolute;
   bottom: 0;

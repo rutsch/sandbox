@@ -11,7 +11,7 @@ var objOruFilter = {
     // Fired when the filter panel is opened - sets the state of the filter to match the filter state of the application
     setorufilterstate: function () {
         var self = this;
-        console.log('bla');
+        // console.log('bla');
 
         self.state.selectedoru = window.objPageState.state.filter.orulevel;
         var strButtonId = 'btn_country';
@@ -40,14 +40,14 @@ var objOruFilter = {
         // console.log(regionId);
         // console.trace();
         // console.log(iterate(self.json, 'guid', regionId))
-        var result = window.iterate(self.json, 'guid', regionId).name;
+        var result = window.objConfig.fragments[regionId];//window.iterate(self.json, 'guid', regionId).name;
 
         //JT: stupid fix for now to get the map up and running with a typo in the metadata id
         if (result == null) {
             var regionIdNew = '';
             if (regionId === 'cantral-east_europe') regionIdNew = 'central-east_europe';
             if (regionId === 'central-east_europe') regionIdNew = 'cantral-east_europe';
-            result = window.iterate(self.json, 'guid', regionIdNew).name;
+            result = window.objConfig.fragments[regionId];// window.iterate(self.json, 'guid', regionIdNew).name;
         }
 
         // Reset the object defined in utils.js
@@ -97,6 +97,9 @@ var objOruFilter = {
         }
         //debugger;
     },
+    setdatalevelattribute: function (level) {
+        window.getEl('body').setAttribute('data-orulevel', ('level' + ((level) ? level : document.getElementsById('oru-select').selectedValue)));
+    },
     convertoruleveltomarket: function (oruLevel) {
 
         switch (parseInt(oruLevel, 10)) {
@@ -117,5 +120,8 @@ var objOruFilter = {
         var self = this;
         self.state.selectedoru = window.app.defaultpagestate.filter.orulevel;
         self.el.wrapper = window.getEl('oru_filter_container');
+
+        // Set the data-oru level class
+        objOruFilter.setdatalevelattribute(1);
     }
 }

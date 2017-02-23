@@ -24,7 +24,7 @@ var objStore = {
       if (x !== y) { throw new Error(); }
       objStore.store = window.localStorage; // Yippee, all is fine!
     } catch (e) {
-      console.log('Could not initiate memory storage, fall back to memory storage shim') // fall back to shim
+    //   console.log('Could not initiate memory storage, fall back to memory storage shim') // fall back to shim
       self.vars.uselocalstorage = false;
       objStore.store = new MemoryStorage();
     }

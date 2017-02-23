@@ -138,6 +138,10 @@ body {
 	}
 }
 
+.level1 .active *{
+    fill: red!important;
+}
+
 
 #error {
   position: absolute;

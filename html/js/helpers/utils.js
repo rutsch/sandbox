@@ -134,7 +134,7 @@ function svgSetTransform(elSvg, objSvgProperties) {
     if (bolUseStringMethod) {
         /* String method */
         // var strTransformValue='translate('+objSvgProperties['translatex']+', '+objSvgProperties['translatey']+') scale('+objSvgProperties['scale']+')';
-        if(objSvgProperties.scale === 'Infinity') objSvgProperties.scale = 1;
+        if (objSvgProperties.scale === 'Infinity') objSvgProperties.scale = 1;
         var strTransformValue = 'matrix(' + objSvgProperties.scale + ',0,0,' + objSvgProperties.scale + ',' + objSvgProperties.translatex + ',' + objSvgProperties.translatey + ')';
 
         elSvg.setAttributeNS(null, 'transform', strTransformValue);
@@ -510,37 +510,38 @@ function serverSideRequest(objArguments) {
     //objXmlHttpLocal = null;
 }
 
-function countryClicked(idCountry, mobile) {
+function countryClicked(idCountry, mobile, forceview) {
     var elRegion = getEl(idCountry);
 
-    if(mobile) {
-        objPageState.mobile  = true;
+    if (mobile) {
+        window.objPageState.mobile = true;
     } else {
-        objPageState.mobile  = false;
+        window.objPageState.mobile = false;
     }
 
     if (idCountry !== "" && elRegion.style.fill !== '#999999' && elRegion.style.fill !== '#999' && elRegion.style.fill !== 'rgb(153, 153, 153)' && elRegion.style.fill !== 'rgb(153,153,153)') {
-        //update the hash and initiate the new view based on that
-        //console.log('click in map ' + idCountry);
-        if (window.objPageState.state.view === 'detail' && window.objPageState.state.filter.oru === idCountry) {
-			window.objPageState.updatepagestate({
-				view: 'worldmap',
-				filter: {
-					oru: 'none',
-                    datasource: objDataFilter.state.filter.datasource,
-                    subtype: objDataFilter.state.filter.subtype
-				}
-			});
-		} else {
-			window.objPageState.updatepagestate({
-				view: 'detail',
-				filter: {
-					oru: idCountry,
-                    datasource: objDataFilter.state.filter.datasource,
-                    subtype: objDataFilter.state.filter.subtype
-				}
-			});
-		}
+        // Update the hash and initiate the new view based on that
+        // console.log('click in map ' + idCountry);
+
+        if (window.objPageState.state.view === 'detail' && window.objPageState.state.filter.oru === idCountry && typeof forceview === 'undefined') {
+            window.objPageState.updatepagestate({
+                view: 'worldmap',
+                filter: {
+                    oru: 'none',
+                    datasource: window.objDataFilter.state.filter.datasource,
+                    subtype: window.objDataFilter.state.filter.subtype
+                }
+            });
+        } else {
+            window.objPageState.updatepagestate({
+                view: ((typeof forceview === 'undefined') ? 'detail' : forceview),
+                filter: {
+                    oru: idCountry,
+                    datasource: window.objDataFilter.state.filter.datasource,
+                    subtype: window.objDataFilter.state.filter.subtype
+                }
+            });
+        }
         //objMap.detailspanel(idCountry);
     } else {
         //debugger;
