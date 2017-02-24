@@ -345,7 +345,7 @@ var app = {
                 // Start translating stuff
 
                 // Translate fragments in the HTML and inject it back into the UI
-                self.vars.basehtml = self.vars.basehtml.replace(/\[([a-zA-Z\s_-]*?)\]/g, function replacementHandler(match, contents, offset, s) {
+                self.vars.basehtml = self.vars.basehtml.replace(/\[([a-zA-Z\d\s_-]*?)\]/g, function replacementHandler(match, contents, offset, s) {
                     return window.translateFragment(contents);
                 });
 
@@ -644,6 +644,9 @@ var objAnalytics = {
         views: [], // Contains an array of objects to send to google analytics { page: '/start', title: 'My New Page Title' }
         events: [] // Contains an array of objects with the events to send to google analytics {category: 'button' /*required - object that was interacted with*/, action: 'click' /*required - type of interaction*/, label: 'some description' /*optional - used for categorization of events*/, value: 1 /*optional - counter*/ }
     },
+    state: {
+        enabled: (location.href.indexOf('www.results.philips.com') === -1)
+    },
     // This self-calling function will check the data object on fixed intervals and populate Google Analytics with the data accordingly
     asyncanalytics: function () {
         var self = this;
@@ -651,7 +654,7 @@ var objAnalytics = {
         // Send the views to Google Analytics
         for (var a = 0; a < self.data.views.length; a++) {
             // Send the view to google analytics
-            window.ga('send', 'pageview', self.data.views[a]);
+            if (self.state.enabled) window.ga('send', 'pageview', self.data.views[a]);
 
             if (a === (self.data.views.length - 1)) {
                 // Last element -> clear out the array
@@ -665,16 +668,16 @@ var objAnalytics = {
             if (self.data.events[a].hasOwnProperty("category") && self.data.events[a].hasOwnProperty("action")) {
                 switch (Object.keys(self.data.events[a]).length) {
                     case 2:
-                        window.ga('send', 'event', self.data.events[a].category, self.data.events[a].action);
+                        if (self.state.enabled) window.ga('send', 'event', self.data.events[a].category, self.data.events[a].action);
                         break;
                     case 3:
                         if (self.data.events[a].hasOwnProperty("label")) {
-                            window.ga('send', 'event', self.data.events[a].category, self.data.events[a].action, self.data.events[a].label);
+                            if (self.state.enabled) window.ga('send', 'event', self.data.events[a].category, self.data.events[a].action, self.data.events[a].label);
                         }
                         break;
                     case 4:
                         if (self.data.events[a].hasOwnProperty("label") && self.data.events[a].hasOwnProperty("value")) {
-                            window.ga('send', 'event', self.data.events[a].category, self.data.events[a].action, self.data.events[a].label, self.data.events[a].value);
+                            if (self.state.enabled) window.ga('send', 'event', self.data.events[a].category, self.data.events[a].action, self.data.events[a].label, self.data.events[a].value);
                         }
                         break;
                     default:
@@ -699,42 +702,46 @@ var objAnalytics = {
     init: function () {
         var self = this;
 
-        // Inject analytics.js
-        (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function () {
-                (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', ((location.href.indexOf('http') > -1) ? '//www.google-analytics.com/analytics.js' : 'js/lib/analytics.js'), 'ga');
+        if (self.state.enabled) {
 
-        // Create the tracker
-        var options;
-        if (location.href.indexOf('http') > -1) {
-            options = 'auto';
-        } else {
-            // We are running inside the app
-            options = {
-                'storage': 'none',
-                'clientId': window.objStore.getlocalstorageitem('statguid')
-            };
+            // Inject analytics.js
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', ((location.href.indexOf('http') > -1) ? '//www.google-analytics.com/analytics.js' : 'js/lib/analytics.js'), 'ga');
+
+            // Create the tracker
+            var options;
+            if (location.href.indexOf('http') > -1) {
+                options = 'auto';
+            } else {
+                // We are running inside the app
+                options = {
+                    'storage': 'none',
+                    'clientId': window.objStore.getlocalstorageitem('statguid')
+                };
+            }
+            window.ga('create', 'UA-52778332-1', options);
+
+            // Assure that we will always use https to communicate with google
+            window.ga('set', 'forceSSL', true);
+
+            // Send an initial hit to the server
+            window.ga('send', 'pageview', {
+                page: '/start' + ((location.href.indexOf('http') > -1) ? '/website' : '/app')
+            });
+
+            // Start the async checker
+            self.asyncanalytics();
         }
-        window.ga('create', 'UA-52778332-1', options);
 
-        // Assure that we will always use https to communicate with google
-        window.ga('set', 'forceSSL', true);
-
-        // Send an initial hit to the server
-        window.ga('send', 'pageview', {
-            page: '/start' + ((location.href.indexOf('http') > -1) ? '/website' : '/app')
-        });
-
-        // Start the async checker
-        self.asyncanalytics();
     }
 
 }
