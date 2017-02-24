@@ -112,7 +112,7 @@
 			.global_presence &,
 			.sustainability & {
 				flex-direction: row;
-				width: grid-size(8);
+				width: grid-size(7);
 				.data-wrapper {
 					align-self: flex-start;
 				}
@@ -130,6 +130,7 @@
 			.image {
 				display: block;
 				width: grid-size(4, false);
+				height: 185px;
 				svg, use {
 					width: 100%;
 					height: 100%;

@@ -623,7 +623,7 @@ var objMap = {
             self.el.elsvgholder.style.width = window.app.state.width + 'px';
             self.el.elsvgholder.style.height = window.app.state.height + 'px';
             self.el.rootsvg.setAttributeNS(null, 'width', window.app.state.width);
-            self.el.rootsvg.setAttributeNS(null, 'height', window.app.state.height);
+            self.el.rootsvg.setAttributeNS(null, 'height', getEl('map').clientHeight);//window.app.state.height);
         }
     },
     // Moves the worldmap by mimicking a drag in the browser window
@@ -946,13 +946,13 @@ var objMap = {
             });
         } else if (window.objDataFilter.state.filter.datasource === 'global_presence') {
             // Global presence
-            window.objRegionInfo.el.data.assets.textContent = objExtendedData.value_assets;
-            window.objRegionInfo.el.data.employees.textContent = objExtendedData.value_employees;
+            window.objRegionInfo.el.data.assets.textContent = window.formatMoney(objExtendedData.value_assets, 0, ',', '.', '');
+            window.objRegionInfo.el.data.employees.textContent = window.formatMoney(objExtendedData.value_employees, 0, ',', '.', '');
             window.objRegionInfo.el.data.female.textContent = objExtendedData.value_female + '%';
             window.objRegionInfo.el.data.male.textContent = objExtendedData.value_male + '%';
             window.objRegionInfo.el.data.plants.textContent = objExtendedData.value_plants;
             window.objRegionInfo.el.data.research.textContent = objExtendedData.value_research;
-            window.objRegionInfo.el.data.sales.textContent = objExtendedData.value_sales;
+            window.objRegionInfo.el.data.sales.textContent = window.formatMoney(objExtendedData.value_sales, 0, ',', '.', '');
 
             if (window.objDataFilter.state.filter.subtype !== 'all') {
                 self.hideOtherElements(window.objDataFilter.state.filter.subtype);
@@ -983,13 +983,13 @@ var objMap = {
             });
         } else if (window.objDataFilter.state.filter.datasource === 'sustainability') {
             // Sustainability
-            window.objRegionInfo.el.data.co2.textContent = objExtendedData.value_co2;
-            window.objRegionInfo.el.data.emission.textContent = objExtendedData.value_emissions;
-            window.objRegionInfo.el.data.emissionhaz.textContent = objExtendedData.value_emissionshaz;
+            window.objRegionInfo.el.data.co2.textContent = window.formatMoney(objExtendedData.value_co2, 0, ',', '.', '');
+            window.objRegionInfo.el.data.emission.textContent = window.formatMoney(objExtendedData.value_emissions, 0, ',', '.', '');
+            window.objRegionInfo.el.data.emissionhaz.textContent = window.formatMoney(objExtendedData.value_emissionshaz, 0, ',', '.', '');
             window.objRegionInfo.el.data.trc.textContent = objExtendedData.value_trc;
-            window.objRegionInfo.el.data.waste.textContent = objExtendedData.value_waste;
-            window.objRegionInfo.el.data.wasterecycled.textContent = objExtendedData.value_wasterecycled;
-            window.objRegionInfo.el.data.water.textContent = objExtendedData.value_water;
+            window.objRegionInfo.el.data.waste.textContent = window.formatMoney(objExtendedData.value_waste, 0, ',', '.', '');
+            window.objRegionInfo.el.data.wasterecycled.textContent = window.formatMoney(objExtendedData.value_wasterecycled, 0, ',', '.', '');
+            window.objRegionInfo.el.data.water.textContent = window.formatMoney(objExtendedData.value_water.replace(',', ''), 0, ',', '.', '');
 
             if (window.objDataFilter.state.filter.subtype !== 'all') {
                 self.hideOtherElements(window.objDataFilter.state.filter.subtype);

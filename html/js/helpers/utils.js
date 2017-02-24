@@ -550,6 +550,38 @@ function countryClicked(idCountry, mobile, forceview) {
     }
 }
 
+function formatFinancialData(input) {
+    var output = '';
+    if (parseFloat(input) < 0) {
+        input = 0 - parseFloat(input);
+        output = '(' + setNumberSeperators(input) + ')';
+    } else {
+        output = setNumberSeperators(input);
+    }
+    return output;
+}
+function setNumberSeperators(str) {
+    var output = '';
+    var amount = new String(str);
+    amount = amount.split('.');
+    var decimals = (amount[1])
+        ? amount[1]
+        : '';
+    amount = amount[0].split('').reverse();
+    for (var i = 0; i <= amount.length - 1; i++) {
+        output = amount[i] + output;
+        if ((i + 1) % 3 == 0 && (amount.length - 1) !== i)
+            output = ',' + output;
+        }
+    if (decimals != '') {
+        output += '.';
+        output += decimals;
+    }
+    if (output.indexOf('.') > -1){
+        if(output.split('.')[1].length < 2) output = output + '0';
+    }
+    return output;
+}
 /*
 Formats a generic integer as a money
 usage

@@ -4,6 +4,7 @@
 	display: none;
 	opacity: 1;
 	position: absolute;
+	z-index: 3;
 
 	@media #{$medium-up} {
 		display: block;
@@ -47,6 +48,12 @@
 				color: #fff;
 				font-size: 14px;
 				margin: 5px 0;
+				height: 50px;
+
+				&:last-child {
+					display: table-cell;
+					vertical-align: bottom;
+				}
 			}
 		}
 	}

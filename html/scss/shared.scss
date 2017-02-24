@@ -125,7 +125,8 @@ body {
             width: 100%;
             position: relative;
             @media #{$medium-up} {
-    			height: 250px;
+                top: 50px;
+    			height: 275px;
             }
 
 		}

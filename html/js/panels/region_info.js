@@ -17,8 +17,8 @@ var objRegionInfo = {
 
         self.el.legend__title.innerHTML = objDataFilter.state.filter.subtype === 'all' ? objConfig.fragments['lives_improved'] : objConfig.fragments[objMap.mapdatatypekeys(objDataFilter.state.filter.subtype)]
         self.el.legend__subtitle.innerHTML = '';
-        self.el.legend__top_value.innerHTML = objMap.intLivesImprovedPercentageMax;
-        self.el.legend__low_value.innerHTML = objMap.intLivesImprovedPercentageMin;
+        // self.el.legend__top_value.innerHTML = objConfig.fragments['high']; //objMap.intLivesImprovedPercentageMax;
+        // self.el.legend__low_value.innerHTML = objConfig.fragments['low']; //objMap.intLivesImprovedPercentageMin;
     },
     hideEmptyEl: function () {
         var self = this;

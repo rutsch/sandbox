@@ -240,7 +240,7 @@
         .sustainability
         .region_info_wrapper_right {
           flex-direction: row;
-          width: calc( ( ( ( 100% + 50px ) / 12 ) * 8 ) - 50px); }
+          width: calc( ( ( ( 100% + 50px ) / 12 ) * 7 ) - 50px); }
           .global_presence .region_info_right .data-wrapper,
           .sustainability .region_info_right .data-wrapper, .global_presence
           .region_info_wrapper_right .data-wrapper,
@@ -258,7 +258,8 @@
       .region_info_right .image,
       .region_info_wrapper_right .image {
         display: block;
-        width: calc( ( ( ( 100% + 50px ) / 12 ) * 4 ) - 50px); }
+        width: calc( ( ( ( 100% + 50px ) / 12 ) * 4 ) - 50px);
+        height: 185px; }
         .region_info_right .image svg, .region_info_right .image use,
         .region_info_wrapper_right .image svg,
         .region_info_wrapper_right .image use {
@@ -342,7 +343,8 @@
   height: 100%;
   display: none;
   opacity: 1;
-  position: absolute; }
+  position: absolute;
+  z-index: 3; }
   @media only screen and (min-width: 769px) {
     .map_tools {
       display: block; } }
@@ -380,7 +382,11 @@
       .map_tools__legend--values li {
         color: #fff;
         font-size: 14px;
-        margin: 5px 0; }
+        margin: 5px 0;
+        height: 50px; }
+        .map_tools__legend--values li:last-child {
+          display: table-cell;
+          vertical-align: bottom; }
   .map_tools__zoom--in, .map_tools__zoom--out {
     position: absolute;
     width: 26px;
@@ -609,7 +615,8 @@ body {
     position: relative; }
     @media only screen and (min-width: 769px) {
       #app_panel #app_wrapper #bottom_panel {
-        height: 250px; } }
+        top: 50px;
+        height: 275px; } }
   #app_panel #app_wrapper #slider_indicator,
   #app_panel #app_wrapper #show_simulation,
   #app_panel #app_wrapper #show_current {
