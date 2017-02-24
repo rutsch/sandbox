@@ -9,7 +9,8 @@ var app = {
         orientation: '',
         ie: !!window.MSStream,
         webbrowser: ((location.href.indexOf('http') > -1)),
-        initialmapview: true
+        initialmapview: true,
+        inframe: (top === self)
     },
     vars: {
         basehtml: null
@@ -318,13 +319,11 @@ var app = {
             method: 'get',
             debug: false
         });
-        var file;
-        if (parent.window) {
-            file = parent.window.location.href.replace(parent.window.location.hash, '') + 'publications/ar16/data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json';
-        } else {
-            file = location.href.replace(/^(.*)index.*$/, '$1') + 'data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json'
+        var file = location.href.replace(/^(.*)index.*$/, '$1') + 'data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json';
+        if (window.location.href.indexOf('results.philips.com') > -1 || window.location.href.indexOf('resultshub.com') > -1) {
+            file = '/publications/ar16/data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json';
         }
-        // console.log(file);
+
         // Load the translation fragments
         window.psv('GET', file, {
             v: Math.random()
