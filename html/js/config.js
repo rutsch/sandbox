@@ -66,57 +66,12 @@ var objConfig = {
             high: '#095D67'
         }
     },
-    resources: {
-        css: [
-            '/css/style.css',
-            '/css/graph.css'
-        ],
-        js: [
-            '/js/helpers/utils.js',
-            '/js/helpers/store.js',
-            '/js/helpers/infographic.js',
-            '/js/panels/footer.js',
-            '/js/panels/header.js',
-            '/js/panels/map.js',
-            '/js/panels/overlay.js',
-            '/js/panels/region_info.js',
-            '/js/panels/sliders.js',
-            '/js/panels/login.js',
-            '/js/panels/error.js',
-            '/js/panels/filter.js',
-            '/js/panels/bookmarks.js',
-            '/js/panels/explain.js',
-            '/js/panels/graph.js',
-            '/js/panels/loading.js',
-            '/js/panels/panel_info.js',
-            '/js/elements/mru_filter.js',
-            '/js/elements/oru_filter.js',
-            '/js/elements/data_filter.js',
-            '/js/app.js'
-        ]
-    },
     sitetype: 'prod',
     lang: 'en',
     fragments: {},
     hideinactivecountries: true,
     snapshots: null,
     currentsnapshotid: 'nothing',
-    loadremotefile: function (filename) {
-        var self = this;
-
-        if (filename.indexOf('js') > -1) { // If filename is a external JavaScript file
-            var fileref = document.createElement('script')
-            fileref.setAttribute("type", "text/javascript")
-            fileref.setAttribute("src", self.urls.base + filename + '?rnd=' + Math.round(Math.random() * 100000000))
-        } else if (filename.indexOf('css') > -1) { // If filename is an external CSS file
-            var fileref = document.createElement("link")
-            fileref.setAttribute("rel", "stylesheet")
-            fileref.setAttribute("type", "text/css")
-            fileref.setAttribute("href", self.urls.base + filename + '?rnd=' + Math.round(Math.random() * 100000000))
-        }
-
-        if (typeof fileref !== "undefined") document.getElementsByTagName("head")[0].appendChild(fileref)
-    },
     calculateconfigsettings: function () {
         var self = this;
 
@@ -208,37 +163,6 @@ var objConfig = {
 
 
     },
-    startapplication: function () {
-        var self = this;
-        // console.log('testing')
-        if (typeof app !== 'undefined' &&
-            typeof objUtils !== 'undefined' &&
-            typeof objStore !== 'undefined' &&
-            typeof objInfographic !== 'undefined' &&
-            typeof objFooter !== 'undefined' &&
-            typeof objHeader !== 'undefined' &&
-            typeof objMap !== 'undefined' &&
-            typeof objOverlay !== 'undefined' &&
-            typeof objRegionInfo !== 'undefined' &&
-            typeof objSliders !== 'undefined' &&
-            typeof objLogin !== 'undefined' &&
-            typeof objError !== 'undefined' &&
-            typeof objFilter !== 'undefined' &&
-            typeof objBookmarks !== 'undefined' &&
-            typeof objTrendGraph !== 'undefined' &&
-            typeof objExplain !== 'undefined' &&
-            typeof objLoading !== 'undefined' &&
-            typeof objPanelInfo !== 'undefined' &&
-            typeof objMruFilter !== 'undefined' &&
-            typeof objOruFilter !== 'undefined'
-        ) {
-            window.app.init();
-        } else {
-            window.setTimeout(function () {
-                self.startapplication();
-            }, 500);
-        }
-    },
     init: function () {
         var self = this;
 
@@ -247,4 +171,5 @@ var objConfig = {
     }
 }
 
+// Initiate the configuration object
 objConfig.init();
