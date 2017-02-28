@@ -142,7 +142,6 @@ var objConfig = {
             // console.log(JSON.stringify(self.urls));
         }
 
-
         // If we are on the dev site, then we need to use a local url for data retrieval etc.
         if (self.sitetype === 'dev' ||
             self.sitetype === 'troper' ||
@@ -160,7 +159,6 @@ var objConfig = {
             calculateUrls('');
             self.urls.dynamicresourceurl = '/tools/api.aspx';
         }
-
 
     },
     init: function () {

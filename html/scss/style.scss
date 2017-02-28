@@ -69,7 +69,7 @@ $xbold: 900;
 @include declareFontSet('CentraleSans', 'CentraleSans-Book',      $normal);
 @include declareFontSet('CentraleSans', 'CentraleSans-Medium',    $medium);
 @include declareFontSet('CentraleSans', 'CentraleSans-Bold',      $bold);
-@include declareFontSet('CentraleSans', 'CentraleSans-Xbold',     $xbold);
+@include declareFontSet('CentraleSans', 'CentraleSans-XBold',     $xbold);
 
 $color-highlight: #E2EA6D;
 

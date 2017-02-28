@@ -117,15 +117,15 @@
   font-family: "CentraleSans";
   font-style: normal;
   font-weight: 900;
-  src: url("../fonts/CentraleSans-Xbold.eot") format("eot");
-  src: url("../fonts/CentraleSans-Xbold.eot?#iefix") format("embedded-opentype"), url("../fonts/CentraleSans-Xbold.woff") format("woff"); }
+  src: url("../fonts/CentraleSans-XBold.eot") format("eot");
+  src: url("../fonts/CentraleSans-XBold.eot?#iefix") format("embedded-opentype"), url("../fonts/CentraleSans-XBold.woff") format("woff"); }
 
 @font-face {
   font-family: "CentraleSans";
   font-style: italic;
   font-weight: 900;
-  src: url("../fonts/CentraleSans-XboldItalic.eot") format("eot");
-  src: url("../fonts/CentraleSans-XboldItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/CentraleSans-XboldItalic.woff") format("woff"); }
+  src: url("../fonts/CentraleSans-XBoldItalic.eot") format("eot");
+  src: url("../fonts/CentraleSans-XBoldItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/CentraleSans-XBoldItalic.woff") format("woff"); }
 
 .region_info,
 .region_info_wrapper {
