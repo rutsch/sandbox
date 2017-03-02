@@ -570,7 +570,7 @@ body {
       fill: #7CC9C5;
       transition: fill .5s ease;
       cursor: pointer; }
-    #app_panel #app_wrapper #map .active * {
+    #app_panel #app_wrapper #map .active:not(#world) * {
       fill: #E2EA6D !important; }
   #app_panel #app_wrapper #regions ul {
     list-style-type: none;

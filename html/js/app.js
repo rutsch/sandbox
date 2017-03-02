@@ -21,7 +21,7 @@ var app = {
         popup: 'none',
         filter: {
             datasource: 'lives_improved',
-            orulevel: '3', // For worldmap data 1, 2, 3, 4
+            orulevel: '1', // For worldmap data 1, 2, 3, 4
             oru: 'none', // Selected country/region
             sector: 'philips', // Main sector
             mru: 'philips' // Product group

@@ -63,7 +63,7 @@ body {
 				transition: fill .5s ease;
 				cursor: pointer;
 			}
-			.active *{
+			.active:not(#world) *{
 				fill: $color-highlight!important;
 			}
 		}
