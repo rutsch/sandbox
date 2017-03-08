@@ -558,7 +558,7 @@ var objMap = {
         var htmlSustain = '<ul><li class="datafilter" data-subtype="all">All data</li>';
         self.datatypes.sustainability.forEach(function (datatype) {
             if (datatype.indexOf('value_') > -1) {
-                htmlSustain += '<li class="datatypefilter" data-subtype="' + datatype + '">' + window.objConfig.fragments[self.mapdatatypekeys(datatype)] + '</li>';
+                htmlSustain += '<li class="datatypefilter" data-subtype="' + datatype + '">' + window.translateFragment(self.mapdatatypekeys(datatype)) + '</li>';
             }
         });
         htmlSustain += '</ul>';
@@ -568,7 +568,7 @@ var objMap = {
         var htmlGlobal = '<ul><li class="datafilter" data-subtype="all">All data</li>'
         self.datatypes.global_presence.forEach(function (datatype) {
             if (datatype.indexOf('value_') > -1) {
-                htmlGlobal += '<li class="datafilter" data-subtype="' + datatype + '">' + window.objConfig.fragments[self.mapdatatypekeys(datatype)] + '</li>';
+                htmlGlobal += '<li class="datafilter" data-subtype="' + datatype + '">' + window.translateFragment(self.mapdatatypekeys(datatype)) + '</li>';
             }
         });
         htmlGlobal += '</ul>';
@@ -623,7 +623,7 @@ var objMap = {
             self.el.elsvgholder.style.width = window.app.state.width + 'px';
             self.el.elsvgholder.style.height = window.app.state.height + 'px';
             self.el.rootsvg.setAttributeNS(null, 'width', window.app.state.width);
-            self.el.rootsvg.setAttributeNS(null, 'height', getEl('map').clientHeight);//window.app.state.height);
+            self.el.rootsvg.setAttributeNS(null, 'height', window.getEl('map').clientHeight); // window.app.state.height);
         }
     },
     // Moves the worldmap by mimicking a drag in the browser window
@@ -698,12 +698,14 @@ var objMap = {
         if ((window.app.state.width / window.app.state.height) >= (self.state.rootanimateattributevalues.size.width / self.state.rootanimateattributevalues.size.height)) {
             // Stretch to height and horizontally center
             zoomFactor = window.app.state.height / self.state.rootanimateattributevalues.size.height;
-            // how much should we move the map after it has been zoomed correctly
+            
+            // How much should we move the map after it has been zoomed correctly
             deltaX = (window.app.state.width - (self.state.rootanimateattributevalues.size.width * zoomFactor)) / 2;
         } else {
-            //Stretch to width and vertically center
+            // Stretch to width and vertically center
             zoomFactor = window.app.state.width / self.state.rootanimateattributevalues.size.width;
-            // how much should we move the map after it has been zoomed correctly
+            
+            // How much should we move the map after it has been zoomed correctly
             deltaY = (window.app.state.height - (self.state.rootanimateattributevalues.size.height * zoomFactor)) / 2;
         }
 
@@ -787,7 +789,7 @@ var objMap = {
         window.objOruFilter.state.selectedoruguid = window.objPageState.state.filter.oru;
 
 
-        if (objBookmarks.isfavourite()) {
+        if (window.objBookmarks.isfavourite()) {
             window.getEl('toggle_favourite').className = window.getEl('toggle_favourite').className + ' selected';
         } else {
             window.getEl('toggle_favourite').className = window.getEl('toggle_favourite').className.replace(' selected', '');
@@ -819,7 +821,8 @@ var objMap = {
                     // debugger;
                     self.hideSelectedCountries();
                     elRegion.setAttribute('class', 'active');
-                    //JT: I introduced a very crappy way to check for a tablet - can this be improved and become app.state.tablet ?
+                    
+                    // JT: I introduced a very crappy way to check for a tablet - can this be improved and become app.state.tablet ?
                     if (window.app.state.width > 768) {
                         self.updateui(regionData, window.objPageState.state.filter.oru, elRegion);
                     } else {
@@ -905,7 +908,7 @@ var objMap = {
         });
 
     },
-    //updates the fields in the ui with new data
+    // Updates the fields in the ui with new data
     setroundeddatainui: function (objData) {
         //debugger;
         var self = this;
@@ -920,7 +923,7 @@ var objMap = {
             // Lives improved
             window.objRegionInfo.el.data.nrlivesimproved.textContent = objExtendedData.displayl + ' ' + window.objConfig.fragments['million'];
             window.objRegionInfo.el.data.labellivesimproved.textContent = window.objConfig.fragments['lives_improved'];
-            window.objRegionInfo.el.data.gdp.textContent = '$' + objExtendedData.displayg + objExtendedData.labelg;
+            window.objRegionInfo.el.data.gdp.textContent = objExtendedData.displayg + objExtendedData.labelg;
             window.objRegionInfo.el.data.population.textContent = objExtendedData.displayp + objExtendedData.labelp;
 
             window.TweenLite.to(elGlobalPresence, 0.3, {
@@ -948,8 +951,8 @@ var objMap = {
             // Global presence
             window.objRegionInfo.el.data.assets.textContent = window.formatMoney(objExtendedData.value_assets, 0, ',', '.', '');
             window.objRegionInfo.el.data.employees.textContent = window.formatMoney(objExtendedData.value_employees, 0, ',', '.', '');
-            window.objRegionInfo.el.data.female.textContent = objExtendedData.value_female + '%';
-            window.objRegionInfo.el.data.male.textContent = objExtendedData.value_male + '%';
+            window.objRegionInfo.el.data.female.textContent = objExtendedData.value_female;
+            window.objRegionInfo.el.data.male.textContent = objExtendedData.value_male;
             window.objRegionInfo.el.data.plants.textContent = objExtendedData.value_plants;
             window.objRegionInfo.el.data.research.textContent = objExtendedData.value_research;
             window.objRegionInfo.el.data.sales.textContent = window.formatMoney(objExtendedData.value_sales, 0, ',', '.', '');
@@ -983,13 +986,19 @@ var objMap = {
             });
         } else if (window.objDataFilter.state.filter.datasource === 'sustainability') {
             // Sustainability
-            window.objRegionInfo.el.data.co2.textContent = window.formatMoney(objExtendedData.value_co2, 0, ',', '.', '');
-            window.objRegionInfo.el.data.emission.textContent = window.formatMoney(objExtendedData.value_emissions, 0, ',', '.', '');
-            window.objRegionInfo.el.data.emissionhaz.textContent = window.formatMoney(objExtendedData.value_emissionshaz, 0, ',', '.', '');
-            window.objRegionInfo.el.data.trc.textContent = objExtendedData.value_trc;
-            window.objRegionInfo.el.data.waste.textContent = window.formatMoney(objExtendedData.value_waste, 0, ',', '.', '');
-            window.objRegionInfo.el.data.wasterecycled.textContent = window.formatMoney(objExtendedData.value_wasterecycled, 0, ',', '.', '');
-            window.objRegionInfo.el.data.water.textContent = window.formatMoney(objExtendedData.value_water.replace(',', ''), 0, ',', '.', '');
+            try {
+                window.objRegionInfo.el.data.co2.textContent = window.formatMoney(objExtendedData.value_co2, 0, ',', '.', '');
+                window.objRegionInfo.el.data.emission.textContent = window.formatMoney(objExtendedData.value_emissions, 0, ',', '.', '');
+                window.objRegionInfo.el.data.emissionhaz.textContent = window.formatMoney(objExtendedData.value_emissionshaz, 0, ',', '.', '');
+                window.objRegionInfo.el.data.trc.textContent = objExtendedData.value_trc;
+                window.objRegionInfo.el.data.waste.textContent = window.formatMoney(objExtendedData.value_waste, 0, ',', '.', '');
+                window.objRegionInfo.el.data.wasterecycled.textContent = window.formatMoney(objExtendedData.value_wasterecycled, 0, ',', '.', '');
+                window.objRegionInfo.el.data.water.textContent = window.formatMoney(objExtendedData.value_water.replace(',', ''), 0, ',', '.', '');
+            } catch (err) {
+                console.log('ERROR:');
+                console.dir(err);
+            }
+
 
             if (window.objDataFilter.state.filter.subtype !== 'all') {
                 self.hideOtherElements(window.objDataFilter.state.filter.subtype);
@@ -1097,6 +1106,7 @@ var objMap = {
                 intDecimals = 1;
             }
             objData.displayg = window.formatMoney(objData.roundedg, intDecimals, ',', '.', '');
+            
             // objData.labelg = ' ' + window.objConfig.fragments['billion'];
             objData.labelg = '';
         }
@@ -1111,6 +1121,7 @@ var objMap = {
                 intDecimals = 1;
             }
             objData.displayp = window.formatMoney(objData.roundedp, intDecimals, ',', '.', '');
+            
             // objData.labelp = ' ' + window.objConfig.fragments['million'];
             objData.labelp = '';
         }
