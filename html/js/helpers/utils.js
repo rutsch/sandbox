@@ -590,6 +590,7 @@ var formattedMoney = formatMoney(myMoney, 2,'.',',');
 
 */
 function formatMoney(n, decPlaces, thouSeparator, decSeparator, currencySymbol) {
+    if (n === undefined) return n;
     var decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
         decSeparator = decSeparator === undefined ? "." : decSeparator,
         thouSeparator = thouSeparator === undefined ? "," : thouSeparator,
