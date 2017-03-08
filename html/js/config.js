@@ -134,7 +134,7 @@ var objConfig = {
 
         // Helper function that reworks the default remote URL's so that they use the domain name as provided by the baseRemoteUrl argument
         function calculateUrls(baseRemoteUrl) {
-            self.urls.dynamicresourceurl = self.urls.dynamicresourceurl.replace(pattrn, baseRemoteUrl + "$3"); //'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
+            self.urls.dynamicresourceurl = self.urls.dynamicresourceurl.replace(pattrn, baseRemoteUrl + "$3"); // 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
             self.urls.authurl2 = self.urls.authurl2.replace(pattrn, baseRemoteUrl + "$3"); // "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
             self.urls.authurl3 = self.urls.authurl3.replace(pattrn, baseRemoteUrl + "$3"); //
             self.urls.urlshiblogin = self.urls.urlshiblogin.replace(pattrn, baseRemoteUrl + "$3");
