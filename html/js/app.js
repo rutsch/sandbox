@@ -103,7 +103,7 @@ var app = {
                 console.log(err);
                 window.objError.show('There was an error retrieving the worldmap data. ' + ((typeof err === 'object') ? JSON.parse(err) : err), true);
             } else {
-                // store data in variable for later use
+                // Store data in variable for later use
                 window.objData[type] = data;
             }
         });
