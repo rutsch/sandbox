@@ -570,15 +570,14 @@ function setNumberSeperators(str) {
     amount = amount[0].split('').reverse();
     for (var i = 0; i <= amount.length - 1; i++) {
         output = amount[i] + output;
-        if ((i + 1) % 3 == 0 && (amount.length - 1) !== i)
-            output = ',' + output;
-        }
-    if (decimals != '') {
+        if ((i + 1) % 3 === 0 && (amount.length - 1) !== i) output = ',' + output;
+    }
+    if (decimals !== '') {
         output += '.';
         output += decimals;
     }
     if (output.indexOf('.') > -1){
-        if(output.split('.')[1].length < 2) output = output + '0';
+        if (output.split('.')[1].length < 2) output = output + '0';
     }
     return output;
 }
@@ -594,7 +593,7 @@ function formatMoney(n, decPlaces, thouSeparator, decSeparator, currencySymbol) 
     var decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
         decSeparator = decSeparator === undefined ? "." : decSeparator,
         thouSeparator = thouSeparator === undefined ? "," : thouSeparator,
-        currencySymbol = currencySymbol === undefined ? "$" : currencySymbol,
+        currencySymbol = currencySymbol === undefined ? "" : currencySymbol,
         sign = n < 0 ? "-" : "",
         i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces), 10) + "",
         j = (j = i.length) > 3 ? j % 3 : 0;
