@@ -12,17 +12,18 @@ var objPanelInfo = {
         var self = this;
 
         self.getcontent(panel, function () {
-            //objOverlay.show();
+            // objOverlay.show();
             self.state.tweening = true;
             self.el.wrapper.style.display = 'block';
-            TweenLite.to(self.el.wrapper, 0.3, {
+            window.TweenLite.to(self.el.wrapper, 0.3, {
                 opacity: 1,
                 onComplete: function () {
-                    //debugger;
+                    // debugger;
                     self.state.tweening = false;
                     self.state.visible = true;
-
-                    /*if(!self.state.contentloaded){
+                    
+                    /*
+                    if(!self.state.contentloaded){
                     serverSideRequest({
                     url: 'data/firstlogin.html', 
                     method: 'get', 
@@ -39,18 +40,14 @@ var objPanelInfo = {
             });
         });
 
-
-
-
-
     },
     hide: function () {
         var self = this;
         self.state.tweening = true;
-        TweenLite.to(self.el.wrapper, 0.3, {
+        window.TweenLite.to(self.el.wrapper, 0.3, {
             opacity: 0,
             onComplete: function () {
-                //objOverlay.hide();
+                // objOverlay.hide();
                 self.el.wrapper.style.display = 'none';
                 self.state.tweening = false;
                 self.state.visible = false;
@@ -62,11 +59,11 @@ var objPanelInfo = {
         var strIntro = panel + '_intro.html';
 
         window.serverSideRequest({
-            url: objConfig.urls.base + '/data/' + strIntro + ((location.href.indexOf('http') > -1) ? '?rnd=' + Math.random() : ''),
+            url: window.objConfig.urls.base + '/data/' + strIntro + ((location.href.indexOf('http') > -1) ? '?v=' + window.pageVars.version : ''),
             method: 'get',
             debug: false,
             callback: function (err, strContent) {
-                //insert the SVG data into the holder div
+                // Insert the SVG data into the holder div
                 self.el.contentwrapper.className = panel;
                 self.el.content.innerHTML = strContent;
                 cb();
@@ -76,7 +73,6 @@ var objPanelInfo = {
 
     },
     removelocalstorageitems: function () {
-        var self = this;
         window.objStore.removelocalstorageitem('seenAppIntro');
         window.objStore.removelocalstorageitem('seenFilterIntro');
         window.objStore.removelocalstorageitem('seenRegionInfoIntro');

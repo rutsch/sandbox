@@ -7,7 +7,7 @@ var objMap = {
     },
     vars: {
         showdetailview: false,
-        regionidtoshow: null //contains the region id of the details panel to show
+        regionidtoshow: null // Contains the region id of the details panel to show
     },
     data: null,
     maps: {
@@ -95,7 +95,7 @@ var objMap = {
             arrFormData['method'] = 'getsvgworldmap';
             arrFormData['fulldomain'] = location.protocol + "//" + location.hostname;
             arrFormData['token'] = window.objLogin.token;
-            arrFormData['v'] = Math.random();
+            arrFormData['v'] = window.pageVars.version;
 
             svgdata = window.serverSideRequest({
                 url: window.objConfig.urls.authurl2,

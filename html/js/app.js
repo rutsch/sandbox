@@ -108,6 +108,7 @@ var app = {
             }
         });
     },
+    
     // Retrieves oru and mru metadata structures
     retrievemetadata: function () {
         var objData = {
@@ -181,7 +182,7 @@ var app = {
     getdimensions: function () {
         var self = this;
         self.state.width = document.body.clientWidth;
-        self.state.height = document.documentElement["clientHeight"] - (document.documentElement["clientHeight"] * .15) - 250;
+        self.state.height = document.documentElement.clientHeight - (document.documentElement.clientHeight * .15) - 250;
         if (self.state.width > self.state.height) {
             self.state.orientation = 'landscape';
         } else {
@@ -272,11 +273,13 @@ var app = {
         window.objHeader.init();
         window.objOverlay.init();
         window.objRegionInfo.init();
+        
         // window.objSliders.init();
         window.objError.init();
         window.objFilter.init();
         window.objBookmarks.init();
         window.objExplain.init();
+        
         // window.objTrendGraph.init();
         window.objLoading.init();
         window.objPanelInfo.init();
@@ -322,7 +325,7 @@ var app = {
 
             // Load the translation fragments
             window.psv('GET', file, {
-                v:  window.pageVars.version
+                v: window.pageVars.version
             }, function retrieveFragmentsHandler(err, data) {
                 if (err) {
                     window.objError.show('There was an error retrieving translation fragments. ' + ((typeof err === 'object') ? JSON.stringify(err) : err), true);
@@ -359,7 +362,7 @@ var app = {
         var self = this;
 
         // Load the main html content using an ajax call
-        app.el.outerwrapper = window.getEl('content_outer_wrapper');
+        self.el.outerwrapper = window.getEl('content_outer_wrapper');
         window.serverSideRequest({
             url: window.objConfig.urls.base + '/data/body_content.html?v=' + window.pageVars.version,
             method: 'get',
@@ -378,11 +381,11 @@ var objPageState = {
         view: null,
         popup: null,
         filter: {
-            datasource: null, // lives improved, global ppresence or sustainability
-            orulevel: null, //for worldmap data 1, 2, 3, 4
-            oru: null, //selected country/region
-            sector: null, //main sector
-            mru: null //product group
+            datasource: null, // Values: lives improved, global ppresence or sustainability
+            orulevel: null, // For worldmap data 1, 2, 3, 4
+            oru: null, // Selected country/region
+            sector: null, // Selected main sector
+            mru: null // Product group
         }
     },
     stateremembered: {
