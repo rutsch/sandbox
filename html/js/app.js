@@ -309,52 +309,64 @@ var app = {
         window.objLogin.getsnapshotconfig();
     },
 
+    retrievetranslationfragments: function (errorMessage, htmlBody) {
+        if (errorMessage) {
+            window.objError.show(errorMessage, true);
+        } else {
+
+            window.app.vars.basehtml = htmlBody;
+            var file = location.href.replace(/^(.*)index.*$/, '$1') + 'data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json';
+            if (window.location.href.indexOf('results.philips.com') > -1 || window.location.href.indexOf('resultshub.com') > -1) {
+                file = '/publications/ar16/data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json';
+            }
+
+            // Load the translation fragments
+            window.psv('GET', file, {
+                v:  window.pageVars.version
+            }, function retrieveFragmentsHandler(err, data) {
+                if (err) {
+                    window.objError.show('There was an error retrieving translation fragments. ' + ((typeof err === 'object') ? JSON.stringify(err) : err), true);
+                } else {
+                    // console.log(data);
+
+                    // Attach the data to the objConfig.fragments object
+                    for (var key in data) {
+                        // console.log(key);
+                        if (typeof key === 'string') window.objConfig.fragments[key] = data[key];
+                    }
+
+                    // console.log(objConfig.fragments);
+
+                    // Start translating stuff
+
+                    // Translate fragments in the HTML and inject it back into the UI
+                    window.app.vars.basehtml = window.app.vars.basehtml.replace(/\[([a-zA-Z\d\s_-]*?)\]/g, function replacementHandler(match, contents, offset, s) {
+                        return window.translateFragment(contents);
+                    });
+
+                    // Inject the translated HTML into the DOM of our page
+                    app.el.outerwrapper.innerHTML = window.app.vars.basehtml;
+
+                    // Continue by initiating the onjects of this application
+                    window.app.initobjects();
+                }
+            });
+        }
+
+    },
+
     init: function () {
         var self = this;
 
-        // Load the main html content
+        // Load the main html content using an ajax call
         app.el.outerwrapper = window.getEl('content_outer_wrapper');
-        self.vars.basehtml = window.serverSideRequest({
-            url: window.objConfig.urls.base + '/data/body_content.html?v=' + Math.random(),
+        window.serverSideRequest({
+            url: window.objConfig.urls.base + '/data/body_content.html?v=' + window.pageVars.version,
             method: 'get',
-            debug: false
+            debug: false,
+            callback: window.app.retrievetranslationfragments
         });
-        var file = location.href.replace(/^(.*)index.*$/, '$1') + 'data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json';
-        if (window.location.href.indexOf('results.philips.com') > -1 || window.location.href.indexOf('resultshub.com') > -1) {
-            file = '/publications/ar16/data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json';
-        }
 
-        // Load the translation fragments
-        window.psv('GET', file, {
-            v: Math.random()
-        }, function retrieveFragmentsHandler(err, data) {
-            if (err) {
-                window.objError.show('There was an error retrieving translation fragments. ' + ((typeof err === 'object') ? JSON.stringify(err) : err), true);
-            } else {
-                // console.log(data);
-
-                // Attach the data to the objConfig.fragments object
-                for (var key in data) {
-                    // console.log(key);
-                    if (typeof key === 'string') window.objConfig.fragments[key] = data[key];
-                }
-
-                // console.log(objConfig.fragments);
-
-                // Start translating stuff
-
-                // Translate fragments in the HTML and inject it back into the UI
-                self.vars.basehtml = self.vars.basehtml.replace(/\[([a-zA-Z\d\s_-]*?)\]/g, function replacementHandler(match, contents, offset, s) {
-                    return window.translateFragment(contents);
-                });
-
-                // Inject the translated HTML into the DOM of our page
-                app.el.outerwrapper.innerHTML = self.vars.basehtml;
-
-                // Continue by initiating the onjects of this application
-                self.initobjects();
-            }
-        });
     }
 }
 

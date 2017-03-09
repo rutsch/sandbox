@@ -76,7 +76,9 @@ var objRegionInfo = {
         // Disabled for now
         // var seenPanelBefore = objStore.getlocalstorageitem('seenRegionInfoIntro');
         var seenPanelBefore = true;
-        if (seenPanelBefore || window.isPublicSite()) {} else {
+        if (seenPanelBefore || window.isPublicSite()) {
+            // Nothing to do
+        } else {
             window.objPanelInfo.show('region_info');
             window.objStore.setlocalstorageitem('seenRegionInfoIntro', 'true');
         }
