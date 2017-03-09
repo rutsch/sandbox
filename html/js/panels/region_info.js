@@ -17,6 +17,7 @@ var objRegionInfo = {
 
         self.el.legend__title.innerHTML = window.objDataFilter.state.filter.subtype === 'all' ? window.objConfig.fragments['lives_improved'] : window.objConfig.fragments[window.objMap.mapdatatypekeys(window.objDataFilter.state.filter.subtype)]
         self.el.legend__subtitle.innerHTML = '';
+        
         // self.el.legend__top_value.innerHTML = objConfig.fragments['high']; //objMap.intLivesImprovedPercentageMax;
         // self.el.legend__low_value.innerHTML = objConfig.fragments['low']; //objMap.intLivesImprovedPercentageMin;
     },
@@ -30,9 +31,10 @@ var objRegionInfo = {
             }
         });
     },
+    
     /*
-     * UI functions
-     */
+    * UI functions
+    */
     show: function () {
         var self = this;
         self.state.tweening = true;
@@ -46,6 +48,7 @@ var objRegionInfo = {
         }
         if (window.objPageState.mobile === true) {
             self.removeMobileRegionInfos();
+           
             // Copy region info html to correct LI
             var el = window.Sizzle('[data-target=' + window.objPageState.state.filter.oru + ']')[0];
 
@@ -54,7 +57,7 @@ var objRegionInfo = {
             el.getElementsByClassName('region_info_wrapper')[0].removeAttribute('style');
         } else {
 
-            // slide down top_panel
+            // Slide down top_panel
             if (window.app.state.width > 768) {
                 window.TweenLite.to(self.el.regionpanel, 0.3, {
                     bottom: '0%',
@@ -70,8 +73,8 @@ var objRegionInfo = {
             }
         }
 
-        //disabled for now
-        //var seenPanelBefore = objStore.getlocalstorageitem('seenRegionInfoIntro');
+        // Disabled for now
+        // var seenPanelBefore = objStore.getlocalstorageitem('seenRegionInfoIntro');
         var seenPanelBefore = true;
         if (seenPanelBefore || window.isPublicSite()) {} else {
             window.objPanelInfo.show('region_info');
@@ -291,40 +294,7 @@ var objRegionInfo = {
         window.objArcProps.targetnode = window.getEl('arc_path');
         window.objArcProps.targetleftwrapper = window.getEl('arc_path_left_wrapper');
         window.objArcProps.targetleftnode = window.getEl('arc_path_left');
+        
         // renderInfographic({ angle: 0 });
-
-        if (window.app.state.mobile) {
-            if (window.app.state.ipad) {
-
-                window.Hammer(self.el.regionpanel).on('drag', function (ev) {
-                    if (ev.gesture.direction === 'up' && ev.gesture.distance > 10) self.hide();
-                });
-
-                //setup swipe effect on simulator panel
-                window.Hammer(self.el.toolspanel).on('drag', function (ev) {
-                    if (ev.gesture.direction === 'up' && ev.gesture.distance > 10) self.hide();
-                });
-
-            } else {
-                //setup swipe effect on the top panel
-                window.Hammer(self.el.regionpanel).on('drag', function (ev) {
-                    //console.log('drag top panel');
-                    //console.log(ev.gesture.direction +' - ' +ev.gesture.distance)
-
-                    if (ev.gesture.direction === 'up' && ev.gesture.distance > 10) self.showsimulation(self);
-                    if (self.state.panel === 'simulation' && ev.gesture.direction === 'down' && ev.gesture.distance > 10) self.showcurrent(self);
-                });
-
-                //setup swipe effect on bottom panel
-                window.Hammer(self.el.toolspanel).on('drag', function (ev) {
-                    //console.log('drag bottom panel');
-                    //console.log(ev.gesture.direction +' - ' +ev.gesture.distance)
-
-                    if (ev.gesture.direction === 'down' && ev.gesture.distance > 10) self.showcurrent(self);
-                });
-            }
-
-        }
-
     }
 }
