@@ -292,7 +292,7 @@ function psv(type, url, objParams, cb) {
     }
     xmlhttp.onreadystatechange = function () {
         if (this.readyState === 4) {
-            //console.log(xmlhttp.statusText);
+            // console.log(xmlhttp.statusText);
             if (this.status === 200) {
                 window.objLoading.hide();
 
@@ -457,13 +457,13 @@ function serverSideRequest(objArguments) {
 
     // Determine onreadystatechange function (async only)
     if (bolAsync) {
-        return objXmlHttpLocal.onreadystatechange = function () {
+        objXmlHttpLocal.onreadystatechange = function () {
             if (this.readyState === 4) {
                 if (this.status === 200) {
                     // OK
                     strResult = objXmlHttpLocal.responseText;
                     if (bolDebug) alert("just before callback function\n\n" + strResult);
-                    callbackFunction(null, strResult);
+                    callbackFunction(undefined, strResult);
                 } else {
                     strResult = "ERROR: There was a problem retrieving the server side data:\n" + objXmlHttpLocal.statusText;
                     callbackFunction(strResult);
@@ -560,13 +560,14 @@ function formatFinancialData(input) {
     }
     return output;
 }
+
 function setNumberSeperators(str) {
     var output = '';
     var amount = new String(str);
     amount = amount.split('.');
-    var decimals = (amount[1])
-        ? amount[1]
-        : '';
+    var decimals = (amount[1]) ?
+        amount[1] :
+        '';
     amount = amount[0].split('').reverse();
     for (var i = 0; i <= amount.length - 1; i++) {
         output = amount[i] + output;
@@ -576,7 +577,7 @@ function setNumberSeperators(str) {
         output += '.';
         output += decimals;
     }
-    if (output.indexOf('.') > -1){
+    if (output.indexOf('.') > -1) {
         if (output.split('.')[1].length < 2) output = output + '0';
     }
     return output;
@@ -647,8 +648,8 @@ function translateFragment(id) {
         // Very dirty way to insert sub and superscript
         if (fragment.indexOf('CO2') > -1) fragment = fragment.replace(/^(.*CO)(2)(.*)$/, '$1<sub>$2</sub>$3');
         if (fragment.indexOf('m3') > -1) fragment = fragment.replace(/^(.*m)(3)(.*)$/, '$1<sup>$2</sup>$3');
-        
+
         return fragment;
-    } 
+    }
     return '[' + id + ']';
 }
