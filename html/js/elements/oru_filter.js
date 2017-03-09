@@ -40,14 +40,14 @@ var objOruFilter = {
         // console.log(regionId);
         // console.trace();
         // console.log(iterate(self.json, 'guid', regionId))
-        var result = window.objConfig.fragments[regionId];//window.iterate(self.json, 'guid', regionId).name;
+        var result = window.translateFragment(regionId); // window.iterate(self.json, 'guid', regionId).name;
 
-        //JT: stupid fix for now to get the map up and running with a typo in the metadata id
-        if (result == null) {
-            var regionIdNew = '';
+        // JT: stupid fix for now to get the map up and running with a typo in the metadata id
+        if (result.indexOf('[') > -1) {
+            var regionIdNew = undefined;
             if (regionId === 'cantral-east_europe') regionIdNew = 'central-east_europe';
             if (regionId === 'central-east_europe') regionIdNew = 'cantral-east_europe';
-            result = window.objConfig.fragments[regionId];// window.iterate(self.json, 'guid', regionIdNew).name;
+            if (regionIdNew) result = window.translateFragment(regionIdNew); // window.iterate(self.json, 'guid', regionIdNew).name;
         }
 
         // Reset the object defined in utils.js

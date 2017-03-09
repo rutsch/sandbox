@@ -15,11 +15,11 @@ var objRegionInfo = {
     renderLegend: function () {
         var self = this;
 
-        self.el.legend__title.innerHTML = window.objDataFilter.state.filter.subtype === 'all' ? window.objConfig.fragments['lives_improved'] : window.objConfig.fragments[window.objMap.mapdatatypekeys(window.objDataFilter.state.filter.subtype)]
+        self.el.legend__title.innerHTML = window.objDataFilter.state.filter.subtype === 'all' ? window.translateFragment('lives_improved') : window.translateFragment(window.objMap.mapdatatypekeys(window.objDataFilter.state.filter.subtype));
         self.el.legend__subtitle.innerHTML = '';
         
-        // self.el.legend__top_value.innerHTML = objConfig.fragments['high']; //objMap.intLivesImprovedPercentageMax;
-        // self.el.legend__low_value.innerHTML = objConfig.fragments['low']; //objMap.intLivesImprovedPercentageMin;
+        // self.el.legend__top_value.innerHTML = window.translateFragment('high') //objMap.intLivesImprovedPercentageMax;
+        // self.el.legend__low_value.innerHTML = window.translateFragment('low') //objMap.intLivesImprovedPercentageMin;
     },
     hideEmptyEl: function () {
         var self = this;

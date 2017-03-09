@@ -38,7 +38,7 @@ var objDataFilter = {
     resetsubtypeindicators: function (subtypeindicators) {
         for (var i = 0; i < subtypeindicators.length; i++) {
             // TRANSLATE
-            subtypeindicators[i].innerText = objConfig.fragments['all_data'];
+            subtypeindicators[i].innerText = window.translateFragment('all_data');
         }
     },
     datasourceChanged: function (e) {
@@ -87,7 +87,7 @@ var objDataFilter = {
         var subtype = this.getAttribute('data-subtype');
 
         // Set the subtype name to div below the data type
-        this.parentNode.parentNode.parentNode.getElementsByClassName('subtypeindicator')[0].innerHTML = this.innerText;
+        this.parentNode.parentNode.parentNode.getElementsByClassName('subtypeindicator')[0].innerHTML = this.innerHTML;
 
         // Set the body element style
         window.getEl('body').setAttribute('data-subtype', subtype);

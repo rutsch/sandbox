@@ -921,8 +921,8 @@ var objMap = {
 
         if (window.objDataFilter.state.filter.datasource === 'lives_improved') {
             // Lives improved
-            window.objRegionInfo.el.data.nrlivesimproved.textContent = objExtendedData.displayl + ' ' + window.objConfig.fragments['million'];
-            window.objRegionInfo.el.data.labellivesimproved.textContent = window.objConfig.fragments['lives_improved'];
+            window.objRegionInfo.el.data.nrlivesimproved.textContent = objExtendedData.displayl + ' ' + window.translateFragment('million');
+            window.objRegionInfo.el.data.labellivesimproved.textContent = window.translateFragment('lives_improved');
             window.objRegionInfo.el.data.gdp.textContent = objExtendedData.displayg + objExtendedData.labelg;
             window.objRegionInfo.el.data.population.textContent = objExtendedData.displayp + objExtendedData.labelp;
 
@@ -1107,7 +1107,7 @@ var objMap = {
             }
             objData.displayg = window.formatMoney(objData.roundedg, intDecimals, ',', '.', '');
             
-            // objData.labelg = ' ' + window.objConfig.fragments['billion'];
+            // objData.labelg = ' ' + window.translateFragment('billion');
             objData.labelg = '';
         }
 
@@ -1122,7 +1122,7 @@ var objMap = {
             }
             objData.displayp = window.formatMoney(objData.roundedp, intDecimals, ',', '.', '');
             
-            // objData.labelp = ' ' + window.objConfig.fragments['million'];
+            // objData.labelp = ' ' + window.translateFragment('million');
             objData.labelp = '';
         }
 
