@@ -217,9 +217,10 @@ function setupHandlersDesktop() {
         "onmouseup": "handleClickTouchEnd(evt)",
         "onmousedown": "handleClickTouchStart(evt)",
         "onmousemove": "handleDrag(evt)"
-        //"onmouseout" : "handleClickTouchEnd(evt)", // Decomment this to stop the pan functionality when dragging out of the SVG element
+        // "onmouseout" : "handleClickTouchEnd(evt)", // Decomment this to stop the pan functionality when dragging out of the SVG element
     });
-    //be aware that the events below are attached to the window - not to the svg or holder div
+    
+    // Be aware that the events below are attached to the window - not to the svg or holder div
     // if(navigator.userAgent.toLowerCase().indexOf('firefox') == -1){
     // 	window.addEventListener('mousewheel', handleZoomDesktop, false); // Chrome/Safari
     // }else{
@@ -230,7 +231,7 @@ function setupHandlersDesktop() {
 
 
 function setupHandlersMobile() {
-    //a few "cheap" tricks to work around the tap-issue (sometimes you need to tap twice to trigger the event...)
+    // A few "cheap" tricks to work around the tap-issue (sometimes you need to tap twice to trigger the event...)
 
     window.app.el.hammersvg.on("dragstart", function (ev) {
         if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
@@ -251,7 +252,7 @@ function setupHandlersMobile() {
 
     window.app.el.hammersvg.on("drag", function (ev) {
         if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
-            //if(window.console) { console.log(ev); }
+            // if(window.console) { console.log(ev); }
         }
 
         objTouchVars.eventcount++;
@@ -260,12 +261,13 @@ function setupHandlersMobile() {
 
         if (objZoomPanSettings.usesamplingformobile) {
 
-            //store details about the event in the global variable
+            // Store details about the event in the global variable
             objTouchVars.fingerx = ev.gesture.srcEvent.pageX;
             objTouchVars.fingery = ev.gesture.srcEvent.pageY;
-            //debugLog();
+            
+            // debugLog();
 
-            //start the sampling
+            // Start the sampling
             if (!objTouchVars.sampling) {
                 if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
                     //console.log('!!! start the drag sampling process !!!');
@@ -281,6 +283,7 @@ function setupHandlersMobile() {
 
 
     });
+    
     /*
     objPageVars.hammersvg.on("dragend release", function(ev) {
     	//if(window.console) { console.log(ev); }
@@ -290,7 +293,7 @@ function setupHandlersMobile() {
 
     window.app.el.hammersvg.on("touch", function (ev) {
         if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
-            //if(window.console) { console.log(ev); }
+            // if(window.console) { console.log(ev); }
         }
 
         objTouchVars.eventcount++;
@@ -308,7 +311,8 @@ function setupHandlersMobile() {
             if (window.console) {
                 console.log(ev);
             }
-            //console.log('pinch');
+            
+            // console.log('pinch');
         }
 
         objTouchVars.eventcount++;
@@ -316,14 +320,14 @@ function setupHandlersMobile() {
         objTouchVars.dragging = true;
 
         if (objZoomPanSettings.usesamplingformobile) {
-            //store details about the event in the global variable
+            // Store details about the event in the global variable
             objTouchVars.fingerx = ev.gesture.startEvent.center.pageX;
             objTouchVars.fingery = ev.gesture.startEvent.center.pageX;
             objTouchVars.gesturescale = ev.gesture.scale;
 
-            //debugLog();
+            // debugLog();
 
-            //start the sampling
+            // Start the sampling
             if (!objTouchVars.sampling) {
                 if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
                     //console.log('!!! start the pinch sampling process !!!');
@@ -382,8 +386,8 @@ function setupHandlersMobile() {
     */
     window.app.el.hammersvg.on("release", function (ev) {
         if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
-            //if(window.console) { console.log(ev); }
-            //console.log('release');
+            // if(window.console) { console.log(ev); }
+            // console.log('release');
         }
 
         objTouchVars.eventcount++;
@@ -393,7 +397,7 @@ function setupHandlersMobile() {
 
 }
 
-//detaches the events from the map so that the map can safely be destroyed
+// Detaches the events from the map so that the map can safely be destroyed
 function removeHandlers(cb) {
     if (objZoomPanSettings.mobile) {
         window.app.el.hammersvg.off("dragstart")
@@ -421,10 +425,12 @@ function removeHandlers(cb) {
  */
 function getEventPoint(evt) {
     var p = objTouchVars.elsvg.createSVGPoint();
-    //console.log(evt);
+    
+    // console.log(evt);
     if (objZoomPanSettings.mobile) {
         p.x = evt.gesture.center.pageX - objTouchVars.svgx;
-        /* hack to zoom in center - seems to be solved in ios 7 */
+        
+        // Hack to zoom in center - seems to be solved in ios 7
         if (window.app.state.ios && !window.app.state.ipad && !window.app.state.ios7) {
             p.x = p.x - window.app.state.width / 2;
         }
@@ -460,12 +466,12 @@ function handleClick(ev) {
  */
 function handleRelease(ev) {
 
-    //in case of pinch: remember the reached zoomlevel (pinch & zoom)
+    // In case of pinch: remember the reached zoomlevel (pinch & zoom)
     if (objTouchVars.action.indexOf('zoom') > -1) {
         objTouchVars.zoom = objTouchVars.zoomworking;
         objTouchVars.pinchscale = 1;
 
-        //avoid that the touch event will fire even after we have released the finger from the screen
+        // Avoid that the touch event will fire even after we have released the finger from the screen
         if (objTouchVars.timer5) clearTimeout(objTouchVars.timer5);
         objTouchVars.timer5 = setTimeout(function () {
             objTouchVars.dragging = false;
@@ -477,7 +483,7 @@ function handleRelease(ev) {
     if (objTouchVars.action === 'drag') {
         objTouchVars.zoom = objTouchVars.zoomworking;
 
-        //avoid that the touch event will fire even after we have released the finger from the screen
+        // Avoid that the touch event will fire even after we have released the finger from the screen
         if (objTouchVars.timer5) clearTimeout(objTouchVars.timer5);
         objTouchVars.timer5 = setTimeout(function () {
             objTouchVars.dragging = false;
@@ -488,10 +494,10 @@ function handleRelease(ev) {
 
 
 
-    //stop the sampling
+    // Stop the sampling
     objTouchVars.sampling = false;
 
-    //reset the variables
+    // Reset the variables
     objTouchVars.fingerx = null;
     objTouchVars.fingery = null;
     objTouchVars.action = '';
@@ -529,7 +535,7 @@ function shouldStillZoom() {
             objTouchVars.zoomlimit = bolExecuteZoom;
 
             /*
-            use bbox is more cpu intense...
+            Use bbox is more cpu intense...
             objTouchVars.mapsize.current=objTouchVars.elsvg.getBBox();
             //console.log('objTouchVars.mapsize.current.width: '+objTouchVars.mapsize.current.width+' - objTouchVars.mapsize.orig.width*objTouchSettings.zoommax: '+(objTouchVars.mapsize.orig.width*objTouchSettings.zoommax)+' - objTouchVars.action: '+objTouchVars.action)
 
@@ -551,9 +557,9 @@ function shouldStillZoom() {
 }
 
 function handleZoomMobile(ev) {
-    //set the action parameter
+    // Set the action parameter
     if (objTouchVars.pinchscale !== ev.gesture.scale) {
-        //console.log('in');
+        // console.log('in');
         if (ev.gesture.scale > objTouchVars.pinchscale) {
             objTouchVars.action = 'zoomin';
         } else {
@@ -564,29 +570,27 @@ function handleZoomMobile(ev) {
         objTouchVars.action = 'zoom';
     }
 
-    //handle maximum zoom
+    // Handle maximum zoom
 
 
 
 
     if (shouldStillZoom()) {
-        //capture the center of the pinch effect
+        // Capture the center of the pinch effect
         objTouchVars.fingerx = ev.gesture.startEvent.center.pageX;
         objTouchVars.fingery = ev.gesture.startEvent.center.pageY;
 
-        //calculate a new zoom level and assure that this stays within limits
+        // Calculate a new zoom level and assure that this stays within limits
         var intOldZoomLevel = objTouchVars.zoomworking;
         var intNewZoomLevel = objTouchVars.zoom * ev.gesture.scale;
 
-        //var intZoomDelta=1-(intOldZoomLevel-intNewZoomLevel);
+        // var intZoomDelta=1-(intOldZoomLevel-intNewZoomLevel);
         var intZoomDelta = 1 - (objTouchVars.pinchscale - ev.gesture.scale);
         if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
             if (window.console) {
-                //console.log(intZoomDelta);
+                // console.log(intZoomDelta);
             }
         }
-
-
 
 
 
@@ -603,7 +607,7 @@ function handleZoomMobile(ev) {
         	}
         }
         */
-        //store the scale mode
+        // Store the scale mode
         objTouchVars.pinchscale = ev.gesture.scale;
 
 
@@ -650,7 +654,7 @@ function handleZoom(evt, z) {
         if (window.console) console.log(z);
     }
 
-    //var g = getRoot(evt.target.ownerDocument);
+    // var g = getRoot(evt.target.ownerDocument);
     var g = (objTouchVars.elanimate == null) ? getRoot(evt.target.ownerDocument) : objTouchVars.elanimate;
 
     var p = getEventPoint(evt);
@@ -663,7 +667,7 @@ function handleZoom(evt, z) {
     setCTM(g, g.getCTM().multiply(k));
 
 
-    //store the resulting matrix
+    // Store the resulting matrix
     if (objTouchVars.svgmatrix == null) objTouchVars.svgmatrix = g.getCTM().inverse();
 
     objTouchVars.svgmatrix = objTouchVars.svgmatrix.multiply(k.inverse());
@@ -679,7 +683,7 @@ function handleZoom(evt, z) {
 function handleDrag(evt) {
     // debugger;
 
-    // PreventDefault is handled by hammer
+    // Hammer sets preventDefault
     if (!objZoomPanSettings.mobile) {
         if (evt.preventDefault) evt.preventDefault();
     }
@@ -745,6 +749,7 @@ function handleDrag(evt) {
     // var g = getRoot(evt.target.ownerDocument);
 
     var g = (objTouchVars.elanimate == null) ? getRoot(evt.target.ownerDocument) : objTouchVars.elanimate;
+    
     // console.log(g);
     // console.log('+++++++')
     // var g=(objTouchVars.elanimate==null && !objZoomPanSettings.mobile)?getRoot(evt.target.ownerDocument):objTouchVars.elanimate;
@@ -752,6 +757,7 @@ function handleDrag(evt) {
     if (objTouchVars.state === 'pan' && objZoomPanSettings.pan) {
         // Pan mode
         var p = getEventPoint(evt).matrixTransform(objTouchVars.svgmatrix);
+        
         // console.log(p)
         // console.log('pan');
         if (bolXmax) p.x = objTouchVars.svgpointorigin.x;
@@ -777,8 +783,9 @@ function handleDrag(evt) {
  * Handle click event. (mousedown)
  */
 function handleClickTouchStart(evt) {
-    debugger;
-    // preventDefault is handled by hammer
+    // debugger;
+
+    // Hammer sets preventDefault
     if (!objZoomPanSettings.mobile) {
         if (evt.preventDefault) evt.preventDefault();
     }
@@ -804,7 +811,7 @@ function handleClickTouchStart(evt) {
     objTouchVars.svgmatrix = g.getCTM().inverse();
     objTouchVars.svgpointorigin = getEventPoint(evt).matrixTransform(objTouchVars.svgmatrix);
 
-    //run the test to see if the user clicked on an element or not
+    // Run the test to see if the user clicked on an element or not
     if (!objZoomPanSettings.mobile) {
         objTouchVars.clickstart = true;
         if (objTouchVars.timer1) clearTimeout(objTouchVars.timer1);
@@ -818,20 +825,21 @@ function handleClickTouchStart(evt) {
  * Handle mouse button release event. (mouseup)
  */
 function handleClickTouchEnd(evt) {
-    debugger;
-    //preventDefault is handled by hammer
+    //debugger;
+    
+    // Hammer sets preventDefault
     if (!objZoomPanSettings.mobile) {
         if (evt.preventDefault) evt.preventDefault();
     }
 
     if (evt != null) evt.returnValue = false;
 
-    if (objTouchVars.state == 'pan' || objTouchVars.state == 'drag') {
+    if (objTouchVars.state === 'pan' || objTouchVars.state === 'drag') {
         // Quit pan mode
         objTouchVars.state = '';
     }
 
-    //fire the click event on
+    // Fire the click event on
     if (!objZoomPanSettings.mobile) {
         if (objTouchVars.clickstart) {
             handleClick(evt);
@@ -857,7 +865,7 @@ function startDragSampling() {
         }
     }
 
-    //fire the drag function using the values that the objPageVars.hammersvg.on("drag") stores
+    // Fire the drag function using the values that the objPageVars.hammersvg.on("drag") stores
     handleDrag({
         gesture: {
             center: {
@@ -884,7 +892,7 @@ function startDragSampling() {
 
 function startPinchSampling() {
     if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
-        //if(window.console) { console.log('in startPinchSampling()'); }
+        // if(window.console) { console.log('in startPinchSampling()'); }
     }
 
     handleZoomMobile({
@@ -908,7 +916,8 @@ function startPinchSampling() {
         }
     });
 
-    //fix the values
+    // Fix the values
+
     /*
     var objAnimationProperties={};
     objAnimationProperties.zoom=objTouchVars.zoomworking;
