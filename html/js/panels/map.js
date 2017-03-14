@@ -203,9 +203,17 @@ var objMap = {
     },
     postprocessworldmapdata: function (data) {
         var self = this;
+        
         var debugRoutine = true;
+        var setColor = true;
+
+        // console.log('----------------');
+        // console.log('In postprocessworldmapdata');
+        // console.dir(data);
+        // console.log('----------------');
 
         window.objLoading.show();
+
         /*
         0) update the ui to set if we will use the simulator or not
         */
@@ -214,7 +222,7 @@ var objMap = {
         /*
 		1) store the data in this object as a property
 		*/
-        self.data = data.snapshotdata;
+        self.data = window.cloneObject(data.snapshotdata);
 
         /*
 		2) retrieve the elements from the svg that we need to color
@@ -224,49 +232,122 @@ var objMap = {
         var arrRegions = window.getFirstLevelChildElements(elSvgWrapper, 'path');
         if (arrRegions.length === 0) arrRegions = window.getFirstLevelChildElements(elSvgWrapper, 'g')
 
+        // Calculate the lives improved percentage and add it to the data variable      
+        if (window.objDataFilter.state.filter.datasource === 'lives_improved') {
+            for (var oruGuid in self.data) {
+                if (typeof oruGuid === 'string') {
+                    self.data[oruGuid].lprc = (self.data[oruGuid].l * 100 / self.data[oruGuid].p)
+                }
+            }
+        }
+
+        /*
+        Find the highest and lowest values in the data objects
+        */
+
+        // A) Filter out only the objects that we actually need to process
+        var dataToProcess = {};
+        var dataTypeMetadata = {};
+        var currentOruArr = window.objOruFilter.listlevel1world;
+
+        switch (window.objPageState.state.filter.orulevel) {
+            case '2':
+                currentOruArr = window.objOruFilter.listlevel2region;
+                break;
+            case '3':
+                currentOruArr = window.objOruFilter.listlevel3market;
+                break;
+            case '4':
+                currentOruArr = window.objOruFilter.listlevel4country;
+                break;
+        }
+
+        var prefix = 'philips_';
+        currentOruArr.forEach(function (objOru, index) {
+            // Check one time if the ORU list contains the philips_ or lighting_ prefix
+            if (index === 0 && objOru.guid.indexOf('_') > -1) {
+                prefix = '';
+            }
+
+            // Store the datatypes that we need to check in an array            
+            if (index === 0) {
+                for (var dataTypeId in self.data[prefix + objOru.guid]) {
+                    if (typeof dataTypeId === 'string') {
+                        dataTypeMetadata[dataTypeId] = {
+                            min: null,
+                            max: null
+                        };
+                    }
+                }
+            }
+
+            if (typeof self.data[prefix + objOru.guid] === 'object') {
+                dataToProcess[prefix + objOru.guid] = self.data[prefix + objOru.guid];
+            } else {
+                console.log('ERROR: Could not locate ORU key ' + prefix + objOru.guid + ' in the dataset');
+            }
+        })
+
+
+
+        // Fill the metadata object with the min and max values of each data type
+        for (var oruGuid in dataToProcess) {
+            if (typeof oruGuid === 'string') {
+                // Loop through all the data types that we have found
+                for (var dataTypeId in dataTypeMetadata) {
+                    if (typeof dataTypeId === 'string') {
+                        var currentValue = dataToProcess[oruGuid][dataTypeId];
+                        if (dataTypeMetadata[dataTypeId].min === null && dataTypeMetadata[dataTypeId].max === null) {
+                            dataTypeMetadata[dataTypeId].min = dataTypeMetadata[dataTypeId].max = currentValue;
+                        } else {
+                            if (currentValue < dataTypeMetadata[dataTypeId].min) {
+                                dataTypeMetadata[dataTypeId].min = currentValue;
+                            } else {
+                                if (currentValue > dataTypeMetadata[dataTypeId].max) {
+                                    dataTypeMetadata[dataTypeId].max = currentValue;
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+
+        //console.log(JSON.stringify(dataTypeMetadata));
+        //console.log(JSON.stringify(dataToProcess));
+
+
         /*
 		3) set the proper coloring
 		*/
 
         // If oru not world and datafilter subtype not all, calculate percentages
 
-        if (window.objOruFilter.state.selectedoru !== 1 && ((window.objDataFilter.state.filter.datasource === 'global_presence' || window.objDataFilter.state.filter.datasource === 'sustainability') && window.objDataFilter.state.filter.subtype !== 'all') || window.objDataFilter.state.filter.datasource === 'lives_improved') {
-            var property = 'l';
-            // Analyze the data we have received
-            var intLivesImprovedPercentageMax = 0;
-            var intLivesImprovedPercentageMin = 100;
+        // Analyze the data we have received
+        var dataValueMax = 100;
+        var dataValueMin = 100;
+
+        if (window.objPageState.state.filter.orulevel !== "1" && ((window.objDataFilter.state.filter.datasource === 'global_presence' || window.objDataFilter.state.filter.datasource === 'sustainability') && window.objDataFilter.state.filter.subtype !== 'all') || window.objDataFilter.state.filter.datasource === 'lives_improved') {
+
+            // For Lives Improved - use the percentage
             if (window.objDataFilter.state.filter.datasource === 'lives_improved') {
-                for (var key in self.data) {
-                    if (self.data[key].l >= 0) {
-
-                        var livesImprovedPercentage = (self.data[key].l * 100 / self.data[key].p);
-                        if (livesImprovedPercentage > intLivesImprovedPercentageMax) intLivesImprovedPercentageMax = livesImprovedPercentage;
-                        if (livesImprovedPercentage < intLivesImprovedPercentageMin) intLivesImprovedPercentageMin = livesImprovedPercentage;
-                    }
-                }
+                dataValueMax = dataTypeMetadata.lprc.max;
+                dataValueMin = dataTypeMetadata.lprc.min;
             } else {
-                for (var key in self.data) {
-                    if (self.data[key][window.objDataFilter.state.filter.subtype] >= 0) {
-                        var livesImprovedPercentage = (self.data[key][window.objDataFilter.state.filter.subtype] * 100 / self.data['philips_world'][window.objDataFilter.state.filter.subtype]);
-                        if (livesImprovedPercentage > intLivesImprovedPercentageMax) intLivesImprovedPercentageMax = livesImprovedPercentage;
-                        if (livesImprovedPercentage < intLivesImprovedPercentageMin) intLivesImprovedPercentageMin = livesImprovedPercentage;
-                    }
-                }
-
+                dataValueMax = dataTypeMetadata[window.objDataFilter.state.filter.subtype].max;
+                dataValueMin = dataTypeMetadata[window.objDataFilter.state.filter.subtype].min;
             }
 
-            if (debugRoutine) console.log(' - intLivesImprovedPercentageMax: ' + intLivesImprovedPercentageMax + ' - intLivesImprovedPercentageMin: ' + intLivesImprovedPercentageMin);
-        } else {
-            intLivesImprovedPercentageMax = 100;
-            intLivesImprovedPercentageMin = 100;
+            if (debugRoutine) console.log(' - dataValueMax: ' + dataValueMax + ' - dataValueMin: ' + dataValueMin);
         }
 
 
-        // Settings for the coloring
+        // Settings for the coloring 10 - 5 
         var minimumPercentage = 0; // Anything below this percentage will get the 'low' color
-        var factor = (100 - minimumPercentage) / (intLivesImprovedPercentageMax - intLivesImprovedPercentageMin);
-
-        if (debugRoutine) console.log(factor);
+        var factor = (dataValueMax === dataValueMin) ? 1 : ((100 - minimumPercentage) / (dataValueMax - dataValueMin));
+        console.log('- factor: ' + factor);
 
         // Calculate rgb colors if needed
         if (!window.objConfig.colors[window.objPageState.state.filter.sector].hasOwnProperty('rgb')) {
@@ -276,81 +357,64 @@ var objMap = {
             window.objConfig.colors[window.objPageState.state.filter.sector].rgb.high = window.rgbFromHex(window.objConfig.colors[window.objPageState.state.filter.sector].high);
         }
 
-        //console.log(JSON.stringify(objConfig.colors[objPageState.state.filter.sector]))
-        //console.log('- factor: ' + factor + ', liMax: ' + intLivesImprovedPercentageMax + ', liMin: ' + intLivesImprovedPercentageMin);
-        //console.log('* ' + JSON.stringify(self.getcolorforpercentage(50, objConfig.colors[objPageState.state.filter.sector].low, objConfig.colors[objPageState.state.filter.sector].middle, objConfig.colors[objPageState.state.filter.sector].high)));
-        //alert('stop');
 
-        var percentageMax = 0,
-            percentageMin = 100;
+        
+
 
         for (var i = 0; i < arrRegions.length; i++) {
             var region = arrRegions[i],
                 regionId = region.id === 'UK' ? 'GB' : region.id,
-                key = window.objPageState.state.filter.mru + '_' + (window.objPageState.state.filter.orulevel !== 4 ? regionId.toLowerCase() : regionId),
-                regionData = (self.data[key]) ? self.data[key] : false;
+                oruGuid = window.objPageState.state.filter.mru + '_' + (window.objPageState.state.filter.orulevel !== 4 ? regionId.toLowerCase() : regionId),
+                regionData = (self.data[oruGuid]) ? self.data[oruGuid] : false;
 
             // console.log(key+' - '+regionData);
             // debugger;
             if (regionData) {
-                var percentageLI;
+                var dataValueToDisplay;
+                var noData = false;
                 if (window.objDataFilter.state.filter.datasource === 'lives_improved') {
                     // Calculate percentage lives improved and store that in the worldmapdata object
-                    percentageLI = (regionData.l * 100) / regionData.p || 0;
-                } else {
-                    if (window.objDataFilter.state.filter.subtype !== 'all') {
-                        percentageLI = (regionData[window.objDataFilter.state.filter.subtype] * 100) / self.data['philips_world'][window.objDataFilter.state.filter.subtype] || 0;
-                    } else {
-                        percentageLI = 100;
-                    }
+                    dataValueToDisplay = self.data[oruGuid].percentageLI = self.data[oruGuid].lprc;
+                    if (self.data[oruGuid].l < 100) noData = true;
+                } else if (window.objDataFilter.state.filter.subtype !== 'all') {
+                    dataValueToDisplay = regionData[window.objDataFilter.state.filter.subtype];
+                    if (dataValueToDisplay === '-') noData = true;
                 }
 
-                self.data[key].percentageLI = percentageLI;
 
 
                 // Add colors to the map
-                var color = window.objConfig.colors[window.objPageState.state.filter.sector].middle;
-                self.data[key].color = color;
+                if (setColor) {
+                    var color = window.objConfig.colors[window.objPageState.state.filter.sector].middle;
+                    self.data[oruGuid].color = color;
 
-                // Calculate the color to place on the map
-                var percentageForColor = 80;
-                if (intLivesImprovedPercentageMax > intLivesImprovedPercentageMin) {
-                    // debugger;
-                    // percentageForColor = (percentageLI - intLivesImprovedPercentageMin) / factor + minimumPercentage;
-                    percentageForColor = percentageLI * factor;
-                }
+                    // Calculate the color to place on the map
+                    var percentageForColor = 100;
+                    if (dataValueMax > dataValueMin) {
+                        percentageForColor = (dataValueToDisplay - dataValueMin) * factor;
+                    }
 
-                if (debugRoutine) console.log(percentageForColor);
+                    if (debugRoutine) console.log(percentageForColor);
 
-                // Correct for percentages above 100 and below 0
-                if (percentageForColor >= 100) percentageForColor = 100;
-                if (percentageForColor < 0) percentageForColor = 0;
+                    // Correct for percentages above 100 and below 0
+                    if (percentageForColor >= 100) percentageForColor = 100;
+                    if (percentageForColor < 0) percentageForColor = 0;
 
-                if (percentageForColor > percentageMax) percentageMax = percentageForColor;
-                if (percentageForColor < percentageMin) percentageMin = percentageForColor;
+                    var colorToSet = self.getcolorforpercentage(percentageForColor, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.low, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.middle, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.high);
 
-                self.intLivesImprovedPercentageMin = percentageMin;
-                self.intLivesImprovedPercentageMax = percentageMax;
-                //console.log('- regionId: ' + regionId + ', percentageLI: ' + percentageLI + ', percentageForColor: ' + percentageForColor);
-                var colorToSet = self.getcolorforpercentage(percentageForColor, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.low, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.middle, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.high);
+                    // JT: shouldn't objConfig.hideinactivecountries be part of the MruFilter object??
+                    if (noData && window.objConfig.hideinactivecountries) colorToSet = '#999';
 
-                //JT: shouldn't objConfig.hideinactivecountries be part of the MruFilter object??
-                if (regionData.l <= 100 && window.objConfig.hideinactivecountries) {
-                    colorToSet = '#999';
-                }
+                    region.style.fill = colorToSet;
 
-                region.style.fill = colorToSet;
-
-                var paths = region.getElementsByTagName('*');
-                for (var ii = 0; ii < paths.length; ii++) {
-                    var path = paths[ii];
-                    if (path.nodeName === 'path' || path.nodeName === 'polygon' || path.nodeName === 'rect' || path.nodeName === 'g' || path.nodeName === 'polyline') {
-                        paths[ii].style.fill = colorToSet;
-                        // paths[ii].style.opacity=1;
+                    var paths = region.getElementsByTagName('*');
+                    for (var y = 0; y < paths.length; y++) {
+                        if (paths[y].nodeName === 'path' || paths[y].nodeName === 'polygon' || paths[y].nodeName === 'rect' || paths[y].nodeName === 'g' || paths[y].nodeName === 'polyline') {
+                            paths[y].style.fill = colorToSet;
+                        }
                     }
                 }
 
-                // JT: end change
             } else {
                 region.style.fill = '#999';
             }
@@ -384,8 +448,10 @@ var objMap = {
             window.objZoomPanSettings.mobile = window.app.state.mobile;
 
             window.objZoomPanSettings.clickcallback = function (event) {
-                // console.log('in callback');
-                // console.log(event);
+                // event.stopPropagation();
+                debugger;
+                console.log('in callback');
+                console.log(event);
 
                 var elClicked = event.srcElement;
                 if (typeof (elClicked) === "undefined") {
@@ -397,7 +463,7 @@ var objMap = {
                 var strParentElementName = elParent.nodeName;
                 var strParentElementId = (elParent.id) ? elParent.id : '';
                 if (strElementId === '') strElementId = strParentElementId;
-                //console.log('strElementName: '+strElementName+' strElementId: '+strElementId+' strParentElementName:'+strParentElementName+' strParentElementId: '+strParentElementId);
+                console.log('- strElementName: ' + strElementName + ' strElementId: ' + strElementId + ' strParentElementName:' + strParentElementName + ' strParentElementId: ' + strParentElementId);
 
                 if (strElementName === 'path' || strElementName === 'g' || strElementName === 'polygon') window.countryClicked(strElementId);
             }
@@ -626,6 +692,7 @@ var objMap = {
             self.el.rootsvg.setAttributeNS(null, 'height', window.getEl('map').clientHeight); // window.app.state.height);
         }
     },
+
     // Moves the worldmap by mimicking a drag in the browser window
     moveworldmap: function (intDeltaX, intDeltaY) {
         var self = this;
@@ -698,13 +765,13 @@ var objMap = {
         if ((window.app.state.width / window.app.state.height) >= (self.state.rootanimateattributevalues.size.width / self.state.rootanimateattributevalues.size.height)) {
             // Stretch to height and horizontally center
             zoomFactor = window.app.state.height / self.state.rootanimateattributevalues.size.height;
-            
+
             // How much should we move the map after it has been zoomed correctly
             deltaX = (window.app.state.width - (self.state.rootanimateattributevalues.size.width * zoomFactor)) / 2;
         } else {
             // Stretch to width and vertically center
             zoomFactor = window.app.state.width / self.state.rootanimateattributevalues.size.width;
-            
+
             // How much should we move the map after it has been zoomed correctly
             deltaY = (window.app.state.height - (self.state.rootanimateattributevalues.size.height * zoomFactor)) / 2;
         }
@@ -777,6 +844,7 @@ var objMap = {
                 transformmatrix: {}
             });
             self.state.rootanimateattributevalues.scale = currentZoom - 1;
+
             // self.centerworldmap(self.el.rootanimate);
             self.moveworldmap(self.state.rootanimateattributevalues.translatex, self.state.rootanimateattributevalues.translatey);
         }
@@ -784,8 +852,8 @@ var objMap = {
     detailspanel: function () {
         var self = this;
 
-        //debugger;
-        //JT: unsure, but I feel that this is a property that we should store in the oru filter object
+        // debugger;
+        // JT: unsure, but I feel that this is a property that we should store in the oru filter object
         window.objOruFilter.state.selectedoruguid = window.objPageState.state.filter.oru;
 
 
@@ -821,7 +889,7 @@ var objMap = {
                     // debugger;
                     self.hideSelectedCountries();
                     elRegion.setAttribute('class', 'active');
-                    
+
                     // JT: I introduced a very crappy way to check for a tablet - can this be improved and become app.state.tablet ?
                     if (window.app.state.width > 768) {
                         self.updateui(regionData, window.objPageState.state.filter.oru, elRegion);
@@ -854,38 +922,45 @@ var objMap = {
         // Set the rounded values in the ui
         self.setroundeddatainui(regionData);
 
-        // Set the percentage in the infographic
-        if (regionData.percentageLI > 100) regionData.percentageLI = 100;
-        if (regionData.percentageLI >= 10 && regionData.percentageLI < 100) regionData.percentageLI = Math.round(regionData.percentageLI);
-        if (regionData.percentageLI < 10 && regionData.percentageLI > 0.1) regionData.percentageLI = Math.round(regionData.percentageLI * 10) / 10;
-        if (regionData.percentageLI < 0.1) regionData.percentageLI = '< 0.1';
-
-        // Set the calculated lives improved percentage
-        window.objRegionInfo.el.data.percentagelivesimproved.textContent = regionData.percentageLI + '%';
-
-        // Set the correct images matching the percentage
-        var elLivesImprovedIcons = window.getEl('lives_improved_icons');
-        // Clear images that where set before
-        elLivesImprovedIcons.innerHTML = '';
-
-        function doScaledTimeout(i, elem) {
+        // Function to add a fade in effect for building up the Lives Improved person images in the UI        
+        function doScaledTimeout(i, elLiIcons, elem) {
             setTimeout(function () {
-                elLivesImprovedIcons.appendChild(elem);
+                elLiIcons.appendChild(elem);
             }, i * 0);
         }
-        for (var i = 0; i < 100; i++) {
-            var elem = document.createElement("img");
-            if (i < regionData.percentageLI) {
-                // Add selected icon
-                elem.setAttribute("src", "img/person-selected.png");
-            } else {
-                // Add unselected icon
-                elem.setAttribute("src", "img/person.png");
+
+        if (window.objDataFilter.state.filter.datasource === 'lives_improved') {
+            // Set the percentage in the infographic
+            if (regionData.percentageLI > 100) regionData.percentageLI = 100;
+            if (regionData.percentageLI >= 10 && regionData.percentageLI < 100) regionData.percentageLI = Math.round(regionData.percentageLI);
+            if (regionData.percentageLI < 10 && regionData.percentageLI > 0.1) regionData.percentageLI = Math.round(regionData.percentageLI * 10) / 10;
+            if (regionData.percentageLI < 0.1) regionData.percentageLI = '< 0.1';
+
+            // Set the calculated lives improved percentage
+            window.objRegionInfo.el.data.percentagelivesimproved.textContent = regionData.percentageLI + '%';
+
+            // Set the correct images matching the percentage
+            var elLivesImprovedIcons = window.getEl('lives_improved_icons');
+
+            // Clear images that where set before
+            elLivesImprovedIcons.innerHTML = '';
+
+
+            for (var i = 0; i < 100; i++) {
+                var elem = document.createElement("img");
+                if (i < regionData.percentageLI) {
+                    // Add selected icon
+                    elem.setAttribute("src", "img/person-selected.png");
+                } else {
+                    // Add unselected icon
+                    elem.setAttribute("src", "img/person.png");
+                }
+                // We can add a timeout effect for the loading of the images here by switching the comments on both lines below
+                // doScaledTimeout(i, elem);
+                elLivesImprovedIcons.appendChild(elem);
             }
-            // We can add a timeout effect for the loading of the images here by switching the comments on both lines below
-            // doScaledTimeout(i, elem);
-            elLivesImprovedIcons.appendChild(elem);
         }
+
 
         // Set the labels in the header
         window.objHeader.setregionname(window.objOruFilter.getregionnamebyid((idCountry.length < 4 ? idCountry : idCountry.toLowerCase())));
@@ -908,16 +983,18 @@ var objMap = {
         });
 
     },
+
     // Updates the fields in the ui with new data
     setroundeddatainui: function (objData) {
-        //debugger;
+        // debugger;
         var self = this;
         var objExtendedData = self.roundlivesimproveddataobject(objData);
 
         var elLivesImproved = window.getEl('region_info_wrapper lives_improved');
         var elGlobalPresence = window.getEl('region_info_wrapper global_presence');
         var elSustainability = window.getEl('region_info_wrapper sustainability');
-        //console.log(objExtendedData)
+
+        // console.log(objExtendedData)
 
         if (window.objDataFilter.state.filter.datasource === 'lives_improved') {
             // Lives improved
@@ -1106,7 +1183,7 @@ var objMap = {
                 intDecimals = 1;
             }
             objData.displayg = window.formatMoney(objData.roundedg, intDecimals, ',', '.', '');
-            
+
             // objData.labelg = ' ' + window.translateFragment('billion');
             objData.labelg = '';
         }
@@ -1121,7 +1198,7 @@ var objMap = {
                 intDecimals = 1;
             }
             objData.displayp = window.formatMoney(objData.roundedp, intDecimals, ',', '.', '');
-            
+
             // objData.labelp = ' ' + window.translateFragment('million');
             objData.labelp = '';
         }
