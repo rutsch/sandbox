@@ -138,6 +138,9 @@ var app = {
                 // Load the retrieved data into the ORU object
                 window.objOruFilter.json = data.result.orudata;
 
+                // Post process the large ORU data object
+                window.objOruFilter.postprocessorudata();
+
                 // Load the retrieved data into the MRU (product) object
                 window.objMruFilter.preparehtml(data.result.productdata);
 

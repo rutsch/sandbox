@@ -1,5 +1,9 @@
 var objOruFilter = {
     json: null,
+    listlevel1world: [],
+    listlevel2region: [],
+    listlevel3market: [],
+    listlevel4country: [],
     state: {
         selectedoru: null, // Detail of the map (1, 2, 3, 4) - replaced with objPageState.state.filter.orulevel
         selectedoruguid: null // Selected country/region - replaced with objPageState.state.filter.oru
@@ -8,6 +12,44 @@ var objOruFilter = {
         mrufilter: null,
         wrapper: null
     },
+
+    // Converts the ORU data in seperate array's with unique keys that we can use elsewhere  
+    postprocessorudata: function () {
+        var self = this;
+
+        // Level 1
+        self.listlevel1world.push({ guid: objOruFilter.json.unit.guid, parent: undefined });
+        
+        // Level 2
+        if (typeof objOruFilter.json.unit.subunits === 'object') {
+            for (var keylevel2 in objOruFilter.json.unit.subunits) {
+                if (typeof keylevel2 === 'string') {
+                    self.listlevel2region.push({ guid: objOruFilter.json.unit.subunits[keylevel2].guid, parent: objOruFilter.json.unit.guid});
+
+                    // Level 3
+                    if (typeof objOruFilter.json.unit.subunits[keylevel2].subunits === 'object') {
+                        for (var keylevel3 in objOruFilter.json.unit.subunits[keylevel2].subunits) {
+                            if (typeof keylevel3 === 'string') {
+                                self.listlevel3market.push({ guid: objOruFilter.json.unit.subunits[keylevel2].subunits[keylevel3].guid, parent: objOruFilter.json.unit.subunits[keylevel2].guid });
+                            
+                                // Level 4
+                                if (typeof objOruFilter.json.unit.subunits[keylevel2].subunits[keylevel3].subunits === 'object') {
+                                    for (var keylevel4 in objOruFilter.json.unit.subunits[keylevel2].subunits[keylevel3].subunits) {
+                                        if (typeof keylevel4 === 'string') {
+                                            self.listlevel3market.push({ guid: objOruFilter.json.unit.subunits[keylevel2].subunits[keylevel3].subunits[keylevel4].guid, parent: objOruFilter.json.unit.subunits[keylevel2].subunits[keylevel3].guid });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }                    
+
+                }
+            }
+        }
+
+    },
+    
     // Fired when the filter panel is opened - sets the state of the filter to match the filter state of the application
     setorufilterstate: function () {
         var self = this;
@@ -120,6 +162,8 @@ var objOruFilter = {
         var self = this;
         self.state.selectedoru = window.app.defaultpagestate.filter.orulevel;
         self.el.wrapper = window.getEl('oru_filter_container');
+
+        // Process the dataset into arrays for every orulevel
 
         // Set the data-oru level class
         objOruFilter.setdatalevelattribute(1);
