@@ -653,3 +653,21 @@ function translateFragment(id) {
     }
     return '[' + id + ']';
 }
+
+/**
+ * Clones a JavaScript object
+ * @param   {object} obj Object to clone
+ * @returns {object} Cloned JavaScript Object
+ */
+function cloneObject(obj) {
+    try {
+        return JSON.parse(JSON.stringify(obj));
+    } catch (err) {
+        console.log('---------------');
+        console.log('There was an error attempting to clone the object');
+        console.trace();
+        console.log(typeof obj);
+        console.log(obj);
+        return console.log('---------------');
+    }
+}
