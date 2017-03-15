@@ -219,12 +219,12 @@ function setupHandlersDesktop() {
         "onmousemove": "handleDrag(evt)"
         // "onmouseout" : "handleClickTouchEnd(evt)", // Decomment this to stop the pan functionality when dragging out of the SVG element
     });
-    
+
     // Be aware that the events below are attached to the window - not to the svg or holder div
-    // if(navigator.userAgent.toLowerCase().indexOf('firefox') == -1){
-    // 	window.addEventListener('mousewheel', handleZoomDesktop, false); // Chrome/Safari
-    // }else{
-    // 	window.addEventListener('DOMMouseScroll', handleZoomDesktop, false); // Others
+    // if (navigator.userAgent.toLowerCase().indexOf('firefox') === -1) {
+    //     window.addEventListener('mousewheel', handleZoomDesktop, false); // Chrome/Safari
+    // } else {
+    //     window.addEventListener('DOMMouseScroll', handleZoomDesktop, false); // Others
     // }
 }
 
@@ -264,7 +264,7 @@ function setupHandlersMobile() {
             // Store details about the event in the global variable
             objTouchVars.fingerx = ev.gesture.srcEvent.pageX;
             objTouchVars.fingery = ev.gesture.srcEvent.pageY;
-            
+
             // debugLog();
 
             // Start the sampling
@@ -283,7 +283,7 @@ function setupHandlersMobile() {
 
 
     });
-    
+
     /*
     objPageVars.hammersvg.on("dragend release", function(ev) {
     	//if(window.console) { console.log(ev); }
@@ -311,7 +311,7 @@ function setupHandlersMobile() {
             if (window.console) {
                 console.log(ev);
             }
-            
+
             // console.log('pinch');
         }
 
@@ -425,11 +425,11 @@ function removeHandlers(cb) {
  */
 function getEventPoint(evt) {
     var p = objTouchVars.elsvg.createSVGPoint();
-    
+
     // console.log(evt);
     if (objZoomPanSettings.mobile) {
         p.x = evt.gesture.center.pageX - objTouchVars.svgx;
-        
+
         // Hack to zoom in center - seems to be solved in ios 7
         if (window.app.state.ios && !window.app.state.ipad && !window.app.state.ios7) {
             p.x = p.x - window.app.state.width / 2;
@@ -623,8 +623,7 @@ function handleZoomMobile(ev) {
 
 
 function handleZoomDesktop(evt) {
-    // debugger;
-    if (!objZoomPanSettings.zoom || window.objOverlay.state.visible) return;
+    if (objZoomPanSettings.zoom === 0 || window.objOverlay.state.visible) return;
 
     objTouchVars.eventcount++;
 
@@ -657,7 +656,9 @@ function handleZoom(evt, z) {
     // var g = getRoot(evt.target.ownerDocument);
     var g = (objTouchVars.elanimate == null) ? getRoot(evt.target.ownerDocument) : objTouchVars.elanimate;
 
-    var p = getEventPoint(evt);
+    // Note: evt can be a mouse scroll event or a pre defined SVGPoint object
+    var p = evt;
+    if(typeof evt.deltaX !== 'undefined')p = getEventPoint(evt);
 
     p = p.matrixTransform(g.getCTM().inverse());
 
@@ -749,7 +750,7 @@ function handleDrag(evt) {
     // var g = getRoot(evt.target.ownerDocument);
 
     var g = (objTouchVars.elanimate == null) ? getRoot(evt.target.ownerDocument) : objTouchVars.elanimate;
-    
+
     // console.log(g);
     // console.log('+++++++')
     // var g=(objTouchVars.elanimate==null && !objZoomPanSettings.mobile)?getRoot(evt.target.ownerDocument):objTouchVars.elanimate;
@@ -757,7 +758,7 @@ function handleDrag(evt) {
     if (objTouchVars.state === 'pan' && objZoomPanSettings.pan) {
         // Pan mode
         var p = getEventPoint(evt).matrixTransform(objTouchVars.svgmatrix);
-        
+
         // console.log(p)
         // console.log('pan');
         if (bolXmax) p.x = objTouchVars.svgpointorigin.x;
@@ -826,7 +827,7 @@ function handleClickTouchStart(evt) {
  */
 function handleClickTouchEnd(evt) {
     //debugger;
-    
+
     // Hammer sets preventDefault
     if (!objZoomPanSettings.mobile) {
         if (evt.preventDefault) evt.preventDefault();

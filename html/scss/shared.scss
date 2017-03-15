@@ -58,14 +58,24 @@ body {
                 display: block;
                 opacity: 1;
             }
-			svg * {
-				fill: #7CC9C5;
-				transition: fill .5s ease;
-				cursor: pointer;
-                &.no-data {
-                    cursor: default!important;
+
+            #main_wrapper{
+                #holder_1000{
+                    text-align: center;
+                    svg{
+                        margin: 0 auto;
+                        * {
+                            fill: #7CC9C5;
+                            transition: fill .5s ease;
+                            cursor: pointer;
+                            &.no-data {
+                                cursor: default!important;
+                            }
+                        }
+                    }
                 }
             }
+
 			.active:not(#world) *{
 				fill: $color-highlight!important;
 			}

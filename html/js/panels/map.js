@@ -3,11 +3,14 @@ var objMap = {
         visible: null
     },
     el: {
-        mapwrapper: null
+        mapwrapper: null,
+        elsvgholder: null,
+        svgcontentwrapper: null
     },
     vars: {
         showdetailview: false,
-        regionidtoshow: null // Contains the region id of the details panel to show
+        regionidtoshow: null, // Contains the region id of the details panel to show
+        zoomdelta: 0.3
     },
     data: null,
     maps: {
@@ -436,10 +439,8 @@ var objMap = {
         // Retrieve the base svg elements
         self.el.rootanimate = window.getEl('viewport');
         self.el.rootsvg = window.getEl('holder_1000').getElementsByTagName('svg')[0];
+        self.el.svgcontentwrapper = window.getEl('svgcontentwrapper');
         // console.log(objPageElements.rootsvg);
-
-        // Resize the map to fit into the window
-        self.resizeworldmap();
 
         // Prepare an object containing vital information about the svg element to animate
         self.state.rootanimateattributevalues = self.retrievesvgelementobject(self.el.rootanimate);
@@ -469,24 +470,30 @@ var objMap = {
                 var strParentElementName = elParent.nodeName;
                 var strParentElementId = (elParent.id) ? elParent.id : '';
                 if (strElementId === '') strElementId = strParentElementId;
-                
+
                 // console.log('- strElementName: ' + strElementName + ' strElementId: ' + strElementId + ' strParentElementName:' + strParentElementName + ' strParentElementId: ' + strParentElementId);
 
                 if ((strElementName === 'path' || strElementName === 'g' || strElementName === 'polygon')) window.countryClicked(strElementId);
             }
 
+            // Initiate the map zoom and pan library
             window.initSgvZoomPan(self.el.rootsvg, self.el.rootanimate);
 
-            // console.log(objPageElements.rootanimateattributevalues);
+            // Resize the map to fit into the window
+            self.resizeworldmap();
+
+
+
         } else {
 
             window.initZoomPan(self.el.rootsvg);
         }
 
-        self.centerworldmap(self.el.rootanimate);
+        // Move the worldmap to the center of the screen
+        self.moveworldmap(((window.app.state.width - self.el.rootanimate.getBBox().width) / 2), 0);
 
         // On the public version of the application, stretch the worldmap to the maximum size of the window
-        if (window.isPublicSite() && window.app.isMobile.any() === false) self.maximizeworldmap(self.el.rootanimate);
+        // if (window.isPublicSite() && window.app.isMobile.any() === false) self.maximizeworldmap(self.el.rootanimate);
 
         window.objLoading.hide();
 
@@ -690,13 +697,15 @@ var objMap = {
     },
     resizeworldmap: function () {
         var self = this;
+
         if (typeof (self.el.rootsvg) !== "undefined") {
-            self.el.rootsvg.setAttributeNS(null, 'viewBox', '0 0 ' + window.app.state.width + ' ' + window.app.state.height);
-            self.el.rootsvg.setAttributeNS(null, 'enable-background', 'new 0 0 ' + window.app.state.width + ' ' + window.app.state.height);
-            self.el.elsvgholder.style.width = window.app.state.width + 'px';
-            self.el.elsvgholder.style.height = window.app.state.height + 'px';
+            var mapDivHeight = self.el.elsvgholder.clientHeight;
+            self.el.rootsvg.setAttributeNS(null, 'viewBox', '0 0 ' + window.app.state.width + ' ' + mapDivHeight);
+            self.el.rootsvg.setAttributeNS(null, 'enable-background', 'new 0 0 ' + window.app.state.width + ' ' + mapDivHeight);
+            // self.el.elsvgholder.style.width = window.app.state.width + 'px';
+            // self.el.elsvgholder.style.height = window.app.state.height + 'px';
             self.el.rootsvg.setAttributeNS(null, 'width', window.app.state.width);
-            self.el.rootsvg.setAttributeNS(null, 'height', window.getEl('map').clientHeight); // window.app.state.height);
+            self.el.rootsvg.setAttributeNS(null, 'height', mapDivHeight); // window.app.state.height);
         }
     },
 
@@ -743,20 +752,34 @@ var objMap = {
             window.handleClickTouchEnd(objFakeEventObject);
         }
     },
+
     // Centers the worldmap in the screen
     centerworldmap: function (elSvg) {
         var self = this;
+
+
         // Set the worldmap to position 0,0, but respect the current zoom level
         window.svgSetTransform(elSvg, {
-            scale: window.svgRetrieveZoomLevel(elSvg),
+            scale: self.state.rootanimateattributevalues.scale,
             translatex: 0,
             translatey: 0,
             transformmatrix: {}
         });
-        //console.log(elSvg);
 
-        // Move to new position
-        self.moveworldmap((window.app.state.width / 2) - (self.state.rootanimateattributevalues.size.width / 2) - self.state.rootanimateattributevalues.x, (window.app.state.height / 2) - (self.state.rootanimateattributevalues.size.height / 2) - self.state.rootanimateattributevalues.y);
+        // debugger;
+
+        // console.log(elSvg);
+
+        // // Move to new position
+        // self.moveworldmap((window.app.state.width / 2) - (self.state.rootanimateattributevalues.size.width / 2) - self.state.rootanimateattributevalues.x, (window.app.state.height / 2) - (self.state.rootanimateattributevalues.size.height / 2) - self.state.rootanimateattributevalues.y);
+        // console.log(self.el.svgcontentwrapper.getBBox().width);
+
+        // var deltaX = ((window.app.state.width - self.el.rootanimate.getBBox().width) / 2);
+
+        self.el.rootanimate.setAttributeNS(null, 'transform', '');
+
+        // Move the worldmap to the center of the screen
+        self.moveworldmap(((window.app.state.width - self.el.rootanimate.getBBox().width) / 2), 0);
 
         // Store the state of the map in a new object
         self.state.rootanimateattributevalues = self.retrievesvgelementobject(self.el.rootanimate);
@@ -804,58 +827,23 @@ var objMap = {
             el.removeAttribute('class')
         });
     },
-    zoomIn: function () {
+
+    // Map zoom functionality using the buttons
+    zoom: function (type) {
         var self = this;
         var currentZoom = self.state.rootanimateattributevalues.scale;
-        if (currentZoom < 5) {
-            window.svgSetTransform(self.el.rootanimate, {
-                scale: currentZoom + 1,
-                translatex: 0,
-                translatey: 0,
-                transformmatrix: {}
-            });
-            self.state.rootanimateattributevalues.scale = currentZoom + 1;
 
-            var zoomFactor = 1,
-                deltaX = 0,
-                deltaY = 0;
+        var p = window.objTouchVars.elsvg.createSVGPoint();
+        p.x = window.app.state.width / 2;
+        p.y = window.app.state.height / 2; // Needs to be improved
 
-            // Determine how to maximize the map
-            if ((window.app.state.width / window.app.state.height) >= (self.state.rootanimateattributevalues.size.width / self.state.rootanimateattributevalues.size.height)) {
-                // Stretch to height and horizontally center
-                zoomFactor = window.app.state.height / self.state.rootanimateattributevalues.size.height;
+        // Use the zoom functionality from the SVG library to execute the zoom on the map
+        window.handleZoom(p, ((type === 'in') ? (currentZoom + self.vars.zoomdelta) : (currentZoom - self.vars.zoomdelta)));
 
-                // How much should we move the map after it has been zoomed correctly
-                deltaX = (window.app.state.width - (self.state.rootanimateattributevalues.size.width * self.state.rootanimateattributevalues.scale)) / 2;
-            } else {
-                // Stretch to width and vertically center
-                zoomFactor = window.app.state.width / self.state.rootanimateattributevalues.size.width;
-
-                // How much should we move the map after it has been zoomed correctly
-                deltaY = (window.app.state.height - (self.state.rootanimateattributevalues.size.height * self.state.rootanimateattributevalues.scale)) / 2;
-            }
-            self.moveworldmap(deltaX, deltaY);
-
-            // self.centerworldmap(self.el.rootanimate);
-        }
-
+        // Store the state of the map in a new object
+        self.state.rootanimateattributevalues = self.retrievesvgelementobject(self.el.rootanimate);
     },
-    zoomOut: function () {
-        var self = this;
-        var currentZoom = self.state.rootanimateattributevalues.scale;
-        if (currentZoom > 1) {
-            window.svgSetTransform(self.el.rootanimate, {
-                scale: currentZoom - 1,
-                translatex: 0,
-                translatey: 0,
-                transformmatrix: {}
-            });
-            self.state.rootanimateattributevalues.scale = currentZoom - 1;
 
-            // self.centerworldmap(self.el.rootanimate);
-            self.moveworldmap(self.state.rootanimateattributevalues.translatex, self.state.rootanimateattributevalues.translatey);
-        }
-    },
     detailspanel: function () {
         var self = this;
 

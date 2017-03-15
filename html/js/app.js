@@ -765,8 +765,10 @@ var objAnalytics = {
 
 window.onresize = function () {
     var self = this;
+    
     // Update the width and height variables
     app.getdimensions();
+
     try {
         if (!app.isMobile.any()) {
             // Rework the dimensions of the map based on the new dimensions of the window
@@ -775,8 +777,8 @@ window.onresize = function () {
             // Center the worldmap
             window.objMap.centerworldmap(window.objMap.el.rootanimate);
 
-            // On the public version of the application, stretch the worldmap to the maximum size of the window
-            if (window.isPublicSite()) window.objMap.maximizeworldmap(window.objMap.el.rootanimate);
+            // // On the public version of the application, stretch the worldmap to the maximum size of the window
+            // if (window.isPublicSite()) window.objMap.maximizeworldmap(window.objMap.el.rootanimate);
 
             window.objRegionInfo.hide();
         }

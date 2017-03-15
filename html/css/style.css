@@ -566,12 +566,16 @@ body {
         width: 100%;
         display: block;
         opacity: 1; } }
-    #app_panel #app_wrapper #map svg * {
-      fill: #7CC9C5;
-      transition: fill .5s ease;
-      cursor: pointer; }
-      #app_panel #app_wrapper #map svg *.no-data {
-        cursor: default !important; }
+    #app_panel #app_wrapper #map #main_wrapper #holder_1000 {
+      text-align: center; }
+      #app_panel #app_wrapper #map #main_wrapper #holder_1000 svg {
+        margin: 0 auto; }
+        #app_panel #app_wrapper #map #main_wrapper #holder_1000 svg * {
+          fill: #7CC9C5;
+          transition: fill .5s ease;
+          cursor: pointer; }
+          #app_panel #app_wrapper #map #main_wrapper #holder_1000 svg *.no-data {
+            cursor: default !important; }
     #app_panel #app_wrapper #map .active:not(#world) * {
       fill: #E2EA6D !important; }
   #app_panel #app_wrapper #regions ul {
