@@ -62,7 +62,10 @@ body {
 				fill: #7CC9C5;
 				transition: fill .5s ease;
 				cursor: pointer;
-			}
+                &.no-data {
+                    cursor: default!important;
+                }
+            }
 			.active:not(#world) *{
 				fill: $color-highlight!important;
 			}
