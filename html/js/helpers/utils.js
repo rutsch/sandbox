@@ -519,7 +519,7 @@ function countryClicked(idCountry, mobile, forceview) {
         window.objPageState.mobile = false;
     }
 
-    if (idCountry !== "" && elRegion.style.fill !== '#999999' && elRegion.style.fill !== '#999' && elRegion.style.fill !== 'rgb(153, 153, 153)' && elRegion.style.fill !== 'rgb(153,153,153)') {
+    if (idCountry !== "" && elRegion.classList.contains("no-data") === false) {
         // Update the hash and initiate the new view based on that
         // console.log('click in map ' + idCountry);
 

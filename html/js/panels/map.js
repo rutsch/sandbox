@@ -203,9 +203,10 @@ var objMap = {
     },
     postprocessworldmapdata: function (data) {
         var self = this;
-        
+
         var debugRoutine = true;
         var setColor = true;
+        var noDataColor = window.rgbFromHex('#999999');
 
         // console.log('----------------');
         // console.log('In postprocessworldmapdata');
@@ -296,28 +297,29 @@ var objMap = {
                 // Loop through all the data types that we have found
                 for (var dataTypeId in dataTypeMetadata) {
                     if (typeof dataTypeId === 'string') {
-                        var currentValue = dataToProcess[oruGuid][dataTypeId];
-                        if (dataTypeMetadata[dataTypeId].min === null && dataTypeMetadata[dataTypeId].max === null) {
-                            dataTypeMetadata[dataTypeId].min = dataTypeMetadata[dataTypeId].max = currentValue;
-                        } else {
-                            if (currentValue < dataTypeMetadata[dataTypeId].min) {
-                                dataTypeMetadata[dataTypeId].min = currentValue;
+                        var currentValue = parseFloat(dataToProcess[oruGuid][dataTypeId]);
+                        if (!isNaN(currentValue)) {
+                            if (dataTypeMetadata[dataTypeId].min === null && dataTypeMetadata[dataTypeId].max === null) {
+                                dataTypeMetadata[dataTypeId].min = dataTypeMetadata[dataTypeId].max = currentValue;
                             } else {
-                                if (currentValue > dataTypeMetadata[dataTypeId].max) {
-                                    dataTypeMetadata[dataTypeId].max = currentValue;
+                                if (currentValue < dataTypeMetadata[dataTypeId].min) {
+                                    dataTypeMetadata[dataTypeId].min = currentValue;
+                                } else {
+                                    if (currentValue > dataTypeMetadata[dataTypeId].max) {
+                                        dataTypeMetadata[dataTypeId].max = currentValue;
+                                    }
                                 }
                             }
                         }
-
                     }
                 }
             }
         }
 
-
-        //console.log(JSON.stringify(dataTypeMetadata));
-        //console.log(JSON.stringify(dataToProcess));
-
+        // console.log('----------------');
+        // console.log(JSON.stringify(dataTypeMetadata));
+        // console.log(JSON.stringify(dataToProcess));
+        // console.log('----------------');
 
         /*
 		3) set the proper coloring
@@ -344,7 +346,7 @@ var objMap = {
         }
 
 
-        // Settings for the coloring 10 - 5 
+        // Settings for the coloring
         var minimumPercentage = 0; // Anything below this percentage will get the 'low' color
         var factor = (dataValueMax === dataValueMin) ? 1 : ((100 - minimumPercentage) / (dataValueMax - dataValueMin));
         console.log('- factor: ' + factor);
@@ -356,9 +358,6 @@ var objMap = {
             window.objConfig.colors[window.objPageState.state.filter.sector].rgb.middle = window.rgbFromHex(window.objConfig.colors[window.objPageState.state.filter.sector].middle);
             window.objConfig.colors[window.objPageState.state.filter.sector].rgb.high = window.rgbFromHex(window.objConfig.colors[window.objPageState.state.filter.sector].high);
         }
-
-
-        
 
 
         for (var i = 0; i < arrRegions.length; i++) {
@@ -385,38 +384,45 @@ var objMap = {
 
                 // Add colors to the map
                 if (setColor) {
-                    var color = window.objConfig.colors[window.objPageState.state.filter.sector].middle;
-                    self.data[oruGuid].color = color;
+                    var colorToSet = '#000';
 
-                    // Calculate the color to place on the map
-                    var percentageForColor = 100;
-                    if (dataValueMax > dataValueMin) {
-                        percentageForColor = (dataValueToDisplay - dataValueMin) * factor;
+                    if (noData && window.objConfig.hideinactivecountries) {
+                        colorToSet = self.getcolorforpercentage(100, noDataColor, noDataColor, noDataColor);
+                    } else {
+                        var color = window.objConfig.colors[window.objPageState.state.filter.sector].middle;
+                        self.data[oruGuid].color = color;
+
+                        // Calculate the color to place on the map
+                        var percentageForColor = 100;
+                        if (dataValueMax > dataValueMin) {
+                            percentageForColor = (dataValueToDisplay - dataValueMin) * factor;
+                        }
+
+                        // if (debugRoutine) console.log('- ' + oruGuid + ': ' + percentageForColor);
+
+                        // Correct for percentages above 100 and below 0
+                        if (percentageForColor >= 100) percentageForColor = 100;
+                        if (percentageForColor < 0) percentageForColor = 0;
+
+                        colorToSet = self.getcolorforpercentage(percentageForColor, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.low, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.middle, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.high);
                     }
 
-                    if (debugRoutine) console.log(percentageForColor);
-
-                    // Correct for percentages above 100 and below 0
-                    if (percentageForColor >= 100) percentageForColor = 100;
-                    if (percentageForColor < 0) percentageForColor = 0;
-
-                    var colorToSet = self.getcolorforpercentage(percentageForColor, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.low, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.middle, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.high);
-
-                    // JT: shouldn't objConfig.hideinactivecountries be part of the MruFilter object??
-                    if (noData && window.objConfig.hideinactivecountries) colorToSet = '#999';
-
+                    // Set the color and the classname on the container element
                     region.style.fill = colorToSet;
+                    region.classList.toggle('no-data', noData);
 
+                    // Set the color and the classname of the nested SVG DOM elements
                     var paths = region.getElementsByTagName('*');
                     for (var y = 0; y < paths.length; y++) {
                         if (paths[y].nodeName === 'path' || paths[y].nodeName === 'polygon' || paths[y].nodeName === 'rect' || paths[y].nodeName === 'g' || paths[y].nodeName === 'polyline') {
                             paths[y].style.fill = colorToSet;
+                            paths[y].classList.toggle('no-data', noData);
                         }
                     }
                 }
 
             } else {
-                region.style.fill = '#999';
+                region.style.fill = noDataColor;
             }
         }
 
@@ -449,9 +455,9 @@ var objMap = {
 
             window.objZoomPanSettings.clickcallback = function (event) {
                 // event.stopPropagation();
-                debugger;
-                console.log('in callback');
-                console.log(event);
+                // debugger;
+                // console.log('in callback');
+                // console.log(event);
 
                 var elClicked = event.srcElement;
                 if (typeof (elClicked) === "undefined") {
@@ -463,9 +469,10 @@ var objMap = {
                 var strParentElementName = elParent.nodeName;
                 var strParentElementId = (elParent.id) ? elParent.id : '';
                 if (strElementId === '') strElementId = strParentElementId;
-                console.log('- strElementName: ' + strElementName + ' strElementId: ' + strElementId + ' strParentElementName:' + strParentElementName + ' strParentElementId: ' + strParentElementId);
+                
+                // console.log('- strElementName: ' + strElementName + ' strElementId: ' + strElementId + ' strParentElementName:' + strParentElementName + ' strParentElementId: ' + strParentElementId);
 
-                if (strElementName === 'path' || strElementName === 'g' || strElementName === 'polygon') window.countryClicked(strElementId);
+                if ((strElementName === 'path' || strElementName === 'g' || strElementName === 'polygon')) window.countryClicked(strElementId);
             }
 
             window.initSgvZoomPan(self.el.rootsvg, self.el.rootanimate);
