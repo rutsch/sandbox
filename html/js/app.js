@@ -87,28 +87,7 @@ var app = {
             return window.getComputedStyle(window.getEl('map'), null).display === 'none';
         }
     },
-    retrievechartdata: function (type) {
-        var objData = {
-            _type: 'json',
-            method: 'getworldmapdata',
-            token: window.objLogin.token,
-            source: type,
-            period: 'future'
-        }
 
-        // showLoadingPanel();
-        window.psv('GET', window.objConfig.urls.dynamicresourceurl, objData, function (err, data) {
-            // hideLoadingPanel();
-            if (err != null) {
-                console.log(err);
-                window.objError.show('There was an error retrieving the worldmap data. ' + ((typeof err === 'object') ? JSON.parse(err) : err), true);
-            } else {
-                // Store data in variable for later use
-                window.objData[type] = data;
-            }
-        });
-    },
-    
     // Retrieves oru and mru metadata structures
     retrievemetadata: function () {
         var objData = {
@@ -121,6 +100,7 @@ var app = {
         window.psv('GET', window.objConfig.urls.dynamicresourceurl, objData, app.retrievemetadatahandler);
     },
     retrievemetadatahandler: function (err, data) {
+        var self = this;
 
         if (err || window.hasProperty(data, 'error')) {
             if (window.hasProperty(data, 'error')) {
@@ -144,15 +124,67 @@ var app = {
                 // Load the retrieved data into the MRU (product) object
                 window.objMruFilter.preparehtml(data.result.productdata);
 
-                // Load the Global Presence and Sustainability data sets
-                app.retrievechartdata('sustainability');
-                app.retrievechartdata('global_presence');
 
-                // Render the initial view of the app
-                app.processinitialview(true);
+
+                // Load the Global Presence and Sustainability data sets
+                app.retrievesustainabilitydata();
             }
 
         }
+    },
+    retrievesustainabilitydata: function () {
+        var self = this;
+
+        var objData = {
+            _type: 'json',
+            method: 'getworldmapdata',
+            token: window.objLogin.token,
+            source: 'sustainability',
+            period: 'future' // TODO: This needs to be dynamic based on the url of the parent window!!!
+        }
+
+        // showLoadingPanel();
+        window.psv('GET', window.objConfig.urls.dynamicresourceurl, objData, function (err, data) {
+            // hideLoadingPanel();
+            if (err != null) {
+                console.log(err);
+                window.objError.show('There was an error retrieving the sustainability data. ' + ((typeof err === 'object') ? JSON.parse(err) : err), true);
+            } else {
+                // Store data in variable for later use
+                window.objData['sustainability'] = data;
+
+                // Load the global presence data
+                self.retrieveglobalpresencedata();
+            }
+        });
+
+    },
+    retrieveglobalpresencedata: function () {
+        var self = this;
+
+        var objData = {
+            _type: 'json',
+            method: 'getworldmapdata',
+            token: window.objLogin.token,
+            source: 'global_presence',
+            period: 'future' // TODO: This needs to be dynamic based on the url of the parent window!!!
+        }
+
+        // showLoadingPanel();
+        window.psv('GET', window.objConfig.urls.dynamicresourceurl, objData, function (err, data) {
+            // hideLoadingPanel();
+            if (err != null) {
+                console.log(err);
+                window.objError.show('There was an error retrieving the Global Presence data. ' + ((typeof err === 'object') ? JSON.parse(err) : err), true);
+            } else {
+                // Store data in variable for later use
+                window.objData['global_presence'] = data;
+
+                // Render the initial view of the app
+                app.processinitialview(true);       
+            }
+        });
+
     },
     start: function (bolShowDetailView) {
         // Init elements with async because elements require external data
@@ -201,7 +233,8 @@ var app = {
         // Set or process the information supplied in the hash
         if (location.hash.length > 0) {
             var objPageStateNew = window.objPageState.hash2object(location.hash);
-            // console.log(objPageStateNew);
+            console.log(objPageStateNew);
+
             if (objPageStateNew.hasOwnProperty("error")) {
                 // Could not properly parse the hash into a state object - default to standard object
                 location.hash = window.objPageState.object2hash(self.defaultpagestate);
@@ -276,13 +309,13 @@ var app = {
         window.objHeader.init();
         window.objOverlay.init();
         window.objRegionInfo.init();
-        
+
         // window.objSliders.init();
         window.objError.init();
         window.objFilter.init();
         window.objBookmarks.init();
         window.objExplain.init();
-        
+
         // window.objTrendGraph.init();
         window.objLoading.init();
         window.objPanelInfo.init();
@@ -384,7 +417,7 @@ var objPageState = {
         view: null,
         popup: null,
         filter: {
-            datasource: null, // Values: lives improved, global ppresence or sustainability
+            datasource: null, // Values: lives improved, global_presence or sustainability
             orulevel: null, // For worldmap data 1, 2, 3, 4
             oru: null, // Selected country/region
             sector: null, // Selected main sector
@@ -546,6 +579,19 @@ var objPageState = {
         if (self.state.filter.datasource !== objPageStateNew.filter.datasource || self.state.filter.subtype !== objPageStateNew.filter.subtype) {
             bolFilterDataChanged = true;
             bolFilterChangeDetected = true;
+
+            // Update the filter object
+            window.objDataFilter.state.filter.datasource = objPageStateNew.filter.datasource;
+            window.objDataFilter.state.filter.subtype = objPageStateNew.filter.subtype;
+
+            // Update the UI so that the correct panels get the selected state
+            if (self.state.filter.subtype !== objPageStateNew.filter.subtype) {
+                // Update the subtype
+                window.objDataFilter.subtypeChanged(undefined, objPageStateNew.filter.datasource, objPageStateNew.filter.subtype, false)
+            } else {
+                // Update the datasource
+                window.objDataFilter.datasourceChanged(undefined, objPageStateNew.filter.datasource, false)
+            }
         }
 
         // 2) check we we are coming from login
@@ -555,6 +601,7 @@ var objPageState = {
         if (self.state.mobile && self.state.initialmapview && bolFromLogin && objPageStateNew.view !== 'login') app.showtransparentlayer();
 
         // 4) handle view change
+        // debugger;
         // console.log(self.state.view);
         // console.log(objPageStateNew.view);
 
@@ -578,7 +625,7 @@ var objPageState = {
             // 5) handle filter change
             if (bolFilterChangeDetected) {
                 // console.log('filter change detected');
-                // if the detail view is open then we need to reload the data in it
+                // If the detail view is open then we need to reload the data in it
                 if (objPageStateNew.view === 'detail') {
                     self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, true, bolFilterDataChanged);
                 } else {
@@ -604,8 +651,16 @@ var objPageState = {
     },
     updateworldmapview: function (objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, bolShowDetailsPanel, bolFilterDataChanged) {
         var self = this;
+
+        // Select the correct data source UI element        
+
         // debugger;
-        if (typeof window.objMap.data === "object" && !bolFilterSectorChanged && !bolFilterMruChanged && !bolFilterOruLevelChanged && bolFilterOruChanged) {
+        if (typeof window.objMap.data === "object" &&
+            !bolFilterSectorChanged &&
+            !bolFilterMruChanged &&
+            !bolFilterOruLevelChanged &&
+            !bolFilterDataChanged &&
+            bolFilterOruChanged) {
             if (objPageStateNew.view === 'detail') {
                 self.setstateobject(objPageStateNew);
 
@@ -626,6 +681,7 @@ var objPageState = {
             // Load the svg map, the map data and open the details panel afterwards
             self.setstateobject(objPageStateNew);
             window.objOruFilter.settocurrentoru();
+            
             // Reload all the data
             if (bolShowDetailsPanel) {
                 app.start(true);
@@ -765,7 +821,7 @@ var objAnalytics = {
 
 window.onresize = function () {
     var self = this;
-    
+
     // Update the width and height variables
     app.getdimensions();
 

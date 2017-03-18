@@ -69,6 +69,13 @@ var objConfig = {
     sitetype: 'prod',
     lang: 'en',
     fragments: {},
+
+    // TODO: This needs to be processed later so that the datasources for this version of the application are defined
+    datasources: [
+        'livesimproved',
+        'sustainability',
+        'global_presence'
+    ],
     hideinactivecountries: true,
     snapshots: null,
     currentsnapshotid: 'nothing',

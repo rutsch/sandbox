@@ -2,6 +2,10 @@ var objDataFilter = {
     el: {
         wrapper: ''
     },
+    vars: {
+        subclicked: false,
+        timerid: null
+    },
     state: {
         filter: {
             datasource: 'lives_improved',
@@ -14,13 +18,6 @@ var objDataFilter = {
     init: function () {
         var self = this;
         self.el.wrapper = window.getEl('map-tab_panels');
-
-        // Add click event to the list items in the header panel
-        var items = window.Sizzle('.map-tab_panels > div > ul > li'); //self.el.wrapper.getElementsByTagName('li');
-        for (var i = 0; i < items.length; i++) {
-            items[i].addEventListener('click', this.datasourceChanged, false);
-        }
-
     },
     showHideLegend: function () {
         if (objDataFilter.state.filter.datasource === 'lives_improved' || objDataFilter.state.filter.subtype !== 'all') {
@@ -35,68 +32,88 @@ var objDataFilter = {
             })
         }
     },
+
     resetsubtypeindicators: function (subtypeindicators) {
         for (var i = 0; i < subtypeindicators.length; i++) {
-            // TRANSLATE
             subtypeindicators[i].innerText = window.translateFragment('all_data');
         }
     },
-    datasourceChanged: function (e) {
-        var element = this;
-        var wasClicked = false;
-        if (e.type && e.type === 'click') {
-            e.stopPropagation();
-            wasClicked = true;
 
-        } else {
-            element = e;
-        }
-
-        objDataFilter.state.filter.datasource = element.getAttribute('data-panel');
-        objDataFilter.state.filter.subtype = 'all';
+    setactivetab: function (el) {
         var items = objDataFilter.el.wrapper.getElementsByClassName('active-tab');
         for (var i = 0; i < items.length; i++) {
             items[i].removeAttribute('class');
         }
-        element.setAttribute('class', 'active-tab');
+        el.setAttribute('class', 'active-tab');
+    },
+
+    datasourceChanged: function (el, dataSource, applyfilter) {
+        if (!objDataFilter.vars.subclicked) {
+            // console.log('***');
+            // console.trace();
+            // console.log(el);
+            // console.log(dataSource);
+            // console.log('***');
+
+            if (typeof el === 'undefined') el = window.Sizzle('li[data-panel=' + dataSource + ']')[0];
+
+            // Set the datafilter state
+            objDataFilter.state.filter.datasource = dataSource;
+            objDataFilter.state.filter.subtype = 'all';
+
+            // Set the active tab in the UI
+            objDataFilter.setactivetab(el);
+
+            // Reset all indicators to their default value
+            objDataFilter.resetsubtypeindicators(objDataFilter.el.wrapper.getElementsByClassName('subtypeindicator'));
+
+            // Remove the data-subtype attribute from the body node
+            window.getEl('body').removeAttribute('data-subtype');
+
+            // Show or hide the legend
+            objDataFilter.showHideLegend();
+
+            // Apply the filter
+            if (applyfilter) window.objFilter.applyfilter();
+        }
+
+    },
+    subtypeChanged: function (el, dataSource, subType, applyfilter) {
+        // debugger;
+
+        if (typeof el === 'undefined') el = window.Sizzle('li[data-panel=' + dataSource + '] li[data-subtype=' + subType + ']')[0];
+
+        // Variable to prevent the click event from triggering datasourceChanged()
+        objDataFilter.vars.subclicked = true;
+
+        // Set the datafilter state
+        objDataFilter.state.filter.datasource = dataSource;
+        objDataFilter.state.filter.subtype = subType;
+
+        var elDataSource = window.Sizzle('li[data-panel=' + dataSource + ']')[0];
+        console.log(elDataSource);
+
+        // Set the active tab in the UI
+        objDataFilter.setactivetab(elDataSource);
 
         // Reset all indicators to their default value
         objDataFilter.resetsubtypeindicators(objDataFilter.el.wrapper.getElementsByClassName('subtypeindicator'));
 
-        // Remove the data-subtype attribute from the body node
-        window.getEl('body').removeAttribute('data-subtype');
-
-        if (wasClicked) {
-            // Apply the filter
-            window.objFilter.applyfilter();
-
-            // Show or hide the legend
-            objDataFilter.showHideLegend();
-        }
-
-    },
-    subtypeChanged: function (e) {
-        if (e) e.stopPropagation();
-
-        //debugger;
-
-        // First kick off the main datasource change event so that we have everything set properly
-        objDataFilter.datasourceChanged(this.parentNode.parentNode.parentNode);
-
-        // Get the sub data type
-        var subtype = this.getAttribute('data-subtype');
-
         // Set the subtype name to div below the data type
-        this.parentNode.parentNode.parentNode.getElementsByClassName('subtypeindicator')[0].innerHTML = this.innerHTML;
+        elDataSource.getElementsByClassName('subtypeindicator')[0].innerHTML = el.innerHTML;
 
         // Set the body element style
-        window.getEl('body').setAttribute('data-subtype', subtype);
-
-        // Apply the filter
-        objDataFilter.state.filter.subtype = subtype;
-        window.objFilter.applyfilter();
+        window.getEl('body').setAttribute('data-subtype', subType);
 
         // Show or hide the legend
         objDataFilter.showHideLegend();
+
+        // Apply the filter        
+        if (applyfilter) window.objFilter.applyfilter();
+
+        // Reset the variable
+        objDataFilter.vars.timerid = setTimeout(function () {
+            objDataFilter.vars.subclicked = false;
+        }, 50);
     }
 }

@@ -53,7 +53,6 @@ var objOruFilter = {
     // Fired when the filter panel is opened - sets the state of the filter to match the filter state of the application
     setorufilterstate: function () {
         var self = this;
-        // console.log('bla');
 
         self.state.selectedoru = window.objPageState.state.filter.orulevel;
         var strButtonId = 'btn_country';

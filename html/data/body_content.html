@@ -17,15 +17,15 @@
 		<div class="map-tab_panels">
 			<div class="container">
 				<ul>
-					<li data-panel="lives_improved" class="datafilter active-tab">
+					<li data-panel="lives_improved" class="datafilter active-tab" onclick="objDataFilter.datasourceChanged(this, 'lives_improved', true)">
 						[lives_improved]
 					</li>
-					<li data-panel="global_presence" class="datafilter">
+					<li data-panel="global_presence" class="datafilter" onclick="objDataFilter.datasourceChanged(this, 'global_presence', true)">
 						[global_presence]
 						<div class="subtypeindicator">[all_data]</div>
 						<div class="datatype-filter"></div>
 					</li>
-					<li data-panel="sustainability" class="datafilter">
+					<li data-panel="sustainability" class="datafilter" onclick="objDataFilter.datasourceChanged(this, 'sustainability', true)">
 						[sustainability]
 						<div class="subtypeindicator">[all_data]</div>
 						<div class="datatype-filter"></div>
