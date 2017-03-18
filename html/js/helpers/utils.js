@@ -1,4 +1,4 @@
-/*eslint-disable no-unused-vars, no-alert */
+/* eslint-disable no-unused-vars, no-alert */
 
 /*
 Utilities
@@ -22,14 +22,14 @@ function findPos(obj) {
         do {
             curleft += obj.offsetLeft;
             curtop += obj.offsetTop;
-        } while (obj = obj.offsetParent);
+        } while (obj === obj.offsetParent);
     }
     return [curleft, curtop];
 }
 
 function logAction(event, elThis, strType) {
-    //console.log(strType);
-    //console.log(event);
+    // console.log(strType);
+    // console.log(event);
 }
 
 function lon2x(lon) {
@@ -46,37 +46,11 @@ function lat2y(lat) {
     return y;
 }
 
-function plot(lat, lon, size) {
-    size = size * .5 + 4;
-    return R.circle(lon2x(lon), lat2y(lat), size).attr(city_attr);
-}
-
-function collectionHas(a, b) { //helper function (see below)
+function collectionHas(a, b) { // Helper function (see below)
     for (var i = 0, len = a.length; i < len; i++) {
         if (a[i] === b) return true;
     }
     return false;
-}
-
-function ColorLuminance(hex, lum) {
-
-    // Validate hex string
-    var hex = String(hex).replace(/[^0-9a-f]/gi, '');
-    if (hex.length < 6) {
-        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-    }
-    lum = lum || 0;
-
-    // Convert to decimal and change luminosity
-    var rgb = "#",
-        c, i;
-    for (i = 0; i < 3; i++) {
-        c = parseInt(hex.substr(i * 2, 2), 16);
-        c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-        rgb += ("00" + c).substr(c.length);
-    }
-
-    return rgb;
 }
 
 function getFirstLevelChildElements(parent, childNodeType) {
@@ -175,6 +149,10 @@ function getTransformedWidth(svg, el) {
 }
 
 function rgbFromHex(hex) {
+    function cutHex(h) {
+        return (h.charAt(0) === "#") ? h.substring(1, 7) : h
+    }    
+
     function hexToR(h) {
         return parseInt((cutHex(h)).substring(0, 2), 16)
     }
@@ -187,9 +165,6 @@ function rgbFromHex(hex) {
         return parseInt((cutHex(h)).substring(4, 6), 16)
     }
 
-    function cutHex(h) {
-        return (h.charAt(0) === "#") ? h.substring(1, 7) : h
-    }
     return {
         r: hexToR(hex),
         g: hexToG(hex),
@@ -249,6 +224,7 @@ function iterate(obj, type, value) {
 // Function that handles the situation where shibboleth login required
 function handleShibbolethLoginRequired(cb) {
     console.log('!!Shibboleth login is required!!');
+    
     // console.trace();
     // debugger;
 
@@ -409,7 +385,8 @@ function serverSideRequest(objArguments) {
     // Determine asynchronous request
     if (callbackFunction == null) bolAsync = false;
 
-    // bolDebug=true;
+    // bolDebug = true;
+
     if (bolDebug) alert("Parameters recieved:\nstrUrl=" + strUrl + "\ncallbackFunction=" + callbackFunction + "\nstrMethod=" + strMethod + "\narrFormData=" + arrFormData + "\nbolSubmitFormData=" + bolSubmitFormData + "\nbolAsync=" + bolAsync);
 
 
@@ -507,7 +484,7 @@ function serverSideRequest(objArguments) {
         return objXmlHttpLocal.responseText;
     }
 
-    //objXmlHttpLocal = null;
+    // objXmlHttpLocal = null;
 }
 
 function countryClicked(idCountry, mobile, forceview) {
@@ -542,23 +519,14 @@ function countryClicked(idCountry, mobile, forceview) {
                 }
             });
         }
-        //objMap.detailspanel(idCountry);
+        
+        // objMap.detailspanel(idCountry);
     } else {
-        //debugger;
-        getEl('messagelist').innerHTML = 'No data according to current sales data.';
-        window.objLogin.showmessages();
+        
+        // debugger;
+        // getEl('messagelist').innerHTML = 'No data according to current sales data.';
+        // window.objLogin.showmessages();
     }
-}
-
-function formatFinancialData(input) {
-    var output = '';
-    if (parseFloat(input) < 0) {
-        input = 0 - parseFloat(input);
-        output = '(' + setNumberSeperators(input) + ')';
-    } else {
-        output = setNumberSeperators(input);
-    }
-    return output;
 }
 
 function setNumberSeperators(str) {
@@ -582,6 +550,17 @@ function setNumberSeperators(str) {
     }
     return output;
 }
+
+function formatFinancialData(input) {
+    var output = '';
+    if (parseFloat(input) < 0) {
+        output = '(' + setNumberSeperators(0 - parseFloat(input)) + ')';
+    } else {
+        output = setNumberSeperators(input);
+    }
+    return output;
+}
+
 /*
 Formats a generic integer as a money
 usage
@@ -625,8 +604,9 @@ function loadUrlInBrowser(strUrl) {
         } else {
             window.open(strUrl, '_blank', 'location=no');
         }
-        //var ref = window.open(strUrl, '_blank', 'location=no');
-        //ref.addEventListener('loadstart', function() { alert(event.url); });
+        
+        // var ref = window.open(strUrl, '_blank', 'location=no');
+        // ref.addEventListener('loadstart', function() { alert(event.url); });
     }
 
 }
