@@ -28,7 +28,6 @@ var objMap = {
         }
     },
     getcolorforpercentage: function (pct, lowColor, middleColor, highColor) {
-        var self = this;
         var useMiddleColor = true;
 
         // console.log('pct: ' + pct);
@@ -140,9 +139,11 @@ var objMap = {
                     mru: window.objPageState.state.filter.mru,
                     snapshotid: window.objConfig.currentsnapshotid
                 }
-                //showLoadingPanel();
+
+                // showLoadingPanel();
                 window.psv('GET', window.objConfig.urls.dynamicresourceurl, objData, function getWorldmapDataHandler(err, data) {
-                    //hideLoadingPanel();
+
+                    // hideLoadingPanel();
                     if (err != null) {
                         // console.log(err);
                         window.objError.show('There was an error retrieving the worldmap data. ' + ((typeof err === 'object') ? JSON.parse(err) : err), true);
@@ -209,7 +210,7 @@ var objMap = {
 
         var debugRoutine = true;
         var setColor = true;
-        var noDataColor = window.rgbFromHex('#999999');
+        var noDataColor = window.rgbFromHex('#cae3e9');
 
         // console.log('----------------');
         // console.log('In postprocessworldmapdata');
@@ -246,7 +247,7 @@ var objMap = {
         }
 
         /*
-        Find the highest and lowest values in the data objects
+        3) Find the highest and lowest values in the data objects
         */
 
         // A) Filter out only the objects that we actually need to process
@@ -319,13 +320,13 @@ var objMap = {
             }
         }
 
-        // console.log('----------------');
-        // console.log(JSON.stringify(dataTypeMetadata));
-        // console.log(JSON.stringify(dataToProcess));
-        // console.log('----------------');
+        console.log('----------------');
+        console.log(JSON.stringify(dataTypeMetadata));
+        console.log(JSON.stringify(dataToProcess));
+        console.log('----------------');
 
         /*
-		3) set the proper coloring
+		4) set the coloring based on the values that we have received
 		*/
 
         // If oru not world and datafilter subtype not all, calculate percentages
@@ -378,12 +379,36 @@ var objMap = {
                     // Calculate percentage lives improved and store that in the worldmapdata object
                     dataValueToDisplay = self.data[oruGuid].percentageLI = self.data[oruGuid].lprc;
                     if (self.data[oruGuid].l < 100) noData = true;
-                } else if (window.objDataFilter.state.filter.subtype !== 'all') {
-                    dataValueToDisplay = regionData[window.objDataFilter.state.filter.subtype];
-                    if (dataValueToDisplay === '-') noData = true;
+                } else {
+                    if (window.objDataFilter.state.filter.subtype === 'all') {
+
+                        var hasDataArr = [];
+                        for (var dataType in regionData) {
+                            if (typeof dataType === 'string') {
+                                var currentValue = parseFloat(regionData[dataType]);
+                                if (!isNaN(currentValue)) {
+                                    if (currentValue === 0) {
+                                        hasDataArr.push('no');
+                                    } else {
+                                        hasDataArr.push('yes')
+                                    }
+                                } else {
+                                    if (regionData[dataType] === '-') {
+                                        hasDataArr.push('no');
+                                    } else {
+                                        hasDataArr.push('yes')
+                                    }  
+                                }
+                            }
+                        }
+
+                        // We have no data for the geographical region if all the elements contain no data
+                        noData = (hasDataArr.indexOf('yes') === -1);
+                    } else {
+                        dataValueToDisplay = regionData[window.objDataFilter.state.filter.subtype];
+                        if (dataValueToDisplay === '-') noData = true;
+                    }
                 }
-
-
 
                 // Add colors to the map
                 if (setColor) {
@@ -392,8 +417,6 @@ var objMap = {
                     if (noData && window.objConfig.hideinactivecountries) {
                         colorToSet = self.getcolorforpercentage(100, noDataColor, noDataColor, noDataColor);
                     } else {
-                        var color = window.objConfig.colors[window.objPageState.state.filter.sector].middle;
-                        self.data[oruGuid].color = color;
 
                         // Calculate the color to place on the map
                         var percentageForColor = 100;
@@ -432,15 +455,13 @@ var objMap = {
 
 
         /*
-		4) perform post processing (set events and center map)
+		5) perform post processing (set events and center map)
 		*/
-
 
         // Retrieve the base svg elements
         self.el.rootanimate = window.getEl('viewport');
         self.el.rootsvg = window.getEl('holder_1000').getElementsByTagName('svg')[0];
         self.el.svgcontentwrapper = window.getEl('svgcontentwrapper');
-        // console.log(objPageElements.rootsvg);
 
         // Prepare an object containing vital information about the svg element to animate
         self.state.rootanimateattributevalues = self.retrievesvgelementobject(self.el.rootanimate);
@@ -500,7 +521,7 @@ var objMap = {
         // hideLoadingPanel();
 
         /*
-		5) set the labels in the interface
+		6) set the labels in the interface
 		*/
         window.objHeader.setregionname(self.state.mapname);
         window.objHeader.setbreadcrumb(window.objMruFilter.getmrufilterbreadcrumb());
@@ -570,14 +591,17 @@ var objMap = {
 
                 // Render the data filter panels for Global presence and sustainability based on the map that we have loaded
                 var elSvgWrapper = window.getEl('svgcontentwrapper');
+
                 // console.log(elSvgWrapper);
                 var arrRegions = window.getFirstLevelChildElements(elSvgWrapper, 'path');
                 if (arrRegions.length === 0) arrRegions = window.getFirstLevelChildElements(elSvgWrapper, 'g');
+
                 // console.log(arrRegions);
 
                 // Set the datatypes for this data section
                 self.datatypes = self.createDataTypeListForRegions(arrRegions);
                 self.renderDataTypeFilters();
+
                 // console.log(self.datatypes);
 
                 // window.objDataFilter.renderDataTypeList(self.datatypes);
@@ -606,6 +630,7 @@ var objMap = {
                 window.countryClicked(this.getAttribute('data-target'), true);
             }, false);
         }
+
         // console.log(list);
     },
     mapdatatypekeys: function (key) {
@@ -643,6 +668,7 @@ var objMap = {
         });
         htmlSustain += '</ul>';
         window.Sizzle('li[data-panel=sustainability] .datatype-filter')[0].innerHTML = htmlSustain;
+
         // console.log(htmlSustain);
 
         var htmlGlobal = '<ul><li class="datafilter" data-subtype="all">All data</li>'
@@ -656,10 +682,12 @@ var objMap = {
 
 
         var subtypes = window.Sizzle('.datatype-filter li');
+
         // console.log(subtypes.length);
         for (var i = 0; i < subtypes.length; i++) {
             subtypes[i].addEventListener('click', window.objDataFilter.subtypeChanged, false);
         }
+
         // console.log(htmlGlobal);
     },
     retrievesvgelementobject: function (elSvg) {
@@ -679,9 +707,10 @@ var objMap = {
         // 3- store the attributes of the svg node into the object too
         for (var attr, i = 0, attrs = self.el.rootanimate.attributes, l = attrs.length; i < l; i++) {
             attr = attrs.item(i);
-            //alert(attr.nodeName);
+
+            // alert(attr.nodeName);
             if (attr.nodeName === 'transform') {
-                //perform string manipulation to find all the values used in the transform
+                // Perform string manipulation to find all the values used in the transform
             }
             window.objSvgElementProperties[attr.nodeName] = attr.nodeValue;
         }
