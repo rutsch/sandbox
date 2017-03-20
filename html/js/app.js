@@ -181,7 +181,7 @@ var app = {
                 window.objData['global_presence'] = data;
 
                 // Render the initial view of the app
-                app.processinitialview(true);       
+                app.processinitialview(true);
             }
         });
 
@@ -584,6 +584,12 @@ var objPageState = {
             window.objDataFilter.state.filter.datasource = objPageStateNew.filter.datasource;
             window.objDataFilter.state.filter.subtype = objPageStateNew.filter.subtype;
 
+            // Retrieve all the datatypes for this geographical region
+            window.objMap.datatypes = window.objMap.createDataTypeListForRegions(objPageStateNew.filter.orulevel);
+
+            // Render the datatypes as sub elements in the tabs
+            window.objMap.renderDataTypeFilters();
+
             // Update the UI so that the correct panels get the selected state
             if (self.state.filter.subtype !== objPageStateNew.filter.subtype && objPageStateNew.filter.subtype !== 'all') {
                 // Update the subtype
@@ -681,7 +687,7 @@ var objPageState = {
             // Load the svg map, the map data and open the details panel afterwards
             self.setstateobject(objPageStateNew);
             window.objOruFilter.settocurrentoru();
-            
+
             // Reload all the data
             if (bolShowDetailsPanel) {
                 app.start(true);

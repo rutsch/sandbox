@@ -79,7 +79,7 @@ var objMap = {
         self.state.mapname = window.objOruFilter.convertoruleveltomarket(window.objPageState.state.filter.orulevel);
 
         // Attempt to retrieve the svg data from localstorage
-        var svgdata = window.objStore.getlocalstorageitem('map_' + self.state.mapname + '_v5');
+        var svgdata = window.objStore.getlocalstorageitem('map_' + self.state.mapname + '_v' + window.objConfig.localstorageversion);
 
         // Test if real SVG data was returned from the local storage
         var performAjax = true;
@@ -109,7 +109,7 @@ var objMap = {
             svgdata = svgdata.replace(/fill:#00ffff/g, '');
 
             if (typeof svgdata === 'string') {
-                window.objStore.setlocalstorageitem('map_' + self.state.mapname + '_v5', svgdata);
+                window.objStore.setlocalstorageitem('map_' + self.state.mapname + '_v' + window.objConfig.localstorageversion, svgdata);
                 return svgdata;
             } else {
                 return "";
@@ -177,12 +177,12 @@ var objMap = {
     },
 
 
-    createDataTypeListForRegions: function () {
+    createDataTypeListForRegions: function (level) {
         var self = this,
             listSustain = [],
             listGlobal = [];
 
-        var regions = window.objOruFilter.retrieveoruarr();
+        var regions = window.objOruFilter.retrieveoruarr(level);
 
         regions.forEach(function (region) {
             listSustain = [];
@@ -314,10 +314,10 @@ var objMap = {
             }
         }
 
-        console.log('----------------');
-        console.log(JSON.stringify(dataTypeMetadata));
-        console.log(JSON.stringify(dataToProcess));
-        console.log('----------------');
+        // console.log('----------------');
+        // console.log(JSON.stringify(dataTypeMetadata));
+        // console.log(JSON.stringify(dataToProcess));
+        // console.log('----------------');
 
         /*
 		4) set the coloring based on the values that we have received
@@ -579,22 +579,15 @@ var objMap = {
 
             // Remove the handlers of the previous map and update svg html
             window.removeHandlers(function () {
-
+                // Inject the SVG map into the DOM
                 self.el.elsvgholder.innerHTML = '';
                 self.el.elsvgholder.innerHTML = strSvg;
-
-                // Render the data filter panels for Global presence and sustainability based on the map that we have loaded
-                var elSvgWrapper = window.getEl('svgcontentwrapper');
-
-
 
                 /*
                 Start move
                 */
 
-                // Set the datatypes for this data section
-                self.datatypes = self.createDataTypeListForRegions();
-                self.renderDataTypeFilters();
+
 
                 // console.log(self.datatypes);
 

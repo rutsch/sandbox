@@ -69,6 +69,7 @@ var objConfig = {
     sitetype: 'prod',
     lang: 'en',
     fragments: {},
+    localstorageversion: 6,
 
     // TODO: This needs to be processed later so that the datasources for this version of the application are defined
     datasources: [
