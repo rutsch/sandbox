@@ -429,14 +429,14 @@ var objMap = {
 
                     // Set the color and the classname on the container element
                     region.style.fill = colorToSet;
-                    region.classList.toggle('no-data', noData);
+                    window.toggleClass(region, 'no-data', noData);
 
                     // Set the color and the classname of the nested SVG DOM elements
                     var paths = region.getElementsByTagName('*');
                     for (var y = 0; y < paths.length; y++) {
                         if (paths[y].nodeName === 'path' || paths[y].nodeName === 'polygon' || paths[y].nodeName === 'rect' || paths[y].nodeName === 'g' || paths[y].nodeName === 'polyline') {
                             paths[y].style.fill = colorToSet;
-                            paths[y].classList.toggle('no-data', noData);
+                            window.toggleClass(paths[y], 'no-data', noData);
                         }
                     }
                 }
@@ -599,13 +599,15 @@ var objMap = {
                 // console.log(self.datatypes);
 
                 // window.objDataFilter.renderDataTypeList(self.datatypes);
-                // Render a country list
-                self.renderCountryList();
+
 
 
                 /*
                 End move
                 */
+
+                // Render a country list to use in the mobile view of the map
+                self.renderCountryList();
 
 
                 // Get worldmap livesimproved data

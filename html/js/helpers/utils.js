@@ -89,15 +89,59 @@ function getParamStringFromObject(objParams) {
 
 }
 
-function toggleClass(el, cls) {
+/**
+ * Tests if a class exists on a DOM element
+ * 
+ * @param {any} el DOM element to inspect or the complete content of the class attribute
+ * @param {string} classname Classname to search for
+ * @returns Booloan indicating if the classname exists
+ */
+function containsClass(el, classname) {
+    var currentClass = (typeof el === 'string') ? el : el.getAttribute('class');
+
+    if (typeof currentClass === 'string') return (currentClass.split(" ").indexOf(classname) > -1);
+
+    return false;
+}
+
+/**
+ * Toggles a class on a DOM node
+ * 
+ * @param {object} el DOM node to toggle the class on
+ * @param {string} cls Classname to toggle on the DOM node
+ * @param {boolean} forceAdd Optionally force add/remove the class on the DOM element
+ */
+function toggleClass(el, cls, forceAdd) {
     var cur = el.getAttribute('class');
 
-    if (cur.indexOf(cls) > -1) {
-        cur = cur.replace(cls, '');
+    if (typeof forceAdd === 'boolean') {
+        if (forceAdd) {
+            // Add the class
+            if (typeof cur === 'string') {
+                if (!containsClass(cur, cls)) el.setAttribute('class', (cur + ' ' + cls));
+            } else {
+                el.setAttribute('class', cls);
+            }
+        } else {
+            // Remove the class if it's present in the attribute
+            if (typeof cur === 'string') {
+                if (containsClass(cur, cls)) {
+                    el.setAttribute('class', (cur.replace(new RegExp('\\b' + cls + '\\b', 'g'), "")));
+                }
+            }
+        }
     } else {
-        cur = cur + ' ' + cls;
+        if (typeof cur === 'string') {
+
+            if (containsClass(el, cls)) {
+                cur = cur.replace(new RegExp('\\b' + cls + '\\b', 'g'), "");
+            } else {
+                cur = cur + ' ' + cls;
+            }
+        }
+
+        el.setAttribute('class', cur);
     }
-    el.setAttribute('class', cur);
 }
 
 
@@ -151,7 +195,7 @@ function getTransformedWidth(svg, el) {
 function rgbFromHex(hex) {
     function cutHex(h) {
         return (h.charAt(0) === "#") ? h.substring(1, 7) : h
-    }    
+    }
 
     function hexToR(h) {
         return parseInt((cutHex(h)).substring(0, 2), 16)
@@ -224,7 +268,7 @@ function iterate(obj, type, value) {
 // Function that handles the situation where shibboleth login required
 function handleShibbolethLoginRequired(cb) {
     console.log('!!Shibboleth login is required!!');
-    
+
     // console.trace();
     // debugger;
 
@@ -496,7 +540,7 @@ function countryClicked(idCountry, mobile, forceview) {
         window.objPageState.mobile = false;
     }
 
-    if (idCountry !== "" && elRegion.classList.contains("no-data") === false) {
+    if (idCountry !== "" && containsClass(elRegion, "no-data") === false) {
         // Update the hash and initiate the new view based on that
         // console.log('click in map ' + idCountry);
 
@@ -519,10 +563,10 @@ function countryClicked(idCountry, mobile, forceview) {
                 }
             });
         }
-        
+
         // objMap.detailspanel(idCountry);
     } else {
-        
+
         // debugger;
         // getEl('messagelist').innerHTML = 'No data according to current sales data.';
         // window.objLogin.showmessages();
@@ -604,7 +648,7 @@ function loadUrlInBrowser(strUrl) {
         } else {
             window.open(strUrl, '_blank', 'location=no');
         }
-        
+
         // var ref = window.open(strUrl, '_blank', 'location=no');
         // ref.addEventListener('loadstart', function() { alert(event.url); });
     }
