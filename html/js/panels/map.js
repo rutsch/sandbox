@@ -126,7 +126,8 @@ var objMap = {
 
         var objData;
 
-        debugger;
+        // debugger;
+
         switch (window.objDataFilter.state.filter.datasource) {
             case "lives_improved":
             case "":
@@ -174,14 +175,19 @@ var objMap = {
         }
 
     },
-    createDataTypeListForRegions: function (regions) {
+
+
+    createDataTypeListForRegions: function () {
         var self = this,
             listSustain = [],
             listGlobal = [];
+
+        var regions = window.objOruFilter.retrieveoruarr();
+
         regions.forEach(function (region) {
             listSustain = [];
             listGlobal = [];
-            var regionId = 'philips_' + region.getAttribute('id');
+            var regionId = 'philips_' + region.guid;
 
             // Loop through object properties
             // debugger;
@@ -253,19 +259,7 @@ var objMap = {
         // A) Filter out only the objects that we actually need to process
         var dataToProcess = {};
         var dataTypeMetadata = {};
-        var currentOruArr = window.objOruFilter.listlevel1world;
-
-        switch (window.objPageState.state.filter.orulevel) {
-            case '2':
-                currentOruArr = window.objOruFilter.listlevel2region;
-                break;
-            case '3':
-                currentOruArr = window.objOruFilter.listlevel3market;
-                break;
-            case '4':
-                currentOruArr = window.objOruFilter.listlevel4country;
-                break;
-        }
+        var currentOruArr = window.objOruFilter.retrieveoruarr();
 
         var prefix = 'philips_';
         currentOruArr.forEach(function (objOru, index) {
@@ -592,21 +586,27 @@ var objMap = {
                 // Render the data filter panels for Global presence and sustainability based on the map that we have loaded
                 var elSvgWrapper = window.getEl('svgcontentwrapper');
 
-                // console.log(elSvgWrapper);
-                var arrRegions = window.getFirstLevelChildElements(elSvgWrapper, 'path');
-                if (arrRegions.length === 0) arrRegions = window.getFirstLevelChildElements(elSvgWrapper, 'g');
 
-                // console.log(arrRegions);
+
+                /*
+                Start move
+                */
 
                 // Set the datatypes for this data section
-                self.datatypes = self.createDataTypeListForRegions(arrRegions);
+                self.datatypes = self.createDataTypeListForRegions();
                 self.renderDataTypeFilters();
 
                 // console.log(self.datatypes);
 
                 // window.objDataFilter.renderDataTypeList(self.datatypes);
                 // Render a country list
-                self.renderCountryList(arrRegions);
+                self.renderCountryList();
+
+
+                /*
+                End move
+                */
+
 
                 // Get worldmap livesimproved data
                 self.getworldmapdata();
@@ -614,24 +614,18 @@ var objMap = {
         }
 
     },
-    renderCountryList: function (regions) {
+
+    // Renders the region list for the mobile view
+    renderCountryList: function () {
+
+        var regions = window.objOruFilter.retrieveoruarr();
+
         var list = '<ul class="c-region-list">';
         regions.forEach(function (region) {
-            list += '<li class="mapselector" data-target="' + region.id + '">' + window.translateFragment(region.id) + '</li>';
+            list += '<li class="mapselector" data-target="' + region.guid + '" onclick="countryClicked(\'' + region.guid + '\', true)">' + window.translateFragment(region.guid) + '</li>';
         });
         list += '</ul>';
         window.getEl('regions').innerHTML = list;
-
-        // Attach click events
-        var lis = document.getElementsByClassName('mapselector');
-
-        for (var i = 0; i < lis.length; i++) {
-            lis[i].addEventListener('click', function () {
-                window.countryClicked(this.getAttribute('data-target'), true);
-            }, false);
-        }
-
-        // console.log(list);
     },
     mapdatatypekeys: function (key) {
         var obj = {
@@ -679,14 +673,6 @@ var objMap = {
         });
         htmlGlobal += '</ul>';
         window.Sizzle('li[data-panel=global_presence] .datatype-filter')[0].innerHTML = htmlGlobal;
-
-
-        // var subtypes = window.Sizzle('.datatype-filter li');
-
-        // // console.log(subtypes.length);
-        // for (var i = 0; i < subtypes.length; i++) {
-        //     subtypes[i].addEventListener('click', window.objDataFilter.subtypeChanged, false);
-        // }
 
         // console.log(htmlGlobal);
     },

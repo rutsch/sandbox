@@ -49,6 +49,26 @@ var objOruFilter = {
         }
 
     },
+
+    // Returns the ORU arrs (listlevel1world, listlevel2region, listlevel3market or listlevel4country) based on the current page state level or the level that was passed
+    retrieveoruarr: function (level) {
+        var oruLevel = parseInt((typeof level === 'undefined') ? window.objPageState.state.filter.orulevel : level, 10);
+
+        switch (oruLevel) {
+            case 1: 
+                return window.objOruFilter.listlevel1world
+            case 2:
+                return window.objOruFilter.listlevel2region;
+            case 3:
+                return window.objOruFilter.listlevel3market;
+            case 4:
+                return window.objOruFilter.listlevel4country;
+            default:
+                window.objError.show('Unexpected level was passed ('+oruLevel+').', true);    
+                console.log('ERROR: unexpected ')    
+                return [];    
+        }
+    },
     
     // Fired when the filter panel is opened - sets the state of the filter to match the filter state of the application
     setorufilterstate: function () {
