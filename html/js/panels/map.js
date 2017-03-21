@@ -215,7 +215,7 @@ var objMap = {
     postprocessworldmapdata: function (data) {
         var self = this;
 
-        var debugRoutine = false;
+        var debugRoutine = true;
         var setColor = true;
         var noDataColor = window.rgbFromHex('#cae3e9');
 
@@ -1028,12 +1028,6 @@ var objMap = {
             window.objRegionInfo.el.data.research.textContent = objExtendedData.value_research;
             window.objRegionInfo.el.data.sales.textContent = window.formatMoney(objExtendedData.value_sales, 0, ',', '.', '');
 
-            if (window.objDataFilter.state.filter.subtype !== 'all') {
-                self.hideOtherElements(window.objDataFilter.state.filter.subtype);
-            } else {
-                self.showAllElements();
-            }
-
             window.TweenLite.to(elGlobalPresence, 0.3, {
                 opacity: 1,
                 'z-index': 1,
@@ -1070,13 +1064,6 @@ var objMap = {
                 console.dir(err);
             }
 
-
-            if (window.objDataFilter.state.filter.subtype !== 'all') {
-                self.hideOtherElements(window.objDataFilter.state.filter.subtype);
-            } else {
-                self.showAllElements();
-            }
-
             window.TweenLite.to(elGlobalPresence, 0.3, {
                 opacity: 0,
                 'z-index': -1,
@@ -1101,23 +1088,6 @@ var objMap = {
         }
 
 
-    },
-    hideOtherElements: function (subtype) {
-
-        for (var property in window.objRegionInfo.el.data) {
-            if (window.objRegionInfo.el.data.hasOwnProperty(property)) {
-                if (window.objRegionInfo.el.data[property].className !== subtype.replace('value_', 'nr_')) {
-                    window.objRegionInfo.el.data[property].parentNode.style.display = 'none';
-                }
-            }
-        }
-    },
-    showAllElements: function () {
-        for (var property in window.objRegionInfo.el.data) {
-            if (window.objRegionInfo.el.data.hasOwnProperty(property)) {
-                window.objRegionInfo.el.data[property].parentNode.style.display = 'block';
-            }
-        }
     },
 
     // Rounds the data befor sending it to the app

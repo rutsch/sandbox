@@ -19,7 +19,8 @@ var objDataFilter = {
         var self = this;
         self.el.wrapper = window.getEl('map-tab_panels');
     },
-    showHideLegend: function () {
+
+    showhidelegend: function () {
         if (objDataFilter.state.filter.datasource === 'lives_improved' || objDataFilter.state.filter.subtype !== 'all') {
             window.objRegionInfo.renderLegend();
             window.TweenLite.to(window.objRegionInfo.el.legend, 0.3, {
@@ -47,6 +48,23 @@ var objDataFilter = {
         el.setAttribute('class', 'active-tab');
     },
 
+    // Shows and hides the lines in the details panel    
+    setdetailspanel: function (dataSource, subType) {
+        var elPanel = document.getElementById(dataSource + '_details');
+        var defaultState = (typeof subType === 'undefined') ? 'block' : 'none';
+
+        // Set the default state for the lines in the details panel
+        var arrDivs = elPanel.getElementsByTagName('div');
+        for (var i = 0; i < arrDivs.length; i++) {
+            arrDivs[i].style.display = defaultState;
+        }
+
+        // Show the subtype element if it was supplied
+        if (typeof subType !== 'undefined') {
+            document.getElementById(subType).style.display = 'block';
+        }
+    },
+
     datasourceChanged: function (el, dataSource, applyfilter) {
         if (!objDataFilter.vars.subclicked) {
             if (typeof el === 'undefined') el = window.Sizzle('li[data-panel=' + dataSource + ']')[0];
@@ -65,7 +83,10 @@ var objDataFilter = {
             window.getEl('body').removeAttribute('data-subtype');
 
             // Show or hide the legend
-            objDataFilter.showHideLegend();
+            objDataFilter.showhidelegend();
+
+            // Only show the elements that are required in the details panel
+            if (dataSource !== 'lives_improved') objDataFilter.setdetailspanel(dataSource);
 
             // Apply the filter
             if (applyfilter) window.objFilter.applyfilter();
@@ -100,7 +121,10 @@ var objDataFilter = {
         window.getEl('body').setAttribute('data-subtype', subType);
 
         // Show or hide the legend
-        objDataFilter.showHideLegend();
+        objDataFilter.showhidelegend();
+
+        // Only show the elements that are required in the details panel
+        if (dataSource !== 'lives_improved') objDataFilter.setdetailspanel(dataSource, subType);
 
         // Apply the filter        
         if (applyfilter) window.objFilter.applyfilter();

@@ -71,7 +71,18 @@
 		width: 100%;
 		padding: .3em 0;
 		border-bottom: 1px solid #3A707A;
-		span {
+
+        &:after { 
+            content: " ";
+            display: block; 
+            height: 0; 
+            clear: both;
+        }
+
+        span.label {
+            float: left;
+        }
+		span.nr {
 			float: right;
 			color: #fff;
 			font-weight: 700;

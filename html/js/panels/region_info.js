@@ -21,16 +21,7 @@ var objRegionInfo = {
         // self.el.legend__top_value.innerHTML = window.translateFragment('high') //objMap.intLivesImprovedPercentageMax;
         // self.el.legend__low_value.innerHTML = window.translateFragment('low') //objMap.intLivesImprovedPercentageMin;
     },
-    hideEmptyEl: function () {
-        var self = this;
-        window.Sizzle('.nr_label').forEach(function (el) {
-            if (el.getElementsByTagName('span')[0].innerText === '' || (window.objDataFilter.state.filter.subtype && window.objDataFilter.state.filter.subtype !== 'all' && el.getElementsByTagName('span')[0].className !== window.objDataFilter.state.filter.subtype.replace('value_', 'nr_'))) {
-                el.style.display = 'none';
-            } else {
-                el.style.display = 'block';
-            }
-        });
-    },
+
     
     /*
     * UI functions
@@ -38,8 +29,6 @@ var objRegionInfo = {
     show: function () {
         var self = this;
         self.state.tweening = true;
-
-        self.hideEmptyEl();
 
         // In the public version of the tool, we show the data in an overlay and hide the filter panel
         if (window.isPublicSite()) {
