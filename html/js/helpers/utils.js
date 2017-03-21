@@ -670,8 +670,8 @@ function translateFragment(id) {
         var fragment = window.objConfig.fragments[id];
 
         // Very dirty way to insert sub and superscript
-        if (fragment.indexOf('CO2') > -1) fragment = fragment.replace(/^(.*CO)(2)(.*)$/, '$1<sub>$2</sub>$3');
-        if (fragment.indexOf('m3') > -1) fragment = fragment.replace(/^(.*m)(3)(.*)$/, '$1<sup>$2</sup>$3');
+        if (fragment.indexOf('CO2') > -1) fragment = fragment.replace(/^(.*CO)(\d)(.*)$/, '$1<sub>$2</sub>$3');
+        if (fragment.indexOf('m3') > -1) fragment = fragment.replace(/^(.*m)(\d)(.*)$/, '$1<sup>$2</sup>$3');
 
         return fragment;
     }
