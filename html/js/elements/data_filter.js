@@ -49,12 +49,6 @@ var objDataFilter = {
 
     datasourceChanged: function (el, dataSource, applyfilter) {
         if (!objDataFilter.vars.subclicked) {
-            // console.log('***');
-            // console.trace();
-            // console.log(el);
-            // console.log(dataSource);
-            // console.log('***');
-
             if (typeof el === 'undefined') el = window.Sizzle('li[data-panel=' + dataSource + ']')[0];
 
             // Set the datafilter state
@@ -90,8 +84,8 @@ var objDataFilter = {
         objDataFilter.state.filter.datasource = dataSource;
         objDataFilter.state.filter.subtype = subType;
 
+        // Retrieve the main datasource tab
         var elDataSource = window.Sizzle('li[data-panel=' + dataSource + ']')[0];
-        console.log(elDataSource);
 
         // Set the active tab in the UI
         objDataFilter.setactivetab(elDataSource);

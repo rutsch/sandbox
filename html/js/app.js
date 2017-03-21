@@ -458,8 +458,11 @@ var objPageState = {
             if (obj.filter.hasOwnProperty("sector")) self.state.filter.sector = obj.filter.sector;
             if (obj.filter.hasOwnProperty("mru")) self.state.filter.mru = obj.filter.mru;
             if (obj.filter.hasOwnProperty("datasource")) self.state.filter.datasource = obj.filter.datasource;
+            if (obj.filter.hasOwnProperty("subtype")) self.state.filter.subtype = obj.filter.subtype;
         }
     },
+
+    // Method used to change the page state and then update the hash
     updatepagestate: function (obj) {
         //  debugger;
         var objCurrentState = objPageState.clonestateobject();
@@ -576,6 +579,12 @@ var objPageState = {
             bolFilterChangeDetected = true;
         }
 
+        // console.log('!-------------!');
+        // console.log('- self.state.filter.datasource: ' + self.state.filter.datasource);
+        // console.log('- objPageStateNew.filter.datasource: ' + objPageStateNew.filter.datasource);
+        // console.log('- self.state.filter.subtype: ' + self.state.filter.subtype);
+        // console.log('- objPageStateNew.filter.subtype: ' + objPageStateNew.filter.subtype);
+        // console.log('!-------------!');
         if (self.state.filter.datasource !== objPageStateNew.filter.datasource || self.state.filter.subtype !== objPageStateNew.filter.subtype) {
             bolFilterDataChanged = true;
             bolFilterChangeDetected = true;
@@ -599,6 +608,16 @@ var objPageState = {
                 window.objDataFilter.datasourceChanged(undefined, objPageStateNew.filter.datasource, false)
             }
         }
+
+        console.log('+---------------------------------------+');
+        console.log('- bolFilterChangeDetected: ' + bolFilterChangeDetected);
+        console.log('- bolFilterOruLevelChanged: ' + bolFilterOruLevelChanged);
+        console.log('- bolFilterOruChanged: ' + bolFilterOruChanged);
+        console.log('- bolFilterSectorChanged: ' + bolFilterSectorChanged);
+        console.log('- bolFilterMruChanged: ' + bolFilterMruChanged);
+        console.log('- bolFilterDataChanged: ' + bolFilterDataChanged);
+        console.log('- bolFromLogin: ' + bolFromLogin);
+        console.log('+---------------------------------------+');
 
         // 2) check we we are coming from login
         if (self.state.view === 'login' && objPageStateNew.view !== 'login') bolFromLogin = true;

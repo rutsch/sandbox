@@ -99,6 +99,7 @@ var objMap = {
             arrFormData['token'] = window.objLogin.token;
             arrFormData['v'] = window.pageVars.version;
 
+            // TODO: Test if there is any way that we can make this an async call...
             svgdata = window.serverSideRequest({
                 url: window.objConfig.urls.authurl2,
                 formdata: arrFormData,
@@ -176,7 +177,7 @@ var objMap = {
 
     },
 
-
+    // Returns two arrays containing the data type (points) used in the sustainability and global presence data sources
     createDataTypeListForRegions: function (level) {
         var self = this,
             listSustain = [],
@@ -214,7 +215,7 @@ var objMap = {
     postprocessworldmapdata: function (data) {
         var self = this;
 
-        var debugRoutine = true;
+        var debugRoutine = false;
         var setColor = true;
         var noDataColor = window.rgbFromHex('#cae3e9');
 
