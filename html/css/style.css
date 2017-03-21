@@ -196,8 +196,17 @@
     width: 100%;
     padding: .3em 0;
     border-bottom: 1px solid #3A707A; }
-    .region_info .nr_label span,
-    .region_info_wrapper .nr_label span {
+    .region_info .nr_label:after,
+    .region_info_wrapper .nr_label:after {
+      content: " ";
+      display: block;
+      height: 0;
+      clear: both; }
+    .region_info .nr_label span.label,
+    .region_info_wrapper .nr_label span.label {
+      float: left; }
+    .region_info .nr_label span.nr,
+    .region_info_wrapper .nr_label span.nr {
       float: right;
       color: #fff;
       font-weight: 700; }
