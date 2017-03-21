@@ -20,7 +20,8 @@ var app = {
         view: 'worldmap',
         popup: 'none',
         filter: {
-            datasource: 'lives_improved',
+            datasource: 'lives_improved', // Data source to use
+            subtype: 'all', // Data point to show
             orulevel: '1', // For worldmap data 1, 2, 3, 4
             oru: 'none', // Selected country/region
             sector: 'philips', // Main sector
@@ -686,6 +687,11 @@ var objPageState = {
             !bolFilterOruLevelChanged &&
             !bolFilterDataChanged &&
             bolFilterOruChanged) {
+            
+            /*
+            Deal with minor state change (for example a click on a geographical region)
+            */
+
             if (objPageStateNew.view === 'detail') {
                 self.setstateobject(objPageStateNew);
 
@@ -693,6 +699,7 @@ var objPageState = {
             } else {
                 // This assumes that we are hitting 'back' from a details panel
                 if (self.state.filter.datasource !== objPageStateNew.filter.datasource) {
+                    
                     //debugger;
                     window.objMap.updatemap(false, app.showappintromessage);
                 }
@@ -703,6 +710,10 @@ var objPageState = {
                 window.objHeader.setregionname(window.objMap.state.mapname);
             }
         } else {
+            /*
+            Deal with major state change (for example a selecting a new worldmap)
+            */
+
             // Load the svg map, the map data and open the details panel afterwards
             self.setstateobject(objPageStateNew);
             window.objOruFilter.settocurrentoru();

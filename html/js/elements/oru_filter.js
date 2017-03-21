@@ -1,3 +1,6 @@
+/**
+ * Organizational Reporting Units filter (world, regions, markets and countries)
+ */
 var objOruFilter = {
     json: null,
     listlevel1world: [],
@@ -18,31 +21,43 @@ var objOruFilter = {
         var self = this;
 
         // Level 1
-        self.listlevel1world.push({ guid: objOruFilter.json.unit.guid, parent: undefined });
-        
+        self.listlevel1world.push({
+            guid: objOruFilter.json.unit.guid,
+            parent: undefined
+        });
+
         // Level 2
         if (typeof objOruFilter.json.unit.subunits === 'object') {
             for (var keylevel2 in objOruFilter.json.unit.subunits) {
                 if (typeof keylevel2 === 'string') {
-                    self.listlevel2region.push({ guid: objOruFilter.json.unit.subunits[keylevel2].guid, parent: objOruFilter.json.unit.guid});
+                    self.listlevel2region.push({
+                        guid: objOruFilter.json.unit.subunits[keylevel2].guid,
+                        parent: objOruFilter.json.unit.guid
+                    });
 
                     // Level 3
                     if (typeof objOruFilter.json.unit.subunits[keylevel2].subunits === 'object') {
                         for (var keylevel3 in objOruFilter.json.unit.subunits[keylevel2].subunits) {
                             if (typeof keylevel3 === 'string') {
-                                self.listlevel3market.push({ guid: objOruFilter.json.unit.subunits[keylevel2].subunits[keylevel3].guid, parent: objOruFilter.json.unit.subunits[keylevel2].guid });
-                            
+                                self.listlevel3market.push({
+                                    guid: objOruFilter.json.unit.subunits[keylevel2].subunits[keylevel3].guid,
+                                    parent: objOruFilter.json.unit.subunits[keylevel2].guid
+                                });
+
                                 // Level 4
                                 if (typeof objOruFilter.json.unit.subunits[keylevel2].subunits[keylevel3].subunits === 'object') {
                                     for (var keylevel4 in objOruFilter.json.unit.subunits[keylevel2].subunits[keylevel3].subunits) {
                                         if (typeof keylevel4 === 'string') {
-                                            self.listlevel3market.push({ guid: objOruFilter.json.unit.subunits[keylevel2].subunits[keylevel3].subunits[keylevel4].guid, parent: objOruFilter.json.unit.subunits[keylevel2].subunits[keylevel3].guid });
+                                            self.listlevel3market.push({
+                                                guid: objOruFilter.json.unit.subunits[keylevel2].subunits[keylevel3].subunits[keylevel4].guid,
+                                                parent: objOruFilter.json.unit.subunits[keylevel2].subunits[keylevel3].guid
+                                            });
                                         }
                                     }
                                 }
                             }
                         }
-                    }                    
+                    }
 
                 }
             }
@@ -55,7 +70,7 @@ var objOruFilter = {
         var oruLevel = parseInt((typeof level === 'undefined') ? window.objPageState.state.filter.orulevel : level, 10);
 
         switch (oruLevel) {
-            case 1: 
+            case 1:
                 return window.objOruFilter.listlevel1world
             case 2:
                 return window.objOruFilter.listlevel2region;
@@ -64,12 +79,12 @@ var objOruFilter = {
             case 4:
                 return window.objOruFilter.listlevel4country;
             default:
-                window.objError.show('Unexpected level was passed ('+oruLevel+').', true);    
-                console.log('ERROR: unexpected ')    
-                return [];    
+                window.objError.show('Unexpected level was passed (' + oruLevel + ').', true);
+                console.log('ERROR: unexpected ')
+                return [];
         }
     },
-    
+
     // Fired when the filter panel is opened - sets the state of the filter to match the filter state of the application
     setorufilterstate: function () {
         var self = this;
@@ -146,8 +161,10 @@ var objOruFilter = {
     },
     settocurrentoru: function () {
         var self = this;
+
         // Remove all selected classes
         var arrAllLi = self.el.wrapper.getElementsByTagName('option');
+
         // console.log(objPageState.state.filter.orulevel);
 
         // Debugger;
@@ -158,6 +175,21 @@ var objOruFilter = {
         }
         //debugger;
     },
+
+    // Renders the region list for the mobile view
+    rendermobilecountrylist: function () {
+        var self = this;
+        var regions = self.retrieveoruarr();
+
+        var list = '<ul class="c-region-list">';
+        regions.forEach(function (region) {
+            list += '<li class="mapselector" data-target="' + region.guid + '" onclick="countryClicked(\'' + region.guid + '\', true)">' + window.translateFragment(region.guid) + '</li>';
+        });
+        list += '</ul>';
+        window.getEl('regions').innerHTML = list;
+    },
+
+
     setdatalevelattribute: function (level) {
         window.getEl('body').setAttribute('data-orulevel', ('level' + ((level) ? level : document.getElementsById('oru-select').selectedValue)));
     },

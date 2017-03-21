@@ -601,8 +601,7 @@ var objMap = {
                 */
 
                 // Render a country list to use in the mobile view of the map
-                self.renderCountryList();
-
+                window.objOruFilter.rendermobilecountrylist();
 
                 // Get worldmap livesimproved data
                 self.getworldmapdata();
@@ -611,18 +610,7 @@ var objMap = {
 
     },
 
-    // Renders the region list for the mobile view
-    renderCountryList: function () {
 
-        var regions = window.objOruFilter.retrieveoruarr();
-
-        var list = '<ul class="c-region-list">';
-        regions.forEach(function (region) {
-            list += '<li class="mapselector" data-target="' + region.guid + '" onclick="countryClicked(\'' + region.guid + '\', true)">' + window.translateFragment(region.guid) + '</li>';
-        });
-        list += '</ul>';
-        window.getEl('regions').innerHTML = list;
-    },
     mapdatatypekeys: function (key) {
         var obj = {
             'value_co2': 'c_o_2',
