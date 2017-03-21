@@ -107,10 +107,14 @@ body {
             		    width: .50em;
 
             		}
+                    &.mapselector{
+                        cursor: pointer;
+                    }
                     .region_info_wrapper {
                         display: block!important;
                         opacity: 1;
                         position: relative;
+                        cursor: default;
                     }
 
                 }

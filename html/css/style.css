@@ -250,6 +250,13 @@
     .region_info_right .image,
     .region_info_wrapper_right .image {
       display: none; }
+    @media only screen and (min-width: 769px) and (max-width: 1024px) {
+      .global_presence .region_info_right,
+      .sustainability .region_info_right, .global_presence
+      .region_info_wrapper_right,
+      .sustainability
+      .region_info_wrapper_right {
+        width: calc( ( ( ( 100% + 50px ) / 12 ) * 7 )); } }
     @media only screen and (min-width: 769px) {
       .region_info_right .data-wrapper,
       .region_info_wrapper_right .data-wrapper {
@@ -601,10 +608,13 @@ body {
         transform: rotate(135deg);
         vertical-align: top;
         width: .50em; }
+      #app_panel #app_wrapper #regions ul li.mapselector {
+        cursor: pointer; }
       #app_panel #app_wrapper #regions ul li .region_info_wrapper {
         display: block !important;
         opacity: 1;
-        position: relative; }
+        position: relative;
+        cursor: default; }
     #app_panel #app_wrapper #regions ul .mapselector.selected {
       color: #E1E96D; }
       #app_panel #app_wrapper #regions ul .mapselector.selected:after {

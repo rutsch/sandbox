@@ -122,6 +122,14 @@
 			display: none;
 
 		}
+
+        @media #{$medium-only}{
+            .global_presence &,
+			.sustainability & {
+				width: grid-size(7, true, true);
+			}
+
+        }
 		@media #{$medium-up} {
 			.data-wrapper {
 				width: grid-size(8, false);

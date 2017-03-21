@@ -55,7 +55,7 @@
 // relative {boolean} Should this calculation be relative to it's parent or to $global-width
 // return {percentage} width in percentage
 
-@function grid-size($size: null, $relative: true) {
+@function grid-size($size: null, $relative: true, $nogutter: false) {
     // determine startwidth, 100% when relative or $global-width when not
     $startWidth: 100%;
     @if $relative == false {
@@ -68,5 +68,11 @@
     // $3. calculate width of asked columns: ( $2 * #{$size} )
     // $4. substract the extra added gutter: ( $3 - #{$grid-gutter-large} )
 
-    @return calc( ( ( ( #{$startWidth} + #{$grid-gutter-large} ) / #{$grid-columns} ) * #{$size} ) - #{$grid-gutter-large} );
+    @if $nogutter == true {
+        @return calc( ( ( ( #{$startWidth} + #{$grid-gutter-large} ) / #{$grid-columns} ) * #{$size} ) );
+    } @else {
+        @return calc( ( ( ( #{$startWidth} + #{$grid-gutter-large} ) / #{$grid-columns} ) * #{$size} ) - #{$grid-gutter-large} );
+    }
+
+    
 }
