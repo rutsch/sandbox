@@ -601,7 +601,7 @@ var objMap = {
                 */
 
                 // Render a country list to use in the mobile view of the map
-                window.objOruFilter.rendermobilecountrylist();
+                window.objOruFilter.rendermobilegeographylist();
 
                 // Get worldmap livesimproved data
                 self.getworldmapdata();

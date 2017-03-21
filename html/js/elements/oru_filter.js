@@ -176,8 +176,8 @@ var objOruFilter = {
         //debugger;
     },
 
-    // Renders the region list for the mobile view
-    rendermobilecountrylist: function () {
+    // Renders the geography list for the mobile view
+    rendermobilegeographylist: function () {
         var self = this;
         var regions = self.retrieveoruarr();
 
