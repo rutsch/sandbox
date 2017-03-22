@@ -218,6 +218,7 @@ var objMap = {
         var debugRoutine = true;
         var setColor = true;
         var noDataColor = window.rgbFromHex('#cae3e9');
+        var combinedDataColor = window.rgbFromHex('#46b0a8');
 
         // console.log('----------------');
         // console.log('In postprocessworldmapdata');
@@ -330,7 +331,8 @@ var objMap = {
         var dataValueMax = 100;
         var dataValueMin = 100;
 
-        if (window.objPageState.state.filter.orulevel !== "1" && ((window.objDataFilter.state.filter.datasource === 'global_presence' || window.objDataFilter.state.filter.datasource === 'sustainability') && window.objDataFilter.state.filter.subtype !== 'all') || window.objDataFilter.state.filter.datasource === 'lives_improved') {
+        if (window.objPageState.state.filter.orulevel !== "1" &&
+            ((window.objDataFilter.state.filter.datasource === 'global_presence' || window.objDataFilter.state.filter.datasource === 'sustainability') && window.objDataFilter.state.filter.subtype !== 'all') || window.objDataFilter.state.filter.datasource === 'lives_improved') {
 
             // For Lives Improved - use the percentage
             if (window.objDataFilter.state.filter.datasource === 'lives_improved') {
@@ -343,6 +345,9 @@ var objMap = {
 
             if (debugRoutine) console.log(' - dataValueMax: ' + dataValueMax + ' - dataValueMin: ' + dataValueMin);
         }
+
+        // Determine when we cannot color the map because we show the data on global level or we show more data types in one view        
+        var combinedView = (window.objPageState.state.filter.orulevel === "1" || ((window.objDataFilter.state.filter.datasource === 'global_presence' || window.objDataFilter.state.filter.datasource === 'sustainability') && window.objDataFilter.state.filter.subtype === 'all'))
 
 
         // Settings for the coloring
@@ -413,19 +418,25 @@ var objMap = {
                         colorToSet = self.getcolorforpercentage(100, noDataColor, noDataColor, noDataColor);
                     } else {
 
-                        // Calculate the color to place on the map
-                        var percentageForColor = 100;
-                        if (dataValueMax > dataValueMin) {
-                            percentageForColor = (dataValueToDisplay - dataValueMin) * factor;
+                        if (combinedView) {
+                            colorToSet = self.getcolorforpercentage(100, combinedDataColor, combinedDataColor, combinedDataColor);
+                        } else {
+                            // Calculate the color to place on the map
+                            var percentageForColor = 100;
+                            if (dataValueMax > dataValueMin) {
+                                percentageForColor = (dataValueToDisplay - dataValueMin) * factor;
+                            }
+
+                            // if (debugRoutine) console.log('- ' + oruGuid + ': ' + percentageForColor);
+
+                            // Correct for percentages above 100 and below 0
+                            if (percentageForColor >= 100) percentageForColor = 100;
+                            if (percentageForColor < 0) percentageForColor = 0;
+
+                            colorToSet = self.getcolorforpercentage(percentageForColor, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.low, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.middle, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.high);
                         }
 
-                        // if (debugRoutine) console.log('- ' + oruGuid + ': ' + percentageForColor);
 
-                        // Correct for percentages above 100 and below 0
-                        if (percentageForColor >= 100) percentageForColor = 100;
-                        if (percentageForColor < 0) percentageForColor = 0;
-
-                        colorToSet = self.getcolorforpercentage(percentageForColor, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.low, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.middle, window.objConfig.colors[window.objPageState.state.filter.sector].rgb.high);
                     }
 
                     // Set the color and the classname on the container element
