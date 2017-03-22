@@ -15,7 +15,7 @@ var objRegionInfo = {
     renderLegend: function () {
         var self = this;
 
-        self.el.legend__title.innerHTML = window.objDataFilter.state.filter.subtype === 'all' ? window.translateFragment('lives_improved') : window.translateFragment(window.objMap.mapdatatypekeys(window.objDataFilter.state.filter.subtype));
+        self.el.legend__title.innerHTML = window.objDataFilter.state.filter.subtype === 'all' ? window.translateFragment('lives_improved') : window.translateFragment(window.objDataFilter.mapdatatypekeys(window.objDataFilter.state.filter.subtype));
         self.el.legend__subtitle.innerHTML = '';
         
         // self.el.legend__top_value.innerHTML = window.translateFragment('high') //objMap.intLivesImprovedPercentageMax;

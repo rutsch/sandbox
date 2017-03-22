@@ -595,22 +595,6 @@ var objMap = {
                 self.el.elsvgholder.innerHTML = '';
                 self.el.elsvgholder.innerHTML = strSvg;
 
-                /*
-                Start move
-                */
-
-
-
-                // console.log(self.datatypes);
-
-                // window.objDataFilter.renderDataTypeList(self.datatypes);
-
-
-
-                /*
-                End move
-                */
-
                 // Render a country list to use in the mobile view of the map
                 window.objOruFilter.rendermobilegeographylist();
 
@@ -622,55 +606,6 @@ var objMap = {
     },
 
 
-    mapdatatypekeys: function (key) {
-        var obj = {
-            'value_co2': 'c_o_2',
-            'value_fte': 'number_of_employees',
-            'value_waste': 'waste',
-            'value_water': 'water',
-            'value_emissions': 'emissions',
-            'value_emissionshaz': 'emissionshaz',
-            'value_trc': 'lwc_rate',
-            'value_wasterecycled': 'recycled',
-            'value_sales': 'number_sales',
-            'value_male': 'percentage_male',
-            'value_female': 'percentage_female',
-            'value_research': 'r_and_d_centers',
-            'value_plants': 'manufacturing_sites',
-            'value_assets': 'number_assets',
-            'value_employees': 'number_of_employees',
-        }
-        if (obj[key]) {
-            return obj[key];
-        } else {
-            console.log('ERROR: key ' + key + ' could not be found...')
-        }
-        return key;
-    },
-    renderDataTypeFilters: function () {
-        var self = this;
-        var htmlSustain = '<ul><li class="datafilter" data-subtype="all" onclick="objDataFilter.subtypeChanged(this, \'sustainability\', \'all\', true)">' + window.translateFragment('all_data') + '</li>';
-        self.datatypes.sustainability.forEach(function (datatype) {
-            if (datatype.indexOf('value_') > -1) {
-                htmlSustain += '<li class="datatypefilter" data-subtype="' + datatype + '" onclick="objDataFilter.subtypeChanged(this, \'sustainability\', \'' + datatype + '\', true)">' + window.translateFragment(self.mapdatatypekeys(datatype)) + '</li>';
-            }
-        });
-        htmlSustain += '</ul>';
-        window.Sizzle('li[data-panel=sustainability] .datatype-filter')[0].innerHTML = htmlSustain;
-
-        // console.log(htmlSustain);
-
-        var htmlGlobal = '<ul><li class="datafilter" data-subtype="all" onclick="objDataFilter.subtypeChanged(this, \'global_presence\', \'all\', true)">' + window.translateFragment('all_data') + '</li>';
-        self.datatypes.global_presence.forEach(function (datatype) {
-            if (datatype.indexOf('value_') > -1) {
-                htmlGlobal += '<li class="datafilter" data-subtype="' + datatype + '" onclick="objDataFilter.subtypeChanged(this, \'global_presence\', \'' + datatype + '\', true)">' + window.translateFragment(self.mapdatatypekeys(datatype)) + '</li>';
-            }
-        });
-        htmlGlobal += '</ul>';
-        window.Sizzle('li[data-panel=global_presence] .datatype-filter')[0].innerHTML = htmlGlobal;
-
-        // console.log(htmlGlobal);
-    },
     retrievesvgelementobject: function (elSvg) {
         var self = this;
         window.objSvgElementProperties = {};
@@ -832,8 +767,8 @@ var objMap = {
         // Store the state of the map in a new object
         self.state.rootanimateattributevalues = self.retrievesvgelementobject(self.el.rootanimate);
     },
-    hideSelectedCountries: function () {
-        Array.prototype.slice.call(document.getElementsByClassName('active')).forEach(function (el) {
+    hideselectedcountries: function () {
+        Array.prototype.slice.call(objMap.el.elsvgholder.getElementsByClassName('active')).forEach(function (el) {
             el.removeAttribute('class')
         });
     },
@@ -892,7 +827,7 @@ var objMap = {
                 onComplete: function () {
                     // alert('in')
                     // debugger;
-                    self.hideSelectedCountries();
+                    self.hideselectedcountries();
                     elRegion.setAttribute('class', 'active');
 
                     // JT: I introduced a very crappy way to check for a tablet - can this be improved and become app.state.tablet ?

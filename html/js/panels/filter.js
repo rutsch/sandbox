@@ -89,9 +89,10 @@ var objFilter = {
     },
     applyfilter: function () {
         var self = this;
+        
         // debugger;
-        //console.log('objFilter.applyfilter()');
-        //update the objPageState properties with the filter selection we have just made
+        // console.log('objFilter.applyfilter()');
+        // Update the objPageState properties with the filter selection we have just made
 
         if (!window.isPublicSite() && self.state.visible && !self.state.tweening) self.hide();
 
@@ -99,8 +100,7 @@ var objFilter = {
 
         self.el.btnapply.style.display = 'none';
 
-        //console.log(objPageState.vars.processed);
-        // debugger;
+        // console.log(objPageState.vars.processed);
 
         // Because we auto-apply the filter for the public site, we need to handle it in a different way.
         if (window.isPublicSite()) {

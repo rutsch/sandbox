@@ -52,9 +52,18 @@
 				position: absolute;
 				right: 0;
 				top: 0px;
-				width: 35px;
+				width: 75px;
 				height: 35px;
 				background: transparent;
+
+                .bg {
+                    width: 35px;
+                    height: 35px;
+                    background: transparent;
+                    position: absolute;
+                    right: 0px;
+                }
+
 				&:after {
 					border-color: #28777F;
 					border-style: solid;
@@ -75,14 +84,18 @@
 				}
 
 				&:hover {
-					background: #48979A;
+					
+                    .bg {
+                        background: #48979A;
+                    }
+
 					&:after {
 						border-color: #fff;
 					}
 					ul {
 						width: calc(#{$content-width} / 3);
-					    right: calc(100% - 35px);
-					    top: 20px;
+					    right: calc(100% - 75px);
+					    top: 19px;
 						height: auto;
 
 						@media #{$xlarge-up} {
@@ -91,7 +104,6 @@
 					}
 					li:first-of-type {
 						background: #1F6F78;
-						color: #fff;
 					}
 				}
 				ul {
@@ -118,6 +130,13 @@
 						&:last-of-type {
 							border: 0;
 						}
+                        &:hover, &.active {
+                            color: #fff;
+                            border-bottom: 1px solid #fff;
+                            &:last-of-type {
+                                border: 0;
+                            }
+                        }
 					}
 
 

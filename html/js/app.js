@@ -598,15 +598,15 @@ var objPageState = {
             window.objMap.datatypes = window.objMap.createDataTypeListForRegions(objPageStateNew.filter.orulevel);
 
             // Render the datatypes as sub elements in the tabs
-            window.objMap.renderDataTypeFilters();
+            window.objDataFilter.renderdatasubtypefilters();
 
             // Update the UI so that the correct panels get the selected state
             if (self.state.filter.subtype !== objPageStateNew.filter.subtype && objPageStateNew.filter.subtype !== 'all') {
                 // Update the subtype
-                window.objDataFilter.subtypeChanged(undefined, objPageStateNew.filter.datasource, objPageStateNew.filter.subtype, false)
+                window.objDataFilter.subtypechanged(undefined, objPageStateNew.filter.datasource, objPageStateNew.filter.subtype, false)
             } else {
                 // Update the datasource
-                window.objDataFilter.datasourceChanged(undefined, objPageStateNew.filter.datasource, false)
+                window.objDataFilter.datasourcechanged(undefined, objPageStateNew.filter.datasource, false)
             }
         }
 
@@ -704,7 +704,7 @@ var objPageState = {
                     window.objMap.updatemap(false, app.showappintromessage);
                 }
                 window.objRegionInfo.hide();
-                window.objMap.hideSelectedCountries();
+                window.objMap.hideselectedcountries();
 
                 // Set the header
                 window.objHeader.setregionname(window.objMap.state.mapname);

@@ -482,12 +482,18 @@
       position: absolute;
       right: 0;
       top: 0px;
-      width: 35px;
+      width: 75px;
       height: 35px;
       background: transparent; }
       @media only screen and (min-width: 769px) {
         .map-tab_panels > div > ul > li .datatype-filter {
           display: block; } }
+      .map-tab_panels > div > ul > li .datatype-filter .bg {
+        width: 35px;
+        height: 35px;
+        background: transparent;
+        position: absolute;
+        right: 0px; }
       .map-tab_panels > div > ul > li .datatype-filter:after {
         border-color: #28777F;
         border-style: solid;
@@ -504,21 +510,20 @@
         transform: rotate(135deg);
         vertical-align: top;
         width: .50em; }
-      .map-tab_panels > div > ul > li .datatype-filter:hover {
+      .map-tab_panels > div > ul > li .datatype-filter:hover .bg {
         background: #48979A; }
-        .map-tab_panels > div > ul > li .datatype-filter:hover:after {
-          border-color: #fff; }
-        .map-tab_panels > div > ul > li .datatype-filter:hover ul {
-          width: calc(960px / 3);
-          right: calc(100% - 35px);
-          top: 20px;
-          height: auto; }
-          @media only screen and (min-width: 1400px) {
-            .map-tab_panels > div > ul > li .datatype-filter:hover ul {
-              width: calc(1280px / 3); } }
-        .map-tab_panels > div > ul > li .datatype-filter:hover li:first-of-type {
-          background: #1F6F78;
-          color: #fff; }
+      .map-tab_panels > div > ul > li .datatype-filter:hover:after {
+        border-color: #fff; }
+      .map-tab_panels > div > ul > li .datatype-filter:hover ul {
+        width: calc(960px / 3);
+        right: calc(100% - 75px);
+        top: 19px;
+        height: auto; }
+        @media only screen and (min-width: 1400px) {
+          .map-tab_panels > div > ul > li .datatype-filter:hover ul {
+            width: calc(1280px / 3); } }
+      .map-tab_panels > div > ul > li .datatype-filter:hover li:first-of-type {
+        background: #1F6F78; }
       .map-tab_panels > div > ul > li .datatype-filter ul {
         position: absolute;
         display: flex;
@@ -541,6 +546,11 @@
             background: transparent; }
           .map-tab_panels > div > ul > li .datatype-filter ul li:last-of-type {
             border: 0; }
+          .map-tab_panels > div > ul > li .datatype-filter ul li:hover, .map-tab_panels > div > ul > li .datatype-filter ul li.active {
+            color: #fff;
+            border-bottom: 1px solid #fff; }
+            .map-tab_panels > div > ul > li .datatype-filter ul li:hover:last-of-type, .map-tab_panels > div > ul > li .datatype-filter ul li.active:last-of-type {
+              border: 0; }
 
 body {
   overflow: hidden;
