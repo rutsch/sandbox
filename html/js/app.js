@@ -603,10 +603,10 @@ var objPageState = {
             // Update the UI so that the correct panels get the selected state
             if (self.state.filter.subtype !== objPageStateNew.filter.subtype && objPageStateNew.filter.subtype !== 'all') {
                 // Update the subtype
-                window.objDataFilter.subtypechanged(undefined, objPageStateNew.filter.datasource, objPageStateNew.filter.subtype, false)
+                window.objDataFilter.subtypechanged(objPageStateNew.filter.datasource, objPageStateNew.filter.subtype)
             } else {
                 // Update the datasource
-                window.objDataFilter.datasourcechanged(undefined, objPageStateNew.filter.datasource, false)
+                window.objDataFilter.datasourcechanged(objPageStateNew.filter.datasource)
             }
         }
 
