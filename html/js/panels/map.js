@@ -178,7 +178,7 @@ var objMap = {
     },
 
     // Returns two arrays containing the data type (points) used in the sustainability and global presence data sources
-    createDataTypeListForRegions: function (level) {
+    createdatatypelistforregions: function (level) {
         var self = this,
             listSustain = [],
             listGlobal = [];

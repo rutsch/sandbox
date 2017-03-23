@@ -127,7 +127,25 @@ var objDataFilter = {
         // Set the default state for the lines in the details panel
         var arrDivs = elPanel.getElementsByTagName('div');
         for (var i = 0; i < arrDivs.length; i++) {
-            arrDivs[i].style.display = defaultState;
+            // Hide the rows that contain no data
+            if (window.objMap.datatypes[dataSource].indexOf(arrDivs[i].id) === -1) {
+                arrDivs[i].style.display = 'none';
+            } else {
+                arrDivs[i].style.display = defaultState;
+            }
+            // var arrSpanNumber = arrDivs[i].getElementsByClassName('nr');
+            // console.log(arrSpanNumber);
+            // if (arrSpanNumber.length > 0) {
+            //     var numberContent = arrSpanNumber[0].innerHTML;
+            //     console.log('- numberContent: ' + numberContent);
+            //     if (numberContent.search(/\d/) === -1) {
+            //         arrDivs[i].style.display = 'none';
+            //     } else {
+            //         arrDivs[i].style.display = defaultState;
+            //     }
+            // } else {
+            //     arrDivs[i].style.display = defaultState;
+            // }
         }
 
         // Show the subtype element if it was supplied

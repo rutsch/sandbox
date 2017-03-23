@@ -163,17 +163,18 @@ var objOruFilter = {
         var self = this;
 
         // Remove all selected classes
-        var arrAllLi = self.el.wrapper.getElementsByTagName('option');
+        var arrOptions = self.el.wrapper.getElementsByTagName('option');
 
         // console.log(objPageState.state.filter.orulevel);
 
         // Debugger;
-        for (var a = 0; a < arrAllLi.length; a++) {
-            if (arrAllLi[a].getAttribute('value') === window.objPageState.state.filter.orulevel) {
-                arrAllLi[a].setAttribute('selected', 'selected')
+        for (var i = 0; i < arrOptions.length; i++) {
+            if (arrOptions[i].getAttribute('value') === window.objPageState.state.filter.orulevel) {
+                arrOptions[i].setAttribute('selected', 'selected');
+            } else {
+                arrOptions[i].removeAttribute('selected');
             }
         }
-        //debugger;
     },
 
     // Renders the geography list for the mobile view

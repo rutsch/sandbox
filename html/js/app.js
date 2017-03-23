@@ -562,6 +562,7 @@ var objPageState = {
             bolFilterSectorChanged = false,
             bolFilterMruChanged = false,
             bolFilterDataChanged = false,
+            bolFilterDataSubTypeChanged = false,
             bolFromLogin = false;
         if (self.state.filter.orulevel !== objPageStateNew.filter.orulevel) {
             bolFilterOruLevelChanged = true;
@@ -580,35 +581,20 @@ var objPageState = {
             bolFilterChangeDetected = true;
         }
 
-        // console.log('!-------------!');
-        // console.log('- self.state.filter.datasource: ' + self.state.filter.datasource);
-        // console.log('- objPageStateNew.filter.datasource: ' + objPageStateNew.filter.datasource);
-        // console.log('- self.state.filter.subtype: ' + self.state.filter.subtype);
-        // console.log('- objPageStateNew.filter.subtype: ' + objPageStateNew.filter.subtype);
-        // console.log('!-------------!');
-        if (self.state.filter.datasource !== objPageStateNew.filter.datasource || self.state.filter.subtype !== objPageStateNew.filter.subtype) {
+        if (self.state.filter.datasource !== objPageStateNew.filter.datasource) {
             bolFilterDataChanged = true;
             bolFilterChangeDetected = true;
-
             // Update the filter object
-            window.objDataFilter.state.filter.datasource = objPageStateNew.filter.datasource;
-            window.objDataFilter.state.filter.subtype = objPageStateNew.filter.subtype;
-
-            // Retrieve all the datatypes for this geographical region
-            window.objMap.datatypes = window.objMap.createDataTypeListForRegions(objPageStateNew.filter.orulevel);
-
-            // Render the datatypes as sub elements in the tabs
-            window.objDataFilter.renderdatasubtypefilters();
-
-            // Update the UI so that the correct panels get the selected state
-            if (self.state.filter.subtype !== objPageStateNew.filter.subtype && objPageStateNew.filter.subtype !== 'all') {
-                // Update the subtype
-                window.objDataFilter.subtypechanged(objPageStateNew.filter.datasource, objPageStateNew.filter.subtype)
-            } else {
-                // Update the datasource
-                window.objDataFilter.datasourcechanged(objPageStateNew.filter.datasource)
-            }
+            window.objDataFilter.state.filter.datasource = objPageStateNew.filter.datasource;  
         }
+
+        if (self.state.filter.subtype !== objPageStateNew.filter.subtype) {
+            bolFilterDataSubTypeChanged = true;
+            bolFilterChangeDetected = true;
+            // Update the filter object
+            window.objDataFilter.state.filter.subtype = objPageStateNew.filter.subtype;    
+        }
+
 
         console.log('+---------------------------------------+');
         console.log('- bolFilterChangeDetected: ' + bolFilterChangeDetected);
@@ -617,6 +603,7 @@ var objPageState = {
         console.log('- bolFilterSectorChanged: ' + bolFilterSectorChanged);
         console.log('- bolFilterMruChanged: ' + bolFilterMruChanged);
         console.log('- bolFilterDataChanged: ' + bolFilterDataChanged);
+        console.log('- bolFilterDataSubTypeChanged: ' + bolFilterDataSubTypeChanged);
         console.log('- bolFromLogin: ' + bolFromLogin);
         console.log('+---------------------------------------+');
 
@@ -625,6 +612,25 @@ var objPageState = {
 
         // 3) show the transparent layer one time only
         if (self.state.mobile && self.state.initialmapview && bolFromLogin && objPageStateNew.view !== 'login') app.showtransparentlayer();
+
+
+        if (bolFilterOruChanged || bolFilterOruLevelChanged || bolFilterDataChanged || bolFilterDataSubTypeChanged) {
+            // Retrieve all the datatypes for this geographical region
+            window.objMap.datatypes = window.objMap.createdatatypelistforregions(objPageStateNew.filter.orulevel);
+
+            // Render the datatypes as sub elements in the tabs
+            window.objDataFilter.renderdatasubtypefilters();            
+        
+            // Update the UI so that the correct panels get the selected state
+            if (self.state.filter.subtype !== objPageStateNew.filter.subtype && objPageStateNew.filter.subtype !== 'all') {
+                // Update the subtype
+                window.objDataFilter.subtypechanged(objPageStateNew.filter.datasource, objPageStateNew.filter.subtype)
+            } else {
+                // Update the datasource
+                window.objDataFilter.datasourcechanged(objPageStateNew.filter.datasource)
+            }            
+        }
+
 
         // 4) handle view change
         // debugger;
