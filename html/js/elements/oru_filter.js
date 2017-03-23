@@ -131,6 +131,7 @@ var objOruFilter = {
 
         return result;
     },
+    
     /*
      * UI functions
      */
@@ -140,18 +141,9 @@ var objOruFilter = {
         console.log(strOru);
 
         self.el.wrapper = window.getEl('oru_filter_container');
-        //remove all selected classes
-        // var arrAllLi = self.el.wrapper.getElementsByTagName('option');
-        // console.log(arrAllLi);
-        // //debugger;
-        // for (var a = 0; a < arrAllLi.length; a++) {
-        // 	console.log(arrAllLi[a].getAttribute('value'));
-        // 	if (arrAllLi[a].getAttribute('value') === strOru) {
-        // 		arrAllLi[a].setAttribute('selected', 'selected')
-        // 	}
-        // }
         el.className = 'selected';
         self.state.selectedoru = strOru;
+
         window.objHeader.setbreadcrumb(window.objMruFilter.getmrufilterbreadcrumb());
         if (arguments.length === 2) window.objFilter.blink();
 
@@ -159,6 +151,7 @@ var objOruFilter = {
         if (window.isPublicSite()) window.objFilter.applyfilter();
         //objMap.updatemap();
     },
+
     settocurrentoru: function () {
         var self = this;
 

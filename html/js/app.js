@@ -597,6 +597,8 @@ var objPageState = {
 
 
         console.log('+---------------------------------------+');
+        console.log('- self.state.filter: ' + JSON.stringify(self.state.filter, null, '  '));
+        console.log('- objPageStateNew.filter: ' + JSON.stringify(objPageStateNew.filter, null, '  '));
         console.log('- bolFilterChangeDetected: ' + bolFilterChangeDetected);
         console.log('- bolFilterOruLevelChanged: ' + bolFilterOruLevelChanged);
         console.log('- bolFilterOruChanged: ' + bolFilterOruChanged);
@@ -614,7 +616,8 @@ var objPageState = {
         if (self.state.mobile && self.state.initialmapview && bolFromLogin && objPageStateNew.view !== 'login') app.showtransparentlayer();
 
 
-        if (bolFilterOruChanged || bolFilterOruLevelChanged || bolFilterDataChanged || bolFilterDataSubTypeChanged) {
+        
+        if (bolFilterOruLevelChanged || bolFilterDataChanged || bolFilterDataSubTypeChanged) {
             // Retrieve all the datatypes for this geographical region
             window.objMap.datatypes = window.objMap.createdatatypelistforregions(objPageStateNew.filter.orulevel);
 
@@ -622,13 +625,18 @@ var objPageState = {
             window.objDataFilter.renderdatasubtypefilters();            
         
             // Update the UI so that the correct panels get the selected state
-            if (self.state.filter.subtype !== objPageStateNew.filter.subtype && objPageStateNew.filter.subtype !== 'all') {
+            if (bolFilterDataSubTypeChanged && objPageStateNew.filter.subtype !== 'all') {
                 // Update the subtype
                 window.objDataFilter.subtypechanged(objPageStateNew.filter.datasource, objPageStateNew.filter.subtype)
             } else {
                 // Update the datasource
                 window.objDataFilter.datasourcechanged(objPageStateNew.filter.datasource)
             }            
+        }
+
+        
+        if (bolFilterOruChanged && objPageStateNew.filter.datasource !== 'lives_improved') {
+            window.objDataFilter.setdetailspanel(objPageStateNew.filter.datasource, objPageStateNew.filter.subtype)
         }
 
 

@@ -78,10 +78,10 @@ var objDataFilter = {
     // Render the datatype sub filter elements underneath the tabs    
     renderdatasubtypefilters: function () {
         var self = this;
-        var htmlSustain = '<div class="bg"></div><ul><li class="datasubtype" data-subtype="all" onclick="objDataFilter.changesubtype(this, \'sustainability\', \'all\')">' + window.translateFragment('all_data') + '</li>';
+        var htmlSustain = '<div class="bg"></div><ul><li class="datasubtype" data-subtype="all" onclick="objDataFilter.changesubtype(\'sustainability\', \'all\')">' + window.translateFragment('all_data') + '</li>';
         window.objMap.datatypes.sustainability.forEach(function (datatype) {
             if (datatype.indexOf('value_') > -1) {
-                htmlSustain += '<li class="datasubtype" data-subtype="' + datatype + '" onclick="objDataFilter.changesubtype(this, \'sustainability\', \'' + datatype + '\')">' + window.translateFragment(self.mapdatatypekeys(datatype)).replace(/^(.*?)(\s*\(.*\))$/g, '$1') + '</li>';
+                htmlSustain += '<li class="datasubtype" data-subtype="' + datatype + '" onclick="objDataFilter.changesubtype(\'sustainability\', \'' + datatype + '\')">' + window.translateFragment(self.mapdatatypekeys(datatype)).replace(/^(.*?)(\s*\(.*\))$/g, '$1') + '</li>';
             }
         });
         htmlSustain += '</ul>';
@@ -89,10 +89,10 @@ var objDataFilter = {
 
         // console.log(htmlSustain);
 
-        var htmlGlobal = '<div class="bg"></div><ul><li class="datasubtype" data-subtype="all" onclick="objDataFilter.changesubtype(this, \'global_presence\', \'all\')">' + window.translateFragment('all_data') + '</li>';
+        var htmlGlobal = '<div class="bg"></div><ul><li class="datasubtype" data-subtype="all" onclick="objDataFilter.changesubtype(\'global_presence\', \'all\')">' + window.translateFragment('all_data') + '</li>';
         window.objMap.datatypes.global_presence.forEach(function (datatype) {
             if (datatype.indexOf('value_') > -1) {
-                htmlGlobal += '<li class="datasubtype" data-subtype="' + datatype + '" onclick="objDataFilter.changesubtype(this, \'global_presence\', \'' + datatype + '\')">' + window.translateFragment(self.mapdatatypekeys(datatype)).replace(/^(.*?)(\s*\(.*\))$/g, '$1') + '</li>';
+                htmlGlobal += '<li class="datasubtype" data-subtype="' + datatype + '" onclick="objDataFilter.changesubtype(\'global_presence\', \'' + datatype + '\')">' + window.translateFragment(self.mapdatatypekeys(datatype)).replace(/^(.*?)(\s*\(.*\))$/g, '$1') + '</li>';
             }
         });
         htmlGlobal += '</ul>';
@@ -120,9 +120,11 @@ var objDataFilter = {
 
     // Shows and hides the lines in the details panel    
     setdetailspanel: function (dataSource, subType) {
-        console.log('setdetailspanel("' + dataSource + '", "' + subType + '")');
+        // console.trace();
+        // console.log('setdetailspanel("' + dataSource + '", "' + subType + '")');
+        // console.log('- window.objMap.datatypes["' + dataSource + '"]: ' + window.objMap.datatypes[dataSource]);
         var elPanel = document.getElementById(dataSource + '_details');
-        var defaultState = (typeof subType === 'undefined') ? 'block' : 'none';
+        var defaultState = (typeof subType === 'undefined') ? 'block' : (subType === 'all') ? 'block' : 'none';
 
         // Set the default state for the lines in the details panel
         var arrDivs = elPanel.getElementsByTagName('div');
@@ -133,19 +135,6 @@ var objDataFilter = {
             } else {
                 arrDivs[i].style.display = defaultState;
             }
-            // var arrSpanNumber = arrDivs[i].getElementsByClassName('nr');
-            // console.log(arrSpanNumber);
-            // if (arrSpanNumber.length > 0) {
-            //     var numberContent = arrSpanNumber[0].innerHTML;
-            //     console.log('- numberContent: ' + numberContent);
-            //     if (numberContent.search(/\d/) === -1) {
-            //         arrDivs[i].style.display = 'none';
-            //     } else {
-            //         arrDivs[i].style.display = defaultState;
-            //     }
-            // } else {
-            //     arrDivs[i].style.display = defaultState;
-            // }
         }
 
         // Show the subtype element if it was supplied
@@ -157,8 +146,10 @@ var objDataFilter = {
     /*
     Click handlers in tab menu
     */
-    changedatasource: function (el, dataSource) {
+    changedatasource: function (dataSource) {
         if (!objDataFilter.vars.subclicked) {
+            console.log('changedatasource("' + dataSource + '")');
+
             // Set the datafilter state
             objDataFilter.state.filter.datasource = dataSource;
             objDataFilter.state.filter.subtype = 'all';
@@ -167,7 +158,8 @@ var objDataFilter = {
             window.objFilter.applyfilter();
         }
     },
-    changesubtype: function (el, dataSource, subType) {
+    changesubtype: function (dataSource, subType) {
+        console.log('changesubtype("' + dataSource + '", "' + subType + '")');
         // Variable to prevent the click event from triggering changedatasource()
         objDataFilter.vars.subclicked = true;
 
@@ -203,13 +195,14 @@ var objDataFilter = {
         objDataFilter.showhidelegend();
 
         // Only show the elements that are required in the details panel
-        if (dataSource !== 'lives_improved') objDataFilter.setdetailspanel(dataSource);
+        if (dataSource !== 'lives_improved') objDataFilter.setdetailspanel(dataSource, 'all');
 
         // Set the data type subfilter to the active state
         if (dataSource !== 'lives_improved') objDataFilter.setdatasubtypefilter(dataSource, 'all');
     },
 
     subtypechanged: function (dataSource, subType) {
+        // debugger;
         var el = window.Sizzle('li[data-panel=' + dataSource + '] li[data-subtype=' + subType + ']')[0];
 
         // Retrieve the main datasource tab
