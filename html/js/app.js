@@ -234,7 +234,7 @@ var app = {
         // Set or process the information supplied in the hash
         if (location.hash.length > 0) {
             var objPageStateNew = window.objPageState.hash2object(location.hash);
-            console.log(objPageStateNew);
+            // console.log(objPageStateNew);
 
             if (objPageStateNew.hasOwnProperty("error")) {
                 // Could not properly parse the hash into a state object - default to standard object
@@ -519,9 +519,47 @@ var objPageState = {
         // #!/view(1)/orulevel(2)/oru(4)/sector(6)/mru(8)/popup(10)
         return '#!/' + obj.view + '/' + obj.filter.orulevel + '/' + obj.filter.oru + '/' + obj.filter.sector + '/' + obj.filter.mru + '/' + obj.popup + '/' + obj.filter.datasource + '/' + (obj.filter.subtype ? obj.filter.subtype : 'all');
     },
+
+    // Calculates the delta between two state objects
+    calculatestatedelta: function (currentState, newState) {
+        var deltaState = {
+            filter: {}
+        };
+        for (var keyCurrentLevel1 in currentState) {
+            if (typeof keyCurrentLevel1 === 'string') {
+                if (newState.hasOwnProperty(keyCurrentLevel1)) {
+                    if (keyCurrentLevel1 === 'filter') {
+                        if (newState.hasOwnProperty('filter')) {
+                            for (var keyCurrentLevel2 in currentState.filter) {
+                                if (typeof keyCurrentLevel2 === 'string') {
+                                    if (newState.filter.hasOwnProperty(keyCurrentLevel2)) {
+                                        if (currentState.filter[keyCurrentLevel2] !== newState.filter[keyCurrentLevel2]) {
+                                            deltaState.filter[keyCurrentLevel2] = newState.filter[keyCurrentLevel2];
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        if (currentState[keyCurrentLevel1] !== newState[keyCurrentLevel1]) {
+                            deltaState[keyCurrentLevel1] = newState[keyCurrentLevel1];
+                        }
+                    }
+                }
+            }
+        }
+
+        // Strip empty filter element
+
+        return deltaState;
+    },
+
     handlechange: function (objPageStateNew) {
         // Check which properties have changed and act accordingly
         var self = this;
+
+        // Calculate the delta between the current and the new state
+        var objPageStateDelta = self.calculatestatedelta(self.state, objPageStateNew);
 
         // 0) add the view to the analytics object so that it will be tracked by google analytics
         window.objAnalytics.data.views.push({
@@ -585,28 +623,29 @@ var objPageState = {
             bolFilterDataChanged = true;
             bolFilterChangeDetected = true;
             // Update the filter object
-            window.objDataFilter.state.filter.datasource = objPageStateNew.filter.datasource;  
+            window.objDataFilter.state.filter.datasource = objPageStateNew.filter.datasource;
         }
 
         if (self.state.filter.subtype !== objPageStateNew.filter.subtype) {
             bolFilterDataSubTypeChanged = true;
             bolFilterChangeDetected = true;
             // Update the filter object
-            window.objDataFilter.state.filter.subtype = objPageStateNew.filter.subtype;    
+            window.objDataFilter.state.filter.subtype = objPageStateNew.filter.subtype;
         }
 
 
         console.log('+---------------------------------------+');
-        console.log('- self.state.filter: ' + JSON.stringify(self.state.filter, null, '  '));
-        console.log('- objPageStateNew.filter: ' + JSON.stringify(objPageStateNew.filter, null, '  '));
-        console.log('- bolFilterChangeDetected: ' + bolFilterChangeDetected);
-        console.log('- bolFilterOruLevelChanged: ' + bolFilterOruLevelChanged);
-        console.log('- bolFilterOruChanged: ' + bolFilterOruChanged);
-        console.log('- bolFilterSectorChanged: ' + bolFilterSectorChanged);
-        console.log('- bolFilterMruChanged: ' + bolFilterMruChanged);
-        console.log('- bolFilterDataChanged: ' + bolFilterDataChanged);
-        console.log('- bolFilterDataSubTypeChanged: ' + bolFilterDataSubTypeChanged);
-        console.log('- bolFromLogin: ' + bolFromLogin);
+        console.log('- self.state: ' + JSON.stringify(self.state, null, '  '));
+        console.log('- objPageStateNew: ' + JSON.stringify(objPageStateNew, null, '  '));
+        console.log('- objPageStateDelta: ' + JSON.stringify(objPageStateDelta, null, '  '));
+        // console.log('- bolFilterChangeDetected: ' + bolFilterChangeDetected);
+        // console.log('- bolFilterOruLevelChanged: ' + bolFilterOruLevelChanged);
+        // console.log('- bolFilterOruChanged: ' + bolFilterOruChanged);
+        // console.log('- bolFilterSectorChanged: ' + bolFilterSectorChanged);
+        // console.log('- bolFilterMruChanged: ' + bolFilterMruChanged);
+        // console.log('- bolFilterDataChanged: ' + bolFilterDataChanged);
+        // console.log('- bolFilterDataSubTypeChanged: ' + bolFilterDataSubTypeChanged);
+        // console.log('- bolFromLogin: ' + bolFromLogin);
         console.log('+---------------------------------------+');
 
         // 2) check we we are coming from login
@@ -616,14 +655,14 @@ var objPageState = {
         if (self.state.mobile && self.state.initialmapview && bolFromLogin && objPageStateNew.view !== 'login') app.showtransparentlayer();
 
 
-        
+
         if (bolFilterOruLevelChanged || bolFilterDataChanged || bolFilterDataSubTypeChanged) {
             // Retrieve all the datatypes for this geographical region
             window.objMap.datatypes = window.objMap.createdatatypelistforregions(objPageStateNew.filter.orulevel);
 
             // Render the datatypes as sub elements in the tabs
-            window.objDataFilter.renderdatasubtypefilters();            
-        
+            window.objDataFilter.renderdatasubtypefilters();
+
             // Update the UI so that the correct panels get the selected state
             if (bolFilterDataSubTypeChanged && objPageStateNew.filter.subtype !== 'all') {
                 // Update the subtype
@@ -631,10 +670,10 @@ var objPageState = {
             } else {
                 // Update the datasource
                 window.objDataFilter.datasourcechanged(objPageStateNew.filter.datasource)
-            }            
+            }
         }
 
-        
+
         if (bolFilterOruChanged && objPageStateNew.filter.datasource !== 'lives_improved') {
             window.objDataFilter.setdetailspanel(objPageStateNew.filter.datasource, objPageStateNew.filter.subtype)
         }
@@ -692,6 +731,9 @@ var objPageState = {
     updateworldmapview: function (objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, bolShowDetailsPanel, bolFilterDataChanged) {
         var self = this;
 
+        // Update current page state with the one we have just received
+        self.setstateobject(objPageStateNew);
+
         // Select the correct data source UI element        
 
         // debugger;
@@ -701,22 +743,23 @@ var objPageState = {
             !bolFilterOruLevelChanged &&
             !bolFilterDataChanged &&
             bolFilterOruChanged) {
-            
+
             /*
             Deal with minor state change (for example a click on a geographical region)
             */
 
+            if (bolFilterDataChanged) {
+
+                //debugger;
+                window.objMap.updatemap(false, app.showappintromessage);
+            }
+
             if (objPageStateNew.view === 'detail') {
-                self.setstateobject(objPageStateNew);
 
                 window.objMap.detailspanel();
             } else {
                 // This assumes that we are hitting 'back' from a details panel
-                if (self.state.filter.datasource !== objPageStateNew.filter.datasource) {
-                    
-                    //debugger;
-                    window.objMap.updatemap(false, app.showappintromessage);
-                }
+
                 window.objRegionInfo.hide();
                 window.objMap.hideselectedcountries();
 
@@ -729,7 +772,6 @@ var objPageState = {
             */
 
             // Load the svg map, the map data and open the details panel afterwards
-            self.setstateobject(objPageStateNew);
             window.objOruFilter.settocurrentoru();
 
             // Reload all the data

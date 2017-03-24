@@ -87,7 +87,7 @@ var objFilter = {
         objFilter.el.loader.style.display = 'none';
         objFilter.el.btnapply.style.display = 'block';
     },
-    applyfilter: function () {
+    applyfilter: function (resetSelectedOru) {
         var self = this;
         
         // debugger;
@@ -100,18 +100,24 @@ var objFilter = {
 
         self.el.btnapply.style.display = 'none';
 
+        var selectedOru = window.objOruFilter.state.selectedoruguid;
+        var newView = 'worldmap';
+        if (typeof resetSelectedOru === 'boolean') {
+            if (resetSelectedOru) selectedOru = 'none';
+        }
+
         // console.log(objPageState.vars.processed);
 
         // Because we auto-apply the filter for the public site, we need to handle it in a different way.
         if (window.isPublicSite()) {
             //   objPageState.updatepagestate(objPageState.state);
             window.objPageState.updatepagestate({
-                view: 'worldmap',
+                view: newView,
                 filter: {
                     datasource: window.objDataFilter.state.filter.datasource,
                     subtype: window.objDataFilter.state.filter.subtype,
-                    orulevel: window.objOruFilter.state.selectedoru, // For worldmap data 1, 2, 3, 4
-                    oru: 'none', // Selected country/region
+                    orulevel: window.objOruFilter.retrieveselectedorulevel(), // For worldmap data 1, 2, 3, 4
+                    oru: selectedOru, // Selected country/region
                     sector: window.objMruFilter.state.selectedsector, // Main sector
                     mru: window.objMruFilter.state.selectedmru // Product group
                 }
@@ -122,7 +128,7 @@ var objFilter = {
                 filter: {
                     datasource: window.objDataFilter.state.filter.datasource,
                     subtype: window.objDataFilter.state.filter.subtype,
-                    orulevel: window.objOruFilter.state.selectedoru, // For worldmap data 1, 2, 3, 4
+                    orulevel: window.objOruFilter.retrieveselectedorulevel(), // For worldmap data 1, 2, 3, 4
                     oru: 'none', // Selected country/region
                     sector: window.objMruFilter.state.selectedsector, // Main sector
                     mru: window.objMruFilter.state.selectedmru // Product group
@@ -133,7 +139,10 @@ var objFilter = {
 
 
         // Hide the details panel
-        if (window.objRegionInfo.state.visible && !window.objRegionInfo.state.tweening) window.objRegionInfo.hide();
+        if (!window.isPublicSite()) {
+            if (window.objRegionInfo.state.visible && !window.objRegionInfo.state.tweening) window.objRegionInfo.hide();
+        }
+        
     },
     init: function () {
         var self = this;

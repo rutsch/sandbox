@@ -131,14 +131,14 @@ var objOruFilter = {
 
         return result;
     },
-    
+
     /*
      * UI functions
      */
     selectoru: function (el, strOru) {
         var self = this;
 
-        console.log(strOru);
+        console.log('- strOru: ' + strOru);
 
         self.el.wrapper = window.getEl('oru_filter_container');
         el.className = 'selected';
@@ -147,9 +147,15 @@ var objOruFilter = {
         window.objHeader.setbreadcrumb(window.objMruFilter.getmrufilterbreadcrumb());
         if (arguments.length === 2) window.objFilter.blink();
 
-        // Apply the filter automatically in case of the public website
-        if (window.isPublicSite()) window.objFilter.applyfilter();
+        // Apply the filter and reset the selected region in the map becuase the same region does not exist in another worldmap
+        window.objFilter.applyfilter(true);
         //objMap.updatemap();
+    },
+
+    // Retrieves the current ORU level from the option list, updates the internal variable and return the value    
+    retrieveselectedorulevel: function () {
+        objOruFilter.state.selectedoru = objOruFilter.el.orulevelselect.options[objOruFilter.el.orulevelselect.selectedIndex].value;
+        return objOruFilter.state.selectedoru;
     },
 
     settocurrentoru: function () {
@@ -206,7 +212,11 @@ var objOruFilter = {
     init: function (cb) {
         var self = this;
         self.state.selectedoru = window.app.defaultpagestate.filter.orulevel;
+        
         self.el.wrapper = window.getEl('oru_filter_container');
+        self.el.orulevelselect = window.getEl('oru-select');
+
+        
 
         // Process the dataset into arrays for every orulevel
 
