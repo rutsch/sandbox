@@ -179,76 +179,7 @@ var objRegionInfo = {
     },
 
 
-    // TODO: Remove Simulation logic
-    showsimulation: function (self) {
-        var self = this;
-
-        self.el.btnshowcurrent.style.display = 'block';
-
-        window.TweenLite.to(self.el.btnshowsimulation, 0.3, {
-            opacity: 0,
-            onComplete: function () {
-                self.showsimulationcomplete();
-                self.state.panel = 'simulation';
-                self.el.btnshowsimulation.style.display = 'none';
-            }
-        });
-        window.TweenLite.to(self.el.btnshowcurrent, 0.3, {
-            opacity: 1,
-            onComplete: self.showsimulationcomplete
-        });
-        window.TweenLite.to(self.el.regionpanel, 0.3, {
-            top: '-35%',
-            onComplete: self.showsimulationcomplete
-        });
-        window.TweenLite.to(self.el.toolspanel, 0.3, {
-            bottom: '0%',
-            onComplete: self.showsimulationcomplete
-        });
-    },
-    // Central onComplete handler for showsimulation() function
-    showsimulationcomplete: function () {
-        var self = objRegionInfo;
-        self.state.tweening = false;
-        self.state.visible = true;
-    },
-
-    
-    showcurrent: function (self) {
-        var self = this;
-
-        self.el.btnshowsimulation.style.display = 'block';
-
-        window.TweenLite.to(self.el.btnshowcurrent, 0.3, {
-            opacity: 0,
-            onComplete: function () {
-                //debugger;
-                self.showcurrentcomplete();
-                self.state.panel = 'current';
-                self.el.btnshowcurrent.style.display = 'none';
-            }
-        });
-        window.TweenLite.to(self.el.toolspanel, 0.3, {
-            bottom: '-35%',
-            onComplete: self.showcurrentcomplete
-        });
-        window.TweenLite.to(self.el.btnshowsimulation, 0.3, {
-            opacity: 1,
-            onComplete: self.showcurrentcomplete
-        });
-
-        window.TweenLite.to(self.el.regionpanel, 0.3, {
-            top: '0%',
-            onComplete: self.showcurrentcomplete
-        });
-
-    },
-    // Central onComplete handler for showcurrent() function
-    showcurrentcomplete: function () {
-        var self = objRegionInfo;
-        self.state.tweening = false;
-        self.state.visible = true;
-    },
+    // Used to show/hide the trend graph
     showhistory: function () {
         var self = this;
         window.TweenLite.to(self.el.history, 0.3, {
@@ -269,6 +200,9 @@ var objRegionInfo = {
             }
         });
     },
+
+
+
     init: function () {
         var self = this;
         self.state.visible = false;
