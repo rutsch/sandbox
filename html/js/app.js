@@ -688,7 +688,7 @@ var objPageState = {
             // console.log('viewchange detected: self.state.view=' + self.state.view + ' - objPageStateNew.view=' + objPageStateNew.view);
             switch (objPageStateNew.view) {
                 case 'worldmap':
-                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, false, bolFilterDataChanged);
+                    self.updateworldmapview(objPageStateNew, objPageStateDelta);
                     break;
                 case 'login':
                     self.stateremembered = self.clonestateobject();
@@ -696,7 +696,7 @@ var objPageState = {
                     window.objLogin.show();
                     break;
                 case 'detail':
-                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, true, bolFilterDataChanged);
+                    self.updateworldmapview(objPageStateNew, objPageStateDelta);
                     break;
             }
         } else {
@@ -706,11 +706,11 @@ var objPageState = {
                 // console.log('filter change detected');
                 // If the detail view is open then we need to reload the data in it
                 if (objPageStateNew.view === 'detail') {
-                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, true, bolFilterDataChanged);
+                    self.updateworldmapview(objPageStateNew, objPageStateDelta);
                 } else {
                     // Called when a change in the filter panel has occured
 
-                    self.updateworldmapview(objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, false, bolFilterDataChanged);
+                    self.updateworldmapview(objPageStateNew, objPageStateDelta);
                 }
             } else {
                 // 6) handle a popup panel change
@@ -728,30 +728,38 @@ var objPageState = {
         // debugger;
         self.setstateobject(objPageStateNew);
     },
-    updateworldmapview: function (objPageStateNew, bolFilterSectorChanged, bolFilterMruChanged, bolFilterOruLevelChanged, bolFilterOruChanged, bolShowDetailsPanel, bolFilterDataChanged) {
+
+
+    updateworldmapview: function (objPageStateNew, objPageStateDelta) {
         var self = this;
 
         // Update current page state with the one we have just received
         self.setstateobject(objPageStateNew);
 
+        // Detect if we are dealing with a minor or a mojor change in the UI
+        var bolMajorChange = false;
+        if (objPageStateDelta.hasOwnProperty('filter')) {
+            if (
+                objPageStateDelta.filter.hasOwnProperty('orulevel') ||
+                objPageStateDelta.filter.hasOwnProperty('datasource') ||
+                objPageStateDelta.filter.hasOwnProperty('sector')
+            ) bolMajorChange = true;
+        }
+
+        console.log('- bolMajorChange: ' + bolMajorChange);
+
         // Select the correct data source UI element        
 
         // debugger;
-        if (typeof window.objMap.data === "object" &&
-            !bolFilterSectorChanged &&
-            !bolFilterMruChanged &&
-            !bolFilterOruLevelChanged &&
-            !bolFilterDataChanged &&
-            bolFilterOruChanged) {
+        if (typeof window.objMap.data === "object" && bolMajorChange === false) {
 
             /*
             Deal with minor state change (for example a click on a geographical region)
             */
 
-            if (bolFilterDataChanged) {
-
-                //debugger;
-                window.objMap.updatemap(false, app.showappintromessage);
+            // Update the colors in the map            
+            if (objPageStateDelta.hasOwnProperty('filter') && (objPageStateDelta.filter.hasOwnProperty('subtype'))) {
+                window.objMap.updatemap((objPageStateNew.view === 'detail'), app.showappintromessage);
             }
 
             if (objPageStateNew.view === 'detail') {
@@ -775,7 +783,7 @@ var objPageState = {
             window.objOruFilter.settocurrentoru();
 
             // Reload all the data
-            if (bolShowDetailsPanel) {
+            if (objPageStateNew.view === 'detail') {
                 app.start(true);
             } else {
                 app.start();

@@ -143,6 +143,9 @@ var objRegionInfo = {
         });
     },
 
+    /*
+    Details panel
+    */
     // Shows and hides the lines in the details panel    
     setdetailspanel: function (dataSource, subType) {
         // console.trace();
@@ -169,14 +172,19 @@ var objRegionInfo = {
     },
 
     hidedetailspanel: function () {
-        var self = this;
 
         window.objHeader.setregionname(window.objMap.state.mapname);
 
+        // Update the states in the different objects        
+        window.objOruFilter.state.selectedoruguid = 'none';
+
+        // Update the page state        
         window.objPageState.updatepagestate({
             view: 'worldmap',
             filter: {
-                oru: 'none'
+                datasource: window.objDataFilter.state.filter.datasource,
+                subtype: window.objDataFilter.state.filter.subtype,
+                oru: 'none',
             }
         });
     },
