@@ -118,30 +118,7 @@ var objDataFilter = {
 
     },
 
-    // Shows and hides the lines in the details panel    
-    setdetailspanel: function (dataSource, subType) {
-        // console.trace();
-        // console.log('setdetailspanel("' + dataSource + '", "' + subType + '")');
-        // console.log('- window.objMap.datatypes["' + dataSource + '"]: ' + window.objMap.datatypes[dataSource]);
-        var elPanel = document.getElementById(dataSource + '_details');
-        var defaultState = (typeof subType === 'undefined') ? 'block' : (subType === 'all') ? 'block' : 'none';
-
-        // Set the default state for the lines in the details panel
-        var arrDivs = elPanel.getElementsByTagName('div');
-        for (var i = 0; i < arrDivs.length; i++) {
-            // Hide the rows that contain no data
-            if (window.objMap.datatypes[dataSource].indexOf(arrDivs[i].id) === -1) {
-                arrDivs[i].style.display = 'none';
-            } else {
-                arrDivs[i].style.display = defaultState;
-            }
-        }
-
-        // Show the subtype element if it was supplied
-        if (typeof subType !== 'undefined') {
-            if (subType !== 'all') document.getElementById(subType).style.display = 'block';
-        }
-    },
+    
 
     /*
     Click handlers in tab menu
@@ -195,7 +172,7 @@ var objDataFilter = {
         objDataFilter.showhidelegend();
 
         // Only show the elements that are required in the details panel
-        if (dataSource !== 'lives_improved') objDataFilter.setdetailspanel(dataSource, 'all');
+        if (dataSource !== 'lives_improved') window.objRegionInfo.setdetailspanel(dataSource, 'all');
 
         // Set the data type subfilter to the active state
         if (dataSource !== 'lives_improved') objDataFilter.setdatasubtypefilter(dataSource, 'all');
@@ -224,7 +201,7 @@ var objDataFilter = {
         objDataFilter.showhidelegend();
 
         // Only show the elements that are required in the details panel
-        if (dataSource !== 'lives_improved') objDataFilter.setdetailspanel(dataSource, subType);
+        if (dataSource !== 'lives_improved') window.objRegionInfo.setdetailspanel(dataSource, subType);
 
         // Set the data type subfilter to the active state
         if (dataSource !== 'lives_improved') objDataFilter.setdatasubtypefilter(dataSource, subType);

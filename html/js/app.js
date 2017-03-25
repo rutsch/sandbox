@@ -675,7 +675,7 @@ var objPageState = {
 
 
         if (bolFilterOruChanged && objPageStateNew.filter.datasource !== 'lives_improved') {
-            window.objDataFilter.setdetailspanel(objPageStateNew.filter.datasource, objPageStateNew.filter.subtype)
+            window.objRegionInfo.setdetailspanel(objPageStateNew.filter.datasource, objPageStateNew.filter.subtype)
         }
 
 

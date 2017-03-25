@@ -12,6 +12,8 @@ var objRegionInfo = {
         population: null,
         gdp: null
     },
+
+
     renderLegend: function () {
         var self = this;
 
@@ -117,6 +119,7 @@ var objRegionInfo = {
         window.objHeader.hidefavouritebutton();
 
     },
+
     // Central onComplete handler for hide() function
     hidecomplete: function (el) {
         var self = objRegionInfo;
@@ -139,6 +142,34 @@ var objRegionInfo = {
             'z-index': 3
         });
     },
+
+    // Shows and hides the lines in the details panel    
+    setdetailspanel: function (dataSource, subType) {
+        // console.trace();
+        // console.log('setdetailspanel("' + dataSource + '", "' + subType + '")');
+        // console.log('- window.objMap.datatypes["' + dataSource + '"]: ' + window.objMap.datatypes[dataSource]);
+        var elPanel = document.getElementById(dataSource + '_details');
+        var defaultState = (typeof subType === 'undefined') ? 'block' : (subType === 'all') ? 'block' : 'none';
+
+        // Set the default state for the lines in the details panel
+        var arrDivs = elPanel.getElementsByTagName('div');
+        for (var i = 0; i < arrDivs.length; i++) {
+            // Hide the rows that contain no data
+            if (window.objMap.datatypes[dataSource].indexOf(arrDivs[i].id) === -1) {
+                arrDivs[i].style.display = 'none';
+            } else {
+                arrDivs[i].style.display = defaultState;
+            }
+        }
+
+        // Show the subtype element if it was supplied
+        if (typeof subType !== 'undefined') {
+            if (subType !== 'all') document.getElementById(subType).style.display = 'block';
+        }
+    },
+
+
+
     removeMobileRegionInfos: function () {
         var el = window.Sizzle('[data-target] > div');
         for (var i = 0; i < el.length; i++) {
@@ -146,6 +177,9 @@ var objRegionInfo = {
             el[i].parentNode.removeChild(el[i]);
         }
     },
+
+
+    // TODO: Remove Simulation logic
     showsimulation: function (self) {
         var self = this;
 
@@ -178,6 +212,8 @@ var objRegionInfo = {
         self.state.tweening = false;
         self.state.visible = true;
     },
+
+    
     showcurrent: function (self) {
         var self = this;
 

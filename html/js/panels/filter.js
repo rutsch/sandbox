@@ -100,11 +100,15 @@ var objFilter = {
 
         self.el.btnapply.style.display = 'none';
 
+        // Calculate the new view to pass in the new page state        
         var selectedOru = window.objOruFilter.state.selectedoruguid;
-        var newView = 'worldmap';
         if (typeof resetSelectedOru === 'boolean') {
             if (resetSelectedOru) selectedOru = 'none';
         }
+
+        // Canculate the view to use
+        var newView = 'worldmap';
+        if (selectedOru !== 'none') newView = 'detail';
 
         // console.log(objPageState.vars.processed);
 
