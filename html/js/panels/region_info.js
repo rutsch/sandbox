@@ -19,15 +19,15 @@ var objRegionInfo = {
 
         self.el.legend__title.innerHTML = window.objDataFilter.state.filter.subtype === 'all' ? window.translateFragment('lives_improved') : window.translateFragment(window.objDataFilter.mapdatatypekeys(window.objDataFilter.state.filter.subtype));
         self.el.legend__subtitle.innerHTML = '';
-        
+
         // self.el.legend__top_value.innerHTML = window.translateFragment('high') //objMap.intLivesImprovedPercentageMax;
         // self.el.legend__low_value.innerHTML = window.translateFragment('low') //objMap.intLivesImprovedPercentageMin;
     },
 
-    
+
     /*
-    * UI functions
-    */
+     * UI functions
+     */
     show: function () {
         var self = this;
         self.state.tweening = true;
@@ -39,7 +39,7 @@ var objRegionInfo = {
         }
         if (window.objPageState.mobile === true) {
             self.removeMobileRegionInfos();
-           
+
             // Copy region info html to correct LI
             var el = window.Sizzle('[data-target=' + window.objPageState.state.filter.oru + ']')[0];
 
@@ -168,6 +168,19 @@ var objRegionInfo = {
         }
     },
 
+    hidedetailspanel: function () {
+        var self = this;
+
+        window.objHeader.setregionname(window.objMap.state.mapname);
+
+        window.objPageState.updatepagestate({
+            view: 'worldmap',
+            filter: {
+                oru: 'none'
+            }
+        });
+    },
+
 
 
     removeMobileRegionInfos: function () {
@@ -255,7 +268,7 @@ var objRegionInfo = {
         window.objArcProps.targetnode = window.getEl('arc_path');
         window.objArcProps.targetleftwrapper = window.getEl('arc_path_left_wrapper');
         window.objArcProps.targetleftnode = window.getEl('arc_path_left');
-        
+
         // renderInfographic({ angle: 0 });
     }
 }
