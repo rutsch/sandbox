@@ -695,3 +695,17 @@ function cloneObject(obj) {
         return console.log('---------------');
     }
 }
+
+/**
+ * Sets a number of styles to a DOM element
+ * 
+ * @param {object} el DOM element
+ * @param {object} styles An onject in the format {background: 'green'}
+ */
+function css(el, styles) {
+    for (var property in styles) {
+        if (typeof property === 'string') {
+            el.style[property] = styles[property];
+        }
+    }  
+}

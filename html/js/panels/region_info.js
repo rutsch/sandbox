@@ -23,6 +23,7 @@ var objRegionInfo = {
      */
     show: function () {
         var self = this;
+        var animate = true;
         self.state.tweening = true;
 
         // In the public version of the tool, we show the data in an overlay and hide the filter panel
@@ -30,7 +31,11 @@ var objRegionInfo = {
             window.objFilter.hide();
             window.objOverlay.show();
         }
+
+        // debugger;
+
         if (window.objPageState.mobile === true) {
+            // Show the mobile version of the region info panel
             self.removeMobileRegionInfos();
 
             // Copy region info html to correct LI
@@ -40,20 +45,19 @@ var objRegionInfo = {
             el.innerHTML = el.innerHTML + window.getEl(window.objDataFilter.state.filter.datasource).outerHTML;
             el.getElementsByClassName('region_info_wrapper')[0].removeAttribute('style');
         } else {
-
-            // Slide down top_panel
-            if (window.app.state.width > 768) {
+            // Show the desktop version of the region info panel
+            if (animate) {
                 window.TweenLite.to(self.el.regionpanel, 0.3, {
                     bottom: '0%',
                     opacity: 1,
-                    onComplete: self.showcomplete(self.el.regionpanel)
+                    onComplete: self.showcomplete(self.el.regionpanel, animate)
                 });
             } else {
-                window.TweenLite.to(self.el.regionpanel, 0.3, {
+                window.css(self.el.regionpanel, {
                     bottom: '0%',
-                    opacity: 1,
-                    onComplete: self.showcomplete(self.el.regionpanel)
+                    opacity: 1
                 });
+                self.showcomplete(self.el.regionpanel, animate);
             }
         }
 
@@ -67,22 +71,35 @@ var objRegionInfo = {
             window.objStore.setlocalstorageitem('seenRegionInfoIntro', 'true');
         }
     },
+
     // Central onComplete handler for show() function
-    showcomplete: function (el) {
+    showcomplete: function (el, animate) {
         var self = objRegionInfo;
         self.state.tweening = false;
         self.state.visible = true;
-        if (el) {
-            // el.className = 'visible';
+
+        if (animate) {
+            window.TweenLite.to(self.el.toolspanel, 0.3, {
+                bottom: '0%',
+                opacity: 0,
+                'z-index': -1
+            });
+        } else {
+            window.css(self.el.toolspanel, {
+                bottom: '0%',
+                opacity: 0,
+                'z-index': -1
+            });
         }
-        window.TweenLite.to(self.el.toolspanel, 0.3, {
-            bottom: '0%',
-            opacity: 0,
-            'z-index': -1
-        })
+
     },
+
+
     hide: function () {
         var self = this;
+        var animate = true;
+
+        // debugger;
 
         if (self.state.visible) {
             // self.el.regionpanel.className = 'hidden animate';
@@ -90,18 +107,26 @@ var objRegionInfo = {
             // Hide the panel
             self.state.tweening = true;
 
-            if (window.app.state.width > 768) {
-                window.TweenLite.to(self.el.regionpanel, 0.3, {
-                    bottom: '0%',
-                    opacity: 0,
-                    onComplete: self.hidecomplete(self.el.regionpanel)
-                });
+            if (animate) {
+                if (window.app.state.width > 768) {
+                    window.TweenLite.to(self.el.regionpanel, 0.3, {
+                        bottom: '0%',
+                        opacity: 0,
+                        onComplete: self.hidecomplete(self.el.regionpanel, animate)
+                    });
+                } else {
+                    window.TweenLite.to(self.el.regionpanel, 0.3, {
+                        bottom: '-86%',
+                        opacity: 0,
+                        onComplete: self.hidecomplete(self.el.regionpanel, animate)
+                    });
+                }
             } else {
-                window.TweenLite.to(self.el.regionpanel, 0.3, {
-                    bottom: '-86%',
+                window.css(self.el.regionpanel, {
                     opacity: 0,
-                    onComplete: self.hidecomplete(self.el.regionpanel)
+                    bottom: '0%'
                 });
+                self.hidecomplete(self.el.regionpanel, animate);
             }
         }
 
@@ -114,26 +139,32 @@ var objRegionInfo = {
     },
 
     // Central onComplete handler for hide() function
-    hidecomplete: function (el) {
+    hidecomplete: function (el, animate) {
         var self = objRegionInfo;
         self.state.tweening = false;
         self.state.visible = false;
 
-        // In the public version of the tool, we show the data in an overlay
+        // // In the public version of the tool, we show the data in an overlay
         if (window.isPublicSite() && window.objOverlay.state.visible) {
             window.objOverlay.hide();
-            // objFilter.show();
+            // window.objFilter.show();
         }
 
-        if (el) {
-            // el.className = 'hidden';
-        }
+        // debugger;
 
-        window.TweenLite.to(self.el.toolspanel, 0.3, {
-            bottom: '0%',
-            opacity: 1,
-            'z-index': 3
-        });
+        if (animate) {
+            window.TweenLite.to(self.el.toolspanel, 0.3, {
+                bottom: '0%',
+                opacity: 1,
+                'z-index': 3
+            });
+        } else {
+            window.css(self.el.toolspanel, {
+                bottom: '0%',
+                opacity: 1,
+                'z-index': 3
+            });
+        }
     },
 
     /*

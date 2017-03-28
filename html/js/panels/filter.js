@@ -11,6 +11,7 @@ var objFilter = {
     show: function () {
         var self = this;
         self.state.currentfilterhtml = self.el.filtercontent.innerHTML;
+
         // For the public websites we do not show the overlay in combination with the filter
         if (!window.isPublicSite()) window.objOverlay.show();
 
@@ -66,7 +67,7 @@ var objFilter = {
         var self = this;
 
         if (window.isPublicSite()) {
-            // Do not blink the filter panel on the publick website when a user clicks on it
+            // Do not blink the filter panel on the public website when a user clicks on it
             self.blinkcomplete();
         } else {
             window.TweenLite.to(self.el.filtercontent, 0.2, {
@@ -89,7 +90,7 @@ var objFilter = {
     },
     applyfilter: function (resetSelectedOru) {
         var self = this;
-        
+
         // debugger;
         console.log('objFilter.applyfilter()');
         // Update the objPageState properties with the filter selection we have just made
@@ -109,9 +110,11 @@ var objFilter = {
             if (resetSelectedOru) selectedOru = 'none';
         }
 
-        // Canculate the view to use
+        // Calculate the view to use
         var newView = 'worldmap';
-        if (selectedOru !== 'none') newView = 'detail';
+        if (selectedOru !== 'none' || oruLevel === '1') newView = 'detail';
+
+        // 
 
         // console.log(objPageState.vars.processed);
 
@@ -149,7 +152,7 @@ var objFilter = {
         if (!window.isPublicSite()) {
             if (window.objRegionInfo.state.visible && !window.objRegionInfo.state.tweening) window.objRegionInfo.hide();
         }
-        
+
     },
     init: function () {
         var self = this;

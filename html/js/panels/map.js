@@ -533,6 +533,7 @@ var objMap = {
         window.objHeader.setbreadcrumb(window.objMruFilter.getmrufilterbreadcrumb());
 
         // If we need to show country region details after the loading sequence has completed
+        // debugger;
         if (self.vars.showdetailview) {
             self.detailspanel();
         } else {
@@ -800,6 +801,7 @@ var objMap = {
         window.app.el.outerwrapper.className = window.objConfig.sitetype + ' ' + window.objPageState.state.filter.sector + ' orulevel' + window.objPageState.state.filter.orulevel;
 
         var key = window.objPageState.state.filter.mru + '_' + (window.objPageState.state.filter.oru.length < 4 ? window.objPageState.state.filter.oru : window.objPageState.state.filter.oru.toLowerCase())
+        
         var regionData = self.data[key];
 
         var elRegion = window.getEl(window.objPageState.state.filter.oru);
@@ -828,8 +830,8 @@ var objMap = {
                 }
             });
         } else {
-            // console.log('Could not find the region in the map to animate.');
-            // console.log(window.objPageState.state.filter.oru);
+            console.log('Could not find the region in the map to animate.');
+            console.log(window.objPageState.state.filter.oru);
         }
 
 
@@ -906,6 +908,10 @@ var objMap = {
         // debugger;
         var self = this;
         var objExtendedData = self.roundlivesimproveddataobject(objData);
+        console.log('++++');
+        console.log('- objData: ' + JSON.stringify(objData));
+        console.log('- objExtendedData: ' + JSON.stringify(objExtendedData));
+        console.log('++++');
 
         var elLivesImproved = window.getEl('region_info_wrapper lives_improved');
         var elGlobalPresence = window.getEl('region_info_wrapper global_presence');
@@ -929,7 +935,7 @@ var objMap = {
             });
             window.TweenLite.to(elSustainability, 0.3, {
                 opacity: 0,
-                'z-index': -1,
+                'z-index': -2,
                 onComplete: function () {
 
                 }
@@ -967,12 +973,12 @@ var objMap = {
             });
             window.TweenLite.to(elLivesImproved, 0.3, {
                 opacity: 0,
-                'z-index': -1,
+                'z-index': -2,
                 onComplete: function () {
 
                 }
             });
-        } else if (window.objPageState.state.filter === 'sustainability') {
+        } else if (window.objPageState.state.filter.datasource === 'sustainability') {
             // Sustainability
             try {
                 window.objRegionInfo.el.data.co2.textContent = objExtendedData.value_co2;
@@ -1003,7 +1009,7 @@ var objMap = {
             });
             window.TweenLite.to(elLivesImproved, 0.3, {
                 opacity: 0,
-                'z-index': -1,
+                'z-index': -2,
                 onComplete: function () {
 
                 }
@@ -1094,11 +1100,13 @@ var objMap = {
                 objData.labelp = '';
             }
 
+            return objData;
+
         } else {
             // Loop through the datapoints and apply formatting/rounding, etc.
 
-
-            for (var key in objData) {
+            var objDataRounded = window.cloneObject(objData);
+            for (var key in objDataRounded) {
                 if (typeof key === 'string') {
                     switch (key) {
                         case 'value_co2':
@@ -1109,23 +1117,22 @@ var objMap = {
                         case 'value_assets':
                         case 'value_employees':
                         case 'value_sales':
-                            objData[key] = window.formatMoney(objData[key], 0, ',', '.', '');
+                            objDataRounded[key] = window.formatMoney(objData[key], 0, ',', '.', '');
                             break;
 
                         case 'value_water':
-                            objData[key] = window.formatMoney(objData[key].replace(',', ''), 0, ',', '.', '');
+                            objDataRounded[key] = window.formatMoney(objData[key].replace(',', ''), 0, ',', '.', '');
                             break;
 
                         default:
-                            objData[key] = objData[key];
+                            objDataRounded[key] = objData[key];
                     }
 
                 }
             }
 
-        }
-
-        return objData;
+            return objDataRounded;
+        }   
     },
 
     roundlivesimprovedpercentage: function (percentageLI) {
