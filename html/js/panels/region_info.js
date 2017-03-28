@@ -10,19 +10,12 @@ var objRegionInfo = {
         labellivesimproved: null,
         percentagelivesimproved: null,
         population: null,
-        gdp: null
+        gdp: null,
+        legendmax: null,
+        legendmin: null
     },
 
 
-    renderLegend: function () {
-        var self = this;
-
-        self.el.legend__title.innerHTML = window.objDataFilter.state.filter.subtype === 'all' ? window.translateFragment('lives_improved') : window.translateFragment(window.objDataFilter.mapdatatypekeys(window.objDataFilter.state.filter.subtype));
-        self.el.legend__subtitle.innerHTML = '';
-
-        // self.el.legend__top_value.innerHTML = window.translateFragment('high') //objMap.intLivesImprovedPercentageMax;
-        // self.el.legend__low_value.innerHTML = window.translateFragment('low') //objMap.intLivesImprovedPercentageMin;
-    },
 
 
     /*
@@ -141,6 +134,58 @@ var objRegionInfo = {
             opacity: 1,
             'z-index': 3
         });
+    },
+
+    /*
+    Legend
+    */
+
+    renderLegend: function (dataValueMax, dataValueMin) {
+        var self = this;
+
+        self.el.legend__title.innerHTML = window.objDataFilter.state.filter.subtype === 'all' ? window.translateFragment('lives_improved') : window.translateFragment(window.objDataFilter.mapdatatypekeys(window.objDataFilter.state.filter.subtype));
+        self.el.legend__subtitle.innerHTML = '';
+
+        if (typeof dataValueMax === 'undefined' || typeof dataValueMin === 'undefined' || dataValueMax === dataValueMin) {
+            self.el.legend__top_value.innerHTML = window.translateFragment('high');
+            self.el.legend__low_value.innerHTML = window.translateFragment('low');
+        } else {
+            // Process the numbers so that they will be displayed correctly
+            var roundedValueMax = 0;
+            var roundedValueMin = 0;
+            switch (window.objPageState.state.filter.datasource) {
+                case 'lives_improved':
+                    roundedValueMax = window.objMap.roundlivesimprovedpercentage(dataValueMax);
+                    roundedValueMin = window.objMap.roundlivesimprovedpercentage(dataValueMin);
+                    break;
+                default:
+                    var tmp = {};
+                    tmp[window.objPageState.state.filter.subtype] = dataValueMax;
+                    roundedValueMax = window.objMap.roundlivesimproveddataobject(tmp)[window.objPageState.state.filter.subtype];
+                    tmp[window.objPageState.state.filter.subtype] = dataValueMin;
+                    roundedValueMin = window.objMap.roundlivesimproveddataobject(tmp)[window.objPageState.state.filter.subtype];
+            }
+
+            self.el.legend__top_value.innerHTML = roundedValueMax;
+            self.el.legend__low_value.innerHTML = roundedValueMin;
+        }
+    },
+
+
+
+    showhidelegend: function (dataValueMax, dataValueMin) {
+        console.log('in showhidelegend(' + dataValueMax + ',' + dataValueMin + ')');
+        if (window.objPageState.state.filter.datasource === 'lives_improved' || window.objPageState.state.filter.subtype !== 'all') {
+            window.objRegionInfo.renderLegend(dataValueMax, dataValueMin);
+            window.TweenLite.to(window.objRegionInfo.el.legend, 0.3, {
+                opacity: 1
+            })
+
+        } else {
+            window.TweenLite.to(window.objRegionInfo.el.legend, 0.3, {
+                opacity: 0
+            })
+        }
     },
 
     /*
@@ -276,6 +321,8 @@ var objRegionInfo = {
         window.objArcProps.targetnode = window.getEl('arc_path');
         window.objArcProps.targetleftwrapper = window.getEl('arc_path_left_wrapper');
         window.objArcProps.targetleftnode = window.getEl('arc_path_left');
+
+
 
         // renderInfographic({ angle: 0 });
     }

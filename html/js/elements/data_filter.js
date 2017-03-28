@@ -20,19 +20,7 @@ var objDataFilter = {
         self.el.wrapper = window.getEl('map-tab_panels');
     },
 
-    showhidelegend: function () {
-        if (objDataFilter.state.filter.datasource === 'lives_improved' || objDataFilter.state.filter.subtype !== 'all') {
-            window.objRegionInfo.renderLegend();
-            window.TweenLite.to(window.objRegionInfo.el.legend, 0.3, {
-                opacity: 1
-            })
 
-        } else {
-            window.TweenLite.to(window.objRegionInfo.el.legend, 0.3, {
-                opacity: 0
-            })
-        }
-    },
 
     resetsubtypeindicators: function (subtypeindicators) {
         for (var i = 0; i < subtypeindicators.length; i++) {
@@ -168,9 +156,6 @@ var objDataFilter = {
         // Remove the data-subtype attribute from the body node
         window.getEl('body').removeAttribute('data-subtype');
 
-        // Show or hide the legend
-        objDataFilter.showhidelegend();
-
         // Only show the elements that are required in the details panel
         if (dataSource !== 'lives_improved') window.objRegionInfo.setdetailspanel(dataSource, 'all');
 
@@ -196,9 +181,6 @@ var objDataFilter = {
 
         // Set the body element style
         window.getEl('body').setAttribute('data-subtype', subType);
-
-        // Show or hide the legend
-        objDataFilter.showhidelegend();
 
         // Only show the elements that are required in the details panel
         if (dataSource !== 'lives_improved') window.objRegionInfo.setdetailspanel(dataSource, subType);

@@ -543,25 +543,8 @@ var objMap = {
         // Post processing
         self.el.elsvgholder.style.visibility = 'visible';
 
-        // If the are on global level and we have not selected a sub element to view, then we need to fire a click on the map to make it selected
-        var subFilterDataSourceCombination = false;
-        if (window.objPageState.state.filter.datasource === 'lives_improved') {
-            subFilterDataSourceCombination = true;
-        } else {
-            if (window.objDataFilter.state.filter.subtype === 'all') subFilterDataSourceCombination = true;
-        }
-
-        // console.log(parseInt(window.objPageState.state.filter.orulevel, 10) + ' - 1');
-        // console.log(subFilterDataSourceCombination + ' - true');
-        // console.log(window.objPageState.state.view + ' - "worldmap"');
-        // console.log(window.objPageState.state.filter.oru + ' - "none"')
-
-        if (parseInt(window.objPageState.state.filter.orulevel, 10) === 1 &&
-            subFilterDataSourceCombination &&
-            window.objPageState.state.view === 'worldmap' &&
-            window.objPageState.state.filter.oru === 'none') {
-            window.countryClicked('world', window.app.isMobile.any(), 'detail');
-        }
+        // Show or hide the legend
+        window.objRegionInfo.showhidelegend(dataValueMax, dataValueMin);
     },
 
     /*
@@ -869,14 +852,9 @@ var objMap = {
         }
 
         if (window.objDataFilter.state.filter.datasource === 'lives_improved') {
-            // Set the percentage in the infographic
-            if (regionData.percentageLI > 100) regionData.percentageLI = 100;
-            if (regionData.percentageLI >= 10 && regionData.percentageLI < 100) regionData.percentageLI = Math.round(regionData.percentageLI);
-            if (regionData.percentageLI < 10 && regionData.percentageLI > 0.1) regionData.percentageLI = Math.round(regionData.percentageLI * 10) / 10;
-            if (regionData.percentageLI < 0.1) regionData.percentageLI = '< 0.1';
 
             // Set the calculated lives improved percentage
-            window.objRegionInfo.el.data.percentagelivesimproved.textContent = regionData.percentageLI + '%';
+            window.objRegionInfo.el.data.percentagelivesimproved.textContent = self.roundlivesimprovedpercentage(regionData.percentageLI) + '%';
 
             // Set the correct images matching the percentage
             var elLivesImprovedIcons = window.getEl('lives_improved_icons');
@@ -935,7 +913,7 @@ var objMap = {
 
         // console.log(objExtendedData)
 
-        if (window.objDataFilter.state.filter.datasource === 'lives_improved') {
+        if (window.objPageState.state.filter.datasource === 'lives_improved') {
             // Lives improved
             window.objRegionInfo.el.data.nrlivesimproved.textContent = objExtendedData.displayl + ' ' + window.translateFragment('million');
             window.objRegionInfo.el.data.labellivesimproved.textContent = window.translateFragment('lives_improved');
@@ -963,15 +941,15 @@ var objMap = {
 
                 }
             });
-        } else if (window.objDataFilter.state.filter.datasource === 'global_presence') {
+        } else if (window.objPageState.state.filter.datasource === 'global_presence') {
             // Global presence
-            window.objRegionInfo.el.data.assets.textContent = window.formatMoney(objExtendedData.value_assets, 0, ',', '.', '');
-            window.objRegionInfo.el.data.employees.textContent = window.formatMoney(objExtendedData.value_employees, 0, ',', '.', '');
+            window.objRegionInfo.el.data.assets.textContent = objExtendedData.value_assets;
+            window.objRegionInfo.el.data.employees.textContent = objExtendedData.value_employees;
             window.objRegionInfo.el.data.female.textContent = objExtendedData.value_female;
             window.objRegionInfo.el.data.male.textContent = objExtendedData.value_male;
             window.objRegionInfo.el.data.plants.textContent = objExtendedData.value_plants;
             window.objRegionInfo.el.data.research.textContent = objExtendedData.value_research;
-            window.objRegionInfo.el.data.sales.textContent = window.formatMoney(objExtendedData.value_sales, 0, ',', '.', '');
+            window.objRegionInfo.el.data.sales.textContent = objExtendedData.value_sales;
 
             window.TweenLite.to(elGlobalPresence, 0.3, {
                 opacity: 1,
@@ -994,16 +972,16 @@ var objMap = {
 
                 }
             });
-        } else if (window.objDataFilter.state.filter.datasource === 'sustainability') {
+        } else if (window.objPageState.state.filter === 'sustainability') {
             // Sustainability
             try {
-                window.objRegionInfo.el.data.co2.textContent = window.formatMoney(objExtendedData.value_co2, 0, ',', '.', '');
-                window.objRegionInfo.el.data.emission.textContent = window.formatMoney(objExtendedData.value_emissions, 0, ',', '.', '');
-                window.objRegionInfo.el.data.emissionhaz.textContent = window.formatMoney(objExtendedData.value_emissionshaz, 0, ',', '.', '');
+                window.objRegionInfo.el.data.co2.textContent = objExtendedData.value_co2;
+                window.objRegionInfo.el.data.emission.textContent = objExtendedData.value_emissions;
+                window.objRegionInfo.el.data.emissionhaz.textContent = objExtendedData.value_emissionshaz;
                 window.objRegionInfo.el.data.trc.textContent = objExtendedData.value_trc;
-                window.objRegionInfo.el.data.waste.textContent = window.formatMoney(objExtendedData.value_waste, 0, ',', '.', '');
-                window.objRegionInfo.el.data.wasterecycled.textContent = window.formatMoney(objExtendedData.value_wasterecycled, 0, ',', '.', '');
-                window.objRegionInfo.el.data.water.textContent = window.formatMoney(objExtendedData.value_water.replace(',', ''), 0, ',', '.', '');
+                window.objRegionInfo.el.data.waste.textContent = objExtendedData.value_waste;
+                window.objRegionInfo.el.data.wasterecycled.textContent = objExtendedData.value_wasterecycled;
+                window.objRegionInfo.el.data.water.textContent = objExtendedData.value_water;
             } catch (err) {
                 console.log('ERROR:');
                 console.dir(err);
@@ -1040,80 +1018,123 @@ var objMap = {
         // console.log(objData)
         var intDecimals = 0;
 
-        // Lives improved
-        if (objData.l >= 0) {
-            // Always have 4 digits in the display
-            // More than 1000 million
-            if (objData.l >= 1000000000) {
-                // console.log('-2');
-                objData.roundedl = Math.round(objData.l / 1000000);
+        if (window.objPageState.state.filter.datasource === 'lives_improved') {
+            // Lives improved
+            if (objData.l >= 0) {
+                // Always have 4 digits in the display
+                // More than 1000 million
+                if (objData.l >= 1000000000) {
+                    // console.log('-2');
+                    objData.roundedl = Math.round(objData.l / 1000000);
 
-                // console.log(objData.roundedl)
+                    // console.log(objData.roundedl)
+                }
+
+                // 100 - 999.99 million
+                if (objData.l >= 100000000 && objData.l < 1000000000) {
+                    // console.log('-1');
+                    objData.roundedl = Math.round((objData.l / 1000000) * 10) / 10;
+                    intDecimals = 1;
+                }
+
+                // 10 - 99.99 million
+                if (objData.l >= 10000000 && objData.l < 100000000) {
+                    // console.log('0');
+                    objData.roundedl = Math.round((objData.l / 1000000) * 100) / 100;
+                    intDecimals = 2;
+                }
+
+                // 0.0001 - 9.99 million
+                if (objData.l < 10000000) {
+                    // console.log('1');
+                    objData.roundedl = Math.round((objData.l / 1000000) * 1000) / 1000;
+                    intDecimals = 3;
+                }
+
+                /*
+                if(objData.l<1000){
+                //console.log('...')
+                objData.roundedl=objData.l;
+                intDecimals=2;
+                }
+                */
+                objData.displayl = window.formatMoney(objData.roundedl, intDecimals, ',', '.', '');
+
+                // objData.labell = 'million lives improved';
+                objData.labell = '';
             }
 
-            // 100 - 999.99 million
-            if (objData.l >= 100000000 && objData.l < 1000000000) {
-                // console.log('-1');
-                objData.roundedl = Math.round((objData.l / 1000000) * 10) / 10;
-                intDecimals = 1;
+            // GDP
+            if (objData.g >= 0) {
+                if (objData.g > 1) {
+                    objData.roundedg = Math.round(objData.g / 1);
+                    intDecimals = 0;
+                } else {
+                    objData.roundedg = Math.round((objData.g / 1) * 10) / 10;
+                    intDecimals = 1;
+                }
+                objData.displayg = window.formatMoney(objData.roundedg, intDecimals, ',', '.', '');
+
+                // objData.labelg = ' ' + window.translateFragment('billion');
+                objData.labelg = '';
             }
 
-            //10 - 99.99 million
-            if (objData.l >= 10000000 && objData.l < 100000000) {
-                // console.log('0');
-                objData.roundedl = Math.round((objData.l / 1000000) * 100) / 100;
-                intDecimals = 2;
-            }
-            // 0.0001 - 9.99 million
-            if (objData.l < 10000000) {
-                // console.log('1');
-                objData.roundedl = Math.round((objData.l / 1000000) * 1000) / 1000;
-                intDecimals = 3;
-            }
-            /*
-			if(objData.l<1000){
-			//console.log('...')
-			objData.roundedl=objData.l;
-			intDecimals=2;
-			}
-			*/
-            objData.displayl = window.formatMoney(objData.roundedl, intDecimals, ',', '.', '');
-            // objData.labell = 'million lives improved';
-            objData.labell = '';
-        }
+            // Population
+            if (objData.p >= 0) {
+                if (objData.p > 1000000) {
+                    objData.roundedp = Math.round(objData.p / 1000000);
+                    intDecimals = 0;
+                } else {
+                    objData.roundedp = Math.round((objData.p / 1000000) * 10) / 10;
+                    intDecimals = 1;
+                }
+                objData.displayp = window.formatMoney(objData.roundedp, intDecimals, ',', '.', '');
 
-        // GDP
-        if (objData.g >= 0) {
-            if (objData.g > 1) {
-                objData.roundedg = Math.round(objData.g / 1);
-                intDecimals = 0;
-            } else {
-                objData.roundedg = Math.round((objData.g / 1) * 10) / 10;
-                intDecimals = 1;
+                // objData.labelp = ' ' + window.translateFragment('million');
+                objData.labelp = '';
             }
-            objData.displayg = window.formatMoney(objData.roundedg, intDecimals, ',', '.', '');
 
-            // objData.labelg = ' ' + window.translateFragment('billion');
-            objData.labelg = '';
-        }
+        } else {
+            // Loop through the datapoints and apply formatting/rounding, etc.
 
-        // Population
-        if (objData.p >= 0) {
-            if (objData.p > 1000000) {
-                objData.roundedp = Math.round(objData.p / 1000000);
-                intDecimals = 0;
-            } else {
-                objData.roundedp = Math.round((objData.p / 1000000) * 10) / 10;
-                intDecimals = 1;
+
+            for (var key in objData) {
+                if (typeof key === 'string') {
+                    switch (key) {
+                        case 'value_co2':
+                        case 'value_emissions':
+                        case 'value_emissionshaz':
+                        case 'value_waste':
+                        case 'value_wasterecycled':
+                        case 'value_assets':
+                        case 'value_employees':
+                        case 'value_sales':
+                            objData[key] = window.formatMoney(objData[key], 0, ',', '.', '');
+                            break;
+
+                        case 'value_water':
+                            objData[key] = window.formatMoney(objData[key].replace(',', ''), 0, ',', '.', '');
+                            break;
+
+                        default:
+                            objData[key] = objData[key];
+                    }
+
+                }
             }
-            objData.displayp = window.formatMoney(objData.roundedp, intDecimals, ',', '.', '');
 
-            // objData.labelp = ' ' + window.translateFragment('million');
-            objData.labelp = '';
         }
 
         return objData;
     },
+
+    roundlivesimprovedpercentage: function (percentageLI) {
+        if (percentageLI > 100) return 100;
+        if (percentageLI >= 10 && percentageLI < 100) return Math.round(percentageLI);
+        if (percentageLI < 10 && percentageLI > 0.1) return Math.round(percentageLI * 10) / 10;
+        return '< 0.1';
+    },
+
     init: function () {
         var self = this;
         self.state.visible = false;
