@@ -535,6 +535,8 @@ var objMap = {
         // If we need to show country region details after the loading sequence has completed
         if (self.vars.showdetailview) {
             self.detailspanel();
+        } else {
+            window.objRegionInfo.hide();
         }
         self.vars.showdetailview = false;
 
@@ -812,16 +814,13 @@ var objMap = {
         // objRegionInfo.hidehistory();
 
         // Add the current ORU sector as a class to the wrapper div
-        window.app.el.outerwrapper.className = window.objConfig.sitetype + ' ' + window.window.objPageState.state.filter.sector;
+        window.app.el.outerwrapper.className = window.objConfig.sitetype + ' ' + window.objPageState.state.filter.sector + ' orulevel' + window.objPageState.state.filter.orulevel;
 
-        var sec = {},
-            back = {},
-            key = window.objPageState.state.filter.mru + '_' + (window.objPageState.state.filter.oru.length < 4 ? window.objPageState.state.filter.oru : window.objPageState.state.filter.oru.toLowerCase()),
-            regionData = self.data[key];
+        var key = window.objPageState.state.filter.mru + '_' + (window.objPageState.state.filter.oru.length < 4 ? window.objPageState.state.filter.oru : window.objPageState.state.filter.oru.toLowerCase())
+        var regionData = self.data[key];
 
         var elRegion = window.getEl(window.objPageState.state.filter.oru);
         if (elRegion) {
-            var opacity = elRegion.style.opacity;
             window.TweenLite.to(elRegion, 0, {
                 opacity: 0.7,
                 onComplete: function () {

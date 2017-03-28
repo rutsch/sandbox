@@ -17,13 +17,13 @@ var app = {
 
     },
     defaultpagestate: {
-        view: 'worldmap',
+        view: 'detail',
         popup: 'none',
         filter: {
             datasource: 'lives_improved', // Data source to use
             subtype: 'all', // Data point to show
             orulevel: '1', // For worldmap data 1, 2, 3, 4
-            oru: 'none', // Selected country/region
+            oru: 'world', // Selected country/region
             sector: 'philips', // Main sector
             mru: 'philips' // Product group
         }
@@ -419,6 +419,7 @@ var objPageState = {
         popup: null,
         filter: {
             datasource: null, // Values: lives improved, global_presence or sustainability
+            subtype: null, // Subtype filter in the data (i.e. only show co2 from the sustainability dataset)
             orulevel: null, // For worldmap data 1, 2, 3, 4
             oru: null, // Selected country/region
             sector: null, // Selected main sector
@@ -635,6 +636,7 @@ var objPageState = {
 
 
         console.log('+---------------------------------------+');
+        // console.trace();
         console.log('- self.state: ' + JSON.stringify(self.state, null, '  '));
         console.log('- objPageStateNew: ' + JSON.stringify(objPageStateNew, null, '  '));
         console.log('- objPageStateDelta: ' + JSON.stringify(objPageStateDelta, null, '  '));
@@ -687,15 +689,12 @@ var objPageState = {
         if (self.state.view !== objPageStateNew.view) {
             // console.log('viewchange detected: self.state.view=' + self.state.view + ' - objPageStateNew.view=' + objPageStateNew.view);
             switch (objPageStateNew.view) {
-                case 'worldmap':
-                    self.updateworldmapview(objPageStateNew, objPageStateDelta);
-                    break;
                 case 'login':
                     self.stateremembered = self.clonestateobject();
                     self.setstateobject(objPageStateNew);
                     window.objLogin.show();
                     break;
-                case 'detail':
+                default:
                     self.updateworldmapview(objPageStateNew, objPageStateDelta);
                     break;
             }
@@ -704,14 +703,8 @@ var objPageState = {
             // 5) handle filter change
             if (bolFilterChangeDetected) {
                 // console.log('filter change detected');
-                // If the detail view is open then we need to reload the data in it
-                if (objPageStateNew.view === 'detail') {
-                    self.updateworldmapview(objPageStateNew, objPageStateDelta);
-                } else {
-                    // Called when a change in the filter panel has occured
+                self.updateworldmapview(objPageStateNew, objPageStateDelta);
 
-                    self.updateworldmapview(objPageStateNew, objPageStateDelta);
-                }
             } else {
                 // 6) handle a popup panel change
 
@@ -720,7 +713,7 @@ var objPageState = {
         }
 
         // 8) Set the oru level as an attribute on the body
-        window.objOruFilter.setdatalevelattribute(objPageState.state.filter.orulevel);
+        window.objOruFilter.setdatalevelattribute(objPageStateNew.filter.orulevel);
 
         // 7) open the filter panel if this is the public website
         // if (window.isPublicSite() && !window.objFilter.state.visible) window.objFilter.show();
@@ -785,7 +778,7 @@ var objPageState = {
             // Reload all the data
             if (objPageStateNew.view === 'detail') {
                 app.start(true);
-            } else {
+            } else {        
                 app.start();
             }
         }

@@ -91,10 +91,13 @@ var objFilter = {
         var self = this;
         
         // debugger;
-        // console.log('objFilter.applyfilter()');
+        console.log('objFilter.applyfilter()');
         // Update the objPageState properties with the filter selection we have just made
 
         if (!window.isPublicSite() && self.state.visible && !self.state.tweening) self.hide();
+
+        // Retrieve the oruLevel that the user has selected
+        var oruLevel = window.objOruFilter.retrieveselectedorulevel();
 
         self.state.currentfilterhtml = self.el.filtercontent.innerHTML;
 
@@ -120,7 +123,7 @@ var objFilter = {
                 filter: {
                     datasource: window.objDataFilter.state.filter.datasource,
                     subtype: window.objDataFilter.state.filter.subtype,
-                    orulevel: window.objOruFilter.retrieveselectedorulevel(), // For worldmap data 1, 2, 3, 4
+                    orulevel: oruLevel, // For worldmap data 1, 2, 3, 4
                     oru: selectedOru, // Selected country/region
                     sector: window.objMruFilter.state.selectedsector, // Main sector
                     mru: window.objMruFilter.state.selectedmru // Product group

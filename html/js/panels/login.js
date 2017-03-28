@@ -145,7 +145,7 @@ var objLogin = {
     },
 
     continueretrievemetadata: function () {
-        window.app.defaultpagestate.view = 'worldmap';
+        if (!window.isPublicSite()) window.app.defaultpagestate.view = 'worldmap';
 
         // Load the metadata
         window.app.retrievemetadata();
