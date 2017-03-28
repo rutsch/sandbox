@@ -1121,7 +1121,11 @@ var objMap = {
                             break;
 
                         case 'value_water':
-                            objDataRounded[key] = window.formatMoney(objData[key].replace(',', ''), 0, ',', '.', '');
+                            var water = objData[key]+'';
+                            if (water.indexOf(',') > -1) {
+                                water = water.replace(/,/g, '');
+                            }
+                            objDataRounded[key] = window.formatMoney(water, 0, ',', '.', '');
                             break;
 
                         default:
