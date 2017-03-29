@@ -114,8 +114,13 @@ var objFilter = {
         var newView = 'worldmap';
         if (selectedOru !== 'none' || oruLevel === '1') newView = 'detail';
 
-        // 
-
+        // Check if the subtype is available on the new level (if we are switching oru-level)
+        var subType = window.objDataFilter.state.filter.subtype;
+        if (oruLevel !== window.objPageState.state.filter.orulevel && window.objDataFilter.state.filter.subtype !== 'all' && window.objDataFilter.state.filter.datasource !== 'lives_improved') {
+            var arrSubTypes = window.objMap.createdatatypelistforregions(oruLevel)[window.objDataFilter.state.filter.datasource];
+            if (arrSubTypes.indexOf(subType) === -1) subType = 'all';
+            
+        }
         // console.log(objPageState.vars.processed);
 
         // Because we auto-apply the filter for the public site, we need to handle it in a different way.
@@ -125,7 +130,7 @@ var objFilter = {
                 view: newView,
                 filter: {
                     datasource: window.objDataFilter.state.filter.datasource,
-                    subtype: window.objDataFilter.state.filter.subtype,
+                    subtype: subType,
                     orulevel: oruLevel, // For worldmap data 1, 2, 3, 4
                     oru: selectedOru, // Selected country/region
                     sector: window.objMruFilter.state.selectedsector, // Main sector

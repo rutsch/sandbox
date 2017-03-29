@@ -371,7 +371,7 @@ var objMap = {
                 regionData = (self.data[oruGuid]) ? self.data[oruGuid] : false;
 
             // console.log(key+' - '+regionData);
-            debugger;
+            // debugger;
             if (regionData) {
                 var dataValueToDisplay;
                 var noData = false;
@@ -811,10 +811,9 @@ var objMap = {
 
         if (elRegion) {
 
-            // If this region has no data, then update the page state to not select a region at all
-            // console.log('- elRegion.getAttribute(\'class\'): ' + elRegion.getAttribute('class'));
             var className = elRegion.getAttribute('class');
             if (typeof className === 'string' && className === 'no-data') {
+                // If this region has no data, then update the page state to not select a region at all
                 window.objPageState.updatepagestate({
                     view: 'worldmap',
                     filter: {
@@ -824,6 +823,7 @@ var objMap = {
                     }
                 });
             } else {
+                // This region contains data so start highlighting the area in the map and fill the details panel with data
                 window.TweenLite.to(elRegion, 0, {
                     opacity: 0.7,
                     onComplete: function () {
