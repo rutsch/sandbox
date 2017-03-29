@@ -371,7 +371,7 @@ var objMap = {
                 regionData = (self.data[oruGuid]) ? self.data[oruGuid] : false;
 
             // console.log(key+' - '+regionData);
-            // debugger;
+            debugger;
             if (regionData) {
                 var dataValueToDisplay;
                 var noData = false;
@@ -775,6 +775,9 @@ var objMap = {
         self.state.rootanimateattributevalues = self.retrievesvgelementobject(self.el.rootanimate);
     },
 
+    /**
+     * Show the details panel, select the active country in the map 
+     */
     detailspanel: function () {
         var self = this;
 
@@ -799,36 +802,53 @@ var objMap = {
 
         // Add the current ORU sector as a class to the wrapper div
         window.app.setmainwrapperclass();
-        
+
         // Retrieve the current data to from the data object
-        var key = window.objPageState.state.filter.mru + '_' + (window.objPageState.state.filter.oru.length < 4 ? window.objPageState.state.filter.oru : window.objPageState.state.filter.oru.toLowerCase());   
+        var key = window.objPageState.state.filter.mru + '_' + (window.objPageState.state.filter.oru.length < 4 ? window.objPageState.state.filter.oru : window.objPageState.state.filter.oru.toLowerCase());
         var regionData = self.data[key];
 
         var elRegion = window.getEl(window.objPageState.state.filter.oru);
+
         if (elRegion) {
-            window.TweenLite.to(elRegion, 0, {
-                opacity: 0.7,
-                onComplete: function () {
-                    // alert('in')
-                    // debugger;
-                    self.hideselectedcountries();
-                    elRegion.setAttribute('class', 'active');
 
-                    // JT: I introduced a very crappy way to check for a tablet - can this be improved and become app.state.tablet ?
-                    if (window.app.state.width > 768) {
-                        self.updateui(regionData, window.objPageState.state.filter.oru, elRegion);
-                    } else {
-                        window.TweenLite.to(self.el.elsvgholder, 0.2, {
-                            opacity: 0,
-                            onComplete: function () {
-                                self.updateui(regionData, window.objPageState.state.filter.oru, elRegion);
-                            }
-                        });
+            // If this region has no data, then update the page state to not select a region at all
+            // console.log('- elRegion.getAttribute(\'class\'): ' + elRegion.getAttribute('class'));
+            var className = elRegion.getAttribute('class');
+            if (typeof className === 'string' && className === 'no-data') {
+                window.objPageState.updatepagestate({
+                    view: 'worldmap',
+                    filter: {
+                        datasource: window.objDataFilter.state.filter.datasource,
+                        subtype: window.objDataFilter.state.filter.subtype,
+                        oru: 'none',
                     }
+                });
+            } else {
+                window.TweenLite.to(elRegion, 0, {
+                    opacity: 0.7,
+                    onComplete: function () {
+                        // alert('in')
+                        // debugger;
+                        self.hideselectedcountries();
+                        elRegion.setAttribute('class', 'active');
+
+                        // JT: I introduced a very crappy way to check for a tablet - can this be improved and become app.state.tablet ?
+                        if (window.app.state.width > 768) {
+                            self.updateui(regionData, window.objPageState.state.filter.oru, elRegion);
+                        } else {
+                            window.TweenLite.to(self.el.elsvgholder, 0.2, {
+                                opacity: 0,
+                                onComplete: function () {
+                                    self.updateui(regionData, window.objPageState.state.filter.oru, elRegion);
+                                }
+                            });
+                        }
 
 
-                }
-            });
+                    }
+                });
+            }
+
         } else {
             console.log('Could not find the region in the map to animate.');
             console.log(window.objPageState.state.filter.oru);
@@ -1121,7 +1141,7 @@ var objMap = {
                             break;
 
                         case 'value_water':
-                            var water = objData[key]+'';
+                            var water = objData[key] + '';
                             if (water.indexOf(',') > -1) {
                                 water = water.replace(/,/g, '');
                             }
@@ -1136,7 +1156,7 @@ var objMap = {
             }
 
             return objDataRounded;
-        }   
+        }
     },
 
     roundlivesimprovedpercentage: function (percentageLI) {
