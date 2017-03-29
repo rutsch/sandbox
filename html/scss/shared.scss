@@ -53,14 +53,16 @@ body {
             // height: 1px;
             // text-indent: -9999px;
             @media #{$medium-up} {
-                height: 400px;
+                height: 440px;
                 width: 100%;
                 display: block;
                 opacity: 1;
             }
 
             #main_wrapper{
+				height: 440px;
                 #holder_1000{
+					height: 440px;
                     text-align: center;
                     svg{
                         margin: 0 auto;
@@ -142,7 +144,7 @@ body {
             width: 100%;
             position: relative;
             @media #{$medium-up} {
-                top: 50px;
+                top: 10px;
     			height: 275px;
             }
 
@@ -195,4 +197,9 @@ body {
 	@media #{$xlarge-up} {
 		max-width: $content-width-large;
 	}
+}
+
+/* Do not show the pointer cursor for the map on oru level 1 */
+.orulevel-1 #map #main_wrapper #holder_1000 svg * {
+	cursor: default!important;
 }
