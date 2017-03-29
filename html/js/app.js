@@ -89,6 +89,18 @@ var app = {
         }
     },
 
+    setmainwrapperclass: function () {
+        window.app.el.outerwrapper.className = window.objConfig.sitetype
+            + ' ' + window.objPageState.state.filter.sector
+            + ' view-' + window.objPageState.state.view
+            + ' datasource-' + window.objPageState.state.filter.datasource
+            + ' subtype-' + window.objPageState.state.filter.subtype
+            + ' orulevel-' + window.objPageState.state.filter.orulevel
+            + ' oru-' + window.objPageState.state.filter.oru
+            + ' sector-' + window.objPageState.state.filter.sector
+            + ' mru-' + window.objPageState.state.filter.mru;
+    },
+
     // Retrieves oru and mru metadata structures
     retrievemetadata: function () {
         var objData = {
@@ -341,7 +353,7 @@ var app = {
         }
 
         // Set the class of the body element to refect the site type
-        app.el.outerwrapper.className = window.objConfig.sitetype;
+        self.setmainwrapperclass();
 
         /*
         This is where it all starts...
@@ -718,8 +730,11 @@ var objPageState = {
         // 7) open the filter panel if this is the public website
         // if (window.isPublicSite() && !window.objFilter.state.visible) window.objFilter.show();
 
-        // debugger;
+        // Update the current state object with the new one
         self.setstateobject(objPageStateNew);
+
+        // Set the main wrapper class
+        window.app.setmainwrapperclass();
     },
 
 

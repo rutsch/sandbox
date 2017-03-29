@@ -205,17 +205,19 @@ var objRegionInfo = {
 
 
     showhidelegend: function (dataValueMax, dataValueMin) {
-        console.log('in showhidelegend(' + dataValueMax + ',' + dataValueMin + ')');
-        if (window.objPageState.state.filter.datasource === 'lives_improved' || window.objPageState.state.filter.subtype !== 'all') {
+        // console.log('in showhidelegend(' + dataValueMax + ',' + dataValueMin + ')');
+        if (window.objPageState.state.filter.datasource === 'lives_improved' ||
+            window.objPageState.state.filter.subtype !== 'all' ||
+            (window.objPageState.state.filter.datasource === 'sustainability' && window.objPageState.state.filter.subtype === 'all' && window.objPageState.state.filter.orulevel === '3')
+        ) {
             window.objRegionInfo.renderLegend(dataValueMax, dataValueMin);
-            window.TweenLite.to(window.objRegionInfo.el.legend, 0.3, {
+            window.css(window.objRegionInfo.el.legend, {
                 opacity: 1
-            })
-
+            });
         } else {
-            window.TweenLite.to(window.objRegionInfo.el.legend, 0.3, {
+            window.css(window.objRegionInfo.el.legend, {
                 opacity: 0
-            })
+            });
         }
     },
 

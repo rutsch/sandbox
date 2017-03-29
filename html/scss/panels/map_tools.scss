@@ -47,13 +47,33 @@
 			li {
 				color: #fff;
 				font-size: 14px;
-				margin: 5px 0;
-				height: 50px;
+				margin: 0;
+				height: 40px;
 
 				&:last-child {
 					display: table-cell;
 					vertical-align: bottom;
 				}
+			}
+		}
+		
+		&--nodata {
+			display: none;
+			&--color{
+				background: #cae3e9!important;
+				padding-left: 15px;
+				padding-right: 15px;
+				padding-top: 5px;
+				padding-bottom: 5px;
+				margin-right: 10px;
+				
+				&:after {
+					content: ' ';
+				}
+			}
+			
+			&--text{
+				
 			}
 		}
 	}
@@ -104,6 +124,23 @@
 			&:after {
 				display: none;
 			}
+		}
+	}
+}
+
+/* Show the no data legend */
+.philips.datasource-sustainability.orulevel-3 {
+	.map_tools__legend--nodata{
+		display: block;
+	}
+}
+
+.philips.datasource-sustainability.orulevel-3.subtype-all{
+	.map_tools__legend{
+		.map_tools__legend__title,
+		.map_tools__legend__subtitle,
+		.map_tools__legend--values{
+			display: none;
 		}
 	}
 }

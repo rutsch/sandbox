@@ -355,7 +355,7 @@
     margin: 0 2em; }
 
 /* ORU Level based styling */
-.orulevel1 .region_info .region_info_close {
+.orulevel-1 .region_info .region_info_close {
   display: none; }
 
 .map_tools {
@@ -402,11 +402,22 @@
       .map_tools__legend--values li {
         color: #fff;
         font-size: 14px;
-        margin: 5px 0;
-        height: 50px; }
+        margin: 0;
+        height: 40px; }
         .map_tools__legend--values li:last-child {
           display: table-cell;
           vertical-align: bottom; }
+    .map_tools__legend--nodata {
+      display: none; }
+      .map_tools__legend--nodata--color {
+        background: #cae3e9 !important;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        margin-right: 10px; }
+        .map_tools__legend--nodata--color:after {
+          content: ' '; }
   .map_tools__zoom--in, .map_tools__zoom--out {
     position: absolute;
     width: 26px;
@@ -438,6 +449,15 @@
       transform: rotate(90deg); }
     .map_tools__zoom--out:after {
       display: none; }
+
+/* Show the no data legend */
+.philips.datasource-sustainability.orulevel-3 .map_tools__legend--nodata {
+  display: block; }
+
+.philips.datasource-sustainability.orulevel-3.subtype-all .map_tools__legend .map_tools__legend__title,
+.philips.datasource-sustainability.orulevel-3.subtype-all .map_tools__legend .map_tools__legend__subtitle,
+.philips.datasource-sustainability.orulevel-3.subtype-all .map_tools__legend .map_tools__legend--values {
+  display: none; }
 
 @media only screen and (min-width: 769px) {
   .map-tab_panels {
