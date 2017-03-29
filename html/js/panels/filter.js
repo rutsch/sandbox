@@ -119,8 +119,16 @@ var objFilter = {
         if (oruLevel !== window.objPageState.state.filter.orulevel && window.objDataFilter.state.filter.subtype !== 'all' && window.objDataFilter.state.filter.datasource !== 'lives_improved') {
             var arrSubTypes = window.objMap.createdatatypelistforregions(oruLevel)[window.objDataFilter.state.filter.datasource];
             if (arrSubTypes.indexOf(subType) === -1) subType = 'all';
-            
+
         }
+
+        // If we switch to global level then fix on 'world' and 'details'
+        if (oruLevel !== window.objPageState.state.filter.orulevel && oruLevel === '1') {
+            newView = 'detail';
+            selectedOru = 'world';
+        }
+
+
         // console.log(objPageState.vars.processed);
 
         // Because we auto-apply the filter for the public site, we need to handle it in a different way.

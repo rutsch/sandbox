@@ -540,37 +540,25 @@ function countryClicked(idCountry, mobile, forceview) {
         window.objPageState.mobile = false;
     }
 
-    if (idCountry !== "" && containsClass(elRegion, "no-data") === false) {
-        // Update the hash and initiate the new view based on that
-        // console.log('click in map ' + idCountry);
-
-        if (window.objPageState.state.view === 'detail' && window.objPageState.state.filter.oru === idCountry && typeof forceview === 'undefined') {
-            window.objPageState.updatepagestate({
-                view: 'worldmap',
-                filter: {
-                    oru: 'none',
-                    datasource: window.objDataFilter.state.filter.datasource,
-                    subtype: window.objDataFilter.state.filter.subtype
-                }
-            });
-        } else {
-            window.objPageState.updatepagestate({
-                view: ((typeof forceview === 'undefined') ? 'detail' : forceview),
-                filter: {
-                    oru: idCountry,
-                    datasource: window.objDataFilter.state.filter.datasource,
-                    subtype: window.objDataFilter.state.filter.subtype
-                }
-            });
+    if (window.objPageState.state.filter.oru !== idCountry && containsClass(elRegion, "no-data") === false) {
+        var newView = 'detail';
+        var newOru = idCountry;
+        if (typeof forceview === 'string' && forceview === 'worldmap') {
+            newView = 'worldmap';
+            newOru = 'none';
         }
-
-        // objMap.detailspanel(idCountry);
+        window.objPageState.updatepagestate({
+            view: newView,
+            filter: {
+                oru: newOru,
+                datasource: window.objDataFilter.state.filter.datasource,
+                subtype: window.objDataFilter.state.filter.subtype
+            }
+        });
     } else {
-
-        // debugger;
-        // getEl('messagelist').innerHTML = 'No data according to current sales data.';
-        // window.objLogin.showmessages();
+        console.log('click discarded because the details panel is already open')
     }
+
 }
 
 function setNumberSeperators(str) {
@@ -707,5 +695,5 @@ function css(el, styles) {
         if (typeof property === 'string') {
             el.style[property] = styles[property];
         }
-    }  
+    }
 }
