@@ -5,11 +5,15 @@
 
 
 body {
-    overflow: hidden;
   font-family: CentraleSans;
   font-size: 100%;
   margin: 0;
   background-color: #7CC9C5;
+
+  &.inframe {
+    padding-left: 35px;
+    padding-right: 45px;
+  }
 }
 
 #title_bar,
@@ -24,7 +28,7 @@ body {
 
 #app_panel {
 	#app_wrapper {
-        padding: 0 10px;
+
 		.map-tab_panels {
 			display: block;
 			top: 0%;
@@ -139,11 +143,12 @@ body {
         }
 
 		#bottom_panel {
-			display: block;
+			display: none;
 			bottom: 0;
             width: 100%;
             position: relative;
             @media #{$medium-up} {
+                display: block;
                 top: 10px;
     			height: 275px;
             }

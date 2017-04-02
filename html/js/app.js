@@ -10,7 +10,7 @@ var app = {
         ie: !!window.MSStream,
         webbrowser: ((location.href.indexOf('http') > -1)),
         initialmapview: true,
-        inframe: (top === self)
+        inframe: (top !== self)
     },
     vars: {
         basehtml: null
@@ -354,6 +354,9 @@ var app = {
 
         // Set the class of the body element to refect the site type
         self.setmainwrapperclass();
+
+        // Set the class of the body element if we are running in an iframe
+        if (app.state.inframe) window.toggleClass(document.body, 'inframe', true);
 
         /*
         This is where it all starts...
@@ -944,7 +947,9 @@ window.onresize = function () {
             // // On the public version of the application, stretch the worldmap to the maximum size of the window
             // if (window.isPublicSite()) window.objMap.maximizeworldmap(window.objMap.el.rootanimate);
 
-            window.objRegionInfo.hide();
+            // window.objRegionInfo.hide();
+
+
         }
     } catch (e) {
         //

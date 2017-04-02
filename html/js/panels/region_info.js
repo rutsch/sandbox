@@ -34,12 +34,13 @@ var objRegionInfo = {
 
         // debugger;
 
-        if (window.objPageState.mobile === true) {
+        if (window.app.state.mobile === true) {
             // Show the mobile version of the region info panel
             self.removeMobileRegionInfos();
 
             // Copy region info html to correct LI
             var el = window.Sizzle('[data-target=' + window.objPageState.state.filter.oru + ']')[0];
+            // debugger;
 
             el.className = 'mapselector selected';
             el.innerHTML = el.innerHTML + window.getEl(window.objDataFilter.state.filter.datasource).outerHTML;

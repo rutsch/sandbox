@@ -577,11 +577,13 @@
               border: 0; }
 
 body {
-  overflow: hidden;
   font-family: CentraleSans;
   font-size: 100%;
   margin: 0;
   background-color: #7CC9C5; }
+  body.inframe {
+    padding-left: 35px;
+    padding-right: 45px; }
 
 #title_bar,
 #menu_bar,
@@ -591,98 +593,103 @@ body {
 [id*='_panel']:not(#app_panel) {
   display: none; }
 
-#app_panel #app_wrapper {
-  padding: 0 10px; }
-  #app_panel #app_wrapper .map-tab_panels {
-    display: block;
-    top: 0%;
-    width: 100%; }
-  #app_panel #app_wrapper #oru_filter_container {
-    display: block;
-    top: 10%;
-    width: 100%; }
-    #app_panel #app_wrapper #oru_filter_container select {
-      padding: .5em 1em;
-      width: 150px; }
-  #app_panel #app_wrapper #map {
-    top: 18%;
-    height: 400px;
-    width: 100%;
-    padding: 20px 0;
-    display: none; }
-    @media only screen and (min-width: 769px) {
-      #app_panel #app_wrapper #map {
-        height: 440px;
-        width: 100%;
-        display: block;
-        opacity: 1; } }
-    #app_panel #app_wrapper #map #main_wrapper {
-      height: 440px; }
-      #app_panel #app_wrapper #map #main_wrapper #holder_1000 {
-        height: 440px;
-        text-align: center; }
-        #app_panel #app_wrapper #map #main_wrapper #holder_1000 svg {
-          margin: 0 auto; }
-          #app_panel #app_wrapper #map #main_wrapper #holder_1000 svg * {
-            fill: #7CC9C5;
-            transition: fill .5s ease;
-            cursor: pointer; }
-            #app_panel #app_wrapper #map #main_wrapper #holder_1000 svg *.no-data {
-              cursor: default !important; }
-    #app_panel #app_wrapper #map .active:not(#world) * {
-      fill: #E2EA6D !important; }
-  #app_panel #app_wrapper #regions ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 50px 0; }
-    #app_panel #app_wrapper #regions ul li {
-      font-size: 21px;
-      padding: 10px 0;
-      position: relative; }
-      #app_panel #app_wrapper #regions ul li:after {
-        border-style: solid;
-        border-width: .05em .05em 0 0;
-        content: "";
-        display: inline-block;
-        height: .50em;
-        margin-left: 25px;
-        right: 10px;
-        position: absolute;
-        top: 15px;
-        -webkit-transform: rotate(135deg);
-        -ms-transform: rotate(135deg);
-        transform: rotate(135deg);
-        vertical-align: top;
-        width: .50em; }
-      #app_panel #app_wrapper #regions ul li.mapselector {
-        cursor: pointer; }
-      #app_panel #app_wrapper #regions ul li .region_info_wrapper {
-        display: block !important;
-        opacity: 1;
-        position: relative;
-        cursor: default; }
-    #app_panel #app_wrapper #regions ul .mapselector.selected {
-      color: #E1E96D; }
-      #app_panel #app_wrapper #regions ul .mapselector.selected:after {
-        transform: rotate(-45deg); }
-      #app_panel #app_wrapper #regions ul .mapselector.selected *:not(.lives_improved_percentage) {
-        font-size: 14px; }
+#app_panel #app_wrapper .map-tab_panels {
+  display: block;
+  top: 0%;
+  width: 100%; }
+
+#app_panel #app_wrapper #oru_filter_container {
+  display: block;
+  top: 10%;
+  width: 100%; }
+  #app_panel #app_wrapper #oru_filter_container select {
+    padding: .5em 1em;
+    width: 150px; }
+
+#app_panel #app_wrapper #map {
+  top: 18%;
+  height: 400px;
+  width: 100%;
+  padding: 20px 0;
+  display: none; }
   @media only screen and (min-width: 769px) {
-    #app_panel #app_wrapper #regions {
-      display: none; } }
-  #app_panel #app_wrapper #bottom_panel {
-    display: block;
-    bottom: 0;
-    width: 100%;
+    #app_panel #app_wrapper #map {
+      height: 440px;
+      width: 100%;
+      display: block;
+      opacity: 1; } }
+  #app_panel #app_wrapper #map #main_wrapper {
+    height: 440px; }
+    #app_panel #app_wrapper #map #main_wrapper #holder_1000 {
+      height: 440px;
+      text-align: center; }
+      #app_panel #app_wrapper #map #main_wrapper #holder_1000 svg {
+        margin: 0 auto; }
+        #app_panel #app_wrapper #map #main_wrapper #holder_1000 svg * {
+          fill: #7CC9C5;
+          transition: fill .5s ease;
+          cursor: pointer; }
+          #app_panel #app_wrapper #map #main_wrapper #holder_1000 svg *.no-data {
+            cursor: default !important; }
+  #app_panel #app_wrapper #map .active:not(#world) * {
+    fill: #E2EA6D !important; }
+
+#app_panel #app_wrapper #regions ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 50px 0; }
+  #app_panel #app_wrapper #regions ul li {
+    font-size: 21px;
+    padding: 10px 0;
     position: relative; }
-    @media only screen and (min-width: 769px) {
-      #app_panel #app_wrapper #bottom_panel {
-        top: 10px;
-        height: 275px; } }
-  #app_panel #app_wrapper #slider_indicator,
-  #app_panel #app_wrapper #show_simulation,
-  #app_panel #app_wrapper #show_current {
-    display: none; }
+    #app_panel #app_wrapper #regions ul li:after {
+      border-style: solid;
+      border-width: .05em .05em 0 0;
+      content: "";
+      display: inline-block;
+      height: .50em;
+      margin-left: 25px;
+      right: 10px;
+      position: absolute;
+      top: 15px;
+      -webkit-transform: rotate(135deg);
+      -ms-transform: rotate(135deg);
+      transform: rotate(135deg);
+      vertical-align: top;
+      width: .50em; }
+    #app_panel #app_wrapper #regions ul li.mapselector {
+      cursor: pointer; }
+    #app_panel #app_wrapper #regions ul li .region_info_wrapper {
+      display: block !important;
+      opacity: 1;
+      position: relative;
+      cursor: default; }
+  #app_panel #app_wrapper #regions ul .mapselector.selected {
+    color: #E1E96D; }
+    #app_panel #app_wrapper #regions ul .mapselector.selected:after {
+      transform: rotate(-45deg); }
+    #app_panel #app_wrapper #regions ul .mapselector.selected *:not(.lives_improved_percentage) {
+      font-size: 14px; }
+
+@media only screen and (min-width: 769px) {
+  #app_panel #app_wrapper #regions {
+    display: none; } }
+
+#app_panel #app_wrapper #bottom_panel {
+  display: none;
+  bottom: 0;
+  width: 100%;
+  position: relative; }
+  @media only screen and (min-width: 769px) {
+    #app_panel #app_wrapper #bottom_panel {
+      display: block;
+      top: 10px;
+      height: 275px; } }
+
+#app_panel #app_wrapper #slider_indicator,
+#app_panel #app_wrapper #show_simulation,
+#app_panel #app_wrapper #show_current {
+  display: none; }
 
 .level1 .active * {
   fill: red !important; }
