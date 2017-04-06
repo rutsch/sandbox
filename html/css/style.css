@@ -614,14 +614,14 @@ body {
   display: none; }
   @media only screen and (min-width: 769px) {
     #app_panel #app_wrapper #map {
-      height: 440px;
+      height: 375px;
       width: 100%;
       display: block;
       opacity: 1; } }
   #app_panel #app_wrapper #map #main_wrapper {
-    height: 440px; }
+    height: 375px; }
     #app_panel #app_wrapper #map #main_wrapper #holder_1000 {
-      height: 440px;
+      height: 375px;
       text-align: center; }
       #app_panel #app_wrapper #map #main_wrapper #holder_1000 svg {
         margin: 0 auto; }
