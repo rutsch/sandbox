@@ -9,7 +9,7 @@ var pageVars = {
 }
 
 // Grab the version from the parent window if possbile
-if (top !== self) {
+if (top !== self && location.href.indexOf('dev.html') === -1) {
     pageVars.version = (top.pageVars.version) ? top.pageVars.version : pageVars.version;
 }
 
