@@ -507,7 +507,7 @@ var objMap = {
             window.initSgvZoomPan(self.el.rootsvg, self.el.rootanimate);
 
             // Resize the map to fit into the window
-            self.resizeworldmap();
+            if (!window.app.state.ipad) self.resizeworldmap();
 
 
 
@@ -517,7 +517,7 @@ var objMap = {
         }
 
         // Move the worldmap to the center of the screen
-        self.moveworldmap(((window.app.state.width - self.el.rootanimate.getBBox().width) / 2), 0);
+        if (!window.app.state.ipad) self.moveworldmap(((window.app.state.width - self.el.rootanimate.getBBox().width) / 2), 0);
 
         // On the public version of the application, stretch the worldmap to the maximum size of the window
         // if (window.isPublicSite() && window.app.isMobile.any() === false) self.maximizeworldmap(self.el.rootanimate);

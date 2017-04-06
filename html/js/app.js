@@ -90,15 +90,15 @@ var app = {
     },
 
     setmainwrapperclass: function () {
-        window.app.el.outerwrapper.className = window.objConfig.sitetype
-            + ' ' + window.objPageState.state.filter.sector
-            + ' view-' + window.objPageState.state.view
-            + ' datasource-' + window.objPageState.state.filter.datasource
-            + ' subtype-' + window.objPageState.state.filter.subtype
-            + ' orulevel-' + window.objPageState.state.filter.orulevel
-            + ' oru-' + window.objPageState.state.filter.oru
-            + ' sector-' + window.objPageState.state.filter.sector
-            + ' mru-' + window.objPageState.state.filter.mru;
+        window.app.el.outerwrapper.className = window.objConfig.sitetype +
+            ' ' + window.objPageState.state.filter.sector +
+            ' view-' + window.objPageState.state.view +
+            ' datasource-' + window.objPageState.state.filter.datasource +
+            ' subtype-' + window.objPageState.state.filter.subtype +
+            ' orulevel-' + window.objPageState.state.filter.orulevel +
+            ' oru-' + window.objPageState.state.filter.oru +
+            ' sector-' + window.objPageState.state.filter.sector +
+            ' mru-' + window.objPageState.state.filter.mru;
     },
 
     // Retrieves oru and mru metadata structures
@@ -229,8 +229,9 @@ var app = {
     },
     getdimensions: function () {
         var self = this;
-        self.state.width = document.body.clientWidth;
-        self.state.height = document.documentElement.clientHeight - (document.documentElement.clientHeight * .15) - 250;
+        self.state.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        self.state.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        // document.documentElement.clientHeight - (document.documentElement.clientHeight * .15) - 250;
         if (self.state.width > self.state.height) {
             self.state.orientation = 'landscape';
         } else {
@@ -796,7 +797,7 @@ var objPageState = {
             // Reload all the data
             if (objPageStateNew.view === 'detail') {
                 app.start(true);
-            } else {        
+            } else {
                 app.start();
             }
         }
@@ -939,10 +940,10 @@ window.onresize = function () {
     try {
         if (!app.isMobile.any()) {
             // Rework the dimensions of the map based on the new dimensions of the window
-            window.objMap.resizeworldmap();
+            if (!app.state.ipad) window.objMap.resizeworldmap();
 
             // Center the worldmap
-            window.objMap.centerworldmap(window.objMap.el.rootanimate);
+            if (!app.state.ipad) window.objMap.centerworldmap(window.objMap.el.rootanimate);
 
             // // On the public version of the application, stretch the worldmap to the maximum size of the window
             // if (window.isPublicSite()) window.objMap.maximizeworldmap(window.objMap.el.rootanimate);
