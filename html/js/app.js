@@ -682,7 +682,7 @@ var objPageState = {
             window.objDataFilter.renderdatasubtypefilters();
 
             // Update the UI so that the correct panels get the selected state
-            if (bolFilterDataSubTypeChanged && objPageStateNew.filter.subtype !== 'all') {
+            if (objPageStateNew.filter.subtype !== 'all') {
                 // Update the subtype
                 window.objDataFilter.subtypechanged(objPageStateNew.filter.datasource, objPageStateNew.filter.subtype)
             } else {
@@ -944,12 +944,6 @@ window.onresize = function () {
 
             // Center the worldmap
             if (!app.state.ipad) window.objMap.centerworldmap(window.objMap.el.rootanimate);
-
-            // // On the public version of the application, stretch the worldmap to the maximum size of the window
-            // if (window.isPublicSite()) window.objMap.maximizeworldmap(window.objMap.el.rootanimate);
-
-            // window.objRegionInfo.hide();
-
 
         }
     } catch (e) {
