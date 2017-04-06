@@ -766,7 +766,7 @@ var objMap = {
 
         var p = window.objTouchVars.elsvg.createSVGPoint();
         p.x = window.app.state.width / 2;
-        p.y = window.app.state.height / 2; // Needs to be improved
+        p.y = (window.app.state.height / 2) - 125; // Needs to be improved
 
         // Use the zoom functionality from the SVG library to execute the zoom on the map
         window.handleZoom(p, ((type === 'in') ? (currentZoom + self.vars.zoomdelta) : (currentZoom - self.vars.zoomdelta)));
