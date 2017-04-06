@@ -431,7 +431,7 @@ function getEventPoint(evt) {
         p.x = evt.gesture.center.pageX - objTouchVars.svgx;
 
         // Hack to zoom in center - seems to be solved in ios 7
-        if (window.app.state.ios && !window.app.state.ipad && !window.app.state.ios7) {
+        if (window.app.state.ios && !window.app.state.ipad) {
             p.x = p.x - window.app.state.width / 2;
         }
         p.y = evt.gesture.center.pageY - objTouchVars.svgy;
