@@ -473,48 +473,41 @@ var objMap = {
         self.state.rootanimateattributevalues = self.retrievesvgelementobject(self.el.rootanimate);
 
         // Apply zoom and pan functionality to the svg drawing
-        var bolUseHomeGrown = true;
-        if (bolUseHomeGrown) {
-            // Initiate the new version of the zoom pan library
-            window.objTouchSettings.debug = false;
-            window.objTouchSettings.debugtointerface = false;
-            window.objTouchSettings.debugtoconsole = true;
-            window.objZoomPanSettings.mobile = window.app.state.mobile;
 
-            window.objZoomPanSettings.clickcallback = function (event) {
-                // event.stopPropagation();
-                // debugger;
-                // console.log('in callback');
-                // console.log(event);
+        // Initiate the new version of the zoom pan library
+        window.objTouchSettings.debug = false;
+        window.objTouchSettings.debugtointerface = false;
+        window.objTouchSettings.debugtoconsole = true;
+        window.objZoomPanSettings.mobile = window.app.state.mobileortablet;
 
-                var elClicked = event.srcElement;
-                if (typeof (elClicked) === "undefined") {
-                    elClicked = event.originalTarget;
-                }
-                var strElementName = elClicked.nodeName;
-                var strElementId = (elClicked.id) ? elClicked.id : '';
-                var elParent = elClicked.parentNode;
-                var strParentElementName = elParent.nodeName;
-                var strParentElementId = (elParent.id) ? elParent.id : '';
-                if (strElementId === '') strElementId = strParentElementId;
+        window.objZoomPanSettings.clickcallback = function (event) {
+            // event.stopPropagation();
+            // debugger;
+            // console.log('in callback');
+            // console.log(event);
 
-                // console.log('- strElementName: ' + strElementName + ' strElementId: ' + strElementId + ' strParentElementName:' + strParentElementName + ' strParentElementId: ' + strParentElementId);
-
-                if ((strElementName === 'path' || strElementName === 'g' || strElementName === 'polygon')) window.countryClicked(strElementId);
+            var elClicked = event.srcElement;
+            if (typeof (elClicked) === "undefined") {
+                elClicked = event.originalTarget;
             }
+            var strElementName = elClicked.nodeName;
+            var strElementId = (elClicked.id) ? elClicked.id : '';
+            var elParent = elClicked.parentNode;
+            var strParentElementName = elParent.nodeName;
+            var strParentElementId = (elParent.id) ? elParent.id : '';
+            if (strElementId === '') strElementId = strParentElementId;
 
-            // Initiate the map zoom and pan library
-            window.initSgvZoomPan(self.el.rootsvg, self.el.rootanimate);
+            // console.log('- strElementName: ' + strElementName + ' strElementId: ' + strElementId + ' strParentElementName:' + strParentElementName + ' strParentElementId: ' + strParentElementId);
 
-            // Resize the map to fit into the window
-            self.resizeworldmap();
-
-
-
-        } else {
-
-            window.initZoomPan(self.el.rootsvg);
+            if ((strElementName === 'path' || strElementName === 'g' || strElementName === 'polygon')) window.countryClicked(strElementId);
         }
+
+        // Initiate the map zoom and pan library
+        window.initSgvZoomPan(self.el.rootsvg, self.el.rootanimate);
+
+        // Resize the map to fit into the window
+        self.resizeworldmap();
+
 
         // Move the worldmap to the center of the screen
         self.moveworldmap(((self.el.elsvgholder.clientWidth - self.el.rootanimate.getBBox().width) / 2), 0);

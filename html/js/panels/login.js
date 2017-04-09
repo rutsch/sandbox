@@ -194,7 +194,7 @@ var objLogin = {
         var strBaseMessage = '';
 
         // On the app we show a new release
-        if (window.app.state.mobile) {
+        if (window.app.state.mobileortablet) {
             strBaseMessage = '<b>New release available</b><p>A new version (' + ((window.app.state.ios) ? newConfig.iosid : newConfig.androidid) + ') of the Lives Improved app is available.</p>';
             strBaseMessage += '<p>Please visit the <span class="mimiclink" onclick="loadUrlInBrowser(\'https://www.livesimproved.philips.com/download\', true)">Lives Improved website</span> to download and install this new version.</p>';
             strBaseMessage += '<p>Details:</p>';

@@ -162,7 +162,7 @@ function initSgvZoomPan(elSvgRoot, elSvgNodeToAnimate) {
     objTouchVars.svgx = arrPos[0];
     objTouchVars.svgy = arrPos[1];
 
-    objTouchSettings.dragsampling = ((window.app.state.mobile) ? 20 : 1);
+    objTouchSettings.dragsampling = ((window.app.state.mobileortablet) ? 20 : 1);
 
     // Setup the handlers
     window.setupHandlers(elSvgRoot);
@@ -175,7 +175,9 @@ function setupHandlers() {
 
     if (objZoomPanSettings.mobile) {
         if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
-            //if(window.console) { console.log('setting up for mobile'); }
+            if (window.console) {
+                console.log('setting up for mobile');
+            }
         }
 
         // Finetune hammer object
@@ -235,7 +237,9 @@ function setupHandlersMobile() {
 
     window.app.el.hammersvg.on("dragstart", function (ev) {
         if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
-            //if(window.console) { console.log(ev); }
+            if (window.console) {
+                console.log(ev);
+            }
         }
 
         objTouchVars.eventcount++;
@@ -252,7 +256,9 @@ function setupHandlersMobile() {
 
     window.app.el.hammersvg.on("drag", function (ev) {
         if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
-            // if(window.console) { console.log(ev); }
+            if (window.console) {
+                console.log(ev);
+            }
         }
 
         objTouchVars.eventcount++;
@@ -658,7 +664,7 @@ function handleZoom(evt, z) {
 
     // Note: evt can be a mouse scroll event or a pre defined SVGPoint object
     var p = evt;
-    if(typeof evt.deltaX !== 'undefined')p = getEventPoint(evt);
+    if (typeof evt.deltaX !== 'undefined') p = getEventPoint(evt);
 
     p = p.matrixTransform(g.getCTM().inverse());
 
@@ -768,6 +774,7 @@ function handleDrag(evt) {
     } else if (objTouchVars.state === 'drag' && objZoomPanSettings.drag) {
         // Drag mode
         var p = getEventPoint(evt).matrixTransform(g.getCTM().inverse());
+        
         // console.log('drag');
 
         setCTM(objTouchVars.eldragtarget, objTouchVars.elsvg.createSVGMatrix().translate(p.x - objTouchVars.svgpointorigin.x, p.y - objTouchVars.svgpointorigin.y).multiply(g.getCTM().inverse()).multiply(objTouchVars.eldragtarget.getCTM()));
