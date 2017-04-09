@@ -507,7 +507,7 @@ var objMap = {
             window.initSgvZoomPan(self.el.rootsvg, self.el.rootanimate);
 
             // Resize the map to fit into the window
-            if (!window.app.state.ipad) self.resizeworldmap();
+            self.resizeworldmap();
 
 
 
@@ -517,7 +517,7 @@ var objMap = {
         }
 
         // Move the worldmap to the center of the screen
-        if (!window.app.state.ipad) self.moveworldmap(((window.app.state.width - self.el.rootanimate.getBBox().width) / 2), 0);
+        self.moveworldmap(((self.el.elsvgholder.clientWidth - self.el.rootanimate.getBBox().width) / 2), 0);
 
         // On the public version of the application, stretch the worldmap to the maximum size of the window
         // if (window.isPublicSite() && window.app.isMobile.any() === false) self.maximizeworldmap(self.el.rootanimate);
@@ -631,11 +631,12 @@ var objMap = {
 
         if (typeof (self.el.rootsvg) !== "undefined") {
             var mapDivHeight = self.el.elsvgholder.clientHeight;
-            self.el.rootsvg.setAttributeNS(null, 'viewBox', '0 0 ' + window.app.state.width + ' ' + mapDivHeight);
-            self.el.rootsvg.setAttributeNS(null, 'enable-background', 'new 0 0 ' + window.app.state.width + ' ' + mapDivHeight);
+            var mapDivWidth = self.el.elsvgholder.clientWidth;
+            self.el.rootsvg.setAttributeNS(null, 'viewBox', '0 0 ' + mapDivWidth + ' ' + mapDivHeight);
+            self.el.rootsvg.setAttributeNS(null, 'enable-background', 'new 0 0 ' + mapDivWidth + ' ' + mapDivHeight);
             // self.el.elsvgholder.style.width = window.app.state.width + 'px';
             // self.el.elsvgholder.style.height = window.app.state.height + 'px';
-            self.el.rootsvg.setAttributeNS(null, 'width', window.app.state.width);
+            self.el.rootsvg.setAttributeNS(null, 'width', mapDivWidth);
             self.el.rootsvg.setAttributeNS(null, 'height', mapDivHeight); // window.app.state.height);
         }
     },
@@ -710,7 +711,7 @@ var objMap = {
         self.el.rootanimate.setAttributeNS(null, 'transform', '');
 
         // Move the worldmap to the center of the screen
-        self.moveworldmap(((window.app.state.width - self.el.rootanimate.getBBox().width) / 2), 0);
+        self.moveworldmap(((self.el.elsvgholder.clientWidth - self.el.rootanimate.getBBox().width) / 2), 0);
 
         // Store the state of the map in a new object
         self.state.rootanimateattributevalues = self.retrievesvgelementobject(self.el.rootanimate);

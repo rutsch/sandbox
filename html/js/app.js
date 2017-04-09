@@ -940,10 +940,10 @@ window.onresize = function () {
     try {
         if (!app.isMobile.any()) {
             // Rework the dimensions of the map based on the new dimensions of the window
-            if (!app.state.ipad) window.objMap.resizeworldmap();
+            window.objMap.resizeworldmap();
 
             // Center the worldmap
-            if (!app.state.ipad) window.objMap.centerworldmap(window.objMap.el.rootanimate);
+            window.objMap.centerworldmap(window.objMap.el.rootanimate);
 
         }
     } catch (e) {
