@@ -540,7 +540,13 @@ function countryClicked(idCountry, mobile, forceview) {
         window.objPageState.mobile = false;
     }
 
-    if (window.objPageState.state.filter.oru !== idCountry && containsClass(elRegion, "no-data") === false) {
+    // console.log('++++');
+    // console.log('- mobile: ' + mobile);
+    // console.log('- containsClass(elRegion, "no-data"): ' + containsClass(elRegion, "no-data"));
+    // console.log('- window.app.state.mobile: ' + window.app.state.mobile);
+    // console.log('++++');
+
+    if (window.objPageState.state.filter.oru !== idCountry && ((containsClass(elRegion, "no-data") === false && window.objPageState.mobile === false) || window.objPageState.mobile)) {
         var newView = 'detail';
         var newOru = idCountry;
         if (typeof forceview === 'string' && forceview === 'worldmap') {

@@ -10,7 +10,8 @@ var objMap = {
     vars: {
         showdetailview: false,
         regionidtoshow: null, // Contains the region id of the details panel to show
-        zoomdelta: 0.3
+        zoomdelta: 0.3,
+        nodataids: []
     },
     data: null,
     maps: {
@@ -212,6 +213,7 @@ var objMap = {
             sustainability: listSustain
         };
     },
+
     postprocessworldmapdata: function (data) {
         var self = this;
 
@@ -219,6 +221,9 @@ var objMap = {
         var setColor = true;
         var noDataColor = window.rgbFromHex('#cae3e9');
         var combinedDataColor = window.rgbFromHex('#46b0a8');
+
+        // Reset the array of region ID's that contain no data
+        self.vars.nodataids.length = 0;
 
         // console.log('----------------');
         // console.log('In postprocessworldmapdata');
@@ -353,7 +358,7 @@ var objMap = {
         // Settings for the coloring
         var minimumPercentage = 0; // Anything below this percentage will get the 'low' color
         var factor = (dataValueMax === dataValueMin) ? 1 : ((100 - minimumPercentage) / (dataValueMax - dataValueMin));
-        console.log('- factor: ' + factor);
+        // console.log('- factor: ' + factor);
 
         // Calculate rgb colors if needed
         if (!window.objConfig.colors[window.objPageState.state.filter.sector].hasOwnProperty('rgb')) {
@@ -451,6 +456,9 @@ var objMap = {
                             window.toggleClass(paths[y], 'no-data', noData);
                         }
                     }
+
+                    // Fill the nodata array with the ID of this region
+                    if (noData) self.vars.nodataids.push(regionId);
                 }
 
             } else {
@@ -539,6 +547,9 @@ var objMap = {
 
         // Show or hide the legend
         window.objRegionInfo.showhidelegend(dataValueMax, dataValueMin);
+
+        // Render a country list to use in the mobile view of the map
+        window.objOruFilter.rendermobilegeographylist();
     },
 
     /*
@@ -573,9 +584,6 @@ var objMap = {
                 // Inject the SVG map into the DOM
                 self.el.elsvgholder.innerHTML = '';
                 self.el.elsvgholder.innerHTML = strSvg;
-
-                // Render a country list to use in the mobile view of the map
-                window.objOruFilter.rendermobilegeographylist();
 
                 // Get worldmap livesimproved data
                 self.getworldmapdata();
@@ -806,7 +814,7 @@ var objMap = {
         if (elRegion) {
 
             var className = elRegion.getAttribute('class');
-            if (typeof className === 'string' && className === 'no-data') {
+            if (typeof className === 'string' && className === 'no-data' && window.app.state.mobile === false) {
                 // If this region has no data, then update the page state to not select a region at all
                 window.objPageState.updatepagestate({
                     view: 'worldmap',

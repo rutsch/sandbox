@@ -126,6 +126,13 @@ body {
                 }
                 .mapselector {
 
+                    &.no-data{
+                        color: #e0e0e0;
+                        div {
+                            color: #e0e0e0!important;
+                        }
+                    }
+
                     &.selected {
                         color: #E1E96D;
                         &:after {
@@ -135,6 +142,8 @@ body {
                             font-size: 14px;
                         }
                     }
+
+
                 }
             }
             @media #{$medium-up} {

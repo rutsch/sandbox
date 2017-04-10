@@ -34,17 +34,25 @@ var objRegionInfo = {
 
         // debugger;
 
-        if (window.app.state.mobile === true) {
+        if (window.objPageState.mobile === true) {
             // Show the mobile version of the region info panel
-            self.removeMobileRegionInfos();
+            self.removemobileregioninfos();
 
-            // Copy region info html to correct LI
             var el = window.Sizzle('[data-target=' + window.objPageState.state.filter.oru + ']')[0];
             // debugger;
 
-            el.className = 'mapselector selected';
-            el.innerHTML = el.innerHTML + window.getEl(window.objDataFilter.state.filter.datasource).outerHTML;
-            el.getElementsByClassName('region_info_wrapper')[0].removeAttribute('style');
+            if (el.getAttribute('class').indexOf('no-data') > -1) {
+                el.className = 'mapselector no-data selected';
+                el.innerHTML = el.innerHTML + '<div class="no-data-text">' + window.translateFragment('no_data_available') + '</div>';
+            } else {
+                // Copy region info html to correct LI
+                el.className = 'mapselector selected';
+                el.innerHTML = el.innerHTML + window.getEl(window.objDataFilter.state.filter.datasource).outerHTML;
+            }
+
+            if (el.getElementsByClassName('region_info_wrapper').length > 0) el.getElementsByClassName('region_info_wrapper')[0].removeAttribute('style');
+
+
         } else {
             // Show the desktop version of the region info panel
             if (animate) {
@@ -132,7 +140,7 @@ var objRegionInfo = {
         }
 
         if (window.objPageState.mobile) {
-            self.removeMobileRegionInfos();
+            self.removemobileregioninfos();
         }
 
         window.objHeader.hidefavouritebutton();
@@ -270,10 +278,10 @@ var objRegionInfo = {
 
 
 
-    removeMobileRegionInfos: function () {
+    removemobileregioninfos: function () {
         var el = window.Sizzle('[data-target] > div');
         for (var i = 0; i < el.length; i++) {
-            el[i].parentNode.className = 'mapselector';
+            el[i].parentNode.className = 'mapselector' + ((el[i].parentNode.getAttribute('class').indexOf('no-data') > -1) ? ' no-data' : '');
             el[i].parentNode.removeChild(el[i]);
         }
     },

@@ -664,6 +664,10 @@ body {
       opacity: 1;
       position: relative;
       cursor: default; }
+  #app_panel #app_wrapper #regions ul .mapselector.no-data {
+    color: #e0e0e0; }
+    #app_panel #app_wrapper #regions ul .mapselector.no-data div {
+      color: #e0e0e0 !important; }
   #app_panel #app_wrapper #regions ul .mapselector.selected {
     color: #E1E96D; }
     #app_panel #app_wrapper #regions ul .mapselector.selected:after {

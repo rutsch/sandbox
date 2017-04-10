@@ -183,7 +183,12 @@ var objOruFilter = {
 
         var list = '<ul class="c-region-list">';
         regions.forEach(function (region) {
-            list += '<li class="mapselector" data-target="' + region.guid + '" onclick="countryClicked(\'' + region.guid + '\', true)">' + window.translateFragment(region.guid) + '</li>';
+            if (window.objMap.vars.nodataids.indexOf(region.guid) === -1) {
+                list += '<li class="mapselector" data-target="' + region.guid + '" onclick="countryClicked(\'' + region.guid + '\', true)">' + window.translateFragment(region.guid) + '</li>';
+            } else {
+                list += '<li class="mapselector no-data" data-target="' + region.guid + '" onclick="countryClicked(\'' + region.guid + '\', true)">' + window.translateFragment(region.guid) + '</li>';
+            }
+            
         });
         list += '</ul>';
         window.getEl('regions').innerHTML = list;
