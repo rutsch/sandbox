@@ -1050,6 +1050,7 @@ var objMap = {
             // Lives improved
             if (objData.l >= 0) {
                 // Always have 4 digits in the display
+                
                 // More than 1000 million
                 if (objData.l >= 1000000000) {
                     // console.log('-2');
@@ -1070,6 +1071,7 @@ var objMap = {
                     // console.log('0');
                     objData.roundedl = Math.round((objData.l / 1000000) * 100) / 100;
                     intDecimals = 2;
+                    if (window.objPageState.state.filter.orulevel === '3') intDecimals = 1;
                 }
 
                 // 0.0001 - 9.99 million
