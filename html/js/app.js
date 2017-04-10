@@ -107,7 +107,8 @@ var app = {
             ' orulevel-' + window.objPageState.state.filter.orulevel +
             ' oru-' + window.objPageState.state.filter.oru +
             ' sector-' + window.objPageState.state.filter.sector +
-            ' mru-' + window.objPageState.state.filter.mru;
+            ' mru-' + window.objPageState.state.filter.mru +
+            ' nrdatasources-' + window.objConfig.datasources.length;
     },
 
     // Retrieves oru and mru metadata structures
