@@ -66,25 +66,30 @@ var objDataFilter = {
     // Render the datatype sub filter elements underneath the tabs    
     renderdatasubtypefilters: function () {
         var self = this;
-        var htmlSustain = '<div class="bg"></div><ul><li class="datasubtype" data-subtype="all" onclick="objDataFilter.changesubtype(\'sustainability\', \'all\')">' + window.translateFragment('all_data') + '</li>';
-        window.objMap.datatypes.sustainability.forEach(function (datatype) {
-            if (datatype.indexOf('value_') > -1) {
-                htmlSustain += '<li class="datasubtype" data-subtype="' + datatype + '" onclick="objDataFilter.changesubtype(\'sustainability\', \'' + datatype + '\')">' + window.translateFragment(self.mapdatatypekeys(datatype)).replace(/^(.*?)(\s*\(.*\))$/g, '$1') + '</li>';
-            }
-        });
-        htmlSustain += '</ul>';
-        window.Sizzle('li[data-panel=sustainability] .datatype-filter')[0].innerHTML = htmlSustain;
+
+        if (window.objConfig.datasources.indexOf('sustainability') > -1) {
+            var htmlSustain = '<div class="bg"></div><ul><li class="datasubtype" data-subtype="all" onclick="objDataFilter.changesubtype(\'sustainability\', \'all\')">' + window.translateFragment('all_data') + '</li>';
+            window.objMap.datatypes.sustainability.forEach(function (datatype) {
+                if (datatype.indexOf('value_') > -1) {
+                    htmlSustain += '<li class="datasubtype" data-subtype="' + datatype + '" onclick="objDataFilter.changesubtype(\'sustainability\', \'' + datatype + '\')">' + window.translateFragment(self.mapdatatypekeys(datatype)).replace(/^(.*?)(\s*\(.*\))$/g, '$1') + '</li>';
+                }
+            });
+            htmlSustain += '</ul>';
+            window.Sizzle('li[data-panel=sustainability] .datatype-filter')[0].innerHTML = htmlSustain;
+        }
+
 
         // console.log(htmlSustain);
-
-        var htmlGlobal = '<div class="bg"></div><ul><li class="datasubtype" data-subtype="all" onclick="objDataFilter.changesubtype(\'global_presence\', \'all\')">' + window.translateFragment('all_data') + '</li>';
-        window.objMap.datatypes.global_presence.forEach(function (datatype) {
-            if (datatype.indexOf('value_') > -1) {
-                htmlGlobal += '<li class="datasubtype" data-subtype="' + datatype + '" onclick="objDataFilter.changesubtype(\'global_presence\', \'' + datatype + '\')">' + window.translateFragment(self.mapdatatypekeys(datatype)).replace(/^(.*?)(\s*\(.*\))$/g, '$1') + '</li>';
-            }
-        });
-        htmlGlobal += '</ul>';
-        window.Sizzle('li[data-panel=global_presence] .datatype-filter')[0].innerHTML = htmlGlobal;
+        if (window.objConfig.datasources.indexOf('global_presence') > -1) {
+            var htmlGlobal = '<div class="bg"></div><ul><li class="datasubtype" data-subtype="all" onclick="objDataFilter.changesubtype(\'global_presence\', \'all\')">' + window.translateFragment('all_data') + '</li>';
+            window.objMap.datatypes.global_presence.forEach(function (datatype) {
+                if (datatype.indexOf('value_') > -1) {
+                    htmlGlobal += '<li class="datasubtype" data-subtype="' + datatype + '" onclick="objDataFilter.changesubtype(\'global_presence\', \'' + datatype + '\')">' + window.translateFragment(self.mapdatatypekeys(datatype)).replace(/^(.*?)(\s*\(.*\))$/g, '$1') + '</li>';
+                }
+            });
+            htmlGlobal += '</ul>';
+            window.Sizzle('li[data-panel=global_presence] .datatype-filter')[0].innerHTML = htmlGlobal;
+        }
 
         // console.log(htmlGlobal);
     },
@@ -106,7 +111,7 @@ var objDataFilter = {
 
     },
 
-    
+
 
     /*
     Click handlers in tab menu

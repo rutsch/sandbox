@@ -71,12 +71,13 @@ var objConfig = {
     fragments: {},
     localstorageversion: 20170409,
 
-    // TODO: This needs to be processed later so that the datasources for this version of the application are defined
+    // Datasources for the map can be defined by adding a datasources= querystring to the source HTML of the application
     datasources: [
-        'livesimproved',
+        'lives_improved',
         'sustainability',
         'global_presence'
     ],
+
     hideinactivecountries: true,
     snapshots: null,
     currentsnapshotid: 'nothing',
@@ -166,6 +167,12 @@ var objConfig = {
         if (self.sitetype.indexOf('public') > -1) {
             calculateUrls('');
             self.urls.dynamicresourceurl = '/tools/api.aspx';
+        }
+    
+        // Test if an explicit set of datasources has been specified in the questring
+        var dataSourcesRaw = location.href.replace(/^.*(\?|&)datasources=((\w|\d|,|\-)+).*$/, '$2');
+        if (dataSourcesRaw !== location.href) {
+            self.datasources = dataSourcesRaw.split(',');
         }
 
     },

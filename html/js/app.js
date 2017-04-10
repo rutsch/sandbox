@@ -122,7 +122,6 @@ var app = {
         window.psv('GET', window.objConfig.urls.dynamicresourceurl, objData, app.retrievemetadatahandler);
     },
     retrievemetadatahandler: function (err, data) {
-        var self = this;
 
         if (err || window.hasProperty(data, 'error')) {
             if (window.hasProperty(data, 'error')) {
@@ -146,16 +145,26 @@ var app = {
                 // Load the retrieved data into the MRU (product) object
                 window.objMruFilter.preparehtml(data.result.productdata);
 
+                /*
+                Start loading the sustainability and global_precense data (we do this once and retain them in memory)
+                */
 
+                if (window.objConfig.datasources.indexOf('sustainability') > -1) {
+                    app.retrievesustainabilitydata();
+                } else if (window.objConfig.datasources.indexOf('global_presence') > -1) {
+                    app.retrieveglobalpresencedata();
+                } else {
+                    // Render the initial view of the app
+                    app.processinitialview(true);
+                }
 
                 // Load the Global Presence and Sustainability data sets
-                app.retrievesustainabilitydata();
+
             }
 
         }
     },
     retrievesustainabilitydata: function () {
-        var self = this;
 
         var objData = {
             _type: 'json',
@@ -175,14 +184,18 @@ var app = {
                 // Store data in variable for later use
                 window.objData['sustainability'] = data;
 
-                // Load the global presence data
-                self.retrieveglobalpresencedata();
+                if (window.objConfig.datasources.indexOf('global_presence') > -1) {
+                    // Load the global presence data
+                    app.retrieveglobalpresencedata();
+                } else {
+                    // Render the initial view of the app
+                    app.processinitialview(true);
+                }
             }
         });
 
     },
     retrieveglobalpresencedata: function () {
-        var self = this;
 
         var objData = {
             _type: 'json',
@@ -240,7 +253,9 @@ var app = {
         var self = this;
         self.state.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
         self.state.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
         // document.documentElement.clientHeight - (document.documentElement.clientHeight * .15) - 250;
+
         if (self.state.width > self.state.height) {
             self.state.orientation = 'landscape';
         } else {
@@ -256,6 +271,7 @@ var app = {
         // Set or process the information supplied in the hash
         if (location.hash.length > 0) {
             var objPageStateNew = window.objPageState.hash2object(location.hash);
+
             // console.log(objPageStateNew);
 
             if (objPageStateNew.hasOwnProperty("error")) {
@@ -402,27 +418,54 @@ var app = {
                     }
 
                     // console.log(objConfig.fragments);
+                    window.app.reworkbasehtml();
 
-                    // Start translating stuff
-
-                    // Translate fragments in the HTML and inject it back into the UI
-                    window.app.vars.basehtml = window.app.vars.basehtml.replace(/\[([a-zA-Z\d\s_-]*?)\]/g, function replacementHandler(match, contents, offset, s) {
-                        return window.translateFragment(contents);
-                    });
-
-                    // Inject the translated HTML into the DOM of our page
-                    app.el.outerwrapper.innerHTML = window.app.vars.basehtml;
-
-                    // Continue by initiating the onjects of this application
-                    window.app.initobjects();
                 }
             });
         }
 
     },
 
+    reworkbasehtml: function () {
+
+        /*
+        1) Translate placeholders in the HTML with translated text fragments
+        */
+        // Translate fragments in the HTML and inject it back into the UI
+        window.app.vars.basehtml = window.app.vars.basehtml.replace(/\[([a-zA-Z\d\s_-]*?)\]/g, function replacementHandler(match, contents, offset, s) {
+            return window.translateFragment(contents);
+        });
+
+        // Inject the translated HTML into the DOM of our page
+        app.el.outerwrapper.innerHTML = window.app.vars.basehtml;
+
+        /*
+        2) Rework the HTML structure based on the datasources that we need to display in this version of the map
+        */
+
+        // 2a) Remove the tabs from the HTML if we do not need them
+        var arrDataSourceTabs = document.getElementsByClassName('datafilter');
+        var tabIdsToRemove = [];
+        for (var i = 0; i < arrDataSourceTabs.length; i++) {
+            var key = arrDataSourceTabs[i].id.replace(/tab_/, '');
+            if (window.objConfig.datasources.indexOf(key) === -1) {
+                tabIdsToRemove.push(arrDataSourceTabs[i].id);
+            }
+        }
+
+        tabIdsToRemove.forEach(function (id) {
+            document.getElementById(id).parentNode.removeChild(document.getElementById(id));
+        })
+
+        // Continue by initiating the objects of this application
+        window.app.initobjects();
+    },
+
     init: function () {
         var self = this;
+
+        // Dynamically adjust the default page state object based on the datasources that we want to show
+        app.defaultpagestate.filter.datasource = window.objConfig.datasources[0];
 
         // Load the main html content using an ajax call
         self.el.outerwrapper = window.getEl('content_outer_wrapper');
@@ -624,8 +667,6 @@ var objPageState = {
         var bolFilterChangeDetected = false,
             bolFilterOruLevelChanged = false,
             bolFilterOruChanged = false,
-            bolFilterSectorChanged = false,
-            bolFilterMruChanged = false,
             bolFilterDataChanged = false,
             bolFilterDataSubTypeChanged = false,
             bolFromLogin = false;
@@ -638,17 +679,16 @@ var objPageState = {
             bolFilterChangeDetected = true;
         }
         if (self.state.filter.sector !== objPageStateNew.filter.sector) {
-            bolFilterSectorChanged = true;
             bolFilterChangeDetected = true;
         }
         if (self.state.filter.mru !== objPageStateNew.filter.mru) {
-            bolFilterMruChanged = true;
             bolFilterChangeDetected = true;
         }
 
         if (self.state.filter.datasource !== objPageStateNew.filter.datasource) {
             bolFilterDataChanged = true;
             bolFilterChangeDetected = true;
+
             // Update the filter object
             window.objDataFilter.state.filter.datasource = objPageStateNew.filter.datasource;
         }
@@ -656,6 +696,7 @@ var objPageState = {
         if (self.state.filter.subtype !== objPageStateNew.filter.subtype) {
             bolFilterDataSubTypeChanged = true;
             bolFilterChangeDetected = true;
+
             // Update the filter object
             window.objDataFilter.state.filter.subtype = objPageStateNew.filter.subtype;
         }

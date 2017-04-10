@@ -193,13 +193,18 @@ var objMap = {
 
             // Loop through object properties
             // debugger;
-            if (window.objData.sustainability && window.objData.sustainability.snapshotdata) {
+            //if (window.objConfig.datasources.indexOf('sustainability') > -1) {
+            
+            if (window.objData.sustainability && window.objData.sustainability.snapshotdata && window.objConfig.datasources.indexOf('sustainability') > -1) {
                 for (var key in window.objData.sustainability.snapshotdata[regionId]) {
                     if (window.objData.sustainability.snapshotdata[regionId].hasOwnProperty(key)) {
                         // Do stuff
                         listSustain.push(key);
                     }
                 }
+            }
+         
+            if (window.objData['global_presence'] && window.objData['global_presence'].snapshotdata && window.objConfig.datasources.indexOf('global_presence') > -1) {
                 for (var key in window.objData.global_presence.snapshotdata[regionId]) {
                     if (window.objData.global_presence.snapshotdata[regionId].hasOwnProperty(key)) {
                         // Do stuff
@@ -1050,7 +1055,7 @@ var objMap = {
             // Lives improved
             if (objData.l >= 0) {
                 // Always have 4 digits in the display
-                
+
                 // More than 1000 million
                 if (objData.l >= 1000000000) {
                     // console.log('-2');
