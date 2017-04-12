@@ -172,7 +172,8 @@ var app = {
             method: 'getworldmapdata',
             token: window.objLogin.token,
             source: 'sustainability',
-            period: window.objConfig.datatype
+            period: window.objConfig.datatype,
+            pubtype: window.objConfig.pubtype
         }
 
         // showLoadingPanel();
@@ -203,7 +204,8 @@ var app = {
             method: 'getworldmapdata',
             token: window.objLogin.token,
             source: 'global_presence',
-            period: window.objConfig.datatype
+            period: window.objConfig.datatype,
+            pubtype: window.objConfig.pubtype
         }
 
         // showLoadingPanel();

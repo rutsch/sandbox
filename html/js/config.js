@@ -81,6 +81,9 @@ var objConfig = {
     // Datatype - current|future
     datatype: 'current',
 
+    // Publication type - ar|qr - required for resolving future Sustainability and Global Presence data
+    pubtype: 'ar',
+
     hideinactivecountries: true,
     snapshots: null,
     currentsnapshotid: 'nothing',
@@ -180,6 +183,9 @@ var objConfig = {
 
         // Test if we need to adjust the standard data-type definition
         if (location.href.indexOf('dv=future') > -1) self.datatype = 'future';
+
+        // Test if we need to adjust the publication type definition
+        if (location.href.indexOf('pt=qr') > -1) self.pubtype = 'qr';
 
     },
     init: function () {
