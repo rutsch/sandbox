@@ -78,6 +78,9 @@ var objConfig = {
         'global_presence'
     ],
 
+    // Datatype - current|future
+    datatype: 'current',
+
     hideinactivecountries: true,
     snapshots: null,
     currentsnapshotid: 'nothing',
@@ -168,12 +171,15 @@ var objConfig = {
             calculateUrls('');
             self.urls.dynamicresourceurl = '/tools/api.aspx';
         }
-    
+
         // Test if an explicit set of datasources has been specified in the questring
         var dataSourcesRaw = location.href.replace(/^.*(\?|&)datasources=((\w|\d|,|\-)+).*$/, '$2');
         if (dataSourcesRaw !== location.href) {
             self.datasources = dataSourcesRaw.split(',');
         }
+
+        // Test if we need to adjust the standard data-type definition
+        if (location.href.indexOf('dv=future') > -1) self.datatype = 'future';
 
     },
     init: function () {

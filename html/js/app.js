@@ -172,7 +172,7 @@ var app = {
             method: 'getworldmapdata',
             token: window.objLogin.token,
             source: 'sustainability',
-            period: 'future' // TODO: This needs to be dynamic based on the url of the parent window!!!
+            period: window.objConfig.datatype
         }
 
         // showLoadingPanel();
@@ -203,7 +203,7 @@ var app = {
             method: 'getworldmapdata',
             token: window.objLogin.token,
             source: 'global_presence',
-            period: 'future' // TODO: This needs to be dynamic based on the url of the parent window!!!
+            period: window.objConfig.datatype
         }
 
         // showLoadingPanel();
