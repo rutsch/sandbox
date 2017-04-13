@@ -34,7 +34,7 @@ var objRegionInfo = {
 
         // debugger;
 
-        if (window.objPageState.mobile === true) {
+        if (window.app.state.mobile === true) {
             // Show the mobile version of the region info panel
             self.removemobileregioninfos();
 
@@ -52,6 +52,10 @@ var objRegionInfo = {
 
             if (el.getElementsByClassName('region_info_wrapper').length > 0) el.getElementsByClassName('region_info_wrapper')[0].removeAttribute('style');
 
+            // Optionally send information to the parent frame about the height of the current page
+            if (window.app.state.inframe) {
+                window.messageIframeResizeToParent();
+            }
 
         } else {
             // Show the desktop version of the region info panel

@@ -703,3 +703,26 @@ function css(el, styles) {
         }
     }
 }
+
+/**
+ * Sends a message to the parent frame indicating that the iframe in which the wordmap is running needs to be resized
+ * 
+ */
+function messageIframeResizeToParent() {
+    window.setTimeout(function () {
+        window.postMessageToParent({
+            action: 'adjustiframeheight',
+            value: document.getElementsByTagName('body')[0].offsetHeight
+        });
+    }, 100);
+}
+
+/**
+ * Sends a message to the parent frame
+ * 
+ * @param {any} message 
+ */
+function postMessageToParent(message) {
+    // var origin = location.href.replace(/^(http(s){0,1}:\/\/.*?)(\/).*$/, '$1');
+    window.parent.postMessage(((typeof message === 'object') ? JSON.stringify(message) : message), '*');
+}

@@ -211,6 +211,10 @@
 		}
 
 		.lives_improved_icons {
+            @media #{$tiny-only} {
+				display: none;
+			}
+
 			width: 250px;
 			flex-wrap: wrap;
 			align-self: flex-end;

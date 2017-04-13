@@ -339,6 +339,10 @@
       width: 250px;
       flex-wrap: wrap;
       align-self: flex-end; }
+      @media only screen and (max-width: 399px) {
+        .region_info_right .lives_improved_icons,
+        .region_info_wrapper_right .lives_improved_icons {
+          display: none; } }
       .region_info_right .lives_improved_icons img,
       .region_info_wrapper_right .lives_improved_icons img {
         height: 18px;
@@ -583,7 +587,8 @@ body {
   background-color: #7CC9C5; }
   body.inframe {
     padding-left: 35px;
-    padding-right: 45px; }
+    padding-right: 45px;
+    overflow: hidden; }
 
 #title_bar,
 #menu_bar,

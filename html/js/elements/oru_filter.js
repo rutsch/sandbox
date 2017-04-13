@@ -188,10 +188,15 @@ var objOruFilter = {
             } else {
                 list += '<li class="mapselector no-data" data-target="' + region.guid + '" onclick="countryClicked(\'' + region.guid + '\', true)">' + window.translateFragment(region.guid) + '</li>';
             }
-            
+
         });
         list += '</ul>';
         window.getEl('regions').innerHTML = list;
+
+        // Optionally send information to the parent frame about the height of the current page        
+        if (window.app.state.mobile && window.app.state.inframe) {
+            window.messageIframeResizeToParent();
+        }
     },
 
 
@@ -217,11 +222,11 @@ var objOruFilter = {
     init: function (cb) {
         var self = this;
         self.state.selectedoru = window.app.defaultpagestate.filter.orulevel;
-        
+
         self.el.wrapper = window.getEl('oru_filter_container');
         self.el.orulevelselect = window.getEl('oru-select');
 
-        
+
 
         // Process the dataset into arrays for every orulevel
 
