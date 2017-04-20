@@ -249,11 +249,14 @@ var objRegionInfo = {
         var arrDivs = elPanel.getElementsByTagName('div');
         for (var i = 0; i < arrDivs.length; i++) {
             // Hide the rows that contain no data
-            if (window.objMap.datatypes[dataSource].indexOf(arrDivs[i].id) === -1) {
-                arrDivs[i].style.display = 'none';
-            } else {
-                arrDivs[i].style.display = defaultState;
+            if (arrDivs[i].getAttribute('class') === 'nr_label') {
+                if (window.objMap.datatypes[dataSource].indexOf(arrDivs[i].id) === -1) {
+                    arrDivs[i].style.display = 'none';
+                } else {
+                    arrDivs[i].style.display = defaultState;
+                }
             }
+
         }
 
         // Show the subtype element if it was supplied

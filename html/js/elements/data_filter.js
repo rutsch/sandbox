@@ -192,5 +192,31 @@ var objDataFilter = {
 
         // Set the data type subfilter to the active state
         if (dataSource !== 'lives_improved') objDataFilter.setdatasubtypefilter(dataSource, subType);
+    },
+
+    renderdatalabel: function (dataSource) {
+        var labelid = window.objConfig.datalabels[window.objConfig.siteid];
+
+        // debugger;
+
+        // Spacial case
+        if (dataSource === 'lives_improved' && window.app.siteid === 'ar16') {
+            labelid = window.objConfig.datalabels['q117'];
+        }
+
+        var label = window.translateFragment(labelid);
+
+        if (window.app.state.inframe) {
+            window.setTimeout(function () {
+                window.postMessageToParent({
+                    action: 'setdatalabel',
+                    value: (label)
+                });
+            }, 100);
+        } else {
+            // TODO - this needs to be implemented
+        }
+
+
     }
 }

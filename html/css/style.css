@@ -191,11 +191,24 @@
       -webkit-transform: rotate(-45deg);
       -ms-transform: rotate(-45deg);
       transform: rotate(-45deg); }
+  .region_info .footnote,
+  .region_info_wrapper .footnote {
+    padding-top: 10px;
+    color: #9c9c9c;
+    font-size: 90%; }
+    .region_info .footnote span,
+    .region_info_wrapper .footnote span {
+      padding-left: 8px; }
   .region_info .nr_label,
   .region_info_wrapper .nr_label {
     width: 100%;
     padding: .3em 0;
     border-bottom: 1px solid #3A707A; }
+    .region_info .nr_label .footnote,
+    .region_info_wrapper .nr_label .footnote {
+      color: inherit;
+      font-size: inherit;
+      padding-top: inherit; }
     .region_info .nr_label:after,
     .region_info_wrapper .nr_label:after {
       content: " ";
@@ -361,6 +374,20 @@
 /* ORU Level based styling */
 .orulevel-1 .region_info .region_info_close {
   display: none; }
+
+/* Footnotes for sustainability data */
+.footnote {
+  display: none; }
+
+div.pubtype-qr.datasource-sustainability.subtype-all div#sustainability_details span.footnote,
+div.pubtype-qr.datasource-sustainability.subtype-value_trc div#sustainability_details span.footnote,
+div.pubtype-qr.datasource-sustainability.subtype-value_co2 div#sustainability_details span.footnote {
+  display: inline; }
+
+div.pubtype-qr.datasource-sustainability.subtype-all div#sustainability_details div.footnote,
+div.pubtype-qr.datasource-sustainability.subtype-value_trc div#sustainability_details div.footnote,
+div.pubtype-qr.datasource-sustainability.subtype-value_co2 div#sustainability_details div.footnote {
+  display: block; }
 
 .map_tools {
   width: 100%;

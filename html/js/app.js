@@ -108,6 +108,7 @@ var app = {
             ' oru-' + window.objPageState.state.filter.oru +
             ' sector-' + window.objPageState.state.filter.sector +
             ' mru-' + window.objPageState.state.filter.mru +
+            ' pubtype-' + window.objConfig.pubtype +
             ' nrdatasources-' + window.objConfig.datasources.length;
     },
 
@@ -388,6 +389,9 @@ var app = {
         // Set the class of the body element if we are running in an iframe
         if (app.state.inframe) window.toggleClass(document.body, 'inframe', true);
 
+        // Set the footnote labels
+        document.getElementById('sustainability_footnote').innerHTML = window.translateFragment('wm_label_ar16');
+
         /*
         This is where it all starts...
         */
@@ -402,7 +406,7 @@ var app = {
             window.app.vars.basehtml = htmlBody;
             var file = location.href.replace(/^(.*)index.*$/, '$1') + 'data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json';
             if (window.location.href.indexOf('results.philips.com') > -1 || window.location.href.indexOf('resultshub.com') > -1) {
-                file = '/publications/ar16/data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json';
+                file = '/publications/' + ((app.state.inframe) ? window.objConfig.siteid : 'ar16') + '/data/locale-' + window.objConfig.lang + ((window.objConfig.lang === 'en') ? '_US' : '_CN') + '.json';
             }
 
             // Load the translation fragments
@@ -743,6 +747,9 @@ var objPageState = {
                 // Update the datasource
                 window.objDataFilter.datasourcechanged(objPageStateNew.filter.datasource)
             }
+
+            // Set data label that indicates the date that this data was rendered
+            window.objDataFilter.renderdatalabel(objPageStateNew.filter.datasource);
         }
 
 

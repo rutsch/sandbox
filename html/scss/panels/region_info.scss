@@ -67,10 +67,26 @@
 		    transform: rotate(-45deg);
 		}
 	}
+
+    .footnote {
+        padding-top: 10px;
+        color: #9c9c9c;
+        font-size: 90%;
+        span{
+            padding-left: 8px;
+        }
+    }
+
 	.nr_label {
 		width: 100%;
 		padding: .3em 0;
 		border-bottom: 1px solid #3A707A;
+
+        .footnote {
+            color: inherit;
+            font-size: inherit;
+            padding-top: inherit;
+        }
 
         &:after { 
             content: " ";
@@ -244,4 +260,23 @@
             display: none;
         }
     }
+}
+
+/* Footnotes for sustainability data */
+.footnote {
+    display: none;
+}
+// Show the footnotes in these special cases
+div.pubtype-qr.datasource-sustainability.subtype-all,
+div.pubtype-qr.datasource-sustainability.subtype-value_trc,
+div.pubtype-qr.datasource-sustainability.subtype-value_co2 {
+    div#sustainability_details{
+        span.footnote {
+            display: inline;
+        }
+        div.footnote {
+            display: block;
+        }
+    }
+    
 }
