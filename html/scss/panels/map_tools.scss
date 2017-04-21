@@ -134,6 +134,12 @@
 		display: block;
 	}
 }
+.philips.datasource-sustainability.orulevel-3.subtype-all,
+.philips.datasource-sustainability.orulevel-3.subtype-value_trc{
+    .map_tools__legend--nodata{
+		display: none;
+	}    
+}
 
 .philips.datasource-sustainability.orulevel-3.subtype-all{
 	.map_tools__legend{

@@ -497,6 +497,10 @@ div.pubtype-qr.datasource-sustainability.subtype-value_emissionshaz div#sustaina
 .philips.datasource-sustainability.orulevel-3 .map_tools__legend--nodata {
   display: block; }
 
+.philips.datasource-sustainability.orulevel-3.subtype-all .map_tools__legend--nodata,
+.philips.datasource-sustainability.orulevel-3.subtype-value_trc .map_tools__legend--nodata {
+  display: none; }
+
 .philips.datasource-sustainability.orulevel-3.subtype-all .map_tools__legend .map_tools__legend__title,
 .philips.datasource-sustainability.orulevel-3.subtype-all .map_tools__legend .map_tools__legend__subtitle,
 .philips.datasource-sustainability.orulevel-3.subtype-all .map_tools__legend .map_tools__legend--values {

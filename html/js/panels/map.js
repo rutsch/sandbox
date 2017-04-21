@@ -194,7 +194,7 @@ var objMap = {
             // Loop through object properties
             // debugger;
             //if (window.objConfig.datasources.indexOf('sustainability') > -1) {
-            
+
             if (window.objData.sustainability && window.objData.sustainability.snapshotdata && window.objConfig.datasources.indexOf('sustainability') > -1) {
                 for (var key in window.objData.sustainability.snapshotdata[regionId]) {
                     if (window.objData.sustainability.snapshotdata[regionId].hasOwnProperty(key)) {
@@ -203,7 +203,7 @@ var objMap = {
                     }
                 }
             }
-         
+
             if (window.objData['global_presence'] && window.objData['global_presence'].snapshotdata && window.objConfig.datasources.indexOf('global_presence') > -1) {
                 for (var key in window.objData.global_presence.snapshotdata[regionId]) {
                     if (window.objData.global_presence.snapshotdata[regionId].hasOwnProperty(key)) {
@@ -398,7 +398,7 @@ var objMap = {
                                 var currentValue = parseFloat(regionData[dataType]);
                                 if (!isNaN(currentValue)) {
                                     if (currentValue === 0) {
-                                        hasDataArr.push('no');
+                                        hasDataArr.push('yes');
                                     } else {
                                         hasDataArr.push('yes')
                                     }
@@ -870,6 +870,8 @@ var objMap = {
         // debugger;
         // if(app.state.width<1000 || app.state.height<1000)self.el.elsvgholder.style.display = 'none';
 
+        console.log(regionData);
+
         // Set the rounded values in the ui
         self.setroundeddatainui(regionData);
 
@@ -944,6 +946,10 @@ var objMap = {
         var elGlobalPresence = window.getEl('region_info_wrapper global_presence');
         var elSustainability = window.getEl('region_info_wrapper sustainability');
 
+        function selectValueForUi(key) {
+            return (objData[key] === '-') ? objData[key] : objExtendedData[key];
+        }
+
         // console.log(objExtendedData)
 
         if (window.objPageState.state.filter.datasource === 'lives_improved') {
@@ -976,13 +982,13 @@ var objMap = {
             });
         } else if (window.objPageState.state.filter.datasource === 'global_presence') {
             // Global presence
-            window.objRegionInfo.el.data.assets.textContent = objExtendedData.value_assets;
-            window.objRegionInfo.el.data.employees.textContent = objExtendedData.value_employees;
-            window.objRegionInfo.el.data.female.textContent = objExtendedData.value_female;
-            window.objRegionInfo.el.data.male.textContent = objExtendedData.value_male;
-            window.objRegionInfo.el.data.plants.textContent = objExtendedData.value_plants;
-            window.objRegionInfo.el.data.research.textContent = objExtendedData.value_research;
-            window.objRegionInfo.el.data.sales.textContent = objExtendedData.value_sales;
+            window.objRegionInfo.el.data.assets.textContent = selectValueForUi('value_assets');
+            window.objRegionInfo.el.data.employees.textContent = selectValueForUi('value_employees');
+            window.objRegionInfo.el.data.female.textContent = selectValueForUi('value_female');
+            window.objRegionInfo.el.data.male.textContent = selectValueForUi('value_male');
+            window.objRegionInfo.el.data.plants.textContent = selectValueForUi('value_plants');
+            window.objRegionInfo.el.data.research.textContent = selectValueForUi('value_research');
+            window.objRegionInfo.el.data.sales.textContent = selectValueForUi('value_sales');
 
             window.TweenLite.to(elGlobalPresence, 0.3, {
                 opacity: 1,
@@ -1008,13 +1014,13 @@ var objMap = {
         } else if (window.objPageState.state.filter.datasource === 'sustainability') {
             // Sustainability
             try {
-                window.objRegionInfo.el.data.co2.textContent = objExtendedData.value_co2;
-                window.objRegionInfo.el.data.emission.textContent = objExtendedData.value_emissions;
-                window.objRegionInfo.el.data.emissionhaz.textContent = objExtendedData.value_emissionshaz;
-                window.objRegionInfo.el.data.trc.textContent = objExtendedData.value_trc;
-                window.objRegionInfo.el.data.waste.textContent = objExtendedData.value_waste;
-                window.objRegionInfo.el.data.wasterecycled.textContent = objExtendedData.value_wasterecycled;
-                window.objRegionInfo.el.data.water.textContent = objExtendedData.value_water;
+                window.objRegionInfo.el.data.co2.textContent = selectValueForUi('value_co2');
+                window.objRegionInfo.el.data.emission.textContent = selectValueForUi('value_emissions');
+                window.objRegionInfo.el.data.emissionhaz.textContent = selectValueForUi('value_emissionshaz');
+                window.objRegionInfo.el.data.trc.textContent = selectValueForUi('value_trc');
+                window.objRegionInfo.el.data.waste.textContent = selectValueForUi('value_waste');
+                window.objRegionInfo.el.data.wasterecycled.textContent = selectValueForUi('value_wasterecycled');
+                window.objRegionInfo.el.data.water.textContent = selectValueForUi('value_water');
             } catch (err) {
                 console.log('ERROR:');
                 console.dir(err);
