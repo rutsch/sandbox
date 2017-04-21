@@ -283,8 +283,8 @@
 }
 // Show the footnotes in these special cases
 div.pubtype-qr.datasource-sustainability.subtype-all,
-div.pubtype-qr.datasource-sustainability.subtype-value_trc,
-div.pubtype-qr.datasource-sustainability.subtype-value_co2 {
+div.pubtype-qr.datasource-sustainability.subtype-value_emissions,
+div.pubtype-qr.datasource-sustainability.subtype-value_emissionshaz {
     div#sustainability_details{
         span.footnote {
             display: inline;

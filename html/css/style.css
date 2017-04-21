@@ -392,13 +392,13 @@
   display: none; }
 
 div.pubtype-qr.datasource-sustainability.subtype-all div#sustainability_details span.footnote,
-div.pubtype-qr.datasource-sustainability.subtype-value_trc div#sustainability_details span.footnote,
-div.pubtype-qr.datasource-sustainability.subtype-value_co2 div#sustainability_details span.footnote {
+div.pubtype-qr.datasource-sustainability.subtype-value_emissions div#sustainability_details span.footnote,
+div.pubtype-qr.datasource-sustainability.subtype-value_emissionshaz div#sustainability_details span.footnote {
   display: inline; }
 
 div.pubtype-qr.datasource-sustainability.subtype-all div#sustainability_details div.footnote,
-div.pubtype-qr.datasource-sustainability.subtype-value_trc div#sustainability_details div.footnote,
-div.pubtype-qr.datasource-sustainability.subtype-value_co2 div#sustainability_details div.footnote {
+div.pubtype-qr.datasource-sustainability.subtype-value_emissions div#sustainability_details div.footnote,
+div.pubtype-qr.datasource-sustainability.subtype-value_emissionshaz div#sustainability_details div.footnote {
   display: block; }
 
 .map_tools {
