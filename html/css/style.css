@@ -191,14 +191,26 @@
       -webkit-transform: rotate(-45deg);
       -ms-transform: rotate(-45deg);
       transform: rotate(-45deg); }
+  .region_info span.footnote,
+  .region_info_wrapper span.footnote {
+    float: left;
+    position: absolute;
+    margin-top: -10px;
+    margin-left: 5px; }
+    .region_info span.footnote sup,
+    .region_info_wrapper span.footnote sup {
+      color: white; }
   .region_info .footnote,
   .region_info_wrapper .footnote {
-    padding-top: 10px;
-    color: #9c9c9c;
+    padding-top: 5px;
+    color: #fff;
     font-size: 90%; }
     .region_info .footnote span,
     .region_info_wrapper .footnote span {
-      padding-left: 8px; }
+      padding-left: 5px; }
+    .region_info .footnote sup,
+    .region_info_wrapper .footnote sup {
+      font-size: 25px; }
   .region_info .nr_label,
   .region_info_wrapper .nr_label {
     width: 100%;
@@ -207,7 +219,7 @@
     .region_info .nr_label .footnote,
     .region_info_wrapper .nr_label .footnote {
       color: inherit;
-      font-size: inherit;
+      font-size: 21px;
       padding-top: inherit; }
     .region_info .nr_label:after,
     .region_info_wrapper .nr_label:after {

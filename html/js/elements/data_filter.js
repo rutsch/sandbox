@@ -197,12 +197,24 @@ var objDataFilter = {
     renderdatalabel: function (dataSource) {
         var labelid = window.objConfig.datalabels[window.objConfig.siteid];
 
-        // debugger;
 
-        // Spacial case
-        if (dataSource === 'lives_improved' && window.app.siteid === 'ar16') {
-            labelid = window.objConfig.datalabels['q117'];
+        // Special cases
+        // A) Lives improved for AR16 should indicate that we are showing Q1 data
+        var q1Launched = false;
+        if (Date.parse('2017-04-24T07:00:00') < Date.now()) {
+            q1Launched = true;
+        }      
+
+        if (dataSource === 'lives_improved' && window.objConfig.siteid === 'ar16') {
+            if (q1Launched) {
+                labelid = window.objConfig.datalabels['q117'];
+            } else {
+                labelid = window.objConfig.datalabels['ar16'];
+            }
         }
+        // B) Sustainability data for QR is only based on HealthTech business
+        if (dataSource === 'sustainability' && window.objConfig.pubtype === 'qr') labelid += '_ht';
+
 
         var label = window.translateFragment(labelid);
 

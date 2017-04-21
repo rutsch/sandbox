@@ -68,13 +68,27 @@
 		}
 	}
 
-    .footnote {
-        padding-top: 10px;
-        color: #9c9c9c;
-        font-size: 90%;
-        span{
-            padding-left: 8px;
+    span.footnote{
+        float: left;
+		position: absolute;
+		margin-top: -10px;
+		margin-left: 5px;
+
+        sup{
+            color: white;
         }
+    }
+    .footnote {
+        padding-top: 5px;
+        color: #fff;
+        font-size: 90%;
+        // For the footnote text in the footer underneath the table
+        span{
+            padding-left: 5px;
+        }
+		sup {
+			font-size: 25px;
+		}
     }
 
 	.nr_label {
@@ -84,19 +98,20 @@
 
         .footnote {
             color: inherit;
-            font-size: inherit;
+            font-size: 21px;
             padding-top: inherit;
         }
 
-        &:after { 
+        &:after {
             content: " ";
-            display: block; 
-            height: 0; 
+            display: block;
+            height: 0;
             clear: both;
         }
 
         span.label {
-            float: left;
+			float: left;
+
         }
 		span.nr {
 			float: right;
@@ -278,5 +293,5 @@ div.pubtype-qr.datasource-sustainability.subtype-value_co2 {
             display: block;
         }
     }
-    
+
 }
