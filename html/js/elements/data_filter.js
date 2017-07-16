@@ -200,7 +200,8 @@ var objDataFilter = {
 
         // Special cases
         // A) Lives improved for AR16 should indicate that we are showing Q1 data
-        var q1Launched = false;
+        var q1Launched = true;
+        // This check does not work....
         if (Date.parse('2017-04-24T07:00:00') < Date.now()) {
             q1Launched = true;
         }      

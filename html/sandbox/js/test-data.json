@@ -1,0 +1,155 @@
+{
+    "philips_asean": {
+        "value_trc": "0.12",
+        "value_co2": "21307",
+        "value_waste": "1463",
+        "value_wasterecycled": "91",
+        "value_water": "74738",
+        "value_emissions": "5",
+        "value_emissionshaz": "25"
+    },
+    "philips_greater_china": {
+        "value_trc": "0.14",
+        "value_co2": "75592",
+        "value_waste": "6663",
+        "value_wasterecycled": "90",
+        "value_water": "977947",
+        "value_emissions": "311",
+        "value_emissionshaz": "27"
+    },
+    "philips_indian_subcontinent": {
+        "value_trc": "0.10",
+        "value_co2": "65148",
+        "value_waste": "2552",
+        "value_wasterecycled": "96",
+        "value_water": "57174",
+        "value_emissions": "6",
+        "value_emissionshaz": "4"
+    },
+    "philips_japan": {
+        "value_trc": "0.20",
+        "value_co2": "-",
+        "value_waste": "-",
+        "value_wasterecycled": "-",
+        "value_water": "-",
+        "value_emissions": "-",
+        "value_emissionshaz": "-"
+    },
+    "philips_russia_central-asia": {
+        "value_trc": "0.00",
+        "value_co2": "-",
+        "value_waste": "-",
+        "value_wasterecycled": "-",
+        "value_water": "-",
+        "value_emissions": "-",
+        "value_emissionshaz": "-"
+    },
+    "philips_africa": {
+        "value_trc": "0.00",
+        "value_co2": "-",
+        "value_waste": "-",
+        "value_wasterecycled": "-",
+        "value_water": "-",
+        "value_emissions": "-",
+        "value_emissionshaz": "-"
+    },
+    "philips_benelux": {
+        "value_trc": "0.22",
+        "value_co2": "10757",
+        "value_waste": "8726",
+        "value_wasterecycled": "80",
+        "value_water": "235372",
+        "value_emissions": "157",
+        "value_emissionshaz": "12"
+    },
+    "philips_central-east_europe": {
+        "value_trc": "0.30",
+        "value_co2": "61274",
+        "value_waste": "7019",
+        "value_wasterecycled": "81",
+        "value_water": "243260",
+        "value_emissions": "92",
+        "value_emissionshaz": "20"
+    },
+    "philips_dach": {
+        "value_trc": "0.50",
+        "value_co2": "7616",
+        "value_waste": "3050",
+        "value_wasterecycled": "89",
+        "value_water": "53264",
+        "value_emissions": "389",
+        "value_emissionshaz": "6"
+    },
+    "philips_france": {
+        "value_trc": "0.76",
+        "value_co2": "1284",
+        "value_waste": "5123",
+        "value_wasterecycled": "95",
+        "value_water": "182370",
+        "value_emissions": "-",
+        "value_emissionshaz": "-"
+    },
+    "philips_iberia": {
+        "value_trc": "0.66",
+        "value_co2": "2398",
+        "value_waste": "2042",
+        "value_wasterecycled": "82",
+        "value_water": "47291",
+        "value_emissions": "-",
+        "value_emissionshaz": "-"
+    },
+    "philips_italy_israel_greece": {
+        "value_trc": "0.53",
+        "value_co2": "6829",
+        "value_waste": "2117",
+        "value_wasterecycled": "76",
+        "value_water": "22529",
+        "value_emissions": "15",
+        "value_emissionshaz": "5"
+    },
+    "philips_middle-east_turkey": {
+        "value_trc": "0.27",
+        "value_co2": "-",
+        "value_waste": "-",
+        "value_wasterecycled": "-",
+        "value_water": "-",
+        "value_emissions": "-",
+        "value_emissionshaz": "-"
+    },
+    "philips_nordics": {
+        "value_trc": "0.20",
+        "value_co2": "-",
+        "value_waste": "-",
+        "value_wasterecycled": "-",
+        "value_water": "-",
+        "value_emissions": "-",
+        "value_emissionshaz": "-"
+    },
+    "philips_uk_ireland": {
+        "value_trc": "0.06",
+        "value_co2": "9096",
+        "value_waste": "1102",
+        "value_wasterecycled": "85",
+        "value_water": "8501",
+        "value_emissions": "77",
+        "value_emissionshaz": "4"
+    },
+    "philips_latin_america": {
+        "value_trc": "0.35",
+        "value_co2": "12972",
+        "value_waste": "8107",
+        "value_wasterecycled": "82",
+        "value_water": "173474",
+        "value_emissions": "0",
+        "value_emissionshaz": "8"
+    },
+    "philips_north_america_bmc": {
+        "value_trc": "0.94",
+        "value_co2": "48193",
+        "value_waste": "16799",
+        "value_wasterecycled": "76",
+        "value_water": "337998",
+        "value_emissions": "47",
+        "value_emissionshaz": "18"
+    }
+}
