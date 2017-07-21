@@ -31,3 +31,7 @@ input[type="range"]::-ms-track {
     color: transparent;
     border: none;
 }
+
+.region_info span.footnote sup, .region_info_wrapper span.footnote sup{
+    padding-left: 52px;
+}
