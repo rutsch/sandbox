@@ -35,7 +35,6 @@ function loadJavaScriptResources(arr) {
     arr.forEach(function (path) {
         loadRemoteResource(path);
     });
-    if (top !== self) loadRemoteResource('/js/lib/iframeResizer.contentWindow.min.js');
 }
 
 /**
