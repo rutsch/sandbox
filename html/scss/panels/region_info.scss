@@ -111,7 +111,9 @@
 
         span.label {
 			margin-right: 50px;
-
+			& + .footnote {
+				margin-left: -50px;
+			}
         }
 		span.nr {
 			float: right;
@@ -290,7 +292,7 @@ div.pubtype-qr.datasource-sustainability.subtype-value_emissionshaz {
             display: inline;
         }
         div.footnote {
-            display: block;
+            display: flex;
         }
     }
 
