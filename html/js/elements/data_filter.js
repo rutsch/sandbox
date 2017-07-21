@@ -197,26 +197,26 @@ var objDataFilter = {
     renderdatalabel: function (dataSource) {
         var labelid = window.objConfig.datalabels[window.objConfig.siteid];
 
+        // TODO: Make this more dynamic so that we do not need to update this manually each publication
+        var labelidFuture = window.objConfig.datalabels['q217'];
 
-        // Special cases
-        // A) Lives improved for AR16 should indicate that we are showing Q1 data
-        var q1Launched = true;
-        // This check does not work....
-        if (Date.parse('2017-04-24T07:00:00') < Date.now()) {
-            q1Launched = true;
-        }      
-
-        if (dataSource === 'lives_improved' && window.objConfig.siteid === 'ar16') {
-            if (q1Launched) {
-                labelid = window.objConfig.datalabels['q117'];
-            } else {
-                labelid = window.objConfig.datalabels['ar16'];
+        // Lives improved data is shown
+        if (dataSource === 'lives_improved') {
+            // A) Lives Improves always shows the latest data
+            labelid = labelidFuture;
+        } else {
+            // B) Sustainability data for QR is only based on HealthTech business
+            if (dataSource === 'sustainability' && window.objConfig.pubtype === 'qr') {
+                // If we are previewing the data then we need to show the new ID
+                if (window.objConfig.datatype === 'future') {
+                    labelid = labelidFuture;
+                }
+                labelid += '_ht';
             }
+            
         }
-        // B) Sustainability data for QR is only based on HealthTech business
-        if (dataSource === 'sustainability' && window.objConfig.pubtype === 'qr') labelid += '_ht';
 
-
+        // Retrieve and translate the label
         var label = window.translateFragment(labelid);
 
         if (window.app.state.inframe) {
@@ -229,7 +229,5 @@ var objDataFilter = {
         } else {
             // TODO - this needs to be implemented
         }
-
-
     }
 }
