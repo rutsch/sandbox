@@ -49,10 +49,10 @@ function addAdditionalAssets() {
 
 
 // Write the stylesheet links
-[
-    '/css/style.css',
-    '/css/graph.css'
-].forEach(function (path) {
+var styleSheets = [];
+styleSheets.push((location.href.indexOf('dev.html') === -1) ? '/css/style.min.css' : '/css/style.css');
+styleSheets.push('/css/graph.css');
+styleSheets.forEach(function (path) {
     loadRemoteResource(path);
 });
 if (!!window.MSStream) loadRemoteResource('/css/ie-all-versions.css');
