@@ -870,7 +870,7 @@ var objMap = {
         // debugger;
         // if(app.state.width<1000 || app.state.height<1000)self.el.elsvgholder.style.display = 'none';
 
-        console.log(regionData);
+        // console.log(regionData);
 
         // Set the rounded values in the ui
         self.setroundeddatainui(regionData);

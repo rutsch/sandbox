@@ -143,7 +143,8 @@ var objConfig = {
         } else if (self.urls.prodpublic.indexOf(location.hostname) > -1) {
             self.sitetype = 'prodpublic';
         }
-        console.log('sitetype: %s', self.sitetype);
+        
+        // console.log('sitetype: %s', self.sitetype);
 
         /*
         Calculate the language
