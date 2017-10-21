@@ -394,7 +394,7 @@ var app = {
         var shortYear = parseInt(window.objConfig.siteid.replace(/^.*(\d\d)$/, '$1'), 10);
         if (window.objConfig.pubtype === 'qr' && (window.objConfig.siteid.indexOf('q1') > -1)) shortYear--;
         footnoteText = footnoteText.replace('16', shortYear);
-        if (window.objConfig.siteid.indexOf('q2') > -1) footnoteText = footnoteText.replace('full-year', 'half-year');
+        if (window.objConfig.siteid.indexOf('q2') > -1 || window.objConfig.siteid.indexOf('q3') > -1) footnoteText = footnoteText.replace('full-year', 'half-year');
         document.getElementById('sustainability_footnote').innerHTML = footnoteText;
 
         /*
