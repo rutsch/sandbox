@@ -198,7 +198,7 @@ var objDataFilter = {
         var labelid = window.objConfig.datalabels[window.objConfig.siteid];
 
         // TODO: Make this more dynamic so that we do not need to update this manually each publication
-        var labelidFuture = window.objConfig.datalabels['q217'];
+        var labelidFuture = window.objConfig.datalabels['q317'];
 
         // Lives improved data is shown
         if (dataSource === 'lives_improved') {
