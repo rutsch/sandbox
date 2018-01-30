@@ -61,7 +61,7 @@ var objMap = {
     self.state.mapname = objOruFilter.convertoruleveltomarket(objPageState.state.filter.orulevel);
 
     //attempt to retrieve the svg data from localstorage
-    var svgdata = objStore.getlocalstorageitem('map_' + self.state.mapname + '_v3');
+    var svgdata = objStore.getlocalstorageitem('map_' + self.state.mapname + '_v5');
 
     //test if real SVG data was returned from the local storage
     var performAjax = true;
@@ -87,7 +87,7 @@ var objMap = {
         debug: false
       });
 
-      objStore.setlocalstorageitem('map_' + self.state.mapname + '_v3', svgdata);
+      objStore.setlocalstorageitem('map_' + self.state.mapname + '_v5', svgdata);
       return svgdata;
 
 
