@@ -399,7 +399,7 @@ var app = {
         // 3) Correct for the period over which the data is calculated
         if (window.objConfig.siteid.indexOf('q2') > -1 || window.objConfig.siteid.indexOf('q3') > -1) {
             footnoteText = footnoteText.replace('full-year', 'the first half-year');
-        } else if (window.objConfig.siteid.indexOf('q2') > -1) {
+        } else if (window.objConfig.siteid.indexOf('q4') > -1) {
             footnoteText = footnoteText.replace('full-year', 'the second half-year');
         }
         document.getElementById('sustainability_footnote').innerHTML = footnoteText;
