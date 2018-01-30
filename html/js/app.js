@@ -389,12 +389,19 @@ var app = {
         // Set the class of the body element if we are running in an iframe
         if (app.state.inframe) window.toggleClass(document.body, 'inframe', true);
 
-        // Set the footnote labels
+        // Set the footnote labels for the sustainability data
+        // 1) Receive the base text for the footnote
         var footnoteText = window.translateFragment('wm_label_ar16');
+        // 2) Correct for the year in the footnote text
         var shortYear = parseInt(window.objConfig.siteid.replace(/^.*(\d\d)$/, '$1'), 10);
         if (window.objConfig.pubtype === 'qr' && (window.objConfig.siteid.indexOf('q1') > -1)) shortYear--;
         footnoteText = footnoteText.replace('16', shortYear);
-        if (window.objConfig.siteid.indexOf('q2') > -1 || window.objConfig.siteid.indexOf('q3') > -1) footnoteText = footnoteText.replace('full-year', 'half-year');
+        // 3) Correct for the period over which the data is calculated
+        if (window.objConfig.siteid.indexOf('q2') > -1 || window.objConfig.siteid.indexOf('q3') > -1) {
+            footnoteText = footnoteText.replace('full-year', 'the first half-year');
+        } else if (window.objConfig.siteid.indexOf('q2') > -1) {
+            footnoteText = footnoteText.replace('full-year', 'the second half-year');
+        }
         document.getElementById('sustainability_footnote').innerHTML = footnoteText;
 
         /*
@@ -826,7 +833,7 @@ var objPageState = {
 
         console.log('- bolMajorChange: ' + bolMajorChange);
 
-        // Select the correct data source UI element        
+        // Select the correct data source UI element
 
         // debugger;
         if (typeof window.objMap.data === "object" && bolMajorChange === false) {
@@ -835,7 +842,7 @@ var objPageState = {
             Deal with minor state change (for example a click on a geographical region)
             */
 
-            // Update the colors in the map            
+            // Update the colors in the map
             if (objPageStateDelta.hasOwnProperty('filter') && (objPageStateDelta.filter.hasOwnProperty('subtype'))) {
                 window.objMap.updatemap((objPageStateNew.view === 'detail'), app.showappintromessage);
             }
