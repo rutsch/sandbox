@@ -803,7 +803,7 @@ var objMap = {
 
 
         // Initiates the simulator
-        // objSliders.start();
+        window.objSliders.start();
 
         // objRegionInfo.hidehistory();
 

@@ -78,17 +78,15 @@
 			</div>
 			<div class="region_info">
 				<div class="region_info_wrapper container lives_improved">
-					<div class="region_info_close" onclick="objRegionInfo.hidedetailspanel();"></div>
+					<!-- <div class="region_info_close" onclick="objRegionInfo.hidedetailspanel();"></div> -->
 					<div class="region_info_left">
 						<h2 class="region_info_title">.</h2>
 						<div class="data-wrapper">
 							<div class="nr_label">[gdp]<span class="nr_gdp nr"></span></div>
 							<div class="nr_label">[population]<span class="nr_population nr"></span></div>
 						</div>
-					</div>
-					<div class="region_info_right">
-						<div class="region_info_right_header">
-							<span class="nr_lives_improved_label">[lives_improved]</span><span class="nr_lives_improved">70.3</span>
+						<div class="region_info_left_header">
+							<span class="nr_lives_improved">70.3</span><span class="nr_lives_improved_label">[lives_improved]</span>
 						</div>
 						<div class="lives_improved_wrapper">
 							<div class="lives_improved_numbers">
@@ -102,9 +100,51 @@
 							</div>
 						</div>
 					</div>
+					<div class="region_info_right">
+						<!-- base svg construction for the line graph -->
+                        <svg class="graph" id="graph" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 640 300" preserveAspectRatio="xMidYMid meet">
+                            <g id="wrapper" transform="translate(0, 0)">
+                              <text id="graph_title" y="40" x="0" xml:space="preserve">Trend</text>
+                  
+                              <g id="grid_wrapper"> </g>
+                  
+                              <!-- axis lines -->
+                              <g class="axis_line">
+                                <line id="x_axisline" x1="20" y1="10" x2="20" y2="280" />
+                              </g>
+                              <g class="axis_line">
+                                <line id="y_axisline" x1="20" y1="280" x2="370" y2="280" />
+                              </g>
+                  
+                              <!-- axis labels -->
+                              <g id="x_axislabel_wrapper" class="labels x-labels"> </g>
+                              <g id="y_axislabel_wrapper" class="labels y-labels"> </g>
+                  
+                              <!-- wrapper for the graph line -->
+                              <g id="line_wrapper"> </g>
+                  
+                              <!-- wrapper for the data points -->
+                              <g id="data_point_wrapper" class="first_set points" data-setname="Our first data set"> </g>
+                  
+                              <g id="popup_trend" transform="">
+                                <path d="m 107,7.5187448 h -6.979 L 92.5,-0.00225557 84.979,7.5187448 H 3 c -1.6570001,0 -3,1.343 -3,3.0000002 v 31 c 0,1.657 1.3429999,3 3,3 h 104 c 1.657,0 3,-1.343 3,-3 v -31 c 0,-1.6570002 -1.343,-3.0000002 -3,-3.0000002 z" id="popup_trend_base" />
+                                <g id="popup_trend_text_wrapper">
+                                  <text id="popup_trend_number" y="26" x="60" xml:space="preserve">2,23</text>
+                                  <text id="popup_trend_text" y="40" x="103" xml:space="preserve">million Lives Improved</text>
+                                </g>
+                              </g>
+                  
+                              <g id="popup_value" onclick="objTrendGraph.showvaluepopup({show: false});" visibility="hidden">
+                                <path d="M 50,25.279 C 50,11.470998 38.808,0.2789983 25,0.2789983 11.193,0.2789983 0,11.470998 0,25.279 c 0,9.007 4.7660001,16.899 11.911,21.3 L 25.332,60 40.246,45.086 C 46.176,40.514 50,33.344 50,25.279 z" id="popup_value_base" transform="scale(1.2)" />
+                                <text id="popup_value_number" y="30" x="29" xml:space="preserve">2,233</text>
+                                <text id="popup_value_text" y="47" x="29" xml:space="preserve">Million</text>
+                              </g>
+                            </g>
+                          </svg>
+					</div>
 				</div>
 				<div class="region_info_wrapper container global_presence">
-					<div class="region_info_close" onclick="objRegionInfo.hidedetailspanel();"></div>
+					<!-- <div class="region_info_close" onclick="objRegionInfo.hidedetailspanel();"></div> -->
 					<div class="region_info_left">
 						<h2 class="region_info_title">.</h2>
 					</div>
@@ -183,7 +223,7 @@
 					</div>
 				</div>
 				<div class="region_info_wrapper container sustainability">
-					<div class="region_info_close" onclick="objRegionInfo.hidedetailspanel();"></div>
+					<!-- <div class="region_info_close" onclick="objRegionInfo.hidedetailspanel();"></div> -->
 					<div class="region_info_left">
 						<h2 class="region_info_title">.</h2>
 					</div>
