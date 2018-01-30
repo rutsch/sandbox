@@ -255,7 +255,7 @@ var objMap = {
         var arrRegions = window.getFirstLevelChildElements(elSvgWrapper, 'path');
         if (arrRegions.length === 0) arrRegions = window.getFirstLevelChildElements(elSvgWrapper, 'g')
 
-        // Calculate the lives improved percentage and add it to the data variable      
+        // Calculate the lives improved percentage and add it to the data variable
         if (window.objDataFilter.state.filter.datasource === 'lives_improved') {
             for (var oruGuid in self.data) {
                 if (typeof oruGuid === 'string') {
@@ -280,7 +280,7 @@ var objMap = {
                 prefix = '';
             }
 
-            // Store the datatypes that we need to check in an array            
+            // Store the datatypes that we need to check in an array
             if (index === 0) {
                 for (var dataTypeId in self.data[prefix + objOru.guid]) {
                     if (typeof dataTypeId === 'string') {
@@ -356,7 +356,7 @@ var objMap = {
             if (debugRoutine) console.log(' - dataValueMax: ' + dataValueMax + ' - dataValueMin: ' + dataValueMin);
         }
 
-        // Determine when we cannot color the map because we show the data on global level or we show more data types in one view        
+        // Determine when we cannot color the map because we show the data on global level or we show more data types in one view
         var combinedView = (window.objPageState.state.filter.orulevel === "1" || ((window.objDataFilter.state.filter.datasource === 'global_presence' || window.objDataFilter.state.filter.datasource === 'sustainability') && window.objDataFilter.state.filter.subtype === 'all'))
 
 
@@ -783,7 +783,7 @@ var objMap = {
     },
 
     /**
-     * Show the details panel, select the active country in the map 
+     * Show the details panel, select the active country in the map
      */
     detailspanel: function () {
         var self = this;
@@ -875,7 +875,7 @@ var objMap = {
         // Set the rounded values in the ui
         self.setroundeddatainui(regionData);
 
-        // Function to add a fade in effect for building up the Lives Improved person images in the UI        
+        // Function to add a fade in effect for building up the Lives Improved person images in the UI
         function doScaledTimeout(i, elLiIcons, elem) {
             setTimeout(function () {
                 elLiIcons.appendChild(elem);
