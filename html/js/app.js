@@ -354,13 +354,13 @@ var app = {
         window.objOverlay.init();
         window.objRegionInfo.init();
 
-        // window.objSliders.init();
+        window.objSliders.init();
         window.objError.init();
         window.objFilter.init();
         window.objBookmarks.init();
         window.objExplain.init();
 
-        // window.objTrendGraph.init();
+        window.objTrendGraph.init();
         window.objLoading.init();
         window.objPanelInfo.init();
 

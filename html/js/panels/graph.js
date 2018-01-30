@@ -10,7 +10,8 @@ var objTrendGraph = {
         popupvaluewidth: 0,
         popupvalueheight: 0,
         data: null,
-        template: null
+        template: null,
+        debug: false || (window.objConfig.sitetype.indexOf('dev') > -1)
     },
     el: {
         root: null,
@@ -217,7 +218,10 @@ var objTrendGraph = {
         var self = this;
 
         // alert('in showvaluepopup')
-        // console.log(objArgs);
+        if (self.vars.debug) {
+            console.log('showvaluepopup(objArgs)')
+            console.log(objArgs);
+        }
 
         if (objArgs.show) {
             // Align the popup and the show it
@@ -276,6 +280,8 @@ var objTrendGraph = {
 
     fliptrendpopup: function (strType) {
         var self = this;
+
+        if (self.vars.debug) console.log('fliptrendpopup("' + strType + '")');
 
         // Undo the flip and repositioning of the text elements
         if (strType === 'original' && self.state.trendpopupflipped) {
@@ -611,6 +617,8 @@ var objTrendGraph = {
         if (typeof objRegionInfo !== "undefined") window.objRegionInfo.showhistory();
 
     },
+
+    // Retrieves the width and the height of the trend graph popup elements
     getbbox: function () {
         var self = this;
 
@@ -642,10 +650,9 @@ var objTrendGraph = {
         self.el.popuptrendtextwrapper = document.getElementById('popup_trend_text_wrapper');
         self.el.toppanel = window.getEl('top_panel');
 
-        // getBoundingClientRect() gets the width & height in "scale" size, getBBox() gets the original size.... 
-        if (!window.isPublicSite()) {
-            self.getbbox();
-        }
+        // Retrieves the size of the popup elements in the trend graph
+        self.getbbox();
+
 
         var objSerializer = new XMLSerializer();
         self.vars.template = objSerializer.serializeToString(self.el.root);
