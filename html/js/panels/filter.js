@@ -104,7 +104,7 @@ var objFilter = {
 
         self.el.btnapply.style.display = 'none';
 
-        // Calculate the new view to pass in the new page state        
+        // Calculate the new view to pass in the new page state
         var selectedOru = window.objOruFilter.state.selectedoruguid;
         if (typeof resetSelectedOru === 'boolean') {
             if (resetSelectedOru) selectedOru = 'none';

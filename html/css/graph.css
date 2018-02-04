@@ -1,3 +1,62 @@
+#graph {
+	width: 100%;
+	height: 100%;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+	position: relative;
+}
+
+#graph > div {
+  display: grid;
+  grid-template-rows: 30px 1fr 30px;
+}
+.value {
+  justify-self: center;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+}
+
+.value:after {
+  content: 'million';
+  display: block;
+  font-size: 12px;
+}
+
+#graph > div:last-child .value,
+#graph > div:last-child .period {
+	font-weight: 900;
+}
+.point {
+  justify-self: center;
+  position: relative;
+}
+.y {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border-radius: 5px;
+
+}
+.period {
+  justify-self: center;
+  font-size: 14px;
+  align-self: flex-end;
+}
+div.line{
+  transform-origin: 0 100%;
+  height: 1px;
+  background: rgba(255,255,255,.5);
+  position: absolute;
+  left: 5px;
+}
+
+
+
+
+
+
 
 svg.graph {
 	font-family: CentraleSans;
@@ -68,7 +127,7 @@ svg.graph g#y_axislabel_wrapper line{
 svg.graph .labels {
 	kerning: 1;
 	fill: #ffffff;
-	fill-opacity: 1;	
+	fill-opacity: 1;
 }
 
 svg.graph .labels.x-labels {

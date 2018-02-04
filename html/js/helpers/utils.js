@@ -91,7 +91,7 @@ function getParamStringFromObject(objParams) {
 
 /**
  * Tests if a class exists on a DOM element
- * 
+ *
  * @param {any} el DOM element to inspect or the complete content of the class attribute
  * @param {string} classname Classname to search for
  * @returns Booloan indicating if the classname exists
@@ -106,7 +106,7 @@ function containsClass(el, classname) {
 
 /**
  * Toggles a class on a DOM node
- * 
+ *
  * @param {object} el DOM node to toggle the class on
  * @param {string} cls Classname to toggle on the DOM node
  * @param {boolean} forceAdd Optionally force add/remove the class on the DOM element
@@ -562,7 +562,15 @@ function countryClicked(idCountry, mobile, forceview) {
             }
         });
     } else {
-        console.log('click discarded because the details panel is already open')
+        // console.log('click discarded because the details panel is already open');
+        window.objPageState.updatepagestate({
+            view: 'worldmap',
+            filter: {
+                oru: 'none',
+                datasource: window.objDataFilter.state.filter.datasource,
+                subtype: window.objDataFilter.state.filter.subtype
+            }
+        });
     }
 
 }
@@ -692,7 +700,7 @@ function cloneObject(obj) {
 
 /**
  * Sets a number of styles to a DOM element
- * 
+ *
  * @param {object} el DOM element
  * @param {object} styles An onject in the format {background: 'green'}
  */
@@ -706,7 +714,7 @@ function css(el, styles) {
 
 /**
  * Sends a message to the parent frame indicating that the iframe in which the wordmap is running needs to be resized
- * 
+ *
  */
 function messageIframeResizeToParent() {
     window.setTimeout(function () {
@@ -719,8 +727,8 @@ function messageIframeResizeToParent() {
 
 /**
  * Sends a message to the parent frame
- * 
- * @param {any} message 
+ *
+ * @param {any} message
  */
 function postMessageToParent(message) {
     // var origin = location.href.replace(/^(http(s){0,1}:\/\/.*?)(\/).*$/, '$1');

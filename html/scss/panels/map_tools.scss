@@ -4,7 +4,7 @@
 	display: none;
 	opacity: 1;
 	position: absolute;
-	z-index: 3;
+	z-index: 1;
 
 	@media #{$medium-up} {
 		display: block;
@@ -17,13 +17,14 @@
 		position: relative;
 	}
 	&__legend {
-		display: flex;
+		display: none;
 		flex-direction: column;
 		width: grid-size(4);
 
 		h4 {
 			margin: 0;
 			color: #fff;
+			display: none;
 		}
 
 		span {
@@ -56,7 +57,7 @@
 				}
 			}
 		}
-		
+
 		&--nodata {
 			display: none;
 			&--color{
@@ -66,14 +67,14 @@
 				padding-top: 5px;
 				padding-bottom: 5px;
 				margin-right: 10px;
-				
+
 				&:after {
 					content: ' ';
 				}
 			}
-			
+
 			&--text{
-				
+
 			}
 		}
 	}
@@ -105,7 +106,8 @@
 		}
 
 		&--in {
-			right: 35px;
+			left: 0px;
+			top: -80px;
 			&:before {
 			    -webkit-transform: rotate(90deg);
 			    -ms-transform: rotate(90deg);
@@ -115,7 +117,8 @@
 		}
 
 		&--out {
-			right: 0;
+			left: 0;
+			top: -45px;
 			&:before {
 			    -webkit-transform: rotate(90deg);
 			    -ms-transform: rotate(90deg);
@@ -138,7 +141,7 @@
 .philips.datasource-sustainability.orulevel-3.subtype-value_trc{
     .map_tools__legend--nodata{
 		display: none;
-	}    
+	}
 }
 
 .philips.datasource-sustainability.orulevel-3.subtype-all{

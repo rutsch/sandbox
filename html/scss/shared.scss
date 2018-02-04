@@ -29,7 +29,14 @@ body {
 
 #app_panel {
 	#app_wrapper {
+        & > div:not(#map) {
+            max-width: $content-width;
+        	margin: 0 auto;
 
+        	@media #{$xlarge-up} {
+        		max-width: $content-width-large;
+        	}
+        }
 		.map-tab_panels {
 			display: block;
 			top: 0%;
@@ -52,7 +59,7 @@ body {
 			top: 18%;
             height: 400px;
             width: 100%;
-            padding: 10px 0;
+            padding: 0px 0;
             display: none;
 			// width: 1px;
             // height: 1px;
@@ -83,7 +90,7 @@ body {
                 }
             }
 
-			.active:not(#world) *{
+			.active *{
 				fill: $color-highlight!important;
 			}
 		}
@@ -163,7 +170,7 @@ body {
             position: relative;
             @media #{$medium-up} {
                 display: block;
-                top: 10px;
+                top: -10px;
     			height: 275px;
             }
 
@@ -213,7 +220,7 @@ body {
 	max-width: $content-width;
 	margin: 0 auto;
 
-	@media #{$xlarge-up} {
+	@media #{$large-up} {
 		max-width: $content-width-large;
 	}
 }

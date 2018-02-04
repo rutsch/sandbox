@@ -1017,7 +1017,7 @@ window.onresize = function () {
 
             // Center the worldmap
             window.objMap.centerworldmap(window.objMap.el.rootanimate);
-
+            window.objTrendGraph.drawgraph();
         }
     } catch (e) {
         //

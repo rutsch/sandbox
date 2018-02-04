@@ -91,19 +91,19 @@ var objRegionInfo = {
         self.state.tweening = false;
         self.state.visible = true;
 
-        if (animate) {
-            window.TweenLite.to(self.el.toolspanel, 0.3, {
-                bottom: '0%',
-                opacity: 0,
-                'z-index': -1
-            });
-        } else {
-            window.css(self.el.toolspanel, {
-                bottom: '0%',
-                opacity: 0,
-                'z-index': -1
-            });
-        }
+        // if (animate) {
+        //     window.TweenLite.to(self.el.toolspanel, 0.3, {
+        //         bottom: '0%',
+        //         opacity: 0,
+        //         'z-index': -1
+        //     });
+        // } else {
+        //     window.css(self.el.toolspanel, {
+        //         bottom: '0%',
+        //         opacity: 0,
+        //         'z-index': -1
+        //     });
+        // }
 
     },
 
@@ -164,20 +164,20 @@ var objRegionInfo = {
         }
 
         // debugger;
-
-        if (animate) {
-            window.TweenLite.to(self.el.toolspanel, 0.3, {
-                bottom: '0%',
-                opacity: 1,
-                'z-index': 3
-            });
-        } else {
-            window.css(self.el.toolspanel, {
-                bottom: '0%',
-                opacity: 1,
-                'z-index': 3
-            });
-        }
+        // 
+        // if (animate) {
+        //     window.TweenLite.to(self.el.toolspanel, 0.3, {
+        //         bottom: '0%',
+        //         opacity: 1,
+        //         'z-index': 3
+        //     });
+        // } else {
+        //     window.css(self.el.toolspanel, {
+        //         bottom: '0%',
+        //         opacity: 1,
+        //         'z-index': 3
+        //     });
+        // }
     },
 
     /*
@@ -237,7 +237,7 @@ var objRegionInfo = {
     /*
     Details panel
     */
-    // Shows and hides the lines in the details panel    
+    // Shows and hides the lines in the details panel
     setdetailspanel: function (dataSource, subType) {
         // console.trace();
         // console.log('setdetailspanel("' + dataSource + '", "' + subType + '")');
@@ -269,10 +269,10 @@ var objRegionInfo = {
 
         window.objHeader.setregionname(window.objMap.state.mapname);
 
-        // Update the states in the different objects        
+        // Update the states in the different objects
         window.objOruFilter.state.selectedoruguid = 'none';
 
-        // Update the page state        
+        // Update the page state
         window.objPageState.updatepagestate({
             view: 'worldmap',
             filter: {
