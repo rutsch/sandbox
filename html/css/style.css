@@ -290,6 +290,9 @@
         .region_info_wrapper_left .data-wrapper > div:first-child:after {
           content: '|';
           padding: 0 3px 0 8px; }
+        .lives_improved .region_info_left .data-wrapper div, .lives_improved
+        .region_info_wrapper_left .data-wrapper div {
+          font-size: 17px; }
       .lives_improved .region_info_left_header, .lives_improved
       .region_info_wrapper_left_header {
         border-bottom: 1px solid rgba(58, 112, 122, 0.5);
