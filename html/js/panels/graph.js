@@ -232,9 +232,10 @@ var objTrendGraph = {
         for (var i = 0; i < linePoints.length - 1; i++) {
             var co = linePoints[i].getBoundingClientRect();
             var conext = linePoints[i + 1].getBoundingClientRect();
+            // debugger;
 
 
-            self.createLine(co.x + 5, (linePoints[i].style.bottom.replace('px', '') * 1) + 5, conext.x + 5, (linePoints[i + 1].style.bottom.replace('px', '') * 1) + 5, linePoints[i].parentNode);
+            self.createLine(co.left + 5, (linePoints[i].style.bottom.replace('px', '') * 1) + 5, conext.left + 5, (linePoints[i + 1].style.bottom.replace('px', '') * 1) + 5, linePoints[i].parentNode);
         }
 
     },
