@@ -129,6 +129,13 @@
 			@media #{$medium-up} {
 				display: block;
 			}
+			br {
+				display: inline;
+			    content: ' ';
+			    clear: none;
+			    width: 5px;
+			    margin-right: 9px;
+			}
 		}
 		.global_presence &,
 		.sustainability & {

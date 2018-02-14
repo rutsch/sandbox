@@ -17,7 +17,6 @@
 		position: relative;
 	}
 	&__legend {
-		display: none;
 		flex-direction: column;
 		width: grid-size(4);
 
@@ -34,6 +33,7 @@
 		&--values {
 			list-style-type: none;
 			position: relative;
+			margin-top: -80px;
 			&:before {
 				content: '';
 				position: absolute;
@@ -80,7 +80,7 @@
 	}
 
 	&__zoom {
-
+		display: none;
 		&--in,
 		&--out {
 			position: absolute;

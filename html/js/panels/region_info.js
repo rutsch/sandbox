@@ -91,19 +91,19 @@ var objRegionInfo = {
         self.state.tweening = false;
         self.state.visible = true;
 
-        // if (animate) {
-        //     window.TweenLite.to(self.el.toolspanel, 0.3, {
-        //         bottom: '0%',
-        //         opacity: 0,
-        //         'z-index': -1
-        //     });
-        // } else {
-        //     window.css(self.el.toolspanel, {
-        //         bottom: '0%',
-        //         opacity: 0,
-        //         'z-index': -1
-        //     });
-        // }
+        if (animate) {
+            window.TweenLite.to(self.el.toolspanel, 0.3, {
+                bottom: '0%',
+                opacity: 0,
+                'z-index': -1
+            });
+        } else {
+            window.css(self.el.toolspanel, {
+                bottom: '0%',
+                opacity: 0,
+                'z-index': -1
+            });
+        }
 
     },
 
@@ -164,20 +164,20 @@ var objRegionInfo = {
         }
 
         // debugger;
-        // 
-        // if (animate) {
-        //     window.TweenLite.to(self.el.toolspanel, 0.3, {
-        //         bottom: '0%',
-        //         opacity: 1,
-        //         'z-index': 3
-        //     });
-        // } else {
-        //     window.css(self.el.toolspanel, {
-        //         bottom: '0%',
-        //         opacity: 1,
-        //         'z-index': 3
-        //     });
-        // }
+        //
+        if (animate) {
+            window.TweenLite.to(self.el.toolspanel, 0.3, {
+                bottom: '0%',
+                opacity: 1,
+                'z-index': 3
+            });
+        } else {
+            window.css(self.el.toolspanel, {
+                bottom: '0%',
+                opacity: 1,
+                'z-index': 3
+            });
+        }
     },
 
     /*
@@ -190,29 +190,31 @@ var objRegionInfo = {
         self.el.legend__title.innerHTML = window.objDataFilter.state.filter.subtype === 'all' ? window.translateFragment('lives_improved') : window.translateFragment(window.objDataFilter.mapdatatypekeys(window.objDataFilter.state.filter.subtype));
         self.el.legend__subtitle.innerHTML = '';
 
-        if (typeof dataValueMax === 'undefined' || typeof dataValueMin === 'undefined' || dataValueMax === dataValueMin) {
-            self.el.legend__top_value.innerHTML = window.translateFragment('high');
-            self.el.legend__low_value.innerHTML = window.translateFragment('low');
-        } else {
-            // Process the numbers so that they will be displayed correctly
-            var roundedValueMax = 0;
-            var roundedValueMin = 0;
-            switch (window.objPageState.state.filter.datasource) {
-                case 'lives_improved':
-                    roundedValueMax = window.objMap.roundlivesimprovedpercentage(dataValueMax);
-                    roundedValueMin = window.objMap.roundlivesimprovedpercentage(dataValueMin);
-                    break;
-                default:
-                    var tmp = {};
-                    tmp[window.objPageState.state.filter.subtype] = dataValueMax;
-                    roundedValueMax = window.objMap.roundlivesimproveddataobject(tmp)[window.objPageState.state.filter.subtype];
-                    tmp[window.objPageState.state.filter.subtype] = dataValueMin;
-                    roundedValueMin = window.objMap.roundlivesimproveddataobject(tmp)[window.objPageState.state.filter.subtype];
-            }
-
-            self.el.legend__top_value.innerHTML = roundedValueMax;
-            self.el.legend__low_value.innerHTML = roundedValueMin;
-        }
+        self.el.legend__top_value.innerHTML = window.translateFragment('high');
+        self.el.legend__low_value.innerHTML = window.translateFragment('low');
+        // if (typeof dataValueMax === 'undefined' || typeof dataValueMin === 'undefined' || dataValueMax === dataValueMin) {
+        //     self.el.legend__top_value.innerHTML = window.translateFragment('high');
+        //     self.el.legend__low_value.innerHTML = window.translateFragment('low');
+        // } else {
+        //     // Process the numbers so that they will be displayed correctly
+        //     var roundedValueMax = 0;
+        //     var roundedValueMin = 0;
+        //     switch (window.objPageState.state.filter.datasource) {
+        //         case 'lives_improved':
+        //             roundedValueMax = window.objMap.roundlivesimprovedpercentage(dataValueMax);
+        //             roundedValueMin = window.objMap.roundlivesimprovedpercentage(dataValueMin);
+        //             break;
+        //         default:
+        //             var tmp = {};
+        //             tmp[window.objPageState.state.filter.subtype] = dataValueMax;
+        //             roundedValueMax = window.objMap.roundlivesimproveddataobject(tmp)[window.objPageState.state.filter.subtype];
+        //             tmp[window.objPageState.state.filter.subtype] = dataValueMin;
+        //             roundedValueMin = window.objMap.roundlivesimproveddataobject(tmp)[window.objPageState.state.filter.subtype];
+        //     }
+        //
+        //     self.el.legend__top_value.innerHTML = roundedValueMax;
+        //     self.el.legend__low_value.innerHTML = roundedValueMin;
+        // }
     },
 
 

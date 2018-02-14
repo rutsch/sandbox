@@ -89,10 +89,15 @@ body {
                     }
                 }
             }
+            .view-detail & {
+                svg *:not(.active) * {
+                    fill: #5BBBB7!important;
+                }
+                svg *.active *{
+                    fill: $color-highlight!important;
+                }
+            }
 
-			.active *{
-				fill: $color-highlight!important;
-			}
 		}
 
         #regions {
@@ -170,7 +175,6 @@ body {
             position: relative;
             @media #{$medium-up} {
                 display: block;
-                top: -10px;
     			height: 275px;
             }
 

@@ -245,6 +245,13 @@
         .region_info_left h2,
         .region_info_wrapper_left h2 {
           display: block; } }
+      .region_info_left h2 br,
+      .region_info_wrapper_left h2 br {
+        display: inline;
+        content: ' ';
+        clear: none;
+        width: 5px;
+        margin-right: 9px; }
     .global_presence .region_info_left .data-wrapper,
     .sustainability .region_info_left .data-wrapper, .global_presence
     .region_info_wrapper_left .data-wrapper,
@@ -453,7 +460,6 @@ div.pubtype-qr.datasource-sustainability.subtype-value_emissionshaz div#sustaina
     height: 100%;
     position: relative; }
   .map_tools__legend {
-    display: none;
     flex-direction: column;
     width: calc( ( ( ( 100% + 50px ) / 12 ) * 4 ) - 50px); }
     .map_tools__legend h4 {
@@ -464,7 +470,8 @@ div.pubtype-qr.datasource-sustainability.subtype-value_emissionshaz div#sustaina
       color: #fff; }
     .map_tools__legend--values {
       list-style-type: none;
-      position: relative; }
+      position: relative;
+      margin-top: -80px; }
       .map_tools__legend--values:before {
         content: '';
         position: absolute;
@@ -498,39 +505,41 @@ div.pubtype-qr.datasource-sustainability.subtype-value_emissionshaz div#sustaina
         margin-right: 10px; }
         .map_tools__legend--nodata--color:after {
           content: ' '; }
-  .map_tools__zoom--in, .map_tools__zoom--out {
-    position: absolute;
-    width: 26px;
-    height: 26px;
-    border-radius: 2px;
-    flex: 1 0 auto;
-    background: #3A707A;
-    color: #fff;
-    cursor: pointer; }
-    .map_tools__zoom--in:after, .map_tools__zoom--in:before, .map_tools__zoom--out:after, .map_tools__zoom--out:before {
+  .map_tools__zoom {
+    display: none; }
+    .map_tools__zoom--in, .map_tools__zoom--out {
       position: absolute;
-      top: 5px;
-      left: 12px;
-      content: ' ';
-      height: 15px;
-      width: 2px;
-      background-color: #fff; }
-  .map_tools__zoom--in {
-    left: 0px;
-    top: -80px; }
-    .map_tools__zoom--in:before {
-      -webkit-transform: rotate(90deg);
-      -ms-transform: rotate(90deg);
-      transform: rotate(90deg); }
-  .map_tools__zoom--out {
-    left: 0;
-    top: -45px; }
-    .map_tools__zoom--out:before {
-      -webkit-transform: rotate(90deg);
-      -ms-transform: rotate(90deg);
-      transform: rotate(90deg); }
-    .map_tools__zoom--out:after {
-      display: none; }
+      width: 26px;
+      height: 26px;
+      border-radius: 2px;
+      flex: 1 0 auto;
+      background: #3A707A;
+      color: #fff;
+      cursor: pointer; }
+      .map_tools__zoom--in:after, .map_tools__zoom--in:before, .map_tools__zoom--out:after, .map_tools__zoom--out:before {
+        position: absolute;
+        top: 5px;
+        left: 12px;
+        content: ' ';
+        height: 15px;
+        width: 2px;
+        background-color: #fff; }
+    .map_tools__zoom--in {
+      left: 0px;
+      top: -80px; }
+      .map_tools__zoom--in:before {
+        -webkit-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        transform: rotate(90deg); }
+    .map_tools__zoom--out {
+      left: 0;
+      top: -45px; }
+      .map_tools__zoom--out:before {
+        -webkit-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        transform: rotate(90deg); }
+      .map_tools__zoom--out:after {
+        display: none; }
 
 /* Show the no data legend */
 .philips.datasource-sustainability.orulevel-3 .map_tools__legend--nodata {
@@ -725,7 +734,9 @@ body {
           cursor: pointer; }
           #app_panel #app_wrapper #map #main_wrapper #holder_1000 svg *.no-data {
             cursor: default !important; }
-  #app_panel #app_wrapper #map .active * {
+  .view-detail #app_panel #app_wrapper #map svg *:not(.active) * {
+    fill: #5BBBB7 !important; }
+  .view-detail #app_panel #app_wrapper #map svg *.active * {
     fill: #E2EA6D !important; }
 
 #app_panel #app_wrapper #regions ul {
@@ -784,7 +795,6 @@ body {
   @media only screen and (min-width: 769px) {
     #app_panel #app_wrapper #bottom_panel {
       display: block;
-      top: -10px;
       height: 275px; } }
 
 #app_panel #app_wrapper #slider_indicator,
