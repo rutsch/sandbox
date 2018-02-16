@@ -23,8 +23,8 @@
 		height: 100%;
 		position: absolute;
 		width: 100%;
-		left: 50%;
-		transform: translateX(-50%);
+		// left: 50%;
+		// transform: translateX(-50%);
 		display: flex;
 
 	}
@@ -148,6 +148,8 @@
 					padding: 10px 0;
 					border-bottom: 1px solid rgba(58, 112, 122, .5);
 					-webkit-column-break-inside: avoid;
+					page-break-inside: avoid;
+					break-inside: avoid-column;
 					span + span {
 						float: right;
 						color: #fff;
