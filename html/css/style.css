@@ -210,8 +210,12 @@
   .region_info_wrapper .nr_label {
     width: 100%;
     font-weight: 700;
-    font-size: 21px;
+    font-size: 17px;
     display: inline; }
+    @media only screen and (min-width: 1400px) {
+      .region_info .nr_label,
+      .region_info_wrapper .nr_label {
+        font-size: 21px; } }
     .region_info .nr_label .footnote,
     .region_info_wrapper .nr_label .footnote {
       color: inherit;

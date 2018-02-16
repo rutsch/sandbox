@@ -92,9 +92,11 @@
 	.nr_label {
 		width: 100%;
 		font-weight: 700;
-	    font-size: 21px;
-
+	    font-size: 17px;
 		display: inline;
+		@media #{$xlarge-up} {
+			font-size: 21px;
+		}
 
         .footnote {
             color: inherit;
