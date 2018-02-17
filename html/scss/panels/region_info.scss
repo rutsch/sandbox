@@ -142,8 +142,10 @@
 		.global_presence &,
 		.sustainability & {
 			.data-wrapper {
-				column-count: 2;
-				column-gap: 50px;
+				@media #{$medium-up} {
+					column-count: 2;
+					column-gap: 50px;
+				}
 				flex-direction: column;
 				justify-content: space-between;
 				div {

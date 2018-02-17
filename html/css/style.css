@@ -259,10 +259,16 @@
     .region_info_wrapper_left .data-wrapper,
     .sustainability
     .region_info_wrapper_left .data-wrapper {
-      column-count: 2;
-      column-gap: 50px;
       flex-direction: column;
       justify-content: space-between; }
+      @media only screen and (min-width: 769px) {
+        .global_presence .region_info_left .data-wrapper,
+        .sustainability .region_info_left .data-wrapper, .global_presence
+        .region_info_wrapper_left .data-wrapper,
+        .sustainability
+        .region_info_wrapper_left .data-wrapper {
+          column-count: 2;
+          column-gap: 50px; } }
       .global_presence .region_info_left .data-wrapper div,
       .sustainability .region_info_left .data-wrapper div, .global_presence
       .region_info_wrapper_left .data-wrapper div,
