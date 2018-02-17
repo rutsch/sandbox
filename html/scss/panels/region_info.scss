@@ -207,8 +207,8 @@
 				}
 			}
 			.lives_improved_percentage {
-				font-size: 50px;
-				line-height: 50px;
+				font-size: 73px;
+				line-height: 86px;
 				color: #fff;
 				font-weight: 800;
 				@media #{$medium-up} {
@@ -242,8 +242,9 @@
 				flex-wrap: wrap;
 
 				img {
-					height: 15px;
-					margin-left: 2px;
+					height: auto;
+				    margin-left: 2px;
+				    width: calc((100% / 25) - 2px);
 
 					@media #{$medium-up} {
 						height: 20px;
@@ -258,6 +259,7 @@
 		justify-content: space-between;
 		margin: 15px 0;
 		position: relative;
+
 		@media #{$medium-up} {
 			width: grid-size(6);
 			// background: #5bbbb7;

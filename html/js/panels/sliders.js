@@ -24,12 +24,12 @@ var objSliders = {
         recalculatecounter: 0,
         setupsimulator: true
     },
-    
+
     /*
      * UI functions
-     * 
-     * !!!!!!!!!!!!!!!!!!!!! NOT USED, ALL ANIMATIONS ARE STARTED FROM OBJREGIONINFO !!!!!!!!!!!!!!!!!!!!!!!! 
-     * 
+     *
+     * !!!!!!!!!!!!!!!!!!!!! NOT USED, ALL ANIMATIONS ARE STARTED FROM OBJREGIONINFO !!!!!!!!!!!!!!!!!!!!!!!!
+     *
      */
 
     /* Helpers */
@@ -37,7 +37,7 @@ var objSliders = {
         var intFloor = 0,
             intCeil = 0;
         var intermediate = Math.round(intValue / intStep) * intStep;
-        
+
         // console.log('- intermediate='+intermediate);
         // console.log('- modulus='+(s%step));
 
@@ -69,7 +69,7 @@ var objSliders = {
         };
     },
 
-    // Loads the data and sets up the interface 
+    // Loads the data and sets up the interface
     start: function () {
         var self = this;
 
@@ -153,7 +153,7 @@ var objSliders = {
         for (var i = 0; i < data.length; i++) {
             var intLivesImproved = data[i].l;
             if (intLivesImproved === -1) intLivesImproved = 0;
-            
+
             // console.log(intLivesImproved);
 
 
@@ -216,7 +216,7 @@ var objSliders = {
             g: -1,
             p: -1
         }).displayl.replace(/,/, ''));
-        
+
         // objGraphData.ymin = objGraphData.ymin - Math.round(((objGraphData.ymin / 100) * 5));
         objGraphData.ymax = parseFloat(window.objMap.roundlivesimproveddataobject({
             l: intMaxValue,
@@ -250,11 +250,14 @@ var objSliders = {
         // Set other properties for the graph
         window.objTrendGraph.props.line.lastsegment.class = 'lastsegment';
         window.objTrendGraph.props.line.lastpoint.id = 'lp';
-        
+
         // console.log(objGraphData);
 
         // Draw the graph
         window.objTrendGraph.reset();
+        window.setTimeout(function () {
+            window.objTrendGraph.redrawgraph();
+        }, 1000)
         window.objTrendGraph.drawgraph(objGraphData);
 
     },

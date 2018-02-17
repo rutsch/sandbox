@@ -32,6 +32,9 @@
 #graph > div:nth-child(6) {
 	-ms-grid-column: 6;
 }
+#graph > div:nth-child(6) .line {
+	display: none;
+}
 .value {
   justify-self: center;
   color: #fff;

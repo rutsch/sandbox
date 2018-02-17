@@ -177,6 +177,8 @@ var objTrendGraph = {
         var self = this;
         var pointY = height * (point.value.replace(',', '') * 1 - minmax.min) / range;
 
+        // debugger;
+
         var pointDiv = document.createElement('div');
         pointDiv.classList.add('y');
         pointDiv.setAttribute('style', 'bottom: ' + (pointY + 15) + 'px');
@@ -198,6 +200,7 @@ var objTrendGraph = {
         el.appendChild(lineDiv);
     },
     drawgraph: function(objData) {
+
         var self = this;
         if (objData === undefined) objData = self.vars.data;
 
@@ -216,7 +219,11 @@ var objTrendGraph = {
 
         // Get min and max values
         var minmax = self.getMinMax();
+
+        // debugger;
+        console.log(self.el.root.getBoundingClientRect());
         var height = self.el.root.getBoundingClientRect().height - 120;
+        if (height < 0) height = 125;
         var range = minmax.max - minmax.min;
 
         // Create the columns
@@ -235,13 +242,17 @@ var objTrendGraph = {
             // debugger;
 
 
-            self.createLine(co.left + 5, (linePoints[i].style.bottom.replace('px', '') * 1) + 5, conext.left + 5, (linePoints[i + 1].style.bottom.replace('px', '') * 1) + 5, linePoints[i].parentNode);
+            // self.createLine(co.left + 5, (linePoints[i].style.bottom.replace('px', '') * 1) + 5, conext.left + 5, (linePoints[i + 1].style.bottom.replace('px', '') * 1) + 5, linePoints[i].parentNode);
         }
 
     },
     redrawgraph: function() {
+        var self = this;
         // Remove the Lines
-
+        var lines = document.querySelectorAll('.line');
+        for (var a = 0; a < lines.length; a++) {
+            lines[a].parentNode.removeChild(lines[a]);
+        }
         // Create the lines
         var linePoints = document.querySelectorAll('.y');
         for (var i = 0; i < linePoints.length - 1; i++) {

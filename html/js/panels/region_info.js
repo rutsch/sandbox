@@ -81,6 +81,7 @@ var objRegionInfo = {
             // Nothing to do
         } else {
             window.objPanelInfo.show('region_info');
+
             window.objStore.setlocalstorageitem('seenRegionInfoIntro', 'true');
         }
     },
