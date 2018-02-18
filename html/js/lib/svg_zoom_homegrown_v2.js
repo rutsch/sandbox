@@ -74,7 +74,7 @@
 
 var objZoomPanSettings = {
     pan: 1, // 1 or 0: enable or disable panning (default enabled)
-    zoom: 1, // 1 or 0: enable or disable zooming (default enabled)
+    zoom: 0, // 1 or 0: enable or disable zooming (default enabled)
     drag: 0, // 1 or 0: enable or disable dragging (default disabled)
     zoomscale: 0.2, // Zoom sensitivity
     mobile: false,
@@ -217,8 +217,8 @@ function setupHandlersDesktop() {
     // debugger;
     setAttributes(objTouchVars.elsvg, {
         "onmouseup": "handleClickTouchEnd(evt)",
-        "onmousedown": "handleClickTouchStart(evt)",
-        "onmousemove": "handleDrag(evt)"
+        "onmousedown": "handleClickTouchStart(evt)"
+        // "onmousemove": "handleDrag(evt)"
         // "onmouseout" : "handleClickTouchEnd(evt)", // Decomment this to stop the pan functionality when dragging out of the SVG element
     });
 
@@ -774,7 +774,7 @@ function handleDrag(evt) {
     } else if (objTouchVars.state === 'drag' && objZoomPanSettings.drag) {
         // Drag mode
         var p = getEventPoint(evt).matrixTransform(g.getCTM().inverse());
-        
+
         // console.log('drag');
 
         setCTM(objTouchVars.eldragtarget, objTouchVars.elsvg.createSVGMatrix().translate(p.x - objTouchVars.svgpointorigin.x, p.y - objTouchVars.svgpointorigin.y).multiply(g.getCTM().inverse()).multiply(objTouchVars.eldragtarget.getCTM()));
@@ -1003,12 +1003,12 @@ function setCTM(elSvg, objSvgProperties) {
     if (!objZoomPanSettings.mobile) bolUseStringMethod = true;
 
     if (bolUseStringMethod) {
-        /* 
+        /*
         String method
         */
         elSvg.setAttributeNS(null, 'transform', 'matrix(' + objSvgProperties.a + ',0,0,' + objSvgProperties.a + ',' + objSvgProperties.e + ',' + objSvgProperties.f + ')');
     } else {
-        /* 
+        /*
         Native method
         */
         elSvg.transform.baseVal.initialize(elSvg.ownerSVGElement.createSVGTransformFromMatrix(objSvgProperties));

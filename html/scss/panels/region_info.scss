@@ -91,7 +91,7 @@
 
 	.nr_label {
 		width: 100%;
-		font-weight: 700;
+		font-weight: 600;
 	    font-size: 17px;
 		display: inline;
 		@media #{$xlarge-up} {
@@ -112,7 +112,7 @@
 			}
         }
 		span.nr {
-			margin-left: 10px;
+			margin-left: 5px;
 			font-weight: 800;
 		}
 		@media #{$medium-up} {

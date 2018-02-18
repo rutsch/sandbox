@@ -209,7 +209,7 @@
   .region_info .nr_label,
   .region_info_wrapper .nr_label {
     width: 100%;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 17px;
     display: inline; }
     @media only screen and (min-width: 1400px) {
@@ -229,7 +229,7 @@
         margin-left: -50px; }
     .region_info .nr_label span.nr,
     .region_info_wrapper .nr_label span.nr {
-      margin-left: 10px;
+      margin-left: 5px;
       font-weight: 800; }
     @media only screen and (min-width: 769px) {
       .region_info .nr_label:last-of-type,
@@ -499,9 +499,11 @@ div.pubtype-qr.datasource-sustainability.subtype-value_emissionshaz div#sustaina
         /* Standard syntax (must be last) */ }
       .map_tools__legend--values li {
         color: #fff;
-        font-size: 14px;
+        font-size: 16px;
+        line-height: 13px;
         margin: 0;
-        height: 40px; }
+        height: 40px;
+        font-weight: 700; }
         .map_tools__legend--values li:last-child {
           display: table-cell;
           vertical-align: bottom; }
