@@ -264,7 +264,7 @@ var objRegionInfo = {
 
         // Show the subtype element if it was supplied
         if (typeof subType !== 'undefined') {
-            if (subType !== 'all') document.getElementById(subType).style.display = 'block';
+            if (subType !== 'all') document.getElementById(subType).style.display = 'inline-block';
         }
     },
 
