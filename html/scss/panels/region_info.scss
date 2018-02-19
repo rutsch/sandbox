@@ -229,7 +229,7 @@
 				padding-top: 15px;
 				display: flex;
 				flex-direction: column;
-				@media #{$medium-up} {
+				@media #{$small-up} {
 					flex-direction: row;
 					padding-top: 0;
 				}
@@ -254,7 +254,7 @@
 				span {
 					font-size: 21px!important;
 				}
-				@media #{$medium-up} {
+				@media #{$small-up} {
 					align-self: unset;
 					margin-left: 0;
 					span {
@@ -272,7 +272,7 @@
 				display: flex;
 				flex-direction: row;
 				align-content: space-between;
-				@media #{$medium-up} {
+				@media #{$small-up} {
 					width: grid-size(6);
 					flex-direction: column;
 					align-content: unset;
@@ -282,7 +282,7 @@
 			.lives_improved_icons {
 
 				padding: 10px 0 0 0;
-				@media #{$medium-up} {
+				@media #{$small-up} {
 					width: 232px;
 				}
 				flex-wrap: wrap;
