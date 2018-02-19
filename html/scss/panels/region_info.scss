@@ -93,7 +93,11 @@
 		width: 100%;
 		font-weight: 600;
 	    font-size: 17px;
-		display: inline;
+		display: block;
+		@media #{$medium-up} {
+			display: inline;
+		}
+
 		@media #{$xlarge-up} {
 			font-size: 21px;
 		}
@@ -106,7 +110,7 @@
 
 
         span.label {
-			margin-right: 50px;
+			margin-right: 30px;
 			& + .footnote {
 				margin-left: -50px;
 			}
@@ -114,6 +118,10 @@
 		span.nr {
 			margin-left: 5px;
 			font-weight: 800;
+			float: right;
+			@media #{$medium-up} {
+				float: none;
+			}
 		}
 		@media #{$medium-up} {
 			&:last-of-type {
@@ -176,10 +184,14 @@
 			.data-wrapper  {
 				border-bottom: 1px solid rgba(58, 112, 122, .5);
 				padding: 5px 0 10px 0;
-				> div:first-child {
-					&:after {
-						content: '|';
-						padding: 0 3px 0 8px;
+				> div:last-child {
+					display: block;
+					@media #{$medium-up} {
+						display: inline;
+						&:before {
+							content: '|';
+							padding: 0 8px 0 3px;
+						}
 					}
 				}
 				div {
@@ -192,19 +204,33 @@
 				font-size: 34px;
 				color: #fff;
 				padding: 10px 0;
+				display: flex;
+				justify-content: space-between;
+				@media #{$medium-up} {
+					display: block;
+				}
 				.nr_lives_improved {
-					font-weight: 700;
+					font-weight: 800;
+					order: 1;
+					@media #{$medium-up} {
+						order: 0;
+					}
 				}
 				.nr_lives_improved_label {
 					font-weight: 500;
-					margin-left: 10px;
-					text-transform: lowercase;
+					@media #{$medium-up} {
+						margin-left: 5px;
+						text-transform: lowercase;
+					}
 				}
 			}
 
 			.lives_improved_wrapper	{
 				padding-top: 15px;
+				display: flex;
+				flex-direction: column;
 				@media #{$medium-up} {
+					flex-direction: row;
 					padding-top: 0;
 				}
 			}
@@ -223,6 +249,18 @@
 				font-size: 21px;
 				font-weight: 800;
 				margin-top: -5px;
+				align-self: center;
+				margin-left: 15px;
+				span {
+					font-size: 21px!important;
+				}
+				@media #{$medium-up} {
+					align-self: unset;
+					margin-left: 0;
+					span {
+						font-size: unset;
+					}
+				}
 			}
 			.lives_improved_wrapper {
 				display: flex;
@@ -230,17 +268,23 @@
 				padding: 10px 0;
 			}
 			.lives_improved_numbers {
-				width: grid-size(6);
+				width: 100%;
 				display: flex;
-				flex-direction: column;
+				flex-direction: row;
+				align-content: space-between;
+				@media #{$medium-up} {
+					width: grid-size(6);
+					flex-direction: column;
+					align-content: unset;
+				}
 			}
 
 			.lives_improved_icons {
-	            @media #{$tiny-only} {
-					display: none;
-				}
+
 				padding: 10px 0 0 0;
-				width: 232px;
+				@media #{$medium-up} {
+					width: 232px;
+				}
 				flex-wrap: wrap;
 
 				img {
@@ -312,6 +356,7 @@
 	}
 	&_title {
 		color: $color-highlight;
+		font-weight: 800;
 	}
 	.region_info_content {
 		margin: 0 2em;

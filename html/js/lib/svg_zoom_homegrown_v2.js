@@ -235,60 +235,60 @@ function setupHandlersDesktop() {
 function setupHandlersMobile() {
     // A few "cheap" tricks to work around the tap-issue (sometimes you need to tap twice to trigger the event...)
 
-    window.app.el.hammersvg.on("dragstart", function (ev) {
-        if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
-            if (window.console) {
-                console.log(ev);
-            }
-        }
-
-        objTouchVars.eventcount++;
-
-        objTouchVars.dragging = true;
-
-        if (objTouchVars.timer1) clearTimeout(objTouchVars.timer1);
-        objTouchVars.timer1 = setTimeout(function () {
-            objTouchVars.dragging = false;
-        }, 500);
-
-        handleClickTouchStart(ev);
-    });
-
-    window.app.el.hammersvg.on("drag", function (ev) {
-        if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
-            if (window.console) {
-                console.log(ev);
-            }
-        }
-
-        objTouchVars.eventcount++;
-
-        objTouchVars.dragging = true;
-
-        if (objZoomPanSettings.usesamplingformobile) {
-
-            // Store details about the event in the global variable
-            objTouchVars.fingerx = ev.gesture.srcEvent.pageX;
-            objTouchVars.fingery = ev.gesture.srcEvent.pageY;
-
-            // debugLog();
-
-            // Start the sampling
-            if (!objTouchVars.sampling) {
-                if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
-                    //console.log('!!! start the drag sampling process !!!');
-                }
-                objTouchVars.sampling = true;
-                objTouchVars.timer4 = setTimeout(function () {
-                    startDragSampling();
-                }, 50);
-            }
-        } else {
-            handleDrag(ev);
-        }
-
-
-    });
+    // window.app.el.hammersvg.on("dragstart", function (ev) {
+    //     if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
+    //         if (window.console) {
+    //             console.log(ev);
+    //         }
+    //     }
+    //
+    //     objTouchVars.eventcount++;
+    //
+    //     objTouchVars.dragging = true;
+    //
+    //     if (objTouchVars.timer1) clearTimeout(objTouchVars.timer1);
+    //     objTouchVars.timer1 = setTimeout(function () {
+    //         objTouchVars.dragging = false;
+    //     }, 500);
+    //
+    //     handleClickTouchStart(ev);
+    // });
+    //
+    // window.app.el.hammersvg.on("drag", function (ev) {
+    //     if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
+    //         if (window.console) {
+    //             console.log(ev);
+    //         }
+    //     }
+    //
+    //     objTouchVars.eventcount++;
+    //
+    //     objTouchVars.dragging = true;
+    //
+    //     if (objZoomPanSettings.usesamplingformobile) {
+    //
+    //         // Store details about the event in the global variable
+    //         objTouchVars.fingerx = ev.gesture.srcEvent.pageX;
+    //         objTouchVars.fingery = ev.gesture.srcEvent.pageY;
+    //
+    //         // debugLog();
+    //
+    //         // Start the sampling
+    //         if (!objTouchVars.sampling) {
+    //             if (objTouchSettings.debug && objTouchSettings.debugtoconsole) {
+    //                 //console.log('!!! start the drag sampling process !!!');
+    //             }
+    //             objTouchVars.sampling = true;
+    //             objTouchVars.timer4 = setTimeout(function () {
+    //                 startDragSampling();
+    //             }, 50);
+    //         }
+    //     } else {
+    //         handleDrag(ev);
+    //     }
+    //
+    //
+    // });
 
     /*
     objPageVars.hammersvg.on("dragend release", function(ev) {
