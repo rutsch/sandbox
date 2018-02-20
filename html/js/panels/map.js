@@ -893,10 +893,12 @@ var objMap = {
             // Clear images that where set before
             elLivesImprovedIcons.innerHTML = '';
 
+            var roundedData = self.roundlivesimprovedpercentage(regionData.percentageLI);
 
+            // debugger;
             for (var i = 0; i < 100; i++) {
                 var elem = document.createElement("img");
-                if (i < regionData.percentageLI) {
+                if (i < roundedData) {
                     // Add selected icon
                     elem.setAttribute("src", "img/person-selected.png");
                 } else {
@@ -906,6 +908,12 @@ var objMap = {
                 // We can add a timeout effect for the loading of the images here by switching the comments on both lines below
                 // doScaledTimeout(i, elem);
                 elLivesImprovedIcons.appendChild(elem);
+            }
+
+            // Check if there is more then one icons panel
+            var iconpanels = document.querySelectorAll('.lives_improved_icons');
+            if (iconpanels.length > 1) {
+                iconpanels[1].innerHTML = iconpanels[0].innerHTML;
             }
         }
 
