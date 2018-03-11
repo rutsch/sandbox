@@ -8,6 +8,10 @@ var pageVars = {
     rootpath: '/webapp/html'
 }
 
+// Correct the root path in case we are serving the Mandarin website running in a subdirectory
+var subfolder = (location.href.indexOf('www.philips.com.cn') > -1) ? location.href.replace(/^http.:\/\/.*?(\/\w+).*$/, '$1') : '';
+pageVars.rootpath = subfolder + pageVars.rootpath;
+
 // Grab the version from the parent window if possbile
 if (top !== self && location.href.indexOf('dev.html') === -1) {
     pageVars.version = (top.pageVars.version) ? top.pageVars.version : pageVars.version;

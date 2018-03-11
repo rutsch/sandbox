@@ -16,6 +16,7 @@ var objConfig = {
         suus: 'https://www.dev.results.philips.com',
         resultshubpublic: 'https://www.results.philips.com',
         resultshubpubliccn: 'https://www.results.philips.com.cn',
+        resultshubpubliccnphilips: 'https://www.philips.com.cn',
         dynamicresourceurl: 'https://www.livesimproved.philips.com/tools/dynamic_resources_cached_closed.aspx',
         authurl2: "https://www.livesimproved.philips.com/tools/dynamic_resources.aspx",
         authurl3: "https://www.livesimproved.philips.com/pages/login/authenticate_user.aspx",
@@ -138,6 +139,8 @@ var objConfig = {
             self.sitetype = 'devpublic';
         } else if (self.urls.resultshubpubliccn.indexOf(location.hostname) > -1) {
             self.sitetype = 'devpublic';
+        } else if (self.urls.resultshubpubliccnphilips.indexOf(location.hostname) > -1) {
+            self.sitetype = 'devpublic';
         } else if (self.urls.devpublic.indexOf(location.hostname) > -1) {
             self.sitetype = 'devpublic';
         } else if (self.urls.prodpublic.indexOf(location.hostname) > -1) {
@@ -183,8 +186,9 @@ var objConfig = {
 
         // Special case to test the app
         if (self.sitetype.indexOf('public') > -1) {
-            calculateUrls('');
-            self.urls.dynamicresourceurl = '/tools/api.aspx';
+            var subfolder = (location.href.indexOf('www.philips.com.cn') > -1) ? location.href.replace(/^http.:\/\/.*?(\/\w+).*$/, '$1') : '';
+            calculateUrls(subfolder);
+            self.urls.dynamicresourceurl = subfolder + '/tools/api.aspx';
         }
 
         // Test if an explicit set of datasources has been specified in the questring
