@@ -189,7 +189,7 @@ var objRegionInfo = {
         var self = this;
 
         self.el.legend__title.innerHTML = window.objDataFilter.state.filter.subtype === 'all' ? window.translateFragment('lives_improved') : window.translateFragment(window.objDataFilter.mapdatatypekeys(window.objDataFilter.state.filter.subtype));
-        self.el.legend__subtitle.innerHTML = '';
+        if (self.el.legend__subtitle) self.el.legend__subtitle.innerHTML = '';
 
         self.el.legend__top_value.innerHTML = window.translateFragment('high');
         self.el.legend__low_value.innerHTML = window.translateFragment('low');
@@ -246,7 +246,7 @@ var objRegionInfo = {
         // console.log('setdetailspanel("' + dataSource + '", "' + subType + '")');
         // console.log('- window.objMap.datatypes["' + dataSource + '"]: ' + window.objMap.datatypes[dataSource]);
         var elPanel = document.getElementById(dataSource + '_details');
-        var defaultState = (typeof subType === 'undefined') ? 'block' : (subType === 'all') ? 'block' : 'none';
+        var defaultState = (typeof subType === 'undefined') ? 'flex' : (subType === 'all') ? 'flex' : 'none';
 
         // Set the default state for the lines in the details panel
         var arrDivs = elPanel.getElementsByTagName('div');

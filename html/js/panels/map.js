@@ -353,7 +353,7 @@ var objMap = {
                 dataValueMin = dataTypeMetadata[window.objDataFilter.state.filter.subtype].min;
             }
 
-            if (debugRoutine) console.log(' - dataValueMax: ' + dataValueMax + ' - dataValueMin: ' + dataValueMin);
+            // if (debugRoutine) console.log(' - dataValueMax: ' + dataValueMax + ' - dataValueMin: ' + dataValueMin);
         }
 
         // Determine when we cannot color the map because we show the data on global level or we show more data types in one view
@@ -801,9 +801,8 @@ var objMap = {
         window.objHeader.showbackbutton();
         window.objHeader.showfavouritebutton();
 
-
         // Initiates the simulator
-        window.objSliders.start();
+        if (window.objPageState.state.filter.datasource === 'lives_improved') window.objSliders.start();
 
         // objRegionInfo.hidehistory();
 
@@ -945,10 +944,10 @@ var objMap = {
         // debugger;
         var self = this;
         var objExtendedData = self.roundlivesimproveddataobject(objData);
-        console.log('++++');
-        console.log('- objData: ' + JSON.stringify(objData));
-        console.log('- objExtendedData: ' + JSON.stringify(objExtendedData));
-        console.log('++++');
+        // console.log('++++');
+        // console.log('- objData: ' + JSON.stringify(objData));
+        // console.log('- objExtendedData: ' + JSON.stringify(objExtendedData));
+        // console.log('++++');
 
         var elLivesImproved = window.getEl('region_info_wrapper lives_improved');
         var elGlobalPresence = window.getEl('region_info_wrapper global_presence');

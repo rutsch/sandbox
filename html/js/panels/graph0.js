@@ -153,8 +153,8 @@ var objTrendGraph = {
     setsvglinecoordinates: function (elLine, objCoords) {
         elLine.setAttributeNS(null, 'x1', objCoords.x1);
         if (isNaN(objCoords.y1)) {
-            console.log(objCoords);
-            console.trace(objCoords.y1)
+            // console.log(objCoords);
+            // console.trace(objCoords.y1)
         }
         elLine.setAttributeNS(null, 'y1', objCoords.y1);
         elLine.setAttributeNS(null, 'x2', objCoords.x2);
@@ -169,7 +169,7 @@ var objTrendGraph = {
         if (self.vars.data != null) {
 
             var objCoords = self.getsvgcoordinatesforpointflex(intNewValue, self.vars.data.points[self.vars.data.points.length - 1].utcend);
-            
+
             // Update the line
             self.el.lastsegment.setAttributeNS(null, 'x2', objCoords.x);
             self.el.lastsegment.setAttributeNS(null, 'y2', objCoords.y);
@@ -194,7 +194,7 @@ var objTrendGraph = {
         // if((objCoords.y+self.vars.popuptrendheight)>=(self.props.height-self.props.padding.bottom)){
         if ((objCoords.y + self.vars.popuptrendheight) >= (self.props.height - self.props.padding.bottom)) {
             self.fliptrendpopup('flipped');
-            
+
             // console.log('perform flip') 53
         } else {
             // console.log('set original')
@@ -226,7 +226,7 @@ var objTrendGraph = {
         if (objArgs.show) {
             // Align the popup and the show it
             self.el.popupvalue.setAttributeNS(null, 'transform', 'translate(' + (objArgs.x - (self.vars.popupvaluewidth / 2)) + ', ' + (objArgs.y - self.vars.popupvalueheight) + ')');
-           
+
             // self.el.popupvalue.setAttributeNS(null,'transform','translate('+(objArgs.x-20)+', '+(objArgs.y)+')');
 
             self.el.popupvalue.setAttributeNS(null, 'visibility', 'visible');
@@ -244,10 +244,10 @@ var objTrendGraph = {
             return 0;
         }
         return Math.max(0,
-            
+
             // Number of digits right of decimal point.
             (match[1] ? match[1].length : 0)
-            
+
             // Adjust for scientific notation.
             - (match[2] ? +match[2] : 0)
         );
@@ -301,7 +301,7 @@ var objTrendGraph = {
 
     reset: function () {
         var self = this;
-        
+
         // 1) throw the original svg node away
         var elContainer = self.el.root.parentNode;
         elContainer.removeChild(self.el.root);
@@ -318,7 +318,7 @@ var objTrendGraph = {
 
         var objPoint = {},
             objCoords = {};
-        
+
         // debugger;
 
         // Sort the array of points on the utc date stamp
@@ -441,7 +441,7 @@ var objTrendGraph = {
         // 5) create the x axis labels
         var elWrapperLabelsX = document.getElementById('x_axislabel_wrapper');
         for (var i = 0; i < self.vars.data.points.length; i++) {
-            
+
             // Label on x axis
             objPoint = self.vars.data.points[i];
             objCoords = self.getsvgcoordinatesforpointflex(objPoint.value, objPoint.utcend);
@@ -485,7 +485,7 @@ var objTrendGraph = {
                 i = Math.round(i * 10) / 10
 
                 // console.log(i+' '+i%self.props.axis.ystep);
-                
+
                 if (i % self.props.axis.ystep === 0) {
                     // console.log('in i='+i)
 
@@ -506,9 +506,9 @@ var objTrendGraph = {
             var intFactor = 1,
                 intPercentage = 1,
                 intLength = (self.props.axis.ymax + '').length;
-            
+
             // console.log(intLength)
-            
+
             switch (intDecimalPlacesIn) {
                 case 1:
                     intFactor = 10;
@@ -527,12 +527,12 @@ var objTrendGraph = {
                     intPercentage = 25;
                     break;
             }
-            
+
             // console.log('intDecimalPlacesIn: %s, intFactor: %s, intPercentage: %s, intLength: %s', intDecimalPlacesIn, intFactor, intPercentage, intLength);
             // console.log(self.props.axis);
 
             var intMargin = ((self.props.axis.ymax - self.props.axis.ymin) / 100) * intPercentage;
-            
+
             // Percenrage from top
             var intValueTopLine = Math.round((self.props.axis.ymax - intMargin) * intFactor) / intFactor;
             arrPoints.push({
@@ -570,7 +570,7 @@ var objTrendGraph = {
             objCoords = self.getsvgcoordinatesforpointflex(objPoint.value, objPoint.utcend);
 
             // console.log(objCoords);
-            
+
             objCoords.x = self.props.padding.left + ((self.props.axis.ylabelinset) ? 3 : -5);
 
             // Correct the y-position so that it aligns better with the little line

@@ -221,7 +221,7 @@ var objTrendGraph = {
         var minmax = self.getMinMax();
 
         // debugger;
-        console.log(self.el.root.getBoundingClientRect());
+        // console.log(self.el.root.getBoundingClientRect());
         var height = self.el.root.getBoundingClientRect().height - 120;
         if (height < 0) height = 125;
         var range = minmax.max - minmax.min;

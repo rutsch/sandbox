@@ -188,13 +188,12 @@
       transform: rotate(-45deg); }
   .region_info span.footnote,
   .region_info_wrapper span.footnote {
-    float: left;
-    position: absolute;
     margin-top: -10px;
     margin-left: 5px; }
     .region_info span.footnote sup,
     .region_info_wrapper span.footnote sup {
-      color: white; }
+      color: white;
+      font-size: 17px !important; }
   .region_info .footnote,
   .region_info_wrapper .footnote {
     padding-top: 5px;
@@ -225,17 +224,10 @@
       color: inherit;
       font-size: 21px;
       padding-top: inherit; }
-    .region_info .nr_label span.label,
-    .region_info_wrapper .nr_label span.label {
-      margin-right: 30px; }
-      .region_info .nr_label span.label + .footnote,
-      .region_info_wrapper .nr_label span.label + .footnote {
-        margin-left: -50px; }
     .region_info .nr_label span.nr,
     .region_info_wrapper .nr_label span.nr {
-      margin-left: 5px;
-      font-weight: 800;
-      float: right; }
+      margin-left: auto;
+      font-weight: 800; }
       @media only screen and (min-width: 769px) {
         .region_info .nr_label span.nr,
         .region_info_wrapper .nr_label span.nr {
@@ -352,7 +344,7 @@
           @media only screen and (min-width: 769px) {
             .lives_improved .region_info_left_header .nr_lives_improved_label, .lives_improved
             .region_info_wrapper_left_header .nr_lives_improved_label {
-              margin-left: 5px;
+              margin-left: 10px;
               text-transform: lowercase; } }
       .lives_improved .region_info_left .lives_improved_wrapper, .lives_improved
       .region_info_wrapper_left .lives_improved_wrapper {

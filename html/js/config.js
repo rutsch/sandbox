@@ -86,14 +86,15 @@ var objConfig = {
     // Publication type - ar|qr - required for resolving future Sustainability and Global Presence data
     pubtype: 'ar',
 
-    // Labels used in the application to display the date of the data    
+    // Labels used in the application to display the date of the data
     datalabels: {
         ar16: 'wm_label_ar16',
         q117: 'wm_label_q117',
         q217: 'wm_label_q217',
         q317: 'wm_label_q317',
         q417: 'wm_label_q417',
-        ar17: 'wm_label_ar17'
+        ar17: 'wm_label_ar17',
+        q118: 'wm_label_q118'
     },
 
     hideinactivecountries: true,
@@ -146,7 +147,7 @@ var objConfig = {
         } else if (self.urls.prodpublic.indexOf(location.hostname) > -1) {
             self.sitetype = 'prodpublic';
         }
-        
+
         // console.log('sitetype: %s', self.sitetype);
 
         /*
@@ -200,7 +201,7 @@ var objConfig = {
         // Test if we need to adjust the standard data-type definition
         if (location.href.indexOf('dv=future') > -1) self.datatype = 'future';
 
-        // Retrieve the site id from the parent        
+        // Retrieve the site id from the parent
         if (location.href.indexOf('siteid=') > -1) self.siteid = location.href.replace(/^.*siteid=((a|q)([a-z]|\d){3}).*$/, '$1');
 
         // Test if we need to adjust the publication type definition

@@ -63,7 +63,7 @@ var objDataFilter = {
         return key;
     },
 
-    // Render the datatype sub filter elements underneath the tabs    
+    // Render the datatype sub filter elements underneath the tabs
     renderdatasubtypefilters: function () {
         var self = this;
 
@@ -94,7 +94,7 @@ var objDataFilter = {
         // console.log(htmlGlobal);
     },
 
-    // Sets the active data source sub-type element in the fold out menu    
+    // Sets the active data source sub-type element in the fold out menu
     setdatasubtypefilter: function (dataSource, subType) {
         // Reset all
         var arrLi = document.getElementsByClassName('datasubtype');
@@ -118,7 +118,7 @@ var objDataFilter = {
     */
     changedatasource: function (dataSource) {
         if (!objDataFilter.vars.subclicked) {
-            console.log('changedatasource("' + dataSource + '")');
+            // console.log('changedatasource("' + dataSource + '")');
 
             // Set the datafilter state
             objDataFilter.state.filter.datasource = dataSource;
@@ -129,7 +129,7 @@ var objDataFilter = {
         }
     },
     changesubtype: function (dataSource, subType) {
-        console.log('changesubtype("' + dataSource + '", "' + subType + '")');
+        // console.log('changesubtype("' + dataSource + '", "' + subType + '")');
         // Variable to prevent the click event from triggering changedatasource()
         objDataFilter.vars.subclicked = true;
 
@@ -198,7 +198,7 @@ var objDataFilter = {
         var labelid = window.objConfig.datalabels[window.objConfig.siteid];
 
         // TODO: Make this more dynamic so that we do not need to update this manually each publication
-        var labelidFuture = window.objConfig.datalabels['q417'];
+        var labelidFuture = window.objConfig.datalabels['q118'];
 
         // Lives improved data is shown
         if (dataSource === 'lives_improved') {
@@ -213,7 +213,7 @@ var objDataFilter = {
                 }
                 labelid += '_ht';
             }
-            
+
         }
 
         // Retrieve and translate the label

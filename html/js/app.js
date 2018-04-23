@@ -720,21 +720,21 @@ var objPageState = {
             window.objDataFilter.state.filter.subtype = objPageStateNew.filter.subtype;
         }
 
-
-        console.log('+---------------------------------------+');
-        // console.trace();
-        console.log('- self.state: ' + JSON.stringify(self.state, null, '  '));
-        console.log('- objPageStateNew: ' + JSON.stringify(objPageStateNew, null, '  '));
-        console.log('- objPageStateDelta: ' + JSON.stringify(objPageStateDelta, null, '  '));
-        // console.log('- bolFilterChangeDetected: ' + bolFilterChangeDetected);
-        // console.log('- bolFilterOruLevelChanged: ' + bolFilterOruLevelChanged);
-        // console.log('- bolFilterOruChanged: ' + bolFilterOruChanged);
-        // console.log('- bolFilterSectorChanged: ' + bolFilterSectorChanged);
-        // console.log('- bolFilterMruChanged: ' + bolFilterMruChanged);
-        // console.log('- bolFilterDataChanged: ' + bolFilterDataChanged);
-        // console.log('- bolFilterDataSubTypeChanged: ' + bolFilterDataSubTypeChanged);
-        // console.log('- bolFromLogin: ' + bolFromLogin);
-        console.log('+---------------------------------------+');
+        //
+        // console.log('+---------------------------------------+');
+        // // console.trace();
+        // console.log('- self.state: ' + JSON.stringify(self.state, null, '  '));
+        // console.log('- objPageStateNew: ' + JSON.stringify(objPageStateNew, null, '  '));
+        // console.log('- objPageStateDelta: ' + JSON.stringify(objPageStateDelta, null, '  '));
+        // // console.log('- bolFilterChangeDetected: ' + bolFilterChangeDetected);
+        // // console.log('- bolFilterOruLevelChanged: ' + bolFilterOruLevelChanged);
+        // // console.log('- bolFilterOruChanged: ' + bolFilterOruChanged);
+        // // console.log('- bolFilterSectorChanged: ' + bolFilterSectorChanged);
+        // // console.log('- bolFilterMruChanged: ' + bolFilterMruChanged);
+        // // console.log('- bolFilterDataChanged: ' + bolFilterDataChanged);
+        // // console.log('- bolFilterDataSubTypeChanged: ' + bolFilterDataSubTypeChanged);
+        // // console.log('- bolFromLogin: ' + bolFromLogin);
+        // console.log('+---------------------------------------+');
 
         // 2) check we we are coming from login
         if (self.state.view === 'login' && objPageStateNew.view !== 'login') bolFromLogin = true;
@@ -831,7 +831,7 @@ var objPageState = {
             ) bolMajorChange = true;
         }
 
-        console.log('- bolMajorChange: ' + bolMajorChange);
+        // console.log('- bolMajorChange: ' + bolMajorChange);
 
         // Select the correct data source UI element
 

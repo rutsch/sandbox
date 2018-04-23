@@ -67,13 +67,14 @@
 	}
 
     span.footnote{
-        float: left;
-		position: absolute;
+        // float: left;
+		// position: absolute;
 		margin-top: -10px;
 		margin-left: 5px;
 
         sup{
             color: white;
+			font-size: 17px!important;
         }
     }
     .footnote {
@@ -108,17 +109,16 @@
             padding-top: inherit;
         }
 
-
-        span.label {
-			margin-right: 30px;
-			& + .footnote {
-				margin-left: -50px;
-			}
-        }
+		//
+        // span.label {
+		// 	margin-right: 30px;
+		// 	& + .footnote {
+		// 		margin-left: -50px;
+		// 	}
+        // }
 		span.nr {
-			margin-left: 5px;
+			margin-left: auto;
 			font-weight: 800;
-			float: right;
 			@media #{$medium-up} {
 				float: none;
 			}
@@ -219,7 +219,7 @@
 				.nr_lives_improved_label {
 					font-weight: 500;
 					@media #{$medium-up} {
-						margin-left: 5px;
+						margin-left: 10px;
 						text-transform: lowercase;
 					}
 				}

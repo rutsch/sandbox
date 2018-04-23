@@ -83,7 +83,7 @@ var objSliders = {
             snapshotid: window.objConfig.currentsnapshotid,
             token: window.objLogin.token
         }
-
+    
         // Reset the counter
         self.recalculatecounter = 0;
 
