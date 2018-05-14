@@ -396,9 +396,10 @@ var objMap = {
                         for (var dataType in regionData) {
                             if (typeof dataType === 'string') {
                                 var currentValue = parseFloat(regionData[dataType]);
+
                                 if (!isNaN(currentValue)) {
                                     if (currentValue === 0) {
-                                        hasDataArr.push('yes');
+                                        hasDataArr.push('no');
                                     } else {
                                         hasDataArr.push('yes')
                                     }
@@ -411,12 +412,12 @@ var objMap = {
                                 }
                             }
                         }
-
                         // We have no data for the geographical region if all the elements contain no data
                         noData = (hasDataArr.indexOf('yes') === -1);
                     } else {
                         dataValueToDisplay = regionData[window.objDataFilter.state.filter.subtype];
-                        if (dataValueToDisplay === '-') noData = true;
+                        console.log(dataValueToDisplay);
+                        if (dataValueToDisplay === '-' || dataValueToDisplay === undefined) noData = true;
                     }
                 }
 
