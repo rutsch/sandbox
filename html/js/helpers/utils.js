@@ -345,20 +345,26 @@ function psv(type, url, objParams, cb) {
                     } else {
                         // Recommended for develop & debug
 
-                        // console.log(xmlhttp.responseText);
-                        var objResponse = JSON.parse(xmlhttp.responseText);
+                        try {
+                            // console.log(xmlhttp.responseText);
+                            var objResponse = JSON.parse(xmlhttp.responseText);
 
-                        // Test if we have lost the session and need to login again
-                        if (objResponse.hasOwnProperty('error')) {
-                            if (objResponse.error.message === "Not authenticated" || objResponse.error.message === "Token mismatch") {
-                                // Run the logout routine which will reset the app to it's original state and the show the login screen
-                                window.objLogin.logout();
+                            // Test if we have lost the session and need to login again
+                            if (objResponse.hasOwnProperty('error')) {
+                                if (objResponse.error.message === "Not authenticated" || objResponse.error.message === "Token mismatch") {
+                                    // Run the logout routine which will reset the app to it's original state and the show the login screen
+                                    window.objLogin.logout();
+                                } else {
+                                    cb(null, objResponse);
+                                }
                             } else {
                                 cb(null, objResponse);
                             }
-                        } else {
-                            cb(null, objResponse);
+                        } catch (err) {
+                            console.log('ERROR: xmlhttp.responseText: ' + xmlhttp.responseText + ', url: ' + url + ', error: ' + err);
+                            cb(err);
                         }
+
                     }
                 }
 
