@@ -398,7 +398,7 @@ var app = {
         footnoteText = footnoteText.replace('16', shortYear);
         // 3) Correct for the period over which the data is calculated
         if (window.objConfig.siteid.indexOf('q2') > -1 || window.objConfig.siteid.indexOf('q3') > -1) {
-            footnoteText = footnoteText.replace('full-year', 'the first half-year');
+            footnoteText = footnoteText.replace('full-year', 'the first half-year').replace('2017', '2018');
         } else if (window.objConfig.siteid.indexOf('q4') > -1) {
             footnoteText = footnoteText.replace('full-year', 'the second half-year');
         }
