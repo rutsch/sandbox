@@ -94,7 +94,10 @@ var objConfig = {
         q317: 'wm_label_q317',
         q417: 'wm_label_q417',
         ar17: 'wm_label_ar17',
-        q118: 'wm_label_q118'
+        q118: 'wm_label_q118',
+        q218: 'wm_label_q217',
+        q318: 'wm_label_q317',
+        q418: 'wm_label_q417'
     },
 
     hideinactivecountries: true,

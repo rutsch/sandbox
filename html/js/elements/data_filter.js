@@ -198,12 +198,15 @@ var objDataFilter = {
         var labelid = window.objConfig.datalabels[window.objConfig.siteid];
 
         // TODO: Make this more dynamic so that we do not need to update this manually each publication
-        var labelidFuture = window.objConfig.datalabels['q118'];
+        var labelidFuture = window.objConfig.datalabels['q218'];
 
         // Lives improved data is shown
         if (dataSource === 'lives_improved') {
             // A) Lives Improves always shows the latest data
-            labelid = labelidFuture;
+            // labelid = labelidFuture;
+            if (window.objConfig.datatype === 'future') {
+                labelid = labelidFuture;
+            }
         } else {
             // B) Sustainability data for QR is only based on HealthTech business
             if (dataSource === 'sustainability' && window.objConfig.pubtype === 'qr') {
